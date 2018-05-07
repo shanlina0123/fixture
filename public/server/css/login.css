@@ -1,0 +1,92 @@
+.loginWrap {
+  position: absolute;
+  width: 500px;
+  height: 360px;
+  top: 50%;
+  left: 50%;
+  margin-top: -180px;
+  margin-left: -250px;
+  padding: 20px 10px;
+  background-color: #fff;
+  border-radius: 5px;
+}
+.loginLogo {
+  width: 150px;
+  display: block;
+  margin: 0 auto 10px auto;
+}
+.loginInner .layui-tab-title li {
+  width: 220px;
+}
+.loginBtn .loginButton {
+  width: 100%;
+}
+.loginLink a {
+  color: #1E9FFF;
+}
+.loginLink a:hover {
+  opacity: .8;
+}
+.layui-input.codeInput {
+  width: 70%;
+}
+.bindingInner {
+  width: 500px;
+  margin: 30px auto;
+}
+.fullForm {
+  width: 750px;
+}
+.fullForm .fullFormInner {
+  width: 710px;
+}
+.userMessageForm .layui-input {
+  border: none;
+}
+.userMessageForm .messagePhone {
+  width: 25%;
+}
+.userMessageForm .changePhone {
+  line-height: 38px;
+  color: #01AAED;
+}
+.userMessageForm .changePhone:hover {
+  opacity: 0.8;
+}
+.popWrap {
+  width: 450px;
+  margin: 65px auto 20px auto;
+}
+.levelNotice {
+  display: block;
+  font-size: 14px;
+  color: #01AAED;
+  padding: 10px 0;
+}
+.levelNotice:hover {
+  color: #01AAED;
+  opacity: 0.8;
+}
+.uploadImg {
+  border: 1px solid #eee;
+  height: 132px;
+  min-width: 200px;
+  margin-left: 10px;
+}
+.loginError {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  margin: 10px 0;
+  color: #FF5722;
+}
+.loginError i {
+  vertical-align: middle;
+}
+.loginContent,
+.changeForm {
+  margin-top: 30px;
+}
+.changepWrap {
+  max-width: 600px;
+}

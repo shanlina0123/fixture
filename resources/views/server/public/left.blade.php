@@ -1,94 +1,41 @@
-<div class="layui-side layui-bg-black">
-    <div class="user-photo">
-        <a class="img" title="我的头像" ><img src="images/face.jpg"></a>
-        <p>你好！<span class="userName">请叫我马哥</span>, 欢迎登录</p>
-    </div>
-    <div class="navBar layui-side-scroll">
-        <ul class="layui-nav layui-nav-tree">
-            <li class="layui-nav-item">
-                <a href="javascript:;" data-url="{{route('company-setting')}}">
-                    <i class="layui-icon" style="font-size: 16px;" data-icon="&#xe620">&#xe620;</i>
-                    <cite>基本设置</cite>
-                </a>
-            </li>
-            <li class="layui-nav-item">
-                <a href="javascript:;">
-                    <i class="layui-icon" data-icon=""></i>
-                    <cite>项目管理</cite>
-                    <span class="layui-nav-more"></span>
-                </a>
-                <dl class="layui-nav-child">
-                    <dd>
-                        <a href="javascript:;" data-url="{{route('activity.index')}}">
-                            <i class="layui-icon" data-icon=""></i>
-                            <cite>活动管理</cite>
-                        </a>
-                    </dd>
-                </dl>
-                <dl class="layui-nav-child">
-                    <dd>
-                        <a href="javascript:;" data-url="{{route('site.index')}}">
-                            <i class="layui-icon" data-icon=""></i>
-                            <cite>工地管理</cite>
-                        </a>
-                    </dd>
-                </dl>
-                <dl class="layui-nav-child">
-                    <dd>
-                        <a href="javascript:;" data-url="{{route('client.index')}}">
-                            <i class="layui-icon" data-icon=""></i>
-                            <cite>客户预约</cite>
-                        </a>
-                    </dd>
-                </dl>
-            </li>
-            <li class="layui-nav-item">
-                <a href="javascript:;">
-                    <i class="layui-icon" data-icon=""></i>
-                    <cite>阶段模板</cite>
-                    <span class="layui-nav-more"></span>
-                </a>
-                <dl class="layui-nav-child">
-                    <dd>
-                        <a href="javascript:;" data-url="{{route('site-template.index')}}">
-                            <i class="layui-icon" data-icon=""></i>
-                            <cite>模板列表</cite>
-                        </a>
-                    </dd>
-                </dl>
-                <dl class="layui-nav-child">
-                    <dd>
-                        <a href="javascript:;" data-url="{{route('site-template.create')}}">
-                            <i class="layui-icon" data-icon=""></i>
-                            <cite>新建模板</cite>
-                        </a>
-                    </dd>
-                </dl>
-            </li>
-            <li class="layui-nav-item">
-                <a href="javascript:;">
-                    <i class="layui-icon" data-icon=""></i>
-                    <cite>系统设置</cite>
-                    <span class="layui-nav-more"></span>
-                </a>
-                <dl class="layui-nav-child">
-                    <dd>
-                        <a href="javascript:;" data-url="{{route('filter-store-index')}}">
-                            <i class="layui-icon" data-icon=""></i>
-                            <cite>门店管理</cite>
-                        </a>
-                    </dd>
-                </dl>
-                <dl class="layui-nav-child">
-                    <dd>
-                        <a href="javascript:;" data-url="{{route('filter-role-index')}}">
-                            <i class="layui-icon" data-icon=""></i>
-                            <cite>角色管理</cite>
-                        </a>
-                    </dd>
-                </dl>
-            </li>
-            <span class="layui-nav-bar" style="top: 112.5px; height: 0px; opacity: 0;"></span>
-        </ul>
-    </div>
+<div class="layui-side-scroll">
+    <ul class="layui-nav layui-nav-tree" lay-filter="test">
+        <li class="layui-nav-item">
+            <a href="javascript:;">活动管理</a>
+            <dl class="layui-nav-child">
+                <dd><a href="">宣传活动</a></dd>
+                <dd><a href="../activity/lucky.html">幸运抽奖</a></dd>
+            </dl>
+        </li>
+        <li class="layui-nav-item">
+            <a href="javascript:;">项目管理</a>
+            <dl class="layui-nav-child">
+                <dd><a href="../project/projectList.html">项目列表</a></dd>
+                <dd><a href="../project/newProject.html">新建项目</a></dd>
+                <dd><a href="../project/modelList.html">阶段模板</a></dd>
+            </dl>
+        </li>
+        <li class="layui-nav-item">
+            <a href="javascript:;">客户管理</a>
+            <dl class="layui-nav-child">
+                <dd><a href="../client/clientList.html">预约客户</a></dd>
+                <dd><a href="../client/luckClientList.html">抽奖客户</a></dd>
+            </dl>
+        </li>
+        <li class="layui-nav-item">
+            <a href="javascript:;">数据分析</a>
+            <dl class="layui-nav-child">
+                <dd><a href="">数据概览</a></dd>
+                <dd><a href="">客户分析</a></dd>
+                <dd><a href="">工地分析</a></dd>
+                <dd><a href="">营销排行</a></dd>
+                <dd><a href="">活动分析</a></dd>
+            </dl>
+        </li>
+        <li class="layui-nav-item"><a href="../message/message.html">资料设置</a></li>
+        <li class="layui-nav-item"><a href="../roles/roleList.html">角色管理</a></li>
+        <li class="layui-nav-item"><a href="../store/storeList.html">门店管理</a></li>
+        <li class="layui-nav-item"><a href="../users/userList.html">用户管理</a></li>
+        <li class="layui-nav-item"><a href="../system/settingList.html">系统属性</a></li>
+    </ul>
 </div>

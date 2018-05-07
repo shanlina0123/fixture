@@ -12,6 +12,7 @@
 */
 //PC端服务路由
 Route::group(['namespace' => 'Server'], function () {
+    Route::get('/', 'IndexController@index')->name('index'); //入口
     Route::match(['get', 'post'], 'register', 'RegisterController@register')->name('register');//注册页面
     Route::match(['get', 'post'], 'login', 'LoginController@login')->name('login');//登录
     Route::get('signout', 'LoginController@signOut')->name('signout');//登出

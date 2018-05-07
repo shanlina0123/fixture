@@ -1,28 +1,46 @@
 <!DOCTYPE html>
-<html>
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7">
+<![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8">
+<![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9">
+<![endif]-->
+<!--[if gt IE 8]>
+<!-->
+<html class="no-js">
+<!--<![endif]-->
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>@yield('title')</title>
-    <meta name="renderer" content="webkit">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta http-equiv="Access-Control-Allow-Origin" content="*">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="format-detection" content="telephone=no">
+    <link rel="icon" href="../../images/icon.ico">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="icon" href="favicon.ico">
-    <link rel="stylesheet" href="{{asset('plugins/layui/css/layui.css')}}" media="all" />
-    <link rel="stylesheet" href="{{asset('css/server/font.css')}}" media="all" />
-    <link rel="stylesheet" href="{{asset('css/server/page.css')}}" media="all" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--css-->
+    <link rel="stylesheet" href="{{asset('server/css/common.css')}}">
+    <link rel="stylesheet" href="{{asset('server/plugins/layui/css/layui.css')}}">
+    <link rel="stylesheet" href="{{asset('server/css/base.css')}}">
     @yield('css')
 </head>
-<body class="childrenBody">
-    @yield('content')
-</div>
-<script src="{{asset('js/public/jquery.js')}}"></script>
-<script type="text/javascript" src="{{asset('js/server/public.js')}}"></script>
-<script type="text/javascript" src="{{asset('plugins/layui2.5/layui.all.js')}}"></script>
-@yield('js')
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <!--顶部导航-->
+        <div class="layui-header" id="header">
+            @include('server.public.top')
+        </div>
+        <!--左侧导航-->
+        <div class="layui-side layui-bg-black" id="left">
+            @include('server.public.left')
+        </div>
+        <div class="layui-body">
+            @yield('content')
+        </div>
+    </div>
 </body>
+<script type="text/javascript" src=="{{asset('server/plugins/layui/layui.js')}}"></script>
+<script type="text/javascript" src="{{asset('server/plugins/jquery/jquery-2.1.4.min.js')}}"></script>
+@yield('js')
 </html>

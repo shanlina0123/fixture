@@ -1,8 +1,6 @@
 @extends('server.layout.content')
-@section('css')
-@stop
 @section('content')
-    我是首页
-@stop
-@section('js')
-@stop
+    <div class="main">
+        这里是一张图
+    </div>
+@endsection
