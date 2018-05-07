@@ -302,4 +302,64 @@ class SiteController extends StoreBaseController
             responseData(\StatusCode::ERROR,'修改失败',$res);
         }
     }
+
+    /**
+     * 工地详情
+     */
+    public function siteInfo()
+    {
+        $data = trimValue( $this->request->all() );
+        $validator = Validator::make(
+            $data,
+            [
+                'id'=>'bail|required|numeric',
+                'companyid'=>'bail|required|numeric',//公司
+                'storeid'=>'bail|required|numeric',//门店
+            ],[
+                'id.required'=>'ID不能为空',
+                'id.numeric'=>'ID数据类型不正确',
+                'companyid.required'=>'公司信息未获取到',
+                'companyid.numeric'=>'公司信息数据类型不正确',
+                'storeid.numeric'=>'门店信息数据类型不正确',
+                'storeid.required'=>'门店信息未获取到',
+            ]
+        );
+        if ($validator->fails())
+        {
+            $messages = $validator->errors()->first();
+            responseData(\StatusCode::CHECK_FORM,'验证失败','',$messages);
+        }
+        $res = $this->site->siteInfo( $data );
+        responseData(\StatusCode::SUCCESS,'工地详情',$res);
+    }
+
+    /**
+     * 详情动态
+     */
+    public function siteDynamic()
+    {
+        $data = trimValue( $this->request->all() );
+        $validator = Validator::make(
+            $data,
+            [
+                'id'=>'bail|required|numeric',
+                'companyid'=>'bail|required|numeric',//公司
+                'storeid'=>'bail|required|numeric',//门店
+            ],[
+                'id.required'=>'ID不能为空',
+                'id.numeric'=>'ID数据类型不正确',
+                'companyid.required'=>'公司信息未获取到',
+                'companyid.numeric'=>'公司信息数据类型不正确',
+                'storeid.numeric'=>'门店信息数据类型不正确',
+                'storeid.required'=>'门店信息未获取到',
+            ]
+        );
+        if ($validator->fails())
+        {
+            $messages = $validator->errors()->first();
+            responseData(\StatusCode::CHECK_FORM,'验证失败','',$messages);
+        }
+        $res = $this->site->siteDynamic( $data );
+        responseData(\StatusCode::SUCCESS,'工地详情动态',$res);
+    }
 }

@@ -9,10 +9,12 @@
 namespace App\Http\Business\Store;
 use App\Http\Business\Common\StoreBase;
 use App\Http\Model\Company\CompanyStageTemplate;
+use App\Http\Model\Company\CompanyStageTemplateTag;
 use App\Http\Model\Data\RenovationMode;
 use App\Http\Model\Data\RoomStyle;
 use App\Http\Model\Data\RoomType;
 use App\Http\Model\Data\StageTemplate;
+use App\Http\Model\Data\StageTemplateTag;
 use App\Http\Model\Dynamic\Dynamic;
 use App\Http\Model\Dynamic\DynamicComment;
 use App\Http\Model\Dynamic\DynamicImages;
@@ -356,4 +358,75 @@ class SiteBusiness extends StoreBase
         return $upload->uploadProductImage( $uuid, $name, 'site_info' );
     }
 
+
+    /**
+     * @param $data
+     * 工地详情
+     */
+    public function siteInfo( $data )
+    {
+        $sWhere['companyid'] = $data['companyid'];
+        $sWhere['storeid'] = $data['storeid'];
+        $sWhere['id'] = $data['id'];
+        $res =  Site::where( $sWhere )->orderBy('id','desc')->with(
+            [
+                'siteToRenovationMode'=>function( $query ){ //装修方式
+                    $query->select('id','name');
+                },
+                'siteToRoomType'=>function( $query ){
+                    $query->select('id','name');//户型
+                },
+                'siteToRoomStyle'=>function( $query ){//风格
+                    $query->select('id','name');
+                },'siteToFolloWrecord'=>function( $query )//观光团
+                {
+                    $query->select('id','siteid','followuserid')->with('followToOuristparty');
+                }
+            ]
+        )->first();
+        if( $res->isdefaulttemplate )
+        {
+            //系统模板
+            $res->tag = StageTemplateTag::orderBy('sort','asc')->where('stagetemplateid',$res->stagetemplateid)->select('stagetemplateid','id','name')->get();
+        }else
+        {
+            //公司模板
+            $res->tag = CompanyStageTemplateTag::orderBy('sort','asc')->where(['stagetemplateid'=>$res->stagetemplateid,'companyid'=>$res->companyid])->get();
+        }
+        //动态
+       /* $comment = Dynamic::where(['companyid'=>$res->companyid,'storeid'=>$res->storeid,'sitetid'=>$res->id,'type'=>0])->with(
+            [
+                'dynamicToFollo'=>function( $query )
+                {
+                     $query->orderBy('id','desc')->select('dynamicid','content');
+                },'dynamicToImages'=>function( $query )
+                {
+                     $query->orderBy('id','desc')->select('dynamicid','ossurl','type');
+                }
+        ])->paginate(config('configure.sPage'));;*/
+        //$res->comment = $comment;
+        return $res;
+    }
+
+
+    /**
+     * @param $data
+     * @return mixed
+     * 工地详情动态
+     */
+    public function siteDynamic( $data )
+    {
+        //动态
+        $comment = Dynamic::where(['companyid'=>$data['companyid'],'storeid'=>$data['storeid'],'sitetid'=>$data['id'],'type'=>0])->with(
+            [
+                'dynamicToFollo'=>function( $query )
+                {
+                    $query->orderBy('id','desc')->select('dynamicid','content');
+                },'dynamicToImages'=>function( $query )
+            {
+                $query->orderBy('id','desc')->select('dynamicid','ossurl','type');
+            }
+            ])->paginate(config('configure.sPage'));
+        return $comment;
+    }
 }
