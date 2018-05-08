@@ -1,10 +1,26 @@
+.indexBg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: url(../images/indexBg.jpg) center center no-repeat;
+}
+.loginBg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: url(../images/loginBg.png) center center no-repeat;
+}
 .loginWrap {
   position: absolute;
   width: 500px;
-  height: 360px;
+  height: 370px;
   top: 50%;
   left: 50%;
-  margin-top: -180px;
+  margin-top: -185px;
   margin-left: -250px;
   padding: 20px 10px;
   background-color: #fff;
@@ -13,7 +29,7 @@
 .loginLogo {
   width: 150px;
   display: block;
-  margin: 0 auto 10px auto;
+  margin: 0 auto;
 }
 .loginInner .layui-tab-title li {
   width: 220px;
@@ -73,11 +89,18 @@
   min-width: 200px;
   margin-left: 10px;
 }
+.errorWrap {
+  position: relative;
+  height: 20px;
+}
 .loginError {
   position: absolute;
   width: 100%;
   text-align: center;
   margin: 10px 0;
+  right: auto;
+  top: 0;
+  line-height: 20px;
   color: #FF5722;
 }
 .loginError i {
@@ -85,7 +108,7 @@
 }
 .loginContent,
 .changeForm {
-  margin-top: 30px;
+  margin-top: 20px;
 }
 .changepWrap {
   max-width: 600px;

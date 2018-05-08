@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{{pix_asset('server/plugins/layui/css/layui.css?v=').config('configure.cssVersion')}}">
     <link rel="stylesheet" href="{{pix_asset('server/css/base.css?v=').config('configure.cssVersion')}}">
     <link rel="stylesheet" href="{{pix_asset('server/css/login.css?v=').config('configure.cssVersion')}}">
+    <script type="text/javascript" src="{{pix_asset('server/plugins/jquery/jquery-2.1.4.min.js')}}"></script>
 </head>
 <body>
 <!--[if lt IE 7]>
@@ -27,14 +28,23 @@
                         <li class="layui-this">密码登录</li>
                         <li>手机号登录</li>
                     </ul>
-                    <div class="Validform_checktip"><i class="layui-icon" style=" color: #FF5722">&#x1007;</i><span></span></div>
+                    <div class="errorWrap">
+                        <div class="loginError">
+                           <span>{{session('msg')}}</span>
+                            @if ($errors->any())
+                                @foreach ($errors->all() as $error)
+                                    <span>{{$error}}</span>
+                                @endforeach
+                            @endif
+                        </div>
+                    </div>
                     <div class="layui-tab-content loginContent">
                         <!--账号密码登录-->
                         <div class="layui-tab-item layui-show">
                                 <form class="form1 layui-form" method="post" action="{{route('login')}}">
                                     {{csrf_field()}}
                                 <div class="layui-form-item">
-                                    <input type="text" class="layui-input" name="username" datatype="m"  nullmsg="请输入手机号码" errormsg="手机号码有误" autocomplete="off">
+                                    <input type="text" class="layui-input" name="username" datatype="*3-20"  nullmsg="请输入手机号码或者用户名" errormsg="手机号码或者用户名不正确" autocomplete="off">
                                 </div>
                                 <div class="layui-form-item">
                                     <input type="hidden" name="logintype" value="1"/>
@@ -78,7 +88,6 @@
     </div>
 </div>
 <script type="text/javascript" src="{{pix_asset('server/plugins/layui/layui.js')}}"></script>
-<script type="text/javascript" src="{{pix_asset('server/plugins/jquery/jquery-2.1.4.min.js')}}"></script>
 <script type="text/javascript" src="{{pix_asset('server/plugins/validform/Validform_v5.3.2_min.js')}}"></script>
 <script type="text/javascript" src="{{pix_asset('server/js/login/login.js?v=').config('configure.jsVersion')}}"></script>
 </body>

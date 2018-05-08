@@ -114,10 +114,6 @@ a:focus {
 .layui-layout-admin .layui-body {
   bottom: 0;
 }
-.layui-nav-tree .layui-nav-child,
-.layui-nav-child {
-  display: block;
-}
 .pageTitle {
   font-size: 18px;
   padding: 10px 0;
@@ -155,7 +151,6 @@ a:focus {
   display: none;
 }
 .Validform_error {
-  display: none;
   position: absolute;
   right: -80px;
   top: 0;

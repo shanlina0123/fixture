@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="{{pix_asset('server/css/common.css?v=').config('configure.cssVersion')}}">
     <link rel="stylesheet" href="{{pix_asset('server/plugins/layui/css/layui.css')}}">
     <link rel="stylesheet" href="{{pix_asset('server/css/base.css?v=').config('configure.cssVersion')}}">
+    <script type="text/javascript" src="{{pix_asset('server/plugins/jquery/jquery-2.1.4.min.js')}}"></script>
     @yield('css')
 </head>
 <body class="layui-layout-body">
@@ -41,6 +42,6 @@
     </div>
 </body>
 <script type="text/javascript" src="{{pix_asset('server/plugins/layui/layui.js')}}"></script>
-<script type="text/javascript" src="{{pix_asset('server/plugins/jquery/jquery-2.1.4.min.js')}}"></script>
+<script type="text/javascript" src="{{pix_asset('server/js/common/common.js?v=').config('configure.jsVersion')}}"></script>
 @yield('js')
 </html>
