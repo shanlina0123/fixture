@@ -30,7 +30,11 @@ class RolesController extends ServerBaseController
      */
     public function index()
     {
-        $list = $this->roles_business->index();
+        //获取请求页码
+        $page=$this->request->input("page");
+        //用户信息
+        $user=getUserInfo();
+        $list = $this->roles_business->index($user->companyid,$user->cityid,$user->storeid,$user->islook,$page);
         return view('server.roles.index',compact('list'));
 
     }

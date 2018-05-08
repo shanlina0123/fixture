@@ -166,3 +166,12 @@ function pix_asset($path,$versionFlag = true,$secure=null)
         $path.="?v=".config('configure.cssVersion');
     return asset($path, $secure,null);
 }
+
+/***
+ * 获取登录用户信息
+ * @return \Illuminate\Session\SessionManager|\Illuminate\Session\Store|mixed
+ */
+function getUserInfo()
+{
+   return   session('userInfo');
+}
