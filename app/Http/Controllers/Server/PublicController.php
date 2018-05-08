@@ -1,10 +1,21 @@
 <?php
 namespace App\Http\Controllers\Server;
+use App\Http\Business\Server\PublicBusiness;
 use App\Http\Controllers\Common\ServerBaseController;
 use Illuminate\Http\Request;
 
 class PublicController extends ServerBaseController
 {
+    /**
+     * The user repository instance.
+     */
+    protected $public_business;
+    protected $request;
+    public function __construct(Request $request)
+    {
+        $this->public_business =  new PublicBusiness($request);
+        $this->request = $request;
+    }
 
     /**
      * 上传图片到本地临时目录
@@ -48,5 +59,20 @@ class PublicController extends ServerBaseController
         {
             return response()->json('', 200);
         }
+    }
+
+
+    /***
+     * 获取菜单
+     */
+    public  function  getMenu()
+    {
+        //获取用户信息
+        $admin_user=$this->request->get("admin_user");//对象
+
+        //获取业务数据
+        $list=$this->public_business->getMenu($admin_user->id,$admin_user->roleFunids);
+        //接口返回结果
+        responseData(\StatusCode::SUCCESS,"获取成功",$list);
     }
 }
