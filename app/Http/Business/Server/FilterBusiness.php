@@ -8,6 +8,7 @@
 
 namespace App\Http\Business\Server;
 use App\Http\Business\Common\ServerBase;
+use App\Http\Model\Store\Store;
 
 class FilterBusiness extends ServerBase
 {
@@ -18,6 +19,9 @@ class FilterBusiness extends ServerBase
      */
     public function getStoreList()
     {
+      
+      $res = Store::where()->select();
+      dd($res);
       return true;
     }
 

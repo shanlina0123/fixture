@@ -80,6 +80,6 @@
 <script type="text/javascript" src="{{pix_asset('server/plugins/layui/layui.js')}}"></script>
 <script type="text/javascript" src="{{pix_asset('server/plugins/jquery/jquery-2.1.4.min.js')}}"></script>
 <script type="text/javascript" src="{{pix_asset('server/plugins/validform/Validform_v5.3.2_min.js')}}"></script>
-<script type="text/javascript" src="{{pix_asset('server/js/login/login.js?v=').config('configure.jsVersion')}}"></script>
+<script type="text/javascript" src="{{pix_asset('server/js/login/login.js')}}"></script>
 </body>
 </html>
