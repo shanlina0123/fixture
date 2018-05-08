@@ -56,4 +56,32 @@ class Site extends Model
     {
         return $this->hasMany('App\Http\Model\Site\SiteFollowrecord','siteid','id');
     }
+
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * 关联装修方式
+     */
+    public function siteToRenovationMode()
+    {
+        return $this->belongsTo('App\Http\Model\Data\RenovationMode','renovationmodeid','id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * 关联户型
+     */
+    public function siteToRoomType()
+    {
+        return $this->belongsTo('App\Http\Model\Data\RoomType','roomtypeid','id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * 关联风格
+     */
+    public function siteToRoomStyle()
+    {
+        return $this->belongsTo('App\Http\Model\Data\RoomStyle','roomstyleid','id');
+    }
 }

@@ -31,6 +31,8 @@ Route::group(['namespace' => 'Store'], function () {
     Route::put('site/is-finish', 'SiteController@isFinish');//工地是否完工
     Route::post('site/edit', 'SiteController@siteEdit');//工地修改数据
     Route::put('site/update', 'SiteController@siteUpdate');//工地修改数据
+    Route::get('site/info', 'SiteController@siteInfo');//工地详情
+    Route::get('site/dynamic', 'SiteController@siteDynamic');//工地详情动态
 
     //门店
     Route::post('store/store-list', 'StoreController@storeList');//门店列表

@@ -9,5 +9,14 @@ class SiteFollowrecord extends Model
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
     protected $table = 'site_followrecord';
-    public $timestamps = true;
+
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * 观光团
+     */
+    public function followToOuristparty()
+    {
+        return $this->belongsTo('App\Http\Model\Ouristparty\Ouristparty','followuserid','id');
+    }
 }

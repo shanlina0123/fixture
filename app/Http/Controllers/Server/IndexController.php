@@ -12,7 +12,7 @@ class IndexController extends ServerBaseController
      */
     public function index()
     {
-        return view('server.index');
+        return view('server.index.index');
     }
 
     /**

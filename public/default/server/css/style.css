@@ -1,0 +1,134 @@
+.popWrap {
+  display: none;
+  width: 400px;
+  margin: 60px auto 20px auto;
+}
+.popWrap .popSubmitBtn {
+  text-align: center;
+  padding-top: 5px;
+}
+.centerBtnWrap {
+  padding: 20px 0;
+}
+.notice {
+  font-size: 18px;
+}
+.describe {
+  font-size: 16px;
+  text-align: center;
+  padding-bottom: 10px;
+}
+.hisMsgUl {
+  margin: 20px 0;
+  font-size: 14px;
+}
+.hisMsgUl li {
+  margin-bottom: 15px;
+}
+.hisMsgUl .userLogo {
+  width: 40px;
+}
+.hisMsgUl .userLogo img {
+  border-radius: 50%;
+}
+.hisMsgUl .rightMsg {
+  margin-left: 10px;
+  width: 95%;
+}
+.hisMsgUl .rightMsg > div {
+  line-height: 20px;
+}
+.clientPop {
+  display: none;
+  width: 500px;
+  margin: 20px auto;
+}
+.logText {
+  font-size: 16px;
+  padding: 10px 0;
+}
+.logUl li {
+  border: 1px solid #eee;
+  padding: 10px;
+  margin-bottom: 15px;
+}
+.logUl .backMsg {
+  padding: 10px 0;
+}
+.editRoleWrap {
+  min-width: 900px;
+}
+.powerListUl > li {
+  border: 1px solid #eee;
+  padding: 10px;
+  margin-bottom: 15px;
+}
+.powerListUl .basePower {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+.powerListUl .powerName {
+  font-size: 14px;
+  padding-bottom: 5px;
+}
+.powerListUl .otherPower {
+  padding-top: 10px;
+}
+.powerListUl .subPower {
+  padding-left: 15px;
+}
+.projectWrap {
+  padding: 10px 0 20px 0;
+  font-size: 14px;
+}
+.projectWrap > a {
+  margin-left: 30px;
+  color: #1E9FFF;
+}
+.projectWrap > a:hover {
+  opacity: 0.8;
+}
+.popModel {
+  width: 500px;
+  margin: 50px auto 20px auto;
+}
+.newModelWrap {
+  text-align: center;
+}
+.proDetailWrap {
+  width: 750px;
+  margin: 0 auto;
+}
+.formTab {
+  max-width: 750px;
+}
+.formInner {
+  max-width: 640px;
+}
+.uploadImgWrap {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border: 1px solid #eee;
+  cursor: pointer;
+}
+.uploadImgWrap .uploadBtn {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 80px;
+  height: 80px;
+  z-index: 20;
+  background: none;
+}
+.uploadImgWrap .imgHome {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 80px;
+  height: 80px;
+  z-index: 10;
+}
+.editBtns {
+  width: 100px;
+}

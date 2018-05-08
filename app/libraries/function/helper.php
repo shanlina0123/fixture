@@ -152,3 +152,15 @@ function responseData( $status="", $messages="", $data="", $errorparam="" )
     echo json_encode($res);
     die;
 }
+
+/**
+ * @param $path
+ * @param null $secure
+ * @return string
+ * 给css加默认前缀
+ */
+function pix_asset($path,$secure = null)
+{
+    $path = config('configure.pix_asset').$path;
+    return asset($path, $secure);
+}
