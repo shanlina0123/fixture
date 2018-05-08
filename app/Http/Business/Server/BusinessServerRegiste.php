@@ -26,9 +26,11 @@ class BusinessServerRegiste extends ServerBase
          $res = new User();
          $res->uuid = create_uuid();
          $res->phone = $data['phone'];
+         $res->username = 'yyz_'.substr($data['phone'],7,4);
          $res->password = optimizedSaltPwd($data['password'],config('configure.salt'));
-         $res->isadmin = 2;
-         $res->isblankout = 1;
+         $res->isadmin = 1;
+         $res->isadminafter = 1;
+         $res->type = 0;
          $res->status = 1;
          if( $res->save() )
          {

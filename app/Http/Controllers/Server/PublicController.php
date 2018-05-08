@@ -51,7 +51,7 @@ class PublicController extends ServerBaseController
         $keyword = $request->input('keyword');
         if( $keyword )
         {
-            $url = 'https://apis.map.qq.com/ws/place/v1/suggestion/?keyword='.$keyword.'&key=N6LBZ-XRSWP-NM5DY-LW7S6-GCKO7-WBFF7';
+            $url = 'https://apis.map.qq.com/ws/place/v1/suggestion/?filter%3Dcategory%3D%E5%B0%8F%E5%8C%BA&keyword='.$keyword.'&key=N6LBZ-XRSWP-NM5DY-LW7S6-GCKO7-WBFF7';
             $data = file_get_contents($url);
             return $data;
 

@@ -21,7 +21,6 @@ Route::group(['namespace' => 'Server'], function () {
         Route::match(['get', 'post'], 'company/setting', 'CompanyController@companySetting')->name('company-setting');  //公司信息设置
         //中间件权限认证路由
         Route::group(['middleware' => ['checkAuth']], function () {
-            Route::get('index', 'IndexController@indexContent')->name('content');   //右侧主页
             Route::any('upload-temp-img', 'PublicController@uploadImgToTemp');   //上传图片
             Route::resource('site', 'SiteController');//工地管理
             Route::post('site/template-tag', 'SiteController@templateTag')->name('site-template-tag');

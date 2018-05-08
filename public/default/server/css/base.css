@@ -157,6 +157,10 @@ a:focus {
   line-height: 38px;
   color: #FF5722;
 }*/
+
+.Validform_wrong{
+
+}
 .Validform_error i {
   vertical-align: middle;
 }

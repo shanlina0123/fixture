@@ -29,22 +29,65 @@ class SiteBusiness extends ServerBase
      * @param $data
      * 工地列表
      */
-    public function getSiteList( $request, $user )
+    public function getSiteList( $where, $user )
     {
-       // Cache::flush();
+        Cache::flush();
         $tag = 'site'.$user->companyid;
-        $where = $tag.$user->storeid.$request->input('page');
-        $value = Cache::tags($tag)->remember( $tag.$where,config('configure.sCache'), function() use( $user, $request ){
+        $tags = $user->roleid.$where['page'].$where['name'].$where['isopen'].$where['storeid'];
+        $tags = base64_encode($tags);
+        $value = Cache::tags($tag)->remember( $tags,config('configure.sCache'), function() use( $user,$where ){
             //网站管理员
-            if( $user->isadmin == 2 )
+            if( $user->isadmin == 1 )
             {
                 $sWhere['companyid'] =  $user->companyid;
             }else
             {
-                $sWhere['companyid'] =  $user->companyid;
-                $sWhere['storeid'] =  $user->storeid;
+                //检测权限
+                if( !empty($user->islook) )
+                {
+                    //存在
+                    switch ( (int)$user->islook )
+                    {
+                        case 1://全部
+                            $sWhere['companyid'] =  $user->companyid;
+                            break;
+                        case 2://城市
+                            $sWhere['companyid'] =  $user->companyid;
+                            $sWhere['cityid'] =  $user->cityid;
+                            break;
+                        case 3://门店
+                            $sWhere['companyid'] =  $user->companyid;
+                            $sWhere['storeid'] =  $user->storeid;
+                            break;
+                        default://默认
+                            $sWhere['companyid'] =  $user->companyid;
+                            $sWhere['storeid'] =  $user->storeid;
+                            break;
+                    }
+                }else
+                {
+                    //不存在
+                    $sWhere['companyid'] =  $user->companyid;
+                    $sWhere['storeid'] =  $user->storeid;
+                }
             }
-            return Site::where( $sWhere )->orderBy('id','desc')->with('siteToStore','siteToDataTag','siteToCommpanyTag')->paginate(config('configure.sPage'));
+            //展示状态
+            if( $where['isopen'] != '' )
+            {
+                $sWhere['isopen'] = $where['isopen'];
+            }
+            $sql = Site::where( $sWhere )->orderBy('id','desc')->with('siteToStore','siteToDataTag','siteToCommpanyTag');
+            //名称搜索
+            if( $where['name'] )
+            {
+                $sql->where('name','like',"%{$where['name']}%");
+            }
+            //店铺
+            if( $where['storeid'] )
+            {
+                $sql->where('storeid',$where['storeid']);
+            }
+            return $sql->paginate(config('configure.sPage'));
         });
         return $value;
     }
@@ -190,7 +233,8 @@ class SiteBusiness extends ServerBase
             $site->uuid = $uuid;
             $site->companyid = $data['companyid'];
             $site->storeid = $data['storeid'];
-            $site->stageid = $data['stagetagid'];
+            $site->cityid = $data['cityid'];
+            $site->stageid = $data['stageid'];
             $site->stagetemplateid = $data['stagetemplateid'];
             $site->isdefaulttemplate = $data['isdefaulttemplate'];
             $site->roomtypeid = $data['roomtypeid'];
@@ -200,6 +244,8 @@ class SiteBusiness extends ServerBase
             //$obj->housename = $data['housename'];
             $site->name = $data['name'];
             $site->addr = $data['addr'];
+            $site->lng = $data['lng'];
+            $site->lat = $data['lat'];
             $site->doornumber = $data['doornumber'];
             $site->acreage = $data['acreage'];
             $site->roomshap = $data['room'].'室'.$data['office'].'厅'.$data['kitchen'].'厨'.$data['wei'].'卫';
@@ -225,7 +271,7 @@ class SiteBusiness extends ServerBase
             $progress->uuid = create_uuid();
             $progress->dynamicid = $dynamic->id;
             $progress->siteid = $site->id;
-            $progress->stagetagid = $data['stagetagid'];
+            $progress->stagetagid = $data['stageid'];
             $progress->isstagedefault = $data['isdefaulttemplate'];
             $progress->tablesign = 1;
             $progress->stageuserid = $data['createuserid'];

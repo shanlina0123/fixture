@@ -33,8 +33,13 @@ class SiteController extends ServerBaseController
      */
     public function index( Request $request )
     {
-        $data = $this->site->getSiteList( $request, $this->userInfo );
-        return view('server.site.index',compact('data'));
+        $parameter = ParameterFiltering($request->all());
+        $where['name'] = array_has($parameter,'name')?$parameter['name']:'';
+        $where['isopen'] = array_has($parameter,'isopen')?$parameter['isopen']:'';
+        $where['storeid'] = array_has($parameter,'storeid')?$parameter['storeid']:'';
+        $where['page'] = array_has($parameter,'page')?$parameter['page']:1;
+        $data = $this->site->getSiteList( $where, $this->userInfo );
+        return view('server.site.index',compact('data','where'));
     }
 
     /**
@@ -71,25 +76,45 @@ class SiteController extends ServerBaseController
     public function store(Request $request)
     {
         //表单验证
-        $request->validate([
-            'stagetagid'=>'required|numeric',
-            'stagetemplateid'=>'required|numeric',
-            'isdefaulttemplate'=>'required|numeric|max:1',
-            'roomtypeid'=>'required|numeric',
-            'roomstyleid'=>'required|numeric',
-            'renovationmodeid'=>'required|numeric',
-            'budget'=>'required|numeric',
-            'name'=>'required|string',
-            'addr'=>'required|string',
-            'doornumber'=>'required|string',
-            'acreage'=>'required',
-            'room'=>'required|numeric',
-            'office'=>'required|numeric',
-            'kitchen'=>'required|numeric',
-            'wei'=>'required|numeric',
-        ]);
+        $request->validate(
+            [
+                'storeid'=>'bail|required|numeric',//门店
+                'name'=>'bail|required|max:20',//项目名称
+                'stageid'=>'bail|required|numeric',//阶段id
+                'addr'=>'bail|required|max:255',//地址
+                'lng'=>'bail|present',//经度
+                'lat'=>'bail|present',//维度
+                'doornumber'=>'bail|present|max:100',//门牌
+                'roomtypeid'=>'required|numeric',//户型
+                'room'=>'bail|required|numeric',//房型
+                'office'=>'bail|required|numeric',//房型
+                'kitchen'=>'bail|required|numeric',//房型
+                'wei'=>'bail|required|numeric',//房型
+                'acreage'=>'required',//面积
+                'roomstyleid'=>'bail|required|numeric',//风格
+                'renovationmodeid'=>'bail|required|numeric',//方式
+                'budget'=>'bail|present',//预算
+                'photo'=>'bail|present',//图片
+
+            ],[
+                'storeid.numeric'=>'门店信息数据类型不正确',
+                'storeid.required'=>'门店信息未获取到',
+                'addr.required'=>'请填写地址',
+                'name.required'=>'项目名称不能为空',
+                'name.max'=>'项目名称最大长度为20个字符',
+                'doornumber.max'=>'门牌名称最大长度为100个字符',
+                'stageid.required'=>'请选择阶段',
+                'stageid.numeric'=>'阶段数据类型不正确',
+                'addr.required'=>'地址不能为空',
+                'roomtypeid.required'=>'请选择户型',
+                'roomstyleid.required'=>'请选择装修风格',
+                'renovationmodeid.required'=>'请选择装修方式',
+                'budget.numeric'=>'预算数据类型不正确',
+            ]
+        );
         $data = trimValue($request->all());
         $data['companyid'] = session('userInfo')->companyid;
+        $data['cityid'] = session('userInfo')->cityid;
         $data['createuserid'] = session('userInfo')['id'];
         $res = $this->site->siteSave( $data );
         if( $res == true )
