@@ -159,8 +159,10 @@ function responseData( $status="", $messages="", $data="", $errorparam="" )
  * @return string
  * 给css加默认前缀
  */
-function pix_asset($path,$secure = null)
+function pix_asset($path,$versionFlag = true,$secure=null)
 {
     $path = config('configure.pix_asset').$path;
-    return asset($path, $secure);
+    if($versionFlag)
+        $path.="?v=".config('configure.cssVersion');
+    return asset($path, $secure,null);
 }
