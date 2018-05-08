@@ -17,20 +17,31 @@ class BusinessServerLogin extends ServerBase
      * @param $data
      * 验证登陆
      */
-    public function checkUser( $data )
+    public function checkUser( $where )
     {
-         $username = $data['username'];
-         $where['phone'] = $username;
-         $where['password'] = optimizedSaltPwd($data['password'],config('configure.salt'));
-         $where['isblankout'] = 1;
-         $res = User::where($where)->select('id','uuid','companyid','storeid','cityid','phone','nickname','resume','faceimg','isadmin')->first();
+
+         $obj = new \stdClass();
+         $where['password'] = optimizedSaltPwd($where['password'],config('configure.salt'));
+         $where['type'] = 0;
+         $where['isinvitationed'] = 0;
+         $res = User::where($where)->first();
          if( $res )
          {
+             if( $res->status !=1 )
+             {
+                 $obj->status = 0;
+                 $obj->msg = '账号已被禁用';
+                 return $obj;
+             }
              session(['userInfo'=>$res]);
-             return  $res;
+             $obj->status = 1;
+             $obj->msg = '登陆成功';
+             return  $obj;
          }else
          {
-             return false;
+             $obj->status = 0;
+             $obj->msg = '账号密码不正确';
+             return $obj;
          }
     }
 }

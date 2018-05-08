@@ -8,5 +8,8 @@ class User extends Model
     protected $guarded = ['id'];
     protected $table = 'user';
     public $timestamps = true;
+    protected $hidden = [
+        'created_at','updated_at'
+    ];
 }
     

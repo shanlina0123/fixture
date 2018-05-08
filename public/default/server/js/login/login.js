@@ -1,24 +1,24 @@
 layui.use(['element'], function() {
    var element = layui.element;
 });
-
 $(".form1").Validform({
     btnSubmit:'#btn_submit1',
-    //tiptype:1,
     postonce: true,
     showAllError: false,
     tiptype: function (msg, o, cssctl)
     {
         if ( !o.obj.is("form") )
         {
-            if( o.type != 2 )
+            if(  o.type !=2 )
             {
-                var objtip = $(".Validform_checktip");
-                objtip.addClass('Validform_error');
-                objtip.find('span').text(msg);
+                var objtip = o.obj.parents(".layui-tab").find('.loginError');
+                cssctl(objtip, o.type);
+                objtip.text(msg);
             }else
             {
-               // var objtip = o.obj.parents('.p-input').find(".Validform_checktip");
+                var objtip = o.obj.parents(".layui-tab").find('.loginError');
+                cssctl(objtip, o.type);
+                objtip.text('');
             }
         }
     }

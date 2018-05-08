@@ -1,4 +1,4 @@
-<div class="layui-logo"><img src="{{asset('default/server/images/logo.png')}}"></div>
+<div class="layui-logo"><img src="{{asset('default/server/images/topLogo.png')}}"></div>
 <ul class="layui-nav layui-layout-right">
     <li class="layui-nav-item">
         <a href="../users/userCenter.html" title="会员中心"><img src="{{asset('default/server/images/user.png')}}" width="32"></a>
@@ -16,7 +16,7 @@
         <dl class="layui-nav-child">
             <dd><a href="../index/userMessage.html">个人资料</a></dd>
             <dd><a href="../index/changePwd.html">修改密码</a></dd>
-            <dd><a href="../../login.html">退出系统</a></dd>
+            <dd><a href="{{route('signout')}}">退出系统</a></dd>
         </dl>
     </li>
 </ul>

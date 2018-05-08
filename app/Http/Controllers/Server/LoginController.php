@@ -41,7 +41,7 @@ class LoginController extends ServerBaseController
                             'password.min'=>'密码最小为6为字符',
                             'password.max'=>'密码最大为12为字符',
                         ]);
-
+                        $where['phone'] = $data['username'];
                     }else
                     {
                         //用户名称
@@ -56,8 +56,10 @@ class LoginController extends ServerBaseController
                             'password.min'=>'密码最小为6为字符',
                             'password.max'=>'密码最大为12为字符',
                         ]);
+                        $where['username'] = $data['username'];
                     }
-                    $res = $this->user->checkUser($data);
+                    $where['password'] = $data['password'];
+                    $res = $this->user->checkUser($where);
                     break;
                 case 2:
                     //验证码登陆
@@ -74,9 +76,9 @@ class LoginController extends ServerBaseController
                     break;
             }
 
-            if( $res == false )
+            if( $res->status == 0  )
             {
-                return redirect()->route('login')->with('msg','登陆失败');
+                return redirect()->route('login')->with('msg',$res->msg);
             }else
             {
                 return redirect()->route('index');

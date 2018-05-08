@@ -120,6 +120,7 @@
   height: 80px;
   z-index: 20;
   background: none;
+  opacity: 0;
 }
 .uploadImgWrap .imgHome {
   position: absolute;

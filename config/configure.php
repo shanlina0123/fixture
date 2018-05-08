@@ -21,7 +21,7 @@ return [
      * 图片信息
      * ---------------------------
      */
-    "showUploads"=>$_SERVER["REQUEST_SCHEME"]."://".$_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"]."/uploads",//图片预览路径
+   // "showUploads"=>$_SERVER["REQUEST_SCHEME"]."://".$_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"]."/uploads",//图片预览路径
     "uploads"=>"uploads",//图片文件路径
     "temp"=>"/temp/",//图片临时目录
 
@@ -31,6 +31,6 @@ return [
      * ----------------------------
      */
     "pix_asset"=>"default/",//css js 目录
-    "cssVersion"=>"002",//css版本
+    "cssVersion"=>"003",//css版本
     "jsVersion"=>"001",//js版本
 ];
