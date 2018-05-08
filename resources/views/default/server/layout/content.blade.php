@@ -41,7 +41,7 @@
         </div>
     </div>
 </body>
-<script type="text/javascript" src="{{pix_asset('server/plugins/layui/layui.js')}}"></script>
-<script type="text/javascript" src="{{pix_asset('server/js/common/common.js?v=').config('configure.jsVersion')}}"></script>
+<script type="text/javascript" src="{{pix_asset('server/plugins/layui/layui.js',false)}}"></script>
+<script type="text/javascript" src="{{pix_asset('server/js/common/common.js')}}"></script>
 @yield('js')
 </html>
