@@ -24,6 +24,7 @@ class BusinessServerLogin extends ServerBase
          $where['password'] = optimizedSaltPwd($where['password'],config('configure.salt'));
          $where['type'] = 0;
          $where['isinvitationed'] = 0;
+         $where['isadminafter'] = 1;
          $res = User::where($where)->first();
          if( $res )
          {
