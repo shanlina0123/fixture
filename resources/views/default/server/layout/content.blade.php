@@ -20,9 +20,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--css-->
-    <link rel="stylesheet" href="{{asset('default/server/css/common.css')}}">
-    <link rel="stylesheet" href="{{asset('default/server/plugins/layui/css/layui.css')}}">
-    <link rel="stylesheet" href="{{asset('default/server/css/base.css')}}">
+    <link rel="stylesheet" href="{{pix_asset('server/css/common.css')}}">
+    <link rel="stylesheet" href="{{pix_asset('server/plugins/layui/css/layui.css')}}">
+    <link rel="stylesheet" href="{{pix_asset('server/css/base.css')}}">
     @yield('css')
 </head>
 <body class="layui-layout-body">
@@ -40,7 +40,7 @@
         </div>
     </div>
 </body>
-<script type="text/javascript" src=="{{asset('default/server/plugins/layui/layui.js')}}"></script>
-<script type="text/javascript" src="{{asset('default/server/plugins/jquery/jquery-2.1.4.min.js')}}"></script>
+<script type="text/javascript" src="{{pix_asset('server/plugins/layui/layui.js')}}"></script>
+<script type="text/javascript" src="{{pix_asset('server/plugins/jquery/jquery-2.1.4.min.js')}}"></script>
 @yield('js')
 </html>

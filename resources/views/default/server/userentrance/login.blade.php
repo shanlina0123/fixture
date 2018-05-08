@@ -8,10 +8,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--css-->
-    <link rel="stylesheet" href="{{asset('default/server/css/common.css')}}">
-    <link rel="stylesheet" href="{{asset('default/server/plugins/layui/css/layui.css')}}">
-    <link rel="stylesheet" href="{{asset('default/server/css/base.css?v=1')}}">
-    <link rel="stylesheet" href="{{asset('default/server/css/login.css')}}">
+    <link rel="stylesheet" href="{{pix_asset('server/css/common.css')}}">
+    <link rel="stylesheet" href="{{pix_asset('server/plugins/layui/css/layui.css')}}">
+    <link rel="stylesheet" href="{{pix_asset('server/css/base.css?v=1')}}">
+    <link rel="stylesheet" href="{{pix_asset('server/css/login.css')}}">
 </head>
 <body>
 <!--[if lt IE 7]>
@@ -21,7 +21,7 @@
     <div class="loginBg">
         <div class="loginWrap">
             <div class="loginInner">
-                <img src="{{asset('default/server/images/logo.png')}}" class="loginLogo">
+                <img src="{{pix_asset('server/images/logo.png')}}" class="loginLogo">
                 <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
                     <ul class="layui-tab-title">
                         <li class="layui-this">密码登录</li>
@@ -77,9 +77,9 @@
         </div>
     </div>
 </div>
-<script type="text/javascript" src="{{asset('default/server/plugins/layui/layui.js')}}"></script>
-<script type="text/javascript" src="{{asset('default/server/plugins/jquery/jquery-2.1.4.min.js')}}"></script>
-<script type="text/javascript" src="{{asset('default/server/plugins/validform/Validform_v5.3.2_min.js')}}"></script>
-<script type="text/javascript" src="{{asset('default/server/js/login/login.js')}}"></script>
+<script type="text/javascript" src="{{pix_asset('server/plugins/layui/layui.js')}}"></script>
+<script type="text/javascript" src="{{pix_asset('server/plugins/jquery/jquery-2.1.4.min.js')}}"></script>
+<script type="text/javascript" src="{{pix_asset('server/plugins/validform/Validform_v5.3.2_min.js')}}"></script>
+<script type="text/javascript" src="{{pix_asset('server/js/login/login.js')}}"></script>
 </body>
 </html>
