@@ -114,7 +114,10 @@ a:focus {
 .layui-layout-admin .layui-body {
   bottom: 0;
 }
-
+.layui-nav-tree .layui-nav-child,
+.layui-nav-child {
+  display: block;
+}
 .pageTitle {
   font-size: 18px;
   padding: 10px 0;
@@ -148,11 +151,12 @@ a:focus {
 .layui-form-item {
   position: relative;
 }
-/*.Validform_checktip {
+.Validform_checktip {
   display: none;
-}*/
+}
 .Validform_error {
- /* position: absolute;*/
+  display: none;
+  position: absolute;
   right: -80px;
   top: 0;
   line-height: 38px;

@@ -20,9 +20,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--css-->
-    <link rel="stylesheet" href="{{pix_asset('server/css/common.css')}}">
+    <link rel="stylesheet" href="{{pix_asset('server/css/common.css?v=').config('configure.cssVersion')}}">
     <link rel="stylesheet" href="{{pix_asset('server/plugins/layui/css/layui.css')}}">
-    <link rel="stylesheet" href="{{pix_asset('server/css/base.css')}}">
+    <link rel="stylesheet" href="{{pix_asset('server/css/base.css?v=').config('configure.cssVersion')}}">
     @yield('css')
 </head>
 <body class="layui-layout-body">
