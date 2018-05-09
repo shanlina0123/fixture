@@ -1,5 +1,8 @@
 @extends('server.layout.content')
 @section('title','新建')
+@section('css')
+
+@endsection
 @section('content')
     <div class="main">
         <h1 class="pageTitle">新建项目</h1>
@@ -142,9 +145,7 @@
                             <i class="layui-icon"></i>
                             <p>点击上传，或将文件拖拽到此处（工地封面：建议上传效果图）</p>
                         </div>
-                        <div class="layui-inline" >
-                            <img width="258" height="135" id="src">
-                        </div>
+                        <div class="uploadImg layui-inline fl"><img width="258" height="135" id="src"></div>
                         <input type="hidden" name="photo" id="photo">
                     </div>
                     <div class="layui-form-item">
@@ -156,7 +157,6 @@
                     <div class="submitButWrap">
                         <button type="button" class="layui-btn" id="btn_submit">立即提交</button>
                     </div>
-
                     <input type="hidden" name="street" value="">
                     <input type="hidden" name="fulladdr" value="">
                     <input type="hidden" name="lng" value="">

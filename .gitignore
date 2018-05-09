@@ -8,3 +8,5 @@ Homestead.json
 .idea/php.xml
 .idea/modules.xml
 .idea/fixture.iml
+public/temp
+public/uploads

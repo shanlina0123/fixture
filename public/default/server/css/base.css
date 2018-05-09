@@ -156,14 +156,10 @@ a:focus {
   top: 0;
   line-height: 38px;
   color: #FF5722;
-}*/
-
-.Validform_wrong{
-
 }
 .Validform_error i {
   vertical-align: middle;
-}
+}*/
 .forLineheight {
   line-height: 38px;
 }
@@ -173,4 +169,49 @@ a:focus {
   padding: 0 10px;
   margin-right: 5px;
   border: 1px solid #eee;
+}
+.pageWrap {
+  padding: 20px 0;
+  text-align: center;
+}
+.pagination li {
+  display: inline-block;
+  box-sizing: content-box;
+}
+.pagination li.active span {
+  background-color: #009688;
+  color: #fff;
+  border-color: #009688;
+}
+.pagination li a {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 0 15px;
+  height: 28px;
+  line-height: 28px;
+  margin: 0 0 5px 0;
+  background-color: #fff;
+  color: #333;
+  font-size: 14px;
+  box-sizing: content-box;
+  border: 1px solid #e2e2e2;
+}
+.pagination li a:hover,
+.pagination li a:active {
+  background-color: #009688;
+  color: #fff;
+  border-color: #009688;
+}
+.pagination li span {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 0 15px;
+  height: 28px;
+  line-height: 28px;
+  margin: 0 0 5px 0;
+  background-color: #fff;
+  color: #333;
+  font-size: 14px;
+  box-sizing: content-box;
+  border: 1px solid #e2e2e2;
 }

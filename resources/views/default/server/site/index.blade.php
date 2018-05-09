@@ -26,8 +26,9 @@
                     <div class="layui-input-inline">
                         <select name="storeid">
                             <option value="">全部</option>
-                            <option value="1">高新店</option>
-                            <option value="2">曲江店</option>
+                            @foreach( $data->store as $storeRow )
+                            <option value="{{$storeRow->id}}" @if( $where['storeid'] == $storeRow->id) selected @endif >{{$storeRow->name}}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>

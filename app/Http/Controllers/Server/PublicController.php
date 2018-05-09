@@ -28,7 +28,7 @@ class PublicController extends ServerBaseController
         try {
             $res = $request->file('file')->store('temp', 'temp');
             $name = explode('/',$res)[1];
-            $obj->code = 0;
+            $obj->code = 1;
             $obj->msg = '上传成功';
             $src->src = "http://".$_SERVER['HTTP_HOST'].'/temp/'.$name;
             $src->name = $name;

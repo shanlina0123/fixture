@@ -11,6 +11,8 @@ layui.use(['form', 'layer','upload'], function() {
         exts:"jpg|png|jpeg",
         size:5120,
         url: '/upload-temp-img',
+        accept:'images',
+        acceptMime:'image/*',
         before: function(obj)
         {
             layer.load(); //上传loading
@@ -20,13 +22,58 @@ layui.use(['form', 'layer','upload'], function() {
             layer.closeAll('loading'); //关闭loading
             $("#src").attr('src',res.data.src);
             $("#photo").val(res.data.name);
-            console.log(res)
+            //console.log(res)
         },
         error: function(index, upload){
             layer.closeAll('loading'); //关闭loading
         }
     });
 
+    /**
+     * 多图片上传
+     */
+    upload.render({
+        elem: '#updateImg'
+        ,exts:"jpg|png|jpeg"
+        ,url: '/upload-temp-img'
+        ,multiple: true
+        ,accept:'images'
+        ,acceptMime:'image/*'
+        ,number:9
+        ,before: function(obj){
+            //预读本地文件示例，不支持ie8
+            var len = $('#update_img').find("img").length;
+            if( len < 9 )
+            {
+                obj.preview(function(index, file, result){
+                    $('#update_img').append('<img src="'+ result +'" alt="'+ file.name +'" class="layui-upload-img">');
+                });
+            }
+        }
+        ,done: function(res){
+            //上传完毕
+            if( res.code )
+            {
+                var img = $("#img").val();
+                if( img )
+                {
+                    var arr = img.split(",");
+                    if( arr.length < 9 )
+                    {
+                        arr.push(res.data.name);
+                        $("#img").val(arr.join());
+                    }else
+                    {
+                        layer.msg('最多可上传9个哦');
+                    }
+
+                }else
+                {
+                    $("#img").val(res.data.name);
+                }
+            }
+        }
+    });
     form.on('select(stagetemplate)', function(data){
         $("#templateTag").empty();
         $("#templateTag").parents('.layui-form-item').removeClass('layui-hide');
@@ -107,6 +154,7 @@ $.extend($.Datatype, {
     "mj": function (gets, obj, curform, regxp)
     {
         var reg = /^([1-9][0-9]*)+(.[0-9]{1,2})?$/;
+        // ^(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*))$ 
         if ( reg.test(gets) && gets <=50000 && gets >= 1)
         {
             return true;
@@ -154,7 +202,9 @@ $.extend($.Datatype, {
     }
 });
 
-
+/**
+ * 地图检索
+ */
 $("#suggestId").keyup(function () {
     var keyword = $(this).val();
     var url = $(this).data('url');

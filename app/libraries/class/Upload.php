@@ -26,7 +26,7 @@ class Upload
                 case "site_info": //工地封面图片
                     $filePath  = $this->filepath.'/'.'site/'.$uuid.'/info';
                     break;
-                case "site_dynamic": //工地动态图片
+                case "site_dynamic": //工地动态图片 $uuid 动态的id
                     $filePath = $this->filepath.'/'.'site/'.$uuid.'/dynamic';
                     break;
                 case "user"://用户
