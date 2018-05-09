@@ -16,8 +16,12 @@ use App\Http\Model\Data\RoomType;
 use App\Http\Model\Data\StageTemplate;
 use App\Http\Model\Data\StageTemplateTag;
 use App\Http\Model\Dynamic\Dynamic;
+use App\Http\Model\Dynamic\DynamicComment;
 use App\Http\Model\Dynamic\DynamicImages;
+use App\Http\Model\Dynamic\DynamicStatistics;
 use App\Http\Model\Site\Site;
+use App\Http\Model\Site\SiteFollowrecord;
+use App\Http\Model\Site\SiteInvitation;
 use App\Http\Model\Site\SiteStageschedule;
 use App\Http\Model\Store;
 use Illuminate\Support\Facades\Cache;
@@ -449,16 +453,28 @@ class SiteBusiness extends ServerBase
             {
                 return false;
             }
-            //删除动态
-            Dynamic::where(['companyid'=>$companyId,'sitetid'=>$site->id])->delete();
-            //删除进度
-            SiteStageschedule::where(['siteid'=>$site->id])->delete();
+
+            //删除工地动态
+            $dynamic = Dynamic::where(['companyid'=>$site->companyid,'sitetid'=>$site->id])->first();
+            if( $dynamic )
+            {
+                //删除统计
+                DynamicStatistics::where(['siteid'=>$site->id,'dynamicid'=>$dynamic->id])->delete();
+                //删除评论
+                DynamicComment::where(['siteid'=>$site->id,'dynamicid'=>$dynamic->id])->delete();
+                //删除动态图片
+                DynamicImages::where(['dynamicid'=>$dynamic->id])->delete();
+                (new \Upload())->delDir('site', $site->uuid);
+                $dynamic->delete();
+            }
+            //删除工地参与者
+            SiteInvitation::where('siteid',$site->id)->delete();
+            //删除工地阶段记录
+            SiteStageschedule::where('siteid',$site->id)->delete();
+            //删除观光团关注的工地
+            SiteFollowrecord::where('siteid',$site->id)->delete();
+            //删除工地
             $site->delete();
-            //下面删除其他信息
-
-
-
-
             DB::commit();
             return true;
         }catch ( Exception $e )
@@ -557,13 +573,13 @@ class SiteBusiness extends ServerBase
                 $arr = explode(',',$data['img']);
                 foreach ( $arr as $k=>$row )
                 {
-                    $res =  $upload->uploadProductImage( $dynamic->id, $row, 'site_dynamic' );
+                    $res =  $upload->uploadProductImage( $site->uuid, $row, 'site_dynamic' );
                     $img = array();
                     if( $res )
                     {
                         //写入数据库
                         $img[$k]['dynamicid'] = $dynamic->id;
-                        $img[$k]['ossurl'] = 'site/'.$dynamic->id.'/dynamic/'.$row;
+                        $img[$k]['ossurl'] = 'site/'.$site->uuid.'/dynamic/'.$row;
                         $img[$k]['type'] = 0;
                         $img[$k]['created_at'] = date("Y-m-d H:i:s");
                     }

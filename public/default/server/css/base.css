@@ -215,3 +215,6 @@ a:focus {
   box-sizing: content-box;
   border: 1px solid #e2e2e2;
 }
+.layui-body{
+  min-widows: 1000px;
+}

@@ -12,7 +12,7 @@
             <dl class="layui-nav-child">
                 <dd><a href="{{route('site.index')}}">项目列表</a></dd>
                 <dd><a href="{{route('site.create')}}">新建项目</a></dd>
-                <dd><a href="../project/modelList.html">阶段模板</a></dd>
+                <dd><a href="{{route('site-template.index')}}">阶段模板</a></dd>
             </dl>
         </li>
         <li class="layui-nav-item">

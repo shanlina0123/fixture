@@ -29,18 +29,10 @@ class SiteTemplateBusiness extends ServerBase
         $tag = 'siteTemplate'.$user->companyid;
         $where = $tag.$request->input('page');
         $value = Cache::tags($tag)->remember( $tag.$where,config('configure.sCache'), function() use( $user, $request ){
-            $data = CompanyStageTemplate::where('companyid',$user->companyid)->with('stageTemplateToTemplateTag')->paginate(config('configure.sPage'));
-            if( count($data) )
-            {
-                $data->default = 0;
-                return $data;
-
-            }else
-            {
-                $data = StageTemplate::where('status',1)->with('stageTemplateToTemplateTag')->paginate(config('configure.sPage'));
-                $data->default = 1;
-                return $data;
-            }
+            $data = new \stdClass();
+            $data->default = StageTemplate::where('status',1)->with('stageTemplateToTemplateTag')->get();
+            $data->definition = CompanyStageTemplate::where('companyid',$user->companyid)->with('stageTemplateToTemplateTag')->paginate(config('configure.sPage'));
+            return $data;
         });
         return $value;
     }
@@ -91,16 +83,17 @@ class SiteTemplateBusiness extends ServerBase
      * @return mixed
      * 修改数据
      */
-    public function editTemplate( $type, $companyId, $id )
+    public function editTemplate( $companyId, $id )
     {
-        if(  $type == 1 )
+        return CompanyStageTemplate::where(['companyid'=>$companyId,'uuid'=>$id])->with('stageTemplateToTemplateTag')->first();
+        /*if(  $type == 1 )
         {
             $data = StageTemplate::where('uuid',$id)->with('stageTemplateToTemplateTag')->first();
         }else
         {
             $data = CompanyStageTemplate::where(['companyid'=>$companyId,'uuid'=>$id])->with('stageTemplateToTemplateTag')->first();
         }
-        return $data;
+        return $data;*/
     }
 
 
@@ -112,69 +105,45 @@ class SiteTemplateBusiness extends ServerBase
      */
     public function updateTemplate( $data, $id )
     {
+        $obj = new \stdClass();
         try{
             DB::beginTransaction();
-            $type = (int)$data['type'];
-            switch ( $type )
+            $res = CompanyStageTemplate::where(['companyid' => $data['companyid'], 'uuid' => $id])->with('stageTemplateToTemplateTag')->first();
+            if ( $res->stageTemplateToSite()->count() )
             {
-                //系统模板
-                case 1:
-                    $template = new CompanyStageTemplate;
-                    $template->uuid = create_uuid();
-                    $template->companyid = $data['companyid'];
-                    $template->name = $data['name'];
-                    $template->isdefault = 0;
-                    $template->created_at = date("Y-m-d H:i:s");
-                    $template->save();
-                    $arr = array();
-                    foreach ($data['tag'] as $k => $row) {
-                        $tag = array();
-                        $tag['uuid'] = create_uuid();
-                        $tag['companyid'] = $data['companyid'];
-                        $tag['stagetemplateid'] = $template->id;
-                        $tag['name'] = $row;
-                        $tag['sort'] = $k;
-                        $tag['created_at'] = date("Y-m-d H:i:s");
-                        $arr[] = $tag;
-                    }
-                    CompanyStageTemplateTag::insert($arr);
-                    DB::commit();
-                    return true;
-                    break;
-                case 0:
-                    $res = CompanyStageTemplate::where(['companyid' => $data['companyid'], 'uuid' => $id])->with('stageTemplateToTemplateTag')->first();
-                    if ($res->stageTemplateToSite()->count())
-                    {
-                        DB::commit();
-                        return false;
-                    }else
-                    {
-                        $res->name = $data['name'];
-                        //删除原来的模板
-                        $res->stageTemplateToTemplateTag()->delete();
-                        //添加新模板
-                        $arr = array();
-                        foreach ($data['tag'] as $k => $row) {
-                            $tag = array();
-                            $tag['uuid'] = create_uuid();
-                            $tag['companyid'] = $data['companyid'];
-                            $tag['stagetemplateid'] = $res->id;
-                            $tag['name'] = $row;
-                            $tag['sort'] = $k;
-                            $tag['created_at'] = date("Y-m-d H:i:s");
-                            $tag['updated_at'] = date("Y-m-d H:i:s");
-                            $arr[] = $tag;
-                        }
-                        CompanyStageTemplateTag::insert($arr);
-                        DB::commit();
-                        return true;
-                    }
-                    break;
+                $obj->ststus = 0;
+                $obj->msg = '模板已被使用不能修改';
+                return $obj;
+            }else
+            {
+                $res->name = $data['name'];
+                //删除原来的模板
+                $res->stageTemplateToTemplateTag()->delete();
+                //添加新模板
+                $arr = array();
+                foreach ($data['tag'] as $k => $row) {
+                    $tag = array();
+                    $tag['uuid'] = create_uuid();
+                    $tag['companyid'] = $data['companyid'];
+                    $tag['stagetemplateid'] = $res->id;
+                    $tag['name'] = $row;
+                    $tag['sort'] = $k;
+                    $tag['created_at'] = date("Y-m-d H:i:s");
+                    $tag['updated_at'] = date("Y-m-d H:i:s");
+                    $arr[] = $tag;
+                }
+                CompanyStageTemplateTag::insert($arr);
+                DB::commit();
+                $obj->ststus = 1;
+                $obj->msg = '模板修改成功';
+                return $obj;
             }
         }catch( Exception $e )
         {
             DB::rollBack();
-            return false;
+            $obj->ststus = 0;
+            $obj->msg = '模板修改失败';
+            return $obj;
         }
     }
     /**
@@ -243,3 +212,62 @@ class SiteTemplateBusiness extends ServerBase
         return $obj;
     }
 }
+
+
+/*$type = (int)$data['type'];
+switch ( $type )
+{
+    //系统模板
+    case 1:
+        $template = new CompanyStageTemplate;
+        $template->uuid = create_uuid();
+        $template->companyid = $data['companyid'];
+        $template->name = $data['name'];
+        $template->isdefault = 0;
+        $template->created_at = date("Y-m-d H:i:s");
+        $template->save();
+        $arr = array();
+        foreach ($data['tag'] as $k => $row) {
+            $tag = array();
+            $tag['uuid'] = create_uuid();
+            $tag['companyid'] = $data['companyid'];
+            $tag['stagetemplateid'] = $template->id;
+            $tag['name'] = $row;
+            $tag['sort'] = $k;
+            $tag['created_at'] = date("Y-m-d H:i:s");
+            $arr[] = $tag;
+        }
+        CompanyStageTemplateTag::insert($arr);
+        DB::commit();
+        return true;
+        break;
+    case 0:
+        $res = CompanyStageTemplate::where(['companyid' => $data['companyid'], 'uuid' => $id])->with('stageTemplateToTemplateTag')->first();
+        if ($res->stageTemplateToSite()->count())
+        {
+            DB::commit();
+            return false;
+        }else
+        {
+            $res->name = $data['name'];
+            //删除原来的模板
+            $res->stageTemplateToTemplateTag()->delete();
+            //添加新模板
+            $arr = array();
+            foreach ($data['tag'] as $k => $row) {
+                $tag = array();
+                $tag['uuid'] = create_uuid();
+                $tag['companyid'] = $data['companyid'];
+                $tag['stagetemplateid'] = $res->id;
+                $tag['name'] = $row;
+                $tag['sort'] = $k;
+                $tag['created_at'] = date("Y-m-d H:i:s");
+                $tag['updated_at'] = date("Y-m-d H:i:s");
+                $arr[] = $tag;
+            }
+            CompanyStageTemplateTag::insert($arr);
+            DB::commit();
+            return true;
+        }
+        break;
+}*/
