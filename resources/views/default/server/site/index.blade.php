@@ -46,7 +46,9 @@
             </form>
         </div>
     </div>
-    <h1 class="pageTitle">项目列表</h1>
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>项目列表</legend>
+    </fieldset>
     <!--列表数据部分-->
     <form class="layui-form">
         <table class="layui-table">

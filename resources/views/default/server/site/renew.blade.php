@@ -1,7 +1,6 @@
 @extends('server.layout.content')
 @section('title','更新')
 @section('css')
-    <link rel="stylesheet" href="{{pix_asset('server/css/login.css')}}">
     <style>
         .layui-upload-img {
             width: 92px;
@@ -12,7 +11,9 @@
 @stop
 @section('content')
 <div class="main">
-    <h1 class="pageTitle">更新项目</h1>
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>更新项目</legend>
+    </fieldset>
     <div class="fullForm">
         <form class="layui-form" id="layui-form" method="post" action="{{route('site-renew',$data->uuid)}}">
             {{csrf_field()}}
@@ -61,7 +62,6 @@
             </div>
             <input type="hidden" id="img" name="img">
         </form>
-        <a href="../users/userCenter.html" class="levelNotice">购买专业版，升级更多直播方式>>></a>
     </div>
 </div>
 <input type="hidden" id="msg" value="{{session('msg')}}">

@@ -5,7 +5,9 @@
 @endsection
 @section('content')
     <div class="main">
-        <h1 class="pageTitle">新建项目</h1>
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>新建项目</legend>
+        </fieldset>
         <div class="fullForm">
             <div class="fullFormInner">
                 <form class="layui-form"  id="layui-form" method="post" action="{{route('site.store')}}">
