@@ -16,7 +16,12 @@ use App\Http\Model\Data\RoomType;
 use App\Http\Model\Data\StageTemplate;
 use App\Http\Model\Data\StageTemplateTag;
 use App\Http\Model\Dynamic\Dynamic;
+use App\Http\Model\Dynamic\DynamicComment;
+use App\Http\Model\Dynamic\DynamicImages;
+use App\Http\Model\Dynamic\DynamicStatistics;
 use App\Http\Model\Site\Site;
+use App\Http\Model\Site\SiteFollowrecord;
+use App\Http\Model\Site\SiteInvitation;
 use App\Http\Model\Site\SiteStageschedule;
 use App\Http\Model\Store;
 use Illuminate\Support\Facades\Cache;
@@ -29,22 +34,65 @@ class SiteBusiness extends ServerBase
      * @param $data
      * 工地列表
      */
-    public function getSiteList( $request, $user )
+    public function getSiteList( $where, $user )
     {
-       // Cache::flush();
+        Cache::flush();
         $tag = 'site'.$user->companyid;
-        $where = $tag.$user->storeid.$request->input('page');
-        $value = Cache::tags($tag)->remember( $tag.$where,config('configure.sCache'), function() use( $user, $request ){
+        $tags = $user->roleid.$where['page'].$where['name'].$where['isopen'].$where['storeid'];
+        $tags = base64_encode($tags);
+        $value = Cache::tags($tag)->remember( $tags,config('configure.sCache'), function() use( $user,$where ){
             //网站管理员
-            if( $user->isadmin == 2 )
+            if( $user->isadmin == 1 )
             {
                 $sWhere['companyid'] =  $user->companyid;
             }else
             {
-                $sWhere['companyid'] =  $user->companyid;
-                $sWhere['storeid'] =  $user->storeid;
+                //检测权限
+                if( !empty($user->islook) )
+                {
+                    //存在
+                    switch ( (int)$user->islook )
+                    {
+                        case 1://全部
+                            $sWhere['companyid'] =  $user->companyid;
+                            break;
+                        case 2://城市
+                            $sWhere['companyid'] =  $user->companyid;
+                            $sWhere['cityid'] =  $user->cityid;
+                            break;
+                        case 3://门店
+                            $sWhere['companyid'] =  $user->companyid;
+                            $sWhere['storeid'] =  $user->storeid;
+                            break;
+                        default://默认
+                            $sWhere['companyid'] =  $user->companyid;
+                            $sWhere['storeid'] =  $user->storeid;
+                            break;
+                    }
+                }else
+                {
+                    //不存在
+                    $sWhere['companyid'] =  $user->companyid;
+                    $sWhere['storeid'] =  $user->storeid;
+                }
             }
-            return Site::where( $sWhere )->orderBy('id','desc')->with('siteToStore','siteToDataTag','siteToCommpanyTag')->paginate(config('configure.sPage'));
+            //展示状态
+            if( $where['isopen'] != '' )
+            {
+                $sWhere['isopen'] = $where['isopen'];
+            }
+            $sql = Site::where( $sWhere )->orderBy('id','desc')->with('siteToStore','siteToDataTag','siteToCommpanyTag');
+            //名称搜索
+            if( $where['name'] )
+            {
+                $sql->where('name','like',"%{$where['name']}%");
+            }
+            //店铺
+            if( $where['storeid'] )
+            {
+                $sql->where('storeid',$where['storeid']);
+            }
+            return $sql->paginate(config('configure.sPage'));
         });
         return $value;
     }
@@ -55,7 +103,7 @@ class SiteBusiness extends ServerBase
     public function getStore( $user )
     {
         //总管理员
-        if( $user->isadmin == 2 )
+        if( $user->isadmin == 1 )
         {
             //查询门店
             if( Cache::get('storeCompany'.$user->companyid) )
@@ -74,7 +122,35 @@ class SiteBusiness extends ServerBase
                 $store =  Cache::get('store'.$user->storeid);
             }else
             {
-                $store = Store::where('id',$user->storeid)->get();
+                //检测权限
+                if( !empty($user->islook) )
+                {
+                    //存在
+                    switch ( (int)$user->islook )
+                    {
+                        case 1://全部
+                            $sWhere['companyid'] =  $user->companyid;
+                            break;
+                        case 2://城市
+                            $sWhere['companyid'] =  $user->companyid;
+                            $sWhere['cityid'] =  $user->cityid;
+                            break;
+                        case 3://门店
+                            $sWhere['companyid'] =  $user->companyid;
+                            $sWhere['storeid'] =  $user->storeid;
+                            break;
+                        default://默认
+                            $sWhere['companyid'] =  $user->companyid;
+                            $sWhere['storeid'] =  $user->storeid;
+                            break;
+                    }
+                }else
+                {
+                    //不存在
+                    $sWhere['companyid'] =  $user->companyid;
+                    $sWhere['storeid'] =  $user->storeid;
+                }
+                $store = Store::where($sWhere)->get();
                 Cache::put('store'.$user->storeid,$store,config('configure.sCache'));
             }
             return $store;
@@ -190,7 +266,8 @@ class SiteBusiness extends ServerBase
             $site->uuid = $uuid;
             $site->companyid = $data['companyid'];
             $site->storeid = $data['storeid'];
-            $site->stageid = $data['stagetagid'];
+            $site->cityid = $data['cityid'];
+            $site->stageid = $data['stageid'];
             $site->stagetemplateid = $data['stagetemplateid'];
             $site->isdefaulttemplate = $data['isdefaulttemplate'];
             $site->roomtypeid = $data['roomtypeid'];
@@ -200,6 +277,8 @@ class SiteBusiness extends ServerBase
             //$obj->housename = $data['housename'];
             $site->name = $data['name'];
             $site->addr = $data['addr'];
+            $site->lng = $data['lng'];
+            $site->lat = $data['lat'];
             $site->doornumber = $data['doornumber'];
             $site->acreage = $data['acreage'];
             $site->roomshap = $data['room'].'室'.$data['office'].'厅'.$data['kitchen'].'厨'.$data['wei'].'卫';
@@ -225,7 +304,7 @@ class SiteBusiness extends ServerBase
             $progress->uuid = create_uuid();
             $progress->dynamicid = $dynamic->id;
             $progress->siteid = $site->id;
-            $progress->stagetagid = $data['stagetagid'];
+            $progress->stagetagid = $data['stageid'];
             $progress->isstagedefault = $data['isdefaulttemplate'];
             $progress->tablesign = 1;
             $progress->stageuserid = $data['createuserid'];
@@ -301,31 +380,43 @@ class SiteBusiness extends ServerBase
      */
     public function siteUpdate( $data, $id )
     {
+
+        $obj = new \stdClass();
         $site = Site::where(['uuid'=>$id,'companyid'=>$data['companyid']])->first();
         if( $site == false )
         {
-            return false;
+            $obj->status = 0;
+            $obj->msg = '未查询到信息';
+            return $obj;
         }
         if( $site->isfinish == 1 )
         {
-            return false;
+            $obj->status = 0;
+            $obj->msg = '已完工不能修改';
+            return $obj;
         }
         if( $data['photo'] )
         {
             $res = $this->toSsoImg($id,$data['photo']);
             if( $res == true )
             {
+                if( $site->explodedossurl )
+                {
+                    //删除原始图片
+                    (new \Upload())->delImg($site->explodedossurl);
+                }
                 $site->explodedossurl = 'site/'.$id.'/info/'.$data['photo'];
             }
         }
-        $site->stageid = $data['stagetagid'];
+        $site->stageid = $data['stageid'];
         $site->roomtypeid = $data['roomtypeid'];
         $site->roomstyleid = $data['roomstyleid'];
         $site->renovationmodeid = $data['renovationmodeid'];
         $site->budget = $data['budget'];
-        //$obj->housename = $data['housename'];
         $site->name = $data['name'];
         $site->addr = $data['addr'];
+        $site->lng = $data['lng'];
+        $site->lat = $data['lat'];
         $site->doornumber = $data['doornumber'];
         $site->acreage = $data['acreage'];
         $site->roomshap = $data['room'].'室'.$data['office'].'厅'.$data['kitchen'].'厨'.$data['wei'].'卫';
@@ -333,8 +424,15 @@ class SiteBusiness extends ServerBase
         $site->isfinish = 0;
         if( $site->save() )
         {
-            return true;
-        }else return false;
+            $obj->status = 1;
+            $obj->msg = '修改成功';
+            return $obj;
+        }else
+        {
+            $obj->status = 0;
+            $obj->msg = '修改失败';
+            return $obj;
+        }
     }
 
 
@@ -355,16 +453,28 @@ class SiteBusiness extends ServerBase
             {
                 return false;
             }
-            //删除动态
-            Dynamic::where(['companyid'=>$companyId,'sitetid'=>$site->id])->delete();
-            //删除进度
-            SiteStageschedule::where(['siteid'=>$site->id])->delete();
+
+            //删除工地动态
+            $dynamic = Dynamic::where(['companyid'=>$site->companyid,'sitetid'=>$site->id])->first();
+            if( $dynamic )
+            {
+                //删除统计
+                DynamicStatistics::where(['siteid'=>$site->id,'dynamicid'=>$dynamic->id])->delete();
+                //删除评论
+                DynamicComment::where(['siteid'=>$site->id,'dynamicid'=>$dynamic->id])->delete();
+                //删除动态图片
+                DynamicImages::where(['dynamicid'=>$dynamic->id])->delete();
+                (new \Upload())->delDir('site', $site->uuid);
+                $dynamic->delete();
+            }
+            //删除工地参与者
+            SiteInvitation::where('siteid',$site->id)->delete();
+            //删除工地阶段记录
+            SiteStageschedule::where('siteid',$site->id)->delete();
+            //删除观光团关注的工地
+            SiteFollowrecord::where('siteid',$site->id)->delete();
+            //删除工地
             $site->delete();
-            //下面删除其他信息
-
-
-
-
             DB::commit();
             return true;
         }catch ( Exception $e )
@@ -384,9 +494,15 @@ class SiteBusiness extends ServerBase
     public function getSiteRenew( $companyId, $uuid )
     {
         $obj = new \stdClass();
-        $site = Site::where(['companyid'=>$companyId,'uuid'=>$uuid])->select('isdefaulttemplate','stagetemplateid','stageid','name')->first();
+        $site = Site::where(['companyid'=>$companyId,'uuid'=>$uuid])->select('isdefaulttemplate','stagetemplateid','stageid','name','isfinish')->first();
         if( $site )
         {
+            if( $site->isfinish == 1 )
+            {
+                $obj->status = 0;
+                $obj->msg = '已完工不能修改';
+                return $obj;
+            }
             if( $site->isdefaulttemplate == 1 )
             {
                 //系统模板
@@ -401,10 +517,14 @@ class SiteBusiness extends ServerBase
             $obj->companyid = $companyId;
             $obj->time = date("Y-m-d H:i:s");
             $obj->name = $site->name;
+            $obj->status = 1;
+            $obj->msg = '更改进度信息';
             return $obj;
         }else
         {
-            return false;
+            $obj->status = 0;
+            $obj->msg = '未查询到信息';
+            return $obj;
         }
     }
 
@@ -419,6 +539,7 @@ class SiteBusiness extends ServerBase
     public function saveSiteRenew( $data, $uuid  )
     {
         try{
+            $obj = new \stdClass();
             DB::beginTransaction();
             $site = Site::where(['companyid'=>$data['companyid'],'uuid'=>$uuid])->first();
             //添加动态
@@ -446,16 +567,41 @@ class SiteBusiness extends ServerBase
             $site_tag->created_at = date("Y-m-d H:i:s");
             $site_tag->save();
             //添加图片
-
+            if( $data['img'] )
+            {
+                $upload = new \Upload();
+                $arr = explode(',',$data['img']);
+                foreach ( $arr as $k=>$row )
+                {
+                    $res =  $upload->uploadProductImage( $site->uuid, $row, 'site_dynamic' );
+                    $img = array();
+                    if( $res )
+                    {
+                        //写入数据库
+                        $img[$k]['dynamicid'] = $dynamic->id;
+                        $img[$k]['ossurl'] = 'site/'.$site->uuid.'/dynamic/'.$row;
+                        $img[$k]['type'] = 0;
+                        $img[$k]['created_at'] = date("Y-m-d H:i:s");
+                    }
+                    if( count($img) )
+                    {
+                        DynamicImages::insert( $img );
+                    }
+                }
+            }
             //更新主表
             $site->stageid = $data['stagetagid'];
             $site->save();
             DB::commit();
-            return true;
+            $obj->status = 1;
+            $obj->msg = '更新成功';
+            return $obj;
         }catch ( Exception $e )
         {
             DB::rollBack();
-            return false;
+            $obj->status = 0;
+            $obj->msg = '更新失败';
+            return $obj;
         }
     }
 }

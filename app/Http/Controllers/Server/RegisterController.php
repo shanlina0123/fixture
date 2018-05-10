@@ -19,15 +19,24 @@ class RegisterController extends ServerBaseController
     {
         if( $request->method() === 'POST' )
         {
+            $data = trimValue($request->all());
             $request->validate([
                 'phone' => 'required|numeric|unique:user|regex:/^1[34578][0-9]{9}$/',
-                'password' => 'required|min:6|max:15',
+                'password' => 'required|min:6|max:12',
                 'confirmed' => 'password_confirmation',
-                'agree' => 'required|numeric',
+                'agree' => 'accepted',
                 'code' => 'required|numeric',
+            ],[
+                'phone.required'=>'电话号码不能为空',
+                'phone.numeric'=>'电话号码有误',
+                'phone.regex'=>'电话号码有误',
+                'phone.unique'=>'该电话号码已被注册',
+                'password.min'=>'密码最小为6为字符',
+                'password.max'=>'密码最大为12为字符',
+                'agree.accepted'=>'请选择用户协议',
+                'code.required'=>'请填写验证码',
+                'code.numeric'=>'验证码有误',
             ]);
-
-            $data = trimValue(array_except($request->all(),['_token','agree']));
             $res = $this->user->userSave($data);
             if( $res == true )
             {

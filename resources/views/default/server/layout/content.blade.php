@@ -16,14 +16,15 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>@yield('title')</title>
-    <link rel="icon" href="../../images/icon.ico">
+    <link rel="icon" href="{{pix_asset('server/images/icon.ico')}}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--css-->
-    <link rel="stylesheet" href="{{pix_asset('server/css/common.css?v=').config('configure.cssVersion')}}">
-    <link rel="stylesheet" href="{{pix_asset('server/plugins/layui/css/layui.css')}}">
-    <link rel="stylesheet" href="{{pix_asset('server/css/base.css?v=').config('configure.cssVersion')}}">
-    <script type="text/javascript" src="{{pix_asset('server/plugins/jquery/jquery-2.1.4.min.js')}}"></script>
+    <link rel="stylesheet" href="{{pix_asset('server/plugins/layui/css/layui.css',false)}}">
+    <link rel="stylesheet" href="{{pix_asset('server/css/common.css')}}">
+    <link rel="stylesheet" href="{{pix_asset('server/css/base.css')}}">
+    <link rel="stylesheet" href="{{pix_asset('server/css/style.css')}}">
+    <script type="text/javascript" src="{{pix_asset('server/plugins/jquery/jquery-2.1.4.min.js',false)}}"></script>
     @yield('css')
 </head>
 <body class="layui-layout-body">
@@ -40,8 +41,9 @@
             @yield('content')
         </div>
     </div>
+    @yield('other')
 </body>
-<script type="text/javascript" src="{{pix_asset('server/plugins/layui/layui.js')}}"></script>
-<script type="text/javascript" src="{{pix_asset('server/js/common/common.js?v=').config('configure.jsVersion')}}"></script>
+<script type="text/javascript" src="{{pix_asset('server/plugins/layui/layui.js',false)}}"></script>
+<script type="text/javascript" src="{{pix_asset('server/js/common/common.js')}}"></script>
 @yield('js')
 </html>

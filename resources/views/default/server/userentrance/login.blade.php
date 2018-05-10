@@ -4,15 +4,15 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>用户登录</title>
-    <link rel="icon" href="../../images/icon.ico">
+    <link rel="icon" href="{{pix_asset('server/images/icon.ico')}}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--css-->
-    <link rel="stylesheet" href="{{pix_asset('server/css/common.css?v=').config('configure.cssVersion')}}">
-    <link rel="stylesheet" href="{{pix_asset('server/plugins/layui/css/layui.css?v=').config('configure.cssVersion')}}">
-    <link rel="stylesheet" href="{{pix_asset('server/css/base.css?v=').config('configure.cssVersion')}}">
-    <link rel="stylesheet" href="{{pix_asset('server/css/login.css?v=').config('configure.cssVersion')}}">
-    <script type="text/javascript" src="{{pix_asset('server/plugins/jquery/jquery-2.1.4.min.js')}}"></script>
+    <link rel="stylesheet" href="{{pix_asset('server/css/common.css')}}">
+    <link rel="stylesheet" href="{{pix_asset('server/plugins/layui/css/layui.css')}}">
+    <link rel="stylesheet" href="{{pix_asset('server/css/base.css')}}">
+    <link rel="stylesheet" href="{{pix_asset('server/css/login.css')}}">
+    <script type="text/javascript" src="{{pix_asset('server/plugins/jquery/jquery-2.1.4.min.js',false)}}"></script>
 </head>
 <body>
 <!--[if lt IE 7]>
@@ -58,7 +58,7 @@
                                 </div>
                                 <div class="layui-form-item loginLink clearfix">
                                     <a href="page/index/forgetPwd.html" class="fl">忘记密码？</a>
-                                    <a href="page/index/regist.html" class="fr">还没有账号？快去注册吧 >></a>
+                                    <a href="{{route('register')}}" class="fr">还没有账号？快去注册吧 >></a>
                                 </div>
                             </form>
                         </div>
@@ -87,8 +87,8 @@
         </div>
     </div>
 </div>
-<script type="text/javascript" src="{{pix_asset('server/plugins/layui/layui.js')}}"></script>
-<script type="text/javascript" src="{{pix_asset('server/plugins/validform/Validform_v5.3.2_min.js')}}"></script>
+<script type="text/javascript" src="{{pix_asset('server/plugins/layui/layui.js',false)}}"></script>
+<script type="text/javascript" src="{{pix_asset('server/plugins/validform/Validform_v5.3.2_min.js',false)}}"></script>
 <script type="text/javascript" src="{{pix_asset('server/js/login/login.js')}}"></script>
 </body>
 </html>

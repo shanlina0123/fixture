@@ -66,6 +66,34 @@ function trimValue( $data )
 
 /**
  * @param $data
+ * @return array
+ * 查询参数过滤
+ */
+function ParameterFiltering( $data )
+{
+    $t_data = array();
+    $pregs = '/select|insert|update|CR|document|LF|eval|delete|script|alert|\'|\/\*|\#|\--|\ --|\/|\*|\-|\+|\=|\~|\*@|\*!|\$|\%|\^|\&|\(|\)|\/|\/\/|\.\.\/|\.\/|union|into|load_file|outfile/';
+    foreach ( $data as $k=>$v )
+    {
+        if( is_array($v) )
+        {
+            $t_data[$k] = ParameterFiltering( $v );
+        }else
+        {
+            if( preg_match($pregs,$v) == 1)
+            {
+                $t_data[$k] = str_replace(trim( $v ),'',trim( $v ));
+            }else
+            {
+                $t_data[$k] = trim( $v );
+            }
+        }
+    }
+    return $t_data;
+}
+
+/**
+ * @param $data
  * @return mixed
  * 返回数据类型
  */
@@ -159,8 +187,19 @@ function responseData( $status="", $messages="", $data="", $errorparam="" )
  * @return string
  * 给css加默认前缀
  */
-function pix_asset($path,$secure = null)
+function pix_asset($path,$versionFlag = true,$secure=null)
 {
     $path = config('configure.pix_asset').$path;
-    return asset($path, $secure);
+    if($versionFlag)
+        $path.="?v=".config('configure.cssVersion');
+    return asset($path, $secure,null);
+}
+
+/***
+ * 获取登录用户信息
+ * @return \Illuminate\Session\SessionManager|\Illuminate\Session\Store|mixed
+ */
+function getUserInfo()
+{
+   return   session('userInfo');
 }

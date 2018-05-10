@@ -10,9 +10,9 @@
         <li class="layui-nav-item">
             <a href="javascript:;">项目管理</a>
             <dl class="layui-nav-child">
-                <dd><a href="../project/projectList.html">项目列表</a></dd>
-                <dd><a href="../project/newProject.html">新建项目</a></dd>
-                <dd><a href="../project/modelList.html">阶段模板</a></dd>
+                <dd><a href="{{route('site.index')}}">项目列表</a></dd>
+                <dd><a href="{{route('site.create')}}">新建项目</a></dd>
+                <dd><a href="{{route('site-template.index')}}">阶段模板</a></dd>
             </dl>
         </li>
         <li class="layui-nav-item">
@@ -33,8 +33,8 @@
             </dl>
         </li>
         <li class="layui-nav-item"><a href="../message/message.html">资料设置</a></li>
-        <li class="layui-nav-item"><a href="../roles/roleList.html">角色管理</a></li>
         <li class="layui-nav-item"><a href="{{route('filter-store-index')}}">门店管理</a></li>
+        <li class="layui-nav-item"><a href="{{route('roles-index')}}">角色管理</a></li>
         <li class="layui-nav-item"><a href="../users/userList.html">用户管理</a></li>
         <li class="layui-nav-item"><a href="../system/settingList.html">系统属性</a></li>
     </ul>

@@ -21,7 +21,6 @@ Route::group(['namespace' => 'Server'], function () {
         Route::match(['get', 'post'], 'company/setting', 'CompanyController@companySetting')->name('company-setting');  //公司信息设置
         //中间件权限认证路由
         Route::group(['middleware' => ['checkAuth']], function () {
-            Route::get('index', 'IndexController@indexContent')->name('content');   //右侧主页
             Route::any('upload-temp-img', 'PublicController@uploadImgToTemp');   //上传图片
             Route::resource('site', 'SiteController');//工地管理
             Route::post('site/template-tag', 'SiteController@templateTag')->name('site-template-tag');
@@ -38,6 +37,10 @@ Route::group(['namespace' => 'Server'], function () {
             Route::post('site-template-default/{id}', 'SiteTemplateController@templateDefault')->name('site-template-default');//模板设置默认
             Route::resource('client', 'ClientController');//客户管理
             Route::post('map-address', 'PublicController@getMapAddress')->name('map-address');//获取腾讯地图搜索的地址
+            //角色
+            Route::get("roles","RolesController@index")->name("roles-index");//列表
+            Route::post("roles","RolesController@store")->name("roles-store");//新增-执行
+            Route::put("roles","RolesController@update")->name("roles-update");//修改-执行
         });
     });
 });

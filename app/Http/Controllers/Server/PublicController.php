@@ -1,10 +1,21 @@
 <?php
 namespace App\Http\Controllers\Server;
+use App\Http\Business\Server\PublicBusiness;
 use App\Http\Controllers\Common\ServerBaseController;
 use Illuminate\Http\Request;
 
 class PublicController extends ServerBaseController
 {
+    /**
+     * The user repository instance.
+     */
+    protected $public_business;
+    protected $request;
+    public function __construct(Request $request)
+    {
+        $this->public_business =  new PublicBusiness($request);
+        $this->request = $request;
+    }
 
     /**
      * 上传图片到本地临时目录
@@ -17,7 +28,7 @@ class PublicController extends ServerBaseController
         try {
             $res = $request->file('file')->store('temp', 'temp');
             $name = explode('/',$res)[1];
-            $obj->code = 0;
+            $obj->code = 1;
             $obj->msg = '上传成功';
             $src->src = "http://".$_SERVER['HTTP_HOST'].'/temp/'.$name;
             $src->name = $name;
@@ -40,7 +51,7 @@ class PublicController extends ServerBaseController
         $keyword = $request->input('keyword');
         if( $keyword )
         {
-            $url = 'https://apis.map.qq.com/ws/place/v1/suggestion/?keyword='.$keyword.'&key=N6LBZ-XRSWP-NM5DY-LW7S6-GCKO7-WBFF7';
+            $url = 'https://apis.map.qq.com/ws/place/v1/suggestion/?filter%3Dcategory%3D%E5%B0%8F%E5%8C%BA&keyword='.$keyword.'&key=N6LBZ-XRSWP-NM5DY-LW7S6-GCKO7-WBFF7';
             $data = file_get_contents($url);
             return $data;
 
@@ -48,5 +59,20 @@ class PublicController extends ServerBaseController
         {
             return response()->json('', 200);
         }
+    }
+
+
+    /***
+     * 获取菜单
+     */
+    public  function  getMenu()
+    {
+        //获取用户信息
+        $admin_user=$this->request->get("admin_user");//对象
+
+        //获取业务数据
+        $list=$this->public_business->getMenu($admin_user->id,$admin_user->roleFunids);
+        //接口返回结果
+        responseData(\StatusCode::SUCCESS,"获取成功",$list);
     }
 }
