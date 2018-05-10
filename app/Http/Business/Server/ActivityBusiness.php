@@ -50,7 +50,6 @@ class ActivityBusiness extends ServerBase
         });
     }
 
-
     /***
      * 获取活动详情、预览
      * @param $uuid
