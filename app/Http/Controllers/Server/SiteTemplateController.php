@@ -94,9 +94,19 @@ class SiteTemplateController extends ServerBaseController
      */
     public function edit($id)
     {
-        $type = $this->request->input('type');
+        //$type = $this->request->input('type');
         $companyId = $this->userInfo->companyid;
-        $data = $this->template->editTemplate( $type, $companyId, $id );
+        $data = $this->template->editTemplate( $companyId, $id );
+        if( $data )
+        {
+            if( $data->stageTemplateToSite()->count() )
+            {
+                return redirect()->back()->with('msg','模板已被使用不能修改');
+            }
+        }else
+        {
+            return redirect()->back()->with('msg','未查询到信息');
+        }
         return view('server.sitetemplate.edit',compact('data','type'));
     }
 
@@ -122,13 +132,13 @@ class SiteTemplateController extends ServerBaseController
         $data = trimValue($this->request->all());
         $data['companyid'] = $this->userInfo->companyid;
         $res = $this->template->updateTemplate( $data, $id );
-        if( $res == true )
+        if( $res->ststus )
         {
             Cache::tags(['siteTemplate'.$data['companyid']])->flush();
             return redirect()->route('site-template.index')->with('msg','修改成功');
         }else
         {
-            return redirect()->back()->withInput($this->request->all())->with('msg','修改失败');
+            return redirect()->back()->withInput($this->request->all())->with('msg',$res->msg );
         }
     }
 
@@ -160,6 +170,22 @@ class SiteTemplateController extends ServerBaseController
     {
         $companyId = $this->userInfo->companyid;
         $res = $this->template->templateDefault( $companyId, $id );
+        if( $res->status  )
+        {
+            Cache::tags(['siteTemplate'.$companyId])->flush();
+        }
+        return json_encode($res);
+    }
+
+    /**
+     * @return string
+     * 添加使用系统模板
+     */
+    public function addDefaultTemplate()
+    {
+        $companyId = $this->userInfo->companyid;
+        $id = $this->request->input('id');
+        $res = $this->template->addDefaultTemplate( $companyId, $id );
         if( $res->status  )
         {
             Cache::tags(['siteTemplate'.$companyId])->flush();

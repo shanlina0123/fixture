@@ -1,6 +1,14 @@
+/**
+ * 页面鼠标样式
+ */
 layui.use(['element'], function() {
     var element = layui.element;
 });
+
+/**
+ * 解决ajax CSRF
+ */
+
 $.ajaxSetup({
     headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -101,7 +109,7 @@ $.ajaxSubmit=function(frm,dataPara,callback) {
         error:function(xhr,textstatus,thrown){
             layer.msg("系统错误", {icon: 2,time: 1000});
         }
-    },"json");
+    });
 }
 
 
@@ -146,7 +154,9 @@ var setFormUrl = function(form,key)
     form.attr("action",url);
 }
 
-
-function isString(obj){ //判断对象是否是字符串
+//判断对象是否是字符串
+function isString(obj){
     return Object.prototype.toString.call(obj) === "[object String]";
 }
+
+

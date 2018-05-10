@@ -30,16 +30,43 @@ class ClientBusiness extends ServerBase
         Cache::tags([$tag])->flush();
         $where = $tag.$request->input('page').$request->input('k').$request->input('status');
         $value = Cache::tags($tag)->remember( $tag.$where,config('configure.sCache'), function() use( $user, $request ){
-            if( $user->isadmin == 2 )
+            //网站管理员
+            if( $user->isadmin == 1 )
             {
-                $swhere['companyid'] = $user->companyid;
-
+                $sWhere['companyid'] =  $user->companyid;
             }else
             {
-                $swhere['companyid'] =  $user->companyid;
-                $swhere['storeid'] =  $user->storeid;
+                //检测权限
+                if( !empty($user->islook) )
+                {
+                    //存在
+                    switch ( (int)$user->islook )
+                    {
+                        case 1://全部
+                            $sWhere['companyid'] =  $user->companyid;
+                            break;
+                        case 2://城市
+                            $sWhere['companyid'] =  $user->companyid;
+                            $sWhere['cityid'] =  $user->cityid;
+                            break;
+                        case 3://门店
+                            $sWhere['companyid'] =  $user->companyid;
+                            $sWhere['storeid'] =  $user->storeid;
+                            break;
+                        default://默认
+                            $sWhere['companyid'] =  $user->companyid;
+                            $sWhere['storeid'] =  $user->storeid;
+                            break;
+                    }
+                }else
+                {
+                    //不存在
+                    $sWhere['companyid'] =  $user->companyid;
+                    $sWhere['storeid'] =  $user->storeid;
+                }
             }
-            $sql = Client::where( $swhere )->orderBy('id','desc')->with('clientToStatus','clientToSource');
+
+            $sql = Client::where( $sWhere )->orderBy('id','desc')->with('clientToStatus','clientToSource');
             //判断查询
             $k = trim($request->input('k'));
             if( $k )

@@ -139,7 +139,7 @@ class SiteBusiness extends StoreBase
             {
                 DB::beginTransaction();
                 //删除工地动态
-                $dynamic = Dynamic::where(['companyid'=>$res->companyid,'storeid'=>$res->storeid,'sitetid'=>$res->id])->first();
+                $dynamic = Dynamic::where(['companyid'=>$res->companyid,'sitetid'=>$res->id])->first();
                 if( $dynamic )
                 {
                     //删除统计

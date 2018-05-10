@@ -1,69 +1,67 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <title>用户注册</title>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <meta name="Keywords" content="网站关键词">
-    <meta name="Description" content="网站介绍">
-    <link rel="stylesheet" href="{{asset('css/userentrance/base.css')}}">
-    <link rel="stylesheet" href="{{asset('css/userentrance/iconfont.css')}}">
-    <link rel="stylesheet" href="{{asset('css/userentrance/reg.css')}}">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>注册</title>
+    <link rel="icon" href="{{pix_asset('server/images/icon.ico')}}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--css-->
+    <link rel="stylesheet" href="{{pix_asset('server/css/common.css')}}">
+    <link rel="stylesheet" href="{{pix_asset('server/plugins/layui/css/layui.css')}}">
+    <link rel="stylesheet" href="{{pix_asset('server/css/base.css')}}">
+    <link rel="stylesheet" href="{{pix_asset('server/css/login.css')}}">
+    <script type="text/javascript" src="{{pix_asset('server/plugins/jquery/jquery-2.1.4.min.js',false)}}"></script>
 </head>
 <body>
-<div id="ajax-hook"></div>
+<!--[if lt IE 7]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
 <div class="wrap">
-    <div class="wpn">
-        <div class="form-data pos">
-            <a href=""><img src="/images/logo.png" class="head-logo"></a>
-            @if( count($errors) > 0 )
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
+    <div class="loginBg">
+        <div class="loginWrap">
+            <div class="loginInner">
+                <img src="{{pix_asset('server/images/logo.png')}}" class="loginLogo">
+                <div class="errorWrap">
+                    <div class="loginError">
+                        <span>{{session('msg')}}</span>
+                        @if ($errors->any())
+                            @foreach ($errors->all() as $error)
+                                <span>{{$error}}</span>
+                            @endforeach
+                        @endif
+                    </div>
                 </div>
-            @endif
-            <form class="form" method="post" action="{{route('register')}}">
-                {{csrf_field()}}
-                <p class="p-input pos">
-                    <label for="tel">手机号</label>
-                    <input type="number" name="phone" datatype="m"  nullmsg="请输入手机号码" errormsg="手机号码有误" autocomplete="off">
-                    <span class="tel-warn tel-err hide Validform_checktip"><em></em><i class="icon-warn"></i><span></span></span>
-                </p>
-                <p class="p-input pos" id="sendcode">
-                    <label for="veri-code">输入验证码</label>
-                    <input type="number" name="code" id="veri-code">
-                    <a href="javascript:;" class="send">发送验证码</a>
-                    <span class="time hide"><em>120</em>s</span>
-                    <span class="error"><em></em><i class="icon-warn" style="margin-left: 5px"></i><span></span></span>
-                </p>
-                <p class="p-input pos" id="pwd">
-                    <label for="passport">输入密码</label>
-                    <input type="password" name="password" datatype="*6-15"  nullmsg="请输入密码" errormsg="密码范围在6~15位之间"  autocomplete="off">
-                    <span class="tel-warn pwd-err hide Validform_checktip"><em></em><i class="icon-warn" style="margin-left: 5px"></i><span></span></span>
-                </p>
-                <p class="p-input pos" id="confirmpwd">
-                    <label for="passport2">确认密码</label>
-                    <input type="password" name="password_confirmation" datatype="*" recheck="password" nullmsg="请输入密码" errormsg="您两次输入的账号密码不一致" autocomplete="off">
-                    <span class="tel-warn confirmpwd-err hide Validform_checktip"><em></em><i class="icon-warn" style="margin-left: 5px"></i><span></span></span>
-                </p>
-            <div class="reg_checkboxline pos p-input">
-                <span class="z"><i class="icon-ok-sign boxcol" nullmsg="请同意!"></i></span>
-                <input type="hidden" name="agree" datatype="*" value="1" nullmsg="请选择" errormsg="请选择">
-                <span class="tel-warn confirmpwd-err hide Validform_checktip"><em></em><i class="icon-warn" style="margin-left: 5px"></i><span></span></span>
-                <p>我已阅读并接受 <a href="#" target="_brack">《XXXX协议说明》</a></p>
+                <form class="form layui-form" method="post" action="{{route('register')}}">
+                    {{csrf_field()}}
+                    <div class="layui-form-item">
+                        <input type="number" class="layui-input" placeholder="手机号" name="phone" datatype="m"  nullmsg="请输入手机号码" errormsg="手机号码有误" autocomplete="off">
+                    </div>
+                    <div class="layui-form-item clearfix">
+                        <input type="text" name="code" lay-verify="title" autocomplete="off" placeholder="短信验证码" class="layui-input codeInput fl">
+                        <button type="button" class="layui-btn msgUncode fr ">发送验证码</button>
+                    </div>
+                    <div class="layui-form-item">
+                        <input type="password" class="layui-input" name="password" datatype="*6-12" placeholder="请输入6-12位字母+数字(区分大小写)" nullmsg="请输入密码" errormsg="密码范围在6~12位之间"  autocomplete="off">
+                    </div>
+                    <div class="layui-form-item">
+                        <input type="password" class="layui-input" name="password_confirmation" datatype="*" placeholder="确认密码" recheck="password" nullmsg="请输入密码" errormsg="您两次输入的账号密码不一致" autocomplete="off">
+                    </div>
+                    <div class="registDeel">
+                        <input type="checkbox" lay-skin="primary" datatype="*" errormsg="请选择"  name="agree">
+                        <a href="javascript:;">用户注册协议</a>
+                    </div>
+                    <div class="layui-form-item loginBtn">
+                        <button type="button" class="layui-btn loginButton" id="btn_submit">立即注册</button>
+                    </div>
+                </form>
             </div>
-            <button class="lang-btn" id="btn_submit">注册</button>
-            </form>
-            <div class="bottom-info">已有账号，<a href="{{route('login')}}">马上登录</a></div>
-            <p class="right">Powered by © 2018</p>
         </div>
     </div>
 </div>
-<script src="{{asset('js/userentrance/jquery.js')}}"></script>
-<script src="{{asset('js/public/Validform_v5.3.2_min.js')}}"></script>
-<script src="{{asset('js/userentrance/register.js')}}"></script>
+<script type="text/javascript" src="{{pix_asset('server/plugins/layui/layui.js',false)}}"></script>
+<script type="text/javascript" src="{{pix_asset('server/plugins/validform/Validform_v5.3.2_min.js',false)}}"></script>
+<script type="text/javascript" src="{{pix_asset('server/js/register/register.js')}}"></script>
 </body>
 </html>

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>用户登录</title>
-    <link rel="icon" href="../../images/icon.ico">
+    <link rel="icon" href="{{pix_asset('server/images/icon.ico')}}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--css-->
@@ -58,7 +58,7 @@
                                 </div>
                                 <div class="layui-form-item loginLink clearfix">
                                     <a href="page/index/forgetPwd.html" class="fl">忘记密码？</a>
-                                    <a href="page/index/regist.html" class="fr">还没有账号？快去注册吧 >></a>
+                                    <a href="{{route('register')}}" class="fr">还没有账号？快去注册吧 >></a>
                                 </div>
                             </form>
                         </div>
