@@ -133,3 +133,10 @@
 .editBtns {
   width: 100px;
 }
+
+.readonly{
+  background-color: #f2f2f2;
+}
+.disabled{
+  background-color: #f2f2f2;
+}

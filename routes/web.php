@@ -37,7 +37,11 @@ Route::group(['namespace' => 'Server'], function () {
             //角色
             Route::get("roles","RolesController@index")->name("roles-index");//列表
             Route::post("roles","RolesController@store")->name("roles-store");//新增-执行
-            Route::put("roles","RolesController@update")->name("roles-update");//修改-执行
+            Route::put("roles/{uuid}","RolesController@update")->name("roles-update");//修改-执行
+            Route::put("roles/setting/{uuid}","RolesController@setting")->name("roles-setting");//设置-执行
+            Route::delete("roles/{uuid}","RolesController@delete")->name("roles-delete");//删除-执行
+            Route::get("roles/auth/{roleid}","RolesController@auth")->name("roles-auth");//角色权限详情
+            Route::put("roles/auth/{roleid}","RolesController@updateAuth")->name("roles-auth-update");//勾选权限
         });
     });
 });

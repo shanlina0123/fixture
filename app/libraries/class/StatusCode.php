@@ -34,5 +34,6 @@ class StatusCode
     const AUTH_ERROR=16;//无权限
     const TOKEN_EMPTY=17;//token为空
     const AUTH_NOT_DEFINED_ERROR=17;//未定义暂未开放
+    const ROLE_HIDDEN=18;//角色已禁用
 
 }

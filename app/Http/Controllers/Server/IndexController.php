@@ -20,6 +20,9 @@ class IndexController extends ServerBaseController
      */
     public function indexContent()
     {
+        Cache::flush();
         return view('server.index.index');
     }
+
+
 }

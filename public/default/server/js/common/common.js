@@ -7,23 +7,146 @@ $.ajaxSetup({
     }
 });
 
+/**
+ * 获取数据ajax-get请求
+ * @author laixm
+ */
+$.sanjiGetJSON = function (url,data,callback){
+    $.ajax({
+        url:url,
+        type:"get",
+        contentType:"application/json",
+        dataType:"json",
+        timeout:10000,
+        data:data,
+        success:function(data){
+            callback(data);
+        }
+    });
+};
+
+/**
+ * 提交json数据的post请求
+ * @author laixm
+ */
+$.postJSON = function(url,data,callback){
+    $.ajax({
+        url:url,
+        type:"post",
+        contentType:"application/json",
+        dataType:"json",
+        data:JSON.stringify(data),
+        timeout:60000,
+        success:function(msg){
+            callback(msg);
+        },
+        error:function(xhr,textstatus,thrown){
+
+        }
+    });
+};
+
+/**
+ * 修改数据的ajax-put请求
+ * @author laixm
+ */
+$.putJSON = function(url,data,callback){
+    $.ajax({
+        url:url,
+        type:"put",
+        contentType:"application/json",
+        dataType:"json",
+        data:data?JSON.stringify(data):"",
+        timeout:20000,
+        success:function(msg){
+            callback(msg);
+        },
+        error:function(xhr,textstatus,thrown){
+
+        }
+    });
+};
+/**
+ * 删除数据的ajax-delete请求
+ * @author laixm
+ */
+$.deleteJSON = function(url,callback){
+    $.ajax({
+        url:url,
+        type:"delete",
+        contentType:"application/json",
+        dataType:"json",
+        success:function(msg){
+            callback(msg);
+        },
+        error:function(xhr,textstatus,thrown){
+
+        }
+    });
+};
+
 //将form转为AJAX提交
-function ajaxSubmit(frm,dataPara) {
+$.ajaxSubmit=function(frm,dataPara,callback) {
     var url=$(frm).attr("action");
+    var dataParam=isString(dataPara)?dataPara:JSON.stringify(dataPara);
     $.ajax({
         url:$(frm).attr("action"),
         type:$(frm).attr("method"),
-        data: dataPara,
+        data:dataParam,
         dataType:"json",
+        contentType:"application/json",
         success: function(data){
-            if(data.status===1){
-                layer.closeAll();
-                layer.msg(data.messages,{icon: 1,time: 1000});
-            }else if(data==='0'){
-                layer.msg(data.messages, {icon: 2,time: 1000});
-            }else{
-                layer.msg("请求错误", {icon: 5,time: 1000});
-            }
+            callback(data);
+        },
+        error:function(xhr,textstatus,thrown){
+            layer.msg("系统错误", {icon: 2,time: 1000});
         }
-    });
+    },"json");
+}
+
+
+
+//获取当前url属性的实际url
+var getAttrUrl = function(obj,key)
+{
+    var that = $(obj);
+    var key=key?key:"uuid";
+    //tr的数据
+    var tr = that.parents("tr");
+    var keyValue=$(tr).attr(key);
+    //编辑url
+    var url= that.attr("url").replace(key,keyValue);
+    that.attr("url",url);
+    return url;
+}
+
+//获取当前Form属性的实际url
+var setAttrFormUrl = function(obj,form,key)
+{
+    var that = $(obj);
+    var key=key?key:"uuid";
+    //tr的数据
+    var tr = $(that).parents("tr");
+    var keyValue=$(tr).attr(key);
+    //编辑url
+    var url= form.attr("action").replace(key,keyValue);
+    form.attr("action",url);
+}
+
+
+
+//获取当前Form属性的实际url
+var setFormUrl = function(form,key)
+{
+    var key=key?key:"uuid";
+    //tr的数据
+    var keyValue=form.attr(key);
+    //编辑url
+    var url= form.attr("action").replace(key,keyValue);
+    form.attr("action",url);
+}
+
+
+function isString(obj){ //判断对象是否是字符串
+    return Object.prototype.toString.call(obj) === "[object String]";
 }
