@@ -7,7 +7,7 @@
  */
 
 
-namespace App\Http\Model\Store;
+namespace App\Http\Model;
 use Illuminate\Database\Eloquent\Model;
 class Store extends Model
 {

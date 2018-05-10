@@ -8,8 +8,8 @@
 
 namespace App\Http\Business\Server;
 use App\Http\Business\Common\ServerBase;
-use App\Http\Model\Store\Store;
-
+use App\Http\Model\Store;
+use DB;
 class FilterBusiness extends ServerBase
 {
 
@@ -19,10 +19,39 @@ class FilterBusiness extends ServerBase
      */
     public function getStoreList()
     {
+      //查询所有门店信息
+      $res = Store::paginate(3);
+      //循环给省市赋值
+      foreach ($res as $k => $v) {
+          $ress = $v->cityid;
+          $city = DB::table('data_city')->where('id',$ress)->get();
+          if($city){
+            $v->shi = $city;
+          }
+          foreach ($city as $kk => $vv) {
+              $citys = $vv->provinceid;
+              $sheng = DB::table('data_province')->where('id',$citys)->get();
+                  if($sheng){
+                    $vv->sheng = $sheng;
+                  }
+          }
+          
+      }
+
       
-      $res = Store::where()->select();
-      dd($res);
-      return true;
+     /* dump($res);*/
+      
+    
+    /* $res= DB::table('store')
+            ->join('data_city', 'store.cityid', '=', 'data_city.id')
+            ->join('data_province', 'data_city.provinceid', '=', 'data_province.id')
+            ->select('store.*', 'data_city.*', 'data_province.*')
+            ->get();
+      dd($res);*/
+       
+      
+       
+      return $res;
     }
 
     /**

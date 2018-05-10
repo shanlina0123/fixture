@@ -29,6 +29,10 @@ Route::group(['namespace' => 'Server'], function () {
             Route::resource('activity', 'ActivityController');  //项目管理 - 活动管理 默认路由
             Route::post('activity/setting', 'ActivityController@setting')->name('activity-setting'); //项目管理 - 活动管理-设置是否公开 默认路由
             Route::get('filter/store-index', 'FilterController@storeIndex')->name('filter-store-index'); //系统管理-门店管理 自定义路由
+            Route::get('filter/storedel','FilterController@storeDel');
+            Route::get('filter/storeadd','FilterController@storeAdd');
+            Route::get('filter/storeedit','FilterController@storeEdit');
+            Route::get('filter/storeedits','FilterController@storeEdits');
             Route::get('filter/role-index', 'FilterController@roleIndex')->name('filter-role-index'); //系统管理 - 角色管理 自定义路由
             Route::resource('site-template', 'SiteTemplateController');//模板管理
             Route::post('site-template-default/{id}', 'SiteTemplateController@templateDefault')->name('site-template-default');//模板设置默认
