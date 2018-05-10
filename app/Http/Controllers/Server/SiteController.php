@@ -62,8 +62,6 @@ class SiteController extends ServerBaseController
         $data->roomStyle = $this->site->getRoomStyle();
         //装修方式
         $data->renovationMode = $this->site->getRenovationMode();
-        //系统模板
-        $data->stageTemplate = $this->site->getStageTemplate();
         //公司模板
         $data->companyTemplate = $this->site->getCompanyStageTemplate( $this->userInfo );
         return view('server.site.create',compact('data'));
@@ -81,7 +79,7 @@ class SiteController extends ServerBaseController
         $request->validate(
             [
                 'storeid'=>'bail|required|numeric',//门店
-                'name'=>'bail|required|max:20',//项目名称
+                'name'=>'bail|required|max:20',//项目名称templateTag
                 'stageid'=>'bail|required|numeric',//阶段id
                 'addr'=>'bail|required|max:255',//地址
                 'lng'=>'bail|present',//经度
@@ -156,8 +154,6 @@ class SiteController extends ServerBaseController
         $data->roomStyle = $this->site->getRoomStyle();
         //装修方式
         $data->renovationMode = $this->site->getRenovationMode();
-        //系统模板
-        $data->stageTemplate = $this->site->getStageTemplate();
         //公司模板
         $data->companyTemplate = $this->site->getCompanyStageTemplate( $this->userInfo );
         $data->info = $this->site->editSite( $id,$companyId );
@@ -245,8 +241,7 @@ class SiteController extends ServerBaseController
     public function templateTag( Request $request )
     {
         $tid = $request->input('tid');
-        $type = $request->input('type');
-        return $this->site->getTemplateTag( $tid, $type, $this->userInfo );
+        return $this->site->getTemplateTag( $tid, $this->userInfo );
     }
 
 
@@ -284,6 +279,40 @@ class SiteController extends ServerBaseController
                 return redirect()->back()->with('msg',$data->msg);
             }
             return view('server.site.renew',compact('data'));
+        }
+    }
+
+    /**
+     * 工地是否公开
+     */
+    public function isOpen( Request $request )
+    {
+        $data = trimValue( $request->all() );
+        $validator = Validator::make(
+            $data,
+            [
+                'id'=>'bail|required|numeric',
+                'isopen'=>'bail|required|numeric|max:1',//是不是公开
+            ],[
+                'id.required'=>'ID不能为空',
+                'id.numeric'=>'ID数据类型不正确',
+                'isopen.numeric'=>'数据类型有误',
+            ]
+        );
+        if ($validator->fails())
+        {
+            $messages = $validator->errors()->first();
+            responseData(\StatusCode::CHECK_FORM,'验证失败','',$messages);
+        }
+        $data['companyid'] = $this->userInfo->companyid;
+        $res = $this->site->siteIsOpen( $data );
+        if( $res == true )
+        {
+            Cache::tags(['site'.$data['companyid']])->flush();
+            responseData(\StatusCode::SUCCESS,'修改成功',$res);
+        }else
+        {
+            responseData(\StatusCode::ERROR,'修改失败',$res);
         }
     }
 }

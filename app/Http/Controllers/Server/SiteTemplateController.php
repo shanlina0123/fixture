@@ -176,4 +176,20 @@ class SiteTemplateController extends ServerBaseController
         }
         return json_encode($res);
     }
+
+    /**
+     * @return string
+     * 添加使用系统模板
+     */
+    public function addDefaultTemplate()
+    {
+        $companyId = $this->userInfo->companyid;
+        $id = $this->request->input('id');
+        $res = $this->template->addDefaultTemplate( $companyId, $id );
+        if( $res->status  )
+        {
+            Cache::tags(['siteTemplate'.$companyId])->flush();
+        }
+        return json_encode($res);
+    }
 }

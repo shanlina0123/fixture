@@ -78,12 +78,10 @@ layui.use(['form', 'layer','upload'], function() {
         $("#templateTag").empty();
         $("#templateTag").parents('.layui-form-item').removeClass('layui-hide');
         $("#templateTag").parents('.layui-form-item').addClass('layui-show');
-        var type = $("#stagetemplateid option:selected").data("type");
-        $("#isdefaulttemplate").val(type);
         var url = $("#stagetemplateid option:selected").data("url");
         var tid = data.elem.value;
         var str = '';
-        $.post(url,{type:type,tid:tid},function ( data ) {
+        $.post(url,{tid:tid},function ( data ) {
             for( var i= 0;i<data.length;i++ )
             {
                 str+='<input type="radio" name="stageid" value="'+data[i].id+'" title="'+data[i].name+'" >';
@@ -91,6 +89,26 @@ layui.use(['form', 'layer','upload'], function() {
             $("#templateTag").append(str);
             form.render('radio');
         },'json');
+    });
+
+    form.on('switch(isOpen)', function(data){
+        var url = $(data.elem).data('url');
+        var isopen = data.elem.checked?1:0;
+        $.post(url,{id:data.value,'isopen':isopen},function ( msg ) {
+            if( msg.status )
+            {
+                layer.msg(msg.messages,{icon:1},function () {
+                    location.href = location;
+                });
+            }else
+            {
+                layer.msg(msg.messages, {icon: 5, time: 2000, shift: 6});
+            }
+        },'json');
+       /* console.log(data.elem); //得到checkbox原始DOM对象
+        console.log(data.elem.checked); //开关是否开启，true或者false
+        console.log(data.value); //开关value值，也可以通过data.elem.value得到
+        console.log(data.othis); //得到美化后的DOM对象*/
     });
 
     if( $("#msg").val() )

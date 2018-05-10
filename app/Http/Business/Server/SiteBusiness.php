@@ -36,7 +36,6 @@ class SiteBusiness extends ServerBase
      */
     public function getSiteList( $where, $user )
     {
-        Cache::flush();
         $tag = 'site'.$user->companyid;
         $tags = $user->roleid.$where['page'].$where['name'].$where['isopen'].$where['storeid'];
         $tags = base64_encode($tags);
@@ -269,12 +268,10 @@ class SiteBusiness extends ServerBase
             $site->cityid = $data['cityid'];
             $site->stageid = $data['stageid'];
             $site->stagetemplateid = $data['stagetemplateid'];
-            $site->isdefaulttemplate = $data['isdefaulttemplate'];
             $site->roomtypeid = $data['roomtypeid'];
             $site->roomstyleid = $data['roomstyleid'];
             $site->renovationmodeid = $data['renovationmodeid'];
             $site->budget = $data['budget'];
-            //$obj->housename = $data['housename'];
             $site->name = $data['name'];
             $site->addr = $data['addr'];
             $site->lng = $data['lng'];
@@ -305,7 +302,6 @@ class SiteBusiness extends ServerBase
             $progress->dynamicid = $dynamic->id;
             $progress->siteid = $site->id;
             $progress->stagetagid = $data['stageid'];
-            $progress->isstagedefault = $data['isdefaulttemplate'];
             $progress->tablesign = 1;
             $progress->stageuserid = $data['createuserid'];
             $progress->positionid = $data['createuserid'];
@@ -324,18 +320,11 @@ class SiteBusiness extends ServerBase
     /**
      * 获取模板进度内容
      */
-    public function getTemplateTag( $tid, $type, $user )
+    public function getTemplateTag( $tid, $user )
     {
-        if( $type == 1 )
-        {
-            //系统模板
-            $data = StageTemplateTag::where(['stagetemplateid'=>$tid,'status'=>1])->get();
-        }else
-        {
-            $companyid = $user->companyid;
-            //公司模板
-            $data = CompanyStageTemplateTag::where(['stagetemplateid'=>$tid,'status'=>1,'companyid'=>$companyid])->get();
-        }
+        $companyid = $user->companyid;
+        //公司模板
+        $data = CompanyStageTemplateTag::where(['stagetemplateid'=>$tid,'status'=>1,'companyid'=>$companyid])->get();
         return $data;
     }
 
@@ -361,15 +350,7 @@ class SiteBusiness extends ServerBase
     public function editSite( $uuid, $companyId )
     {
         $res = Site::where(['uuid'=>$uuid,'companyid'=>$companyId])->first();
-        if( $res->isdefaulttemplate == 1 )
-        {
-            //系统模板
-            $res->tage = StageTemplateTag::where(['stagetemplateid'=>$res->stagetemplateid,'status'=>1])->get();
-        }else
-        {
-            //自定义模板
-            $res->tage = CompanyStageTemplateTag::where(['stagetemplateid'=>$res->stagetemplateid,'status'=>1,'companyid'=>$companyId])->get();
-        }
+        $res->tage = CompanyStageTemplateTag::where(['stagetemplateid'=>$res->stagetemplateid,'status'=>1,'companyid'=>$companyId])->get();
         return $res;
     }
 
@@ -494,7 +475,7 @@ class SiteBusiness extends ServerBase
     public function getSiteRenew( $companyId, $uuid )
     {
         $obj = new \stdClass();
-        $site = Site::where(['companyid'=>$companyId,'uuid'=>$uuid])->select('isdefaulttemplate','stagetemplateid','stageid','name','isfinish')->first();
+        $site = Site::where(['companyid'=>$companyId,'uuid'=>$uuid])->select('stagetemplateid','stageid','name','isfinish')->first();
         if( $site )
         {
             if( $site->isfinish == 1 )
@@ -503,15 +484,8 @@ class SiteBusiness extends ServerBase
                 $obj->msg = '已完工不能修改';
                 return $obj;
             }
-            if( $site->isdefaulttemplate == 1 )
-            {
-                //系统模板
-                $obj->tage = StageTemplateTag::where(['stagetemplateid'=>$site->stagetemplateid,'status'=>1])->get();
-            }else
-            {
-                //自定义模板
-                $obj->tage = CompanyStageTemplateTag::where(['stagetemplateid'=>$site->stagetemplateid,'status'=>1,'companyid'=>$companyId])->get();
-            }
+            //自定义模板
+            $obj->tage = CompanyStageTemplateTag::where(['stagetemplateid'=>$site->stagetemplateid,'status'=>1,'companyid'=>$companyId])->get();
             $obj->stageid = $site->stageid;
             $obj->uuid = $uuid;
             $obj->companyid = $companyId;
@@ -561,7 +535,6 @@ class SiteBusiness extends ServerBase
             $site_tag->dynamicid = $dynamic->id;
             $site_tag->siteid = $site->id;
             $site_tag->stagetagid = $data['stagetagid'];
-            $site_tag->isstagedefault = $site->isdefaulttemplate;
             $site_tag->tablesign = 1;
             $site_tag->stageuserid = $data['createuserid'];
             $site_tag->created_at = date("Y-m-d H:i:s");
@@ -604,4 +577,24 @@ class SiteBusiness extends ServerBase
             return $obj;
         }
     }
+
+
+    /**
+     * 工地是否公开
+     */
+    public function siteIsOpen( $data )
+    {
+        $sWhere['companyid'] = $data['companyid'];
+        $sWhere['id'] = $data['id'];
+        $res = Site::where($sWhere)->first();
+        if( $res )
+        {
+            $res->isopen = $data['isopen'];
+            return $res->save();
+        }else
+        {
+            responseData(\StatusCode::ERROR,'工地信息不存在',$res);
+        }
+    }
+
 }

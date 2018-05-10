@@ -124,6 +124,30 @@ $(".del-btn").click(function () {
     });
 });
 
+
+$(".add-default").click(function () {
+    var url = $(this).data('url');
+    var id = $(this).data('id');
+    var index = $(this);
+    layer.confirm('您确认要使用吗', {
+        icon: 3, title:'使用',
+        btn: ['确认','取消'] //按钮
+    }, function(){
+        $.post(url,{id:id},function ( data ) {
+            if( data.status == 1 )
+            {
+                layer.msg(data.msg,{icon:1},function () {
+                    location.reload();
+                });
+            }else
+            {
+                layer.msg(data.msg, {icon: 5, time: 2000, shift: 6});
+            }
+        },'json')
+    });
+});
+
+
 $(".default-btn").click(function () {
     var url = $(this).data('url');
     $.post(url,function ( data ) {

@@ -18,7 +18,7 @@
         <li class="layui-nav-item">
             <a href="javascript:;">客户管理</a>
             <dl class="layui-nav-child">
-                <dd><a href="../client/clientList.html">预约客户</a></dd>
+                <dd><a href="{{route('client.index')}}">预约客户</a></dd>
                 <dd><a href="../client/luckClientList.html">抽奖客户</a></dd>
             </dl>
         </li>

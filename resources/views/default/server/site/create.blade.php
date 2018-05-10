@@ -56,15 +56,11 @@
                         <div class="layui-input-inline">
                             <select name="stagetemplateid"  id="stagetemplateid" lay-filter="stagetemplate" datatype="*" nullmsg="请选择阶段模板">
                                 <option value="">请选择阶段模板</option>
-                                @foreach( $data->stageTemplate as $row )
-                                    <option value="{{$row->id}}" data-type="1" data-url="{{route('site-template-tag')}}">{{$row->name}}</option>
-                                @endforeach
                                 @foreach( $data->companyTemplate as $crow )
                                     <option value="{{$crow->id}}" data-type="0" data-url="{{route('site-template-tag')}}">{{$crow->name}}</option>
                                 @endforeach
                             </select>
                         </div>
-                        <input type="hidden" name="isdefaulttemplate" value="" id="isdefaulttemplate">
                         <div class="forLineheight" style="color: #FF5722;">新建项目之后，阶段模板不可再修改</div>
                     </div>
                     <div class="layui-form-item layui-hide">

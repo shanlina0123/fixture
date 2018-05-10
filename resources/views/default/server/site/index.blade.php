@@ -1,7 +1,7 @@
 @extends('server.layout.content')
 @section('title','项目管理')
 @section('css')
-    <link rel="stylesheet" href="{{pix_asset('server/css/style.css')}}">
+
 @endsection
 @section('content')
 <div class="main">
@@ -65,24 +65,22 @@
                 <th>操作</th>
             </tr>
             </thead>
-            @foreach( $data as $row )
+            @foreach( $data as $k=>$row )
                 <tr>
-                    <td>{{$row->id}}</td>
+                    <td>{{$k+1}}</td>
                     <td><img src="{{getImgUrl($row->explodedossurl)}}"></td>
                     <td>{{$row->name}}</td>
-                    @if( $row->isdefaulttemplate == 1 )
-                        <td>{{$row->siteToDataTag?$row->siteToDataTag->name:''}}</td>
-                    @else
-                        <td>{{$row->siteToCommpanyTag?$row->siteToCommpanyTag->name:''}}</td>
-                    @endif
+                    <td>{{$row->siteToCommpanyTag?$row->siteToCommpanyTag->name:''}}</td>
                     <td>{{$row->siteToStore?$row->siteToStore->name:''}}</td>
                     <td>{{$row->created_at}}</td>
                     <td>{{$row->updated_at}}</td>
-                    <td><input type="checkbox" name="show"  @if($row->isopen == 1) checked @endif lay-skin="switch" lay-text="是|否" lay-filter="isShow"></td>
+                    <td><input type="checkbox" name="show"  data-url="{{route('site-isopen')}}" value="{{$row->id}}" @if( $row->isfinish == 1) disabled @else @if($row->isopen == 1) checked @endif  lay-filter="isOpen" @endif lay-skin="switch" lay-text="是|否" ></td>
                     <td>
                         <div class="layui-btn-group">
-                            <a  class="layui-btn" href="{{route('site-renew',$row->uuid)}}">更新</a>
-                            <a  class="layui-btn" href="{{route('site.edit',$row->uuid)}}">编辑</a>
+                            @if( $row->isfinish == 0 )
+                                <a  class="layui-btn" href="{{route('site-renew',$row->uuid)}}">更新</a>
+                                <a  class="layui-btn" href="{{route('site.edit',$row->uuid)}}">编辑</a>
+                            @endif
                             <button type="button" class="layui-btn deleteBtn" onclick="del(this)" data-url="{{route('site.destroy',$row->uuid)}}">删除</button>
                         </div>
                     </td>

@@ -14,6 +14,7 @@
         <tr>
             <th>ID</th>
             <th>模板名称</th>
+            <th>模板阶段</th>
             <th>操作</th>
         </tr>
         </thead>
@@ -22,9 +23,17 @@
                 <td>{{$row->id}}</td>
                 <td>{{$row->name}}</td>
                 <td>
-                    <div class="layui-btn-group">
-                        <button type="button" class="layui-btn editBtn">设为默认</button>
-                    </div>
+                    @foreach( $row->stageTemplateToTemplateTag as $dk=>$trow )
+                        {{$trow->name}}
+                        @if( count($row->stageTemplateToTemplateTag)-1 != $dk ) -> @endif
+                    @endforeach
+                </td>
+                <td>
+                    @if(count($row->stageTemplateToCompanyTemplate))
+                       <button type="button" class="layui-btn layui-btn-mini layui-btn-disabled">已使用</button>
+                    @else
+                       <button type="button" class="layui-btn add-default" data-id="{{$row->id}}" data-url="{{route('site-add-default-template')}}">去使用</button>
+                    @endif
                 </td>
             </tr>
         @endforeach
@@ -43,9 +52,9 @@
             <th>操作</th>
         </tr>
         </thead>
-        @foreach( $data->definition as $row )
+        @foreach( $data->definition as $k=>$row )
             <tr>
-                <td>{{$row->id}}</td>
+                <td>{{$k+1}}</td>
                 <td>{{$row->name}}</td>
                 <td>
                     @foreach( $row->stageTemplateToTemplateTag as $dk=>$trow )
@@ -58,19 +67,20 @@
                 </td>
                 <td>
                     <div class="layui-btn-group">
-                        @if( $row->isdefault == 1 )
-                            <a class="layui-btn layui-btn-danger layui-btn-mini">设为默认</a>
-                        @else
+                        @if( $row->isdefault != 1 )
                             <a class="layui-btn layui-btn-mini default-btn" data-url="{{route('site-template-default',$row->uuid)}}">设为默认</a>
                         @endif
                         <a class="layui-btn layui-btn-mini edit-btn" href="{{route('site-template.edit',$row->uuid)}}">编辑</a>
+                        @if( $row->issystem !=1 )
                         <a class="layui-btn layui-btn-mini del-btn"  data-url="{{route('site-template.destroy',$row->uuid)}}">删除</a>
+                        @endif
                     </div>
                 </td>
             </tr>
         @endforeach
     </table>
     </form>
+    <div class="pageWrap">{{$data->links()}}</div>
 </div>
 <input type="hidden" id="msg" value="{{session('msg')}}">
 @endsection
