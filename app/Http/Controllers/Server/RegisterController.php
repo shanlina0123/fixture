@@ -22,8 +22,7 @@ class RegisterController extends ServerBaseController
             $data = trimValue($request->all());
             $request->validate([
                 'phone' => 'required|numeric|unique:user|regex:/^1[34578][0-9]{9}$/',
-                'password' => 'required|min:6|max:12',
-                'confirmed' => 'password_confirmation',
+                'password' => 'required|min:6|max:12|confirmed',
                 'agree' => 'accepted',
                 'code' => 'required|numeric',
             ],[
@@ -33,6 +32,7 @@ class RegisterController extends ServerBaseController
                 'phone.unique'=>'该电话号码已被注册',
                 'password.min'=>'密码最小为6为字符',
                 'password.max'=>'密码最大为12为字符',
+                'password.confirmed'=>'两次输入密码不一致',
                 'agree.accepted'=>'请选择用户协议',
                 'code.required'=>'请填写验证码',
                 'code.numeric'=>'验证码有误',

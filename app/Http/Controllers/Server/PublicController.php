@@ -3,7 +3,7 @@ namespace App\Http\Controllers\Server;
 use App\Http\Business\Server\PublicBusiness;
 use App\Http\Controllers\Common\ServerBaseController;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Validator;
 class PublicController extends ServerBaseController
 {
     /**
@@ -74,5 +74,60 @@ class PublicController extends ServerBaseController
         $list=$this->public_business->getMenu($admin_user->id,$admin_user->roleFunids);
         //接口返回结果
         responseData(\StatusCode::SUCCESS,"获取成功",$list);
+    }
+
+    /**
+     * @param $phone
+     * @param $type
+     * 发送短息
+     */
+    public function sendSms()
+    {
+        $data = trimValue( $this->request->all() );
+        $validator = Validator::make(
+            $data,
+            [
+                'phone'=>'bail|regex:/^1[34578][0-9]{9}$/',
+                'type'=>'bail|required|numeric',//类型
+            ],[
+                'phone.regex'=>'手机号码不正确',
+                'type.numeric'=>'类型不正确',
+            ]
+        );
+        if ($validator->fails())
+        {
+            $messages = $validator->errors()->first();
+            responseData(\StatusCode::CHECK_FORM,'验证失败','',$messages);
+        }
+        switch ( (int)$data['type'] )
+        {
+            case 1: //注册
+            case 2: //修改手机号码
+                $validator = Validator::make(
+                    $data,
+                    [
+                        'phone'=>'unique:user',
+                    ],[
+                        'phone.unique'=>'手机号码已存在',
+                    ]
+                );
+                if ($validator->fails())
+                {
+                    $messages = $validator->errors()->first();
+                    responseData(\StatusCode::CHECK_FORM,$messages);
+                }
+                \Sms::getCode($data['phone'],$data['type']);
+                break;
+            case 3: //修改密码
+                $user = session('userInfo');
+                if( $user->phone != $data['phone'] )
+                {
+                    responseData(\StatusCode::ERROR,'电话号码与实际注册的不符');
+                }
+                \Sms::getCode($data['phone'],$data['type']);
+                break;
+
+        }
+        responseData(\StatusCode::ERROR,'发送失败');
     }
 }

@@ -14,7 +14,6 @@ use App\Http\Model\Data\RenovationMode;
 use App\Http\Model\Data\RoomStyle;
 use App\Http\Model\Data\RoomType;
 use App\Http\Model\Data\StageTemplate;
-use App\Http\Model\Data\StageTemplateTag;
 use App\Http\Model\Dynamic\Dynamic;
 use App\Http\Model\Dynamic\DynamicComment;
 use App\Http\Model\Dynamic\DynamicImages;
