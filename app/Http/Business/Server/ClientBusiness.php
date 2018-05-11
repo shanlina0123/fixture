@@ -118,7 +118,7 @@ class ClientBusiness extends ServerBase
      */
     public function editClient( $user, $id )
     {
-        if( $user->isadmin == 2 )
+        if( $user->isadmin == 1 )
         {
             $swhere['uuid'] = $id;
             $swhere['companyid'] = $user->companyid;
@@ -129,7 +129,9 @@ class ClientBusiness extends ServerBase
             $swhere['companyid'] = $user->companyid;
             $swhere['storeid'] =  $user->storeid;
         }
-       return Client::where($swhere)->with('clientToClientFollow')->first();
+        return Client::where($swhere)->with(['clientToClientFollow'=>function( $query ){
+            $query->with('clientFollowToStatus');
+        }])->first();
     }
 
     /**
@@ -168,6 +170,7 @@ class ClientBusiness extends ServerBase
                 $arr['follow_userid'] = $user->id;
                 $arr['created_at'] = date("Y-m-d H:i:s");
                 ClientFollow::insert( $arr );
+                $res->save();
                 DB::commit();
                 return true;
             }else

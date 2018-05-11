@@ -76,11 +76,14 @@ class ClientController extends ServerBaseController
      */
     public function edit($id)
     {
-        //存储地址
-        $this->request->session()->put('returnUrl', url()->previous());
-        $status = $this->client->getClientStatus();
         $data = $this->client->editClient( $this->userInfo, $id );
-        return view('server.client.edit',compact('data','status'));
+        if( $data )
+        {
+            responseData(\StatusCode::SUCCESS,'跟进记录',$data);
+        }else
+        {
+            responseData(\StatusCode::ERROR,'跟进记录',[]);
+        }
     }
 
     /**
@@ -99,22 +102,13 @@ class ClientController extends ServerBaseController
         ]);
         $data = trimValue($this->request->all());
         $res = $this->client->updateClient( $data, $this->userInfo, $id );
-        if ($this->request->session()->has('returnUrl'))
-        {
-            $returnUrl =  $this->request->session()->pull('returnUrl');
-
-        }else
-        {
-            $returnUrl = route('client.index');
-        }
         if( $res == true )
         {
             Cache::tags(['client'.$this->userInfo->companyid])->flush();
-            return redirect($returnUrl)->with('msg','操作成功');
-
+            return redirect()->back()->with('msg','更近成功');
         }else
         {
-            return redirect($returnUrl)->with('msg','操作失败');
+            return redirect()->back()->with('msg','更近失败');
         }
     }
 
