@@ -26,6 +26,7 @@ class BusinessServerLogin extends ServerBase
          $where['isinvitationed'] = 0;
          $where['isadminafter'] = 1;
          $res = User::where($where)->first();
+         $res->islook=0;
          if( $res )
          {
              if( $res->status !=1 )

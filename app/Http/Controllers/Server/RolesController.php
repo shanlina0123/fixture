@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Server;
 use App\Http\Business\Server\RolesBusiness;
 use App\Http\Controllers\Common\ServerBaseController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 /***
@@ -30,35 +31,39 @@ class RolesController extends ServerBaseController
      */
     public function index()
     {
-        //获取请求页码
-        $page=$this->request->input("page");
-        //用户信息
-        $user=getUserInfo();
-        $list = $this->roles_business->index($user->companyid,$user->cityid,$user->storeid,$user->islook,$page);
-        return view('server.roles.index',compact('list'));
-
+        //获取列表数据
+        $dataSource=$this->getListData();
+        $list=$dataSource["data"];
+        $errorMsg=$dataSource["messages"];
+        //处理ajax请求
+        if($this->request->ajax()){
+            responseAjax($dataSource);
+        }
+        return view('server.roles.index',compact('list'))->with("errorMsg",$errorMsg);
     }
 
     /***
-     * 角色详情
-     * @param $uuid
+     * 获取列表数据集
      */
-    public function edit($uuid)
+    public  function  getListData()
     {
-        //验证规则
-        $validator = Validator::make(["uuid"=>$uuid],[
-            'uuid' => 'required|max:32|min:32'
-        ],['uuid.required'=>'参数错误','uuid.max'=>'参数错误','uuid.min'=>'参数错误']);
-
-        //进行验证
-        if ($validator->fails()) {
-            responseData(\StatusCode::PARAM_ERROR,"参数错误");
+        $page=$this->request->input("page");
+        //用户信息
+        $user=getUserInfo();
+        //非管理员参数验证
+        if($user->isadmin==0) {
+            if (strlen($user->companyid) == 0 ||
+                strlen($user->cityid) == 0 ||
+                strlen($user->storeid) == 0
+            ) {
+                return  responseCData(\StatusCode::PARAM_ERROR,"用户信息不完整",null);
+            }
         }
-        //获取业务数据
-        $data=$this->roles_business->edit($uuid);
-        //接口返回结果
-        return view('server.roles.edit',compact('data'));
+        $list = $this->roles_business->index($user->isadmin,$user->companyid,$user->cityid,$user->storeid,$user->islook,$page);
+        return   responseCData(\StatusCode::SUCCESS,"",$list);
     }
+
+
 
 
     /***
@@ -94,7 +99,7 @@ class RolesController extends ServerBaseController
 
 
     /***
-     * 执行 - 修改活动
+     * 执行 - 修改
      * @param Request $request
      */
     public function update($uuid)
@@ -137,9 +142,9 @@ class RolesController extends ServerBaseController
             responseData(\StatusCode::PARAM_ERROR,"参数错误");
         }
         //获取业务数据
-        $this->roles_business->setting($uuid);
+        $rs=$this->roles_business->setting($uuid);
         //接口返回结果
-        responseData(\StatusCode::SUCCESS,"设置成功");
+        responseData(\StatusCode::SUCCESS,"设置成功",$rs);
 
     }
 
@@ -163,24 +168,39 @@ class RolesController extends ServerBaseController
         responseData(\StatusCode::SUCCESS,"删除成功");
     }
 
+
     /***
      * 角色权限详情
-     * @param $uuid
+     * @param $roleid
      */
-    public function authEdit($role_uuid)
+    public  function  auth($roleid)
+    {
+        //获取列表数据
+        $dataSource=$this->getAuthListData($roleid);
+        $list=$dataSource["data"];
+        $errorMsg=$dataSource["messages"];
+        //处理ajax请求
+        if($this->request->ajax()){
+            responseAjax($dataSource);
+        }
+        return view('server.roles.auth',compact('list'))->with("errorMsg",$errorMsg);
+    }
+    /***
+     * 角色权限详情数据包
+     * @param $roleid
+     */
+    public function getAuthListData($roleid)
     {
         //验证规则
-        $validator = Validator::make(["role_uuid"=>$role_uuid],[
-            'role_uuid' => 'required|max:32|min:32'
-        ],['role_uuid.required'=>'参数为空错误','role_uuid.max'=>'参数max错误','role_uuid.min'=>'参数min错误',]);
+        $validator = Validator::make(["roleid"=>$roleid],[
+            'roleid' => 'required|numeric'
+        ],['roleid.required'=>'参数为空错误','roleid.numeric'=>'参数错误非int类型',]);
         //进行验证
         if ($validator->fails()) {
-            responseData(\StatusCode::PARAM_ERROR,"验证失败","",$validator->errors());
+           return responseCData(\StatusCode::PARAM_ERROR,"验证失败","",$validator->errors());
         }
         //获取业务数据
-        $data=$this->roles_business->authEdit($role_uuid);
-        //接口返回结果
-        return view('server.roles.authEdit',compact('data'));
+        return $this->roles_business->auth($roleid);
     }
 
 
@@ -188,41 +208,26 @@ class RolesController extends ServerBaseController
     /***
      * 勾选角色权限 - 执行
      */
-    public  function  updateAuth($role_uuid)
+    public  function  updateAuth($roleid)
     {
         //获取请求参数
-        $data=$this->getData(["functionid","islook"],$this->request->all());
-        $validateData=array_merge(["role_uuid"=>$role_uuid],$data);
+        $data=$this->getData(["funcislook"],$this->request->all());
+        $validateData=array_merge(["roleid"=>$roleid],$data);
 
         //定义验证规则
         $validator = Validator::make($validateData,[
-            'role_uuid' => 'required|max:32|min:32',
-            "functionid"=>'required',
-            "islook"=>"required|numeric"
-        ],['role_uuid.required'=>'uuid参数为空错误','role_uuid.max'=>'uuid参数max错误','role_uuid.min'=>'uuid参数min错误',
-            'functionid.required'=>'functionid参数为空错误',
-            'islook.required'=>'视野参数为空错误','islook.numeric'=>'视野参数只能是int',]);
+            'roleid' => 'required|numeric',
+            "funcislook"=>'present',
+        ],['roleid.required'=>'uuid参数为空错误','roleid.numeric'=>'参数错误非int类型',
+            'funcislook.present'=>'菜单权限勾选参数缺少']);
 
         //进行验证
         if ($validator->fails()) {
             responseData(\StatusCode::PARAM_ERROR,"验证失败","",$validator->errors());
         }
 
-        //数组 int验证 updateorcreate
-        if(!checkParam($data["functionid"],"is_array_int"))
-        {
-            responseData(\StatusCode::PARAM_ERROR,"验证失败","",["functionid"=>["functionid参数格式错误"]]);
-        }
-
-        if(strlen($data["islook"])>0)
-        {
-            if(!in_array($data["islook"],[0,1]))
-            {
-                responseData(\StatusCode::PARAM_ERROR,"验证失败","",["islook"=>["islook参数非预定义"]]);
-            }
-        }
         //获取业务数据
-        $this->auth_service->updateAuth($role_uuid,$data);
+        $this->roles_business->updateAuth($roleid,$data);
         //接口返回结果
         responseData(\StatusCode::SUCCESS,"勾选成功");
     }

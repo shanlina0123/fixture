@@ -2,13 +2,14 @@
 @section("title")角色管理@endsection
 @section('content')
     <div class="main">
+        <div style="display: none" id="errorMsg" content="{{$errorMsg}}"></div>
         <!--新增和筛选部分-->
         <div class="addBtnWrap">
             <button type="button" class="layui-btn addBtn">新增角色</button>
         </div>
         <!--列表数据部分-->
-        <form class="layui-form">
-            <table class="layui-table">
+        <form class="layui-form" action="{{route('roles-index')}}" method="get" id="listForm">
+            <table class="layui-table" id="listTable">
                 <thead>
                 <tr>
                     <th>序号</th>
@@ -17,33 +18,43 @@
                     <th>操作</th>
                 </tr>
                 </thead>
-                @foreach($list as $index=>$item)
-                    <tr>
+                @if($list!=null) @foreach($list as $index=>$item)
+                    <tr class="listRow" uuid="{{$item->uuid}}" roleid="{{$item->id}}">
                         <td>{{$index+1}}</td>
-                        <td>{{$item->name}}</td>
-                        <td><input type="checkbox" name="status" lay-skin="switch" lay-text="ON|OFF" ></td>
+                        <td id="rowName">{{$item->name}}</td>
+                        <td id="rowStatus" status="{{$item->status}}">
+                        @if($item->isdefault==1)
+                            默认
+                        @else
+                            @if($item->status==1)
+                               <input type="checkbox"  name="status" lay-skin="switch" lay-text="ON|OFF" checked="checked" lay-filter="rowStatus" url="{{route('roles-setting','uuid')}}">
+                            @else
+                               <input type="checkbox" name="status" lay-skin="switch" lay-text="ON|OFF" lay-filter="rowStatus" url="{{route('roles-setting','uuid')}}">
+                            @endif
+                        @endif
+                       </td>
                         <td>
-                            @if($item->isdeafult==1)
+                            @if($item->isdefault==1)
                                 默认
                              @else
                                 <div class="layui-btn-group">
                                     <button type="button" class="layui-btn editBtn">编辑</button>
-                                    <a href="editRole.html" class="layui-btn">权限设置</a>
-                                    <button type="button" class="layui-btn deleteBtn">删除</button>
+                                    <a class="layui-btn authBtn" url="{{route('roles-auth','roleid')}}" >权限设置</a>
+                                    <button type="button" class="layui-btn deleteBtn" url="{{route('roles-delete','uuid')}}">删除</button>
                                 </div>
                              @endif
                         </td>
                     </tr>
-                @endforeach
+                   @endforeach @endif
             </table>
         </form>
-        <div class="pageWrap">{{ $list->links() }}</div>
+        <div class="pageWrap">@if($list!=null){{ $list->links() }} @endif</div>
     </div>
 @endsection
 @section('other')
     <!--新增门店弹窗-->
     <div class="addWrap popWrap">
-        <form class="layui-form" action="{{route('roles-store')}}" method="post">
+        <form class="layui-form"  id="addForm"  action="{{route('roles-store')}}" method="post" >
             <div class="layui-form-item">
                 <label class="layui-form-label">角色名称</label>
                 <div class="layui-input-inline">
@@ -51,21 +62,21 @@
                 </div>
             </div>
             <div class="layui-form-item popSubmitBtn">
-                <button type="button" class="layui-btn ajaxSubmit">立即提交</button>
+                <button type="button" class="layui-btn ajaxSubmit" id="add-btn">立即提交</button>
             </div>
         </form>
     </div>
     <!--编辑门店弹窗-->
-    <div class="editWrap popWrap" action="{{route('roles-update')}}" method="put">
-        <form class="layui-form">
+    <div class="editWrap popWrap">
+        <form class="layui-form" id="editForm"  action="{{route('roles-update','uuid')}}" method="put">
             <div class="layui-form-item">
                 <label class="layui-form-label">角色名称</label>
                 <div class="layui-input-inline">
-                    <input type="text" class="layui-input" value="门店管理员">
+                    <input type="text" class="layui-input" value="" id="name">
                 </div>
             </div>
             <div class="layui-form-item popSubmitBtn">
-                <button type="button" class="layui-btn ajaxSubmit">立即提交</button>
+                <button type="button" class="layui-btn ajaxSubmit" id="edit-btn">立即提交</button>
             </div>
         </form>
     </div>
