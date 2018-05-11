@@ -6,8 +6,7 @@
  * Time: 16:28
  */
 
-
-namespace App\Http\Model;
+namespace App\Http\Model\Store;
 use Illuminate\Database\Eloquent\Model;
 class Store extends Model
 {

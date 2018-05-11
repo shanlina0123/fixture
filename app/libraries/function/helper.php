@@ -279,3 +279,17 @@ function list_to_tree($list, $pk='id', $pid = 'pid', $child = '_child', $root = 
     }
     return $tree;
 }
+
+
+/****
+ * 过滤下划线和%
+ * @param $str
+ * @return mixed|string
+ */
+function searchFilter($str)
+{
+    $search = addslashes($str);
+    $search = str_replace('_',"\\_",$search);
+    $search = str_replace('%',"\\%",$search);
+    return $search;
+}
