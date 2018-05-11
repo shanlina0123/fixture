@@ -33,4 +33,7 @@ return [
     "pix_asset"=>"default/",//css js 目录
     "cssVersion"=>"003",//css版本
     "jsVersion"=>"001",//js版本
+
+    //默认密码
+    "adminPwd"=>"xxs111111"
 ];

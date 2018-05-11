@@ -74,7 +74,7 @@ return array(
     'App\\Http\\Model\\Site\\SiteFollowrecord' => $baseDir . '/app/Http/Model/Site/SiteFollowrecord.php',
     'App\\Http\\Model\\Site\\SiteParticipant' => $baseDir . '/app/Http/Model/Site/SiteParticipant.php',
     'App\\Http\\Model\\Site\\SiteStageschedule' => $baseDir . '/app/Http/Model/Site/SiteStageschedule.php',
-    'App\\Http\\Model\\Store' => $baseDir . '/app/Http/Model/Store.php',
+    'App\\Http\\Model\\Store\\Store' => $baseDir . '/app/Http/Model/Store/Store.php',
     'App\\Http\\Model\\User\\User' => $baseDir . '/app/Http/Model/User/User.php',
     'App\\Providers\\AppServiceProvider' => $baseDir . '/app/Providers/AppServiceProvider.php',
     'App\\Providers\\AuthServiceProvider' => $baseDir . '/app/Providers/AuthServiceProvider.php',

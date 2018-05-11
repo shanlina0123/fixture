@@ -19,6 +19,8 @@ Route::group(['namespace' => 'Server'], function () {
     Route::group(['middleware' => ['checkUser']], function () {
         Route::get('/', 'IndexController@index')->name('index'); //入口
         Route::match(['get', 'post'], 'company/setting', 'CompanyController@companySetting')->name('company-setting');  //公司信息设置
+
+
         //中间件权限认证路由
         Route::group(['middleware' => ['checkAuth']], function () {
             Route::any('upload-temp-img', 'PublicController@uploadImgToTemp');   //上传图片
@@ -51,6 +53,13 @@ Route::group(['namespace' => 'Server'], function () {
             Route::delete("roles/{uuid}","RolesController@delete")->name("roles-delete");//删除-执行
             Route::get("roles/auth/{roleid}","RolesController@auth")->name("roles-auth");//角色权限详情
             Route::put("roles/auth/{roleid}","RolesController@updateAuth")->name("roles-auth-update");//勾选权限
+            //用户
+            Route::get("admin","AdminController@index")->name("admin-index");//列表
+            Route::post("admin/search","AdminController@index")->name("admin-search-index");//搜索列表
+            Route::post("admin","AdminController@store")->name("admin-store");//新增-执行
+            Route::put("admin/{uuid}","AdminController@update")->name("admin-update");//修改-执行
+            Route::delete("admin/{uuid}","AdminController@delete")->name("admin-delete");//删除-执行
+            Route::put("admin/setting/{uuid}","AdminController@setting")->name("admin-setting");//设置-执行
         });
     });
 });

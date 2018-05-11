@@ -87,7 +87,7 @@ class RolesBusiness extends ServerBase
             {
                 DB::commit();
                 //删除缓存
-              Cache::tags(["Filter-RolePageList"])->flush();
+                Cache::tags(["Filter-RoleFunctionList","Admin-RoleList"])->flush();
             }else{
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR,"新增失败");
@@ -142,7 +142,7 @@ class RolesBusiness extends ServerBase
             {
                 DB::commit();
                 //删除缓存
-                Cache::tags(["Filter-RolePageList"])->flush();
+                Cache::tags(["Filter-RoleFunctionList","Admin-RoleList"])->flush();
             }else{
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR,"修改失败");
@@ -196,7 +196,7 @@ class RolesBusiness extends ServerBase
             {
                 DB::commit();
                 //删除缓存
-                Cache::tags(["Filter-RolePageList"])->flush();
+                Cache::tags(["Filter-RoleFunctionList","Admin-RoleList"])->flush();
             }else{
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR,"删除失败");
@@ -241,7 +241,7 @@ class RolesBusiness extends ServerBase
             if ($rs !== false) {
                 DB::commit();
                 //删除缓存
-                Cache::tags(["Filter-RolePageList"])->flush();
+                Cache::tags(["Filter-RoleFunctionList","Admin-RoleList"])->flush();
                 return ["status"=>$admin["status"]];
             } else {
                 DB::rollBack();
@@ -262,8 +262,6 @@ class RolesBusiness extends ServerBase
      */
     public function  auth($roleid,$tag1="Filter-FunctionList",$tag2 = "Filter-RoleFunctionList")
     {
-        Cache::forget($tag1);
-        Cache::tags($tag2)->flush();
         //检查角色是否已禁用
         $list["role"]=FilterRole::select("id","name","status")->where("id",$roleid)->first()->toArray();
         if(empty($list["role"]))
@@ -383,7 +381,7 @@ class RolesBusiness extends ServerBase
             {
                 DB::commit();
                 //删除缓存
-                Cache::tags("Filter-RoleFunctionList")->flush();
+                Cache::tags(["Filter-RoleFunctionList","Admin-RoleList"])->flush();
             } else {
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR, "勾选失败");
