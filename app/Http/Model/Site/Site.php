@@ -17,7 +17,7 @@ class Site extends Model
      */
     public function siteToStore()
     {
-        return $this->belongsTo('App\Http\Model\Store','storeid','id');
+        return $this->belongsTo('App\Http\Model\Store\Store','storeid','id');
     }
 
     /**

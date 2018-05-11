@@ -90,6 +90,9 @@ class Sms
                     case "3":
                         $content = "温馨提示:您修改密码的验证码为：" . $code . "请勿向他人泄露！";
                         break;
+                    case "4":
+                        $content = "温馨提示:您登陆的验证码为：" . $code . "请勿向他人泄露！";
+                        break;
                 }
                 $res = Sms::SendSms( $phone, $content );
                 if( $res )

@@ -401,7 +401,7 @@ class ComposerStaticInit8fde48a8b0a3d8760651318138fd3161
         'App\\Http\\Model\\Site\\SiteInvitation' => __DIR__ . '/../..' . '/app/Http/Model/Site/SiteInvitation.php',
         'App\\Http\\Model\\Site\\SiteStageschedule' => __DIR__ . '/../..' . '/app/Http/Model/Site/SiteStageschedule.php',
         'App\\Http\\Model\\Sms\\History' => __DIR__ . '/../..' . '/app/Http/Model/Sms/History.php',
-        'App\\Http\\Model\\Store' => __DIR__ . '/../..' . '/app/Http/Model/Store.php',
+        'App\\Http\\Model\\Store' => __DIR__ . '/../..',
         'App\\Http\\Model\\User\\User' => __DIR__ . '/../..' . '/app/Http/Model/User/User.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'App\\Providers\\AuthServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AuthServiceProvider.php',

@@ -65,7 +65,7 @@ class LoginController extends ServerBaseController
                     //验证码登陆
                     $request->validate([
                         'username' => 'bail|regex:/^1[34578][0-9]{9}$/|unique:user',
-                        'code' => 'required|numeric|min:4?maz',
+                        'code' => 'required|min:4|max:4',
                     ],[
                         'username.regex'=>'请输入正确的手机号',
                         'username.unique'=>'该手机号还未注册',
@@ -73,6 +73,16 @@ class LoginController extends ServerBaseController
                         'code.min'=>'验证码错误',
                         'code.max'=>'验证码错误',
                     ]);
+                    $code_cache = Cache::get('tel_'.$data['username']);
+                    if( $data['code'] != $code_cache )
+                    {
+                        return redirect()->back()->with('msg','验证码错误');
+                    }
+                    $where['phone'] = $data['username'];
+                    $res = $this->user->checkUserPhone($where);
+                    break;
+                default:
+                    return redirect()->back()->with('msg','登陆失败');
                     break;
             }
 
@@ -81,6 +91,7 @@ class LoginController extends ServerBaseController
                 return redirect()->route('login')->with('msg',$res->msg);
             }else
             {
+                Cache::forget('tel_'.$data['username']);
                 return redirect()->route('index');
             }
         }else

@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Server;
 use App\Http\Business\Server\PublicBusiness;
 use App\Http\Controllers\Common\ServerBaseController;
+use App\Http\Model\User\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 class PublicController extends ServerBaseController
@@ -123,6 +124,22 @@ class PublicController extends ServerBaseController
                 if( $user->phone != $data['phone'] )
                 {
                     responseData(\StatusCode::ERROR,'电话号码与实际注册的不符');
+                }
+                \Sms::getCode($data['phone'],$data['type']);
+                break;
+            case 4: //密码登陆
+                $where['type'] = 0;
+                $where['isinvitationed'] = 0;
+                $where['isadminafter'] = 1;
+                $where['phone'] = $data['phone'];
+                $user = User::where($where)->first();
+                if( !$user )
+                {
+                    responseData(\StatusCode::ERROR,'账号不存在');
+                }
+                if( $user->status != 1 )
+                {
+                    responseData(\StatusCode::ERROR,'账号已冻结');
                 }
                 \Sms::getCode($data['phone'],$data['type']);
                 break;

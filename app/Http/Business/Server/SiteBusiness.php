@@ -22,7 +22,7 @@ use App\Http\Model\Site\Site;
 use App\Http\Model\Site\SiteFollowrecord;
 use App\Http\Model\Site\SiteInvitation;
 use App\Http\Model\Site\SiteStageschedule;
-use App\Http\Model\Store;
+use App\Http\Model\Store\Store;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 

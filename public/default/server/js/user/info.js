@@ -43,7 +43,7 @@ layui.use(['layer','form'], function() {
         $.ajax({
             url:url,
             type:"PUT",
-            data:{phone:phone,type:2},
+            data:{phone:phone,type:type},
             dataType:"json",
             success: function( data )
             {
