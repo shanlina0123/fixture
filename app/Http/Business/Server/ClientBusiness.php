@@ -27,7 +27,7 @@ class ClientBusiness extends ServerBase
     public function getClientList( $user,$request )
     {
         $tag = 'client'.$user->companyid;
-        Cache::tags([$tag])->flush();
+        //Cache::tags([$tag])->flush();
         $where = $tag.$request->input('page').$request->input('k').$request->input('status');
         $value = Cache::tags($tag)->remember( $tag.$where,config('configure.sCache'), function() use( $user, $request ){
             //网站管理员

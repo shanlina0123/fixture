@@ -80,7 +80,7 @@
         @endforeach
     </table>
     </form>
-    <div class="pageWrap">{{$data->links()}}</div>
+    <div class="pageWrap">{{$data->definition->links()}}</div>
 </div>
 <input type="hidden" id="msg" value="{{session('msg')}}">
 @endsection
