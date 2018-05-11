@@ -22,7 +22,7 @@
                             </select>
                         </div>
                     </div>
-                    <button type="button" class="layui-btn searchBtn">查询</button>
+                    <button class="layui-btn searchBtn">查询</button>
                 </form>
             </div>
         </div>
@@ -49,7 +49,7 @@
                     <td>{{$row->clientToStatus?$row->clientToStatus->name:''}}</td>
                     <td>{{$row->created_at}}</td>
                     <td>
-                        <a class="layui-btn layui-btn-sm update-btn" data-url="{{route('client.edit',$row->uuid)}}">跟进</a>
+                        <a class="layui-btn layui-btn-sm update-btn" data-form="{{route('client.update',$row->uuid)}}" data-url="{{route('client.edit',$row->uuid)}}">跟进</a>
                         <a class="layui-btn layui-btn-sm" data-url="{{route('client.destroy',$row->uuid)}}" onclick="del(this)">删除</a>
                     </td>
                 </tr>
@@ -62,14 +62,15 @@
 
 <!--客户跟进弹窗-->
 <div class="clientPop">
-    <form class="layui-form">
+    <form class="layui-form" id="layui-form" method="post" action="">
+        {{csrf_field()}}
+        {{ method_field('PUT') }}
         <div class="layui-form-item">
             <label class="layui-form-label">客户状态</label>
             <div class="layui-input-block">
-                <select name="modules" lay-verify="required" lay-search="">
-                    <option value="">选择状态</option>
+                <select name="followstatusid" datatype="*" errormsg="请选择">
                     @foreach( $status as $rs )
-                        <option value="{{$rs->id}}" @if( $rs->id == $where['status'])  selected @endif >{{$rs->name}}</option>
+                        <option value="{{$rs->id}}">{{$rs->name}}</option>
                     @endforeach
                 </select>
             </div>
@@ -77,31 +78,16 @@
         <div class="layui-form-item">
             <label class="layui-form-label">跟进内容</label>
             <div class="layui-input-block">
-                <textarea placeholder="请输入内容" class="layui-textarea"></textarea>
+                <textarea placeholder="请输入内容" name="followcontent" class="layui-textarea"></textarea>
             </div>
         </div>
-        <div class="describe"><button type="button" class="layui-btn ">立即提交</button></div>
+        <div class="describe"><button type="button" id="btn_submit" class="layui-btn ">立即提交</button></div>
     </form>
-    <h2 class="logText">跟进日志</h2>
-    <ul class="logUl">
-        <li>
-            <div>客户状态：<span>无效</span></div>
-            <p class="backMsg">客户说她已经买过了。</p>
-            <div class="clearfix">
-                <span class="fl">跟进人：张三</span>
-                <span class="fr">跟进时间：2017-12-12</span>
-            </div>
-        </li>
-        <li>
-            <div>客户状态：<span>无效</span></div>
-            <p class="backMsg">客户说她已经买过了。</p>
-            <div class="clearfix">
-                <span class="fl">跟进人：张三</span>
-                <span class="fr">跟进时间：2017-12-12</span>
-            </div>
-        </li>
-    </ul>
+    <div id="list">
+
+    </div>
 </div>
 @section('js')
-    <script src="{{pix_asset('server/js/client/client.js')}}"></script>
+    <script type="text/javascript" src="{{pix_asset('server/plugins/validform/Validform_v5.3.2_min.js',false)}}"></script>
+    <script type="text/javascript" src="{{pix_asset('server/js/client/client.js')}}"></script>
 @endsection
