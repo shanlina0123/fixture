@@ -3,27 +3,42 @@ use Illuminate\Support\Facades\Cache;
 use \App\Http\Model\Sms\History;
 class Sms
 {
+
+    private $appid = '1400091404';
+    private $appkey = 'cb9241e3e160a7d277cc20dae3fb8849';
+    private $url = 'https://yun.tim.qq.com/v5/tlssmssvr/sendsms';
+
     //定义发送短信的url
     /**
      * @param $phone 电话号码
      * @param $conent 短信内容
      * @return bool 返回真或者假
      */
-    function  GetSms($phone,$conent)
+    private function  GetSms( $phone, $conent )
     {
+        $random = rand(10000,99999);
+        $time = time();
         $post_data = array();
-        $post_data['account'] = iconv('GB2312', 'GB2312',"VIP_ljw");
-        $post_data['pswd'] = iconv('GB2312', 'GB2312',"sxDXlijia521");
-        $post_data['mobile'] =trim($phone);
-        $post_data['msg']=mb_convert_encoding("$conent",'UTF-8', 'auto');
-        $url='';
-        $o="";
-        foreach ($post_data as $k=>$v)
-        {
-            $o.= "$k=".urlencode($v)."&";
-        }
-        $post_data=substr($o,0,-1);
-        return file_get_contents($url.$post_data);
+        $post_data['msg'] = $conent;
+        $sig = $this->sig( $phone, $random, $time );
+        $post_data['sig'] = $sig;
+        $post_data['tel'] = ['mobile'=>$phone,'nationcode'=>'86'];
+        $post_data['time'] = $time+360000000;
+        $post_data['type'] = 0;
+        $url = $this->url.'?sdkappid='.$this->appid.'&random='.$random;
+        return $this->sendCurlPost( $url, $post_data );
+    }
+
+    /**
+     * @param $phone
+     * @param $random
+     * @param $time
+     * @return string
+     * 加密
+     */
+    private function sig(  $phone, $random, $time  )
+    {
+        return hash("sha256", "appkey=".$this->appkey."&random=".$random."&time=".$time."&mobile=".$phone);
     }
 
     /**
@@ -35,6 +50,45 @@ class Sms
         return rand(1000,9999);
     }
 
+
+    /**
+     * 发送请求
+     *
+     * @param string $url      请求地址
+     * @param array  $dataObj  请求内容
+     * @return string 应答json字符串
+     */
+    public function sendCurlPost($url, $dataObj)
+    {
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_HEADER, 0);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 60);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($dataObj));
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        $ret = curl_exec($curl);
+        if (false == $ret)
+        {
+            $result = "{ \"result\":" . -2 . ",\"errmsg\":\"" . curl_error($curl) . "\"}";
+        } else
+        {
+            $rsp = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            if (200 != $rsp) {
+                $result = "{ \"result\":" . -1 . ",\"errmsg\":\"". $rsp
+                    . " " . curl_error($curl) ."\"}";
+            } else {
+                $result = $ret;
+            }
+        }
+        curl_close($curl);
+        return $result;
+    }
+
+
+
     /**
      * @param $phone
      * @param $conent
@@ -43,8 +97,22 @@ class Sms
      */
     static function SendSms( $phone, $conent )
     {
-        return 1;
 
+        if( config('configure.is_sms') == true )
+        {
+            $res = (new Sms())->GetSms( $phone, $conent );
+            $res = json_decode( $res, true );
+        }else
+        {
+            $res['result'] = 0;
+        }
+        if( $res['result'] == 0 )
+        {
+            return true;
+        }else
+        {
+            return false;
+        }
     }
 
 
@@ -61,59 +129,44 @@ class Sms
         {
             responseData(StatusCode::ERROR,'手机号码验证失败');
         }
-
-        $time = date("Y-m-d H:i");
-        $count = History::whereRaw("DATE_FORMAT(created_at,'%Y-%m-%d %H:%i') = ?",array($time))->count();
-        if( $count >= config('configure.sms_count') )
+        $code = Sms::create_code();
+        Cache::put('tel_'.$phone,$code,config('configure.sms_cache'));
+        switch ( $type )
         {
-            Sms::SendSms(config('configure.manage_phone'),'温馨提示：一分钟内发送短信超过'.config('configure.sms_count').'条');
-            responseData(StatusCode::ERROR,'发送失败...');
+            case "1":
+                $content = "您本次的验证码是".$code."，请于10分钟内填写。请勿泄露。";
+                break;
+            case "2":
+                $content = "您本次的验证码是".$code."，请于10分钟内填写。请勿泄露。";
+                break;
+            case "3":
+                $content = "您本次的验证码是".$code."，请于10分钟内填写。请勿泄露。";
+                break;
+            case "4":
+                $content = "您本次的验证码是".$code."，请于10分钟内填写。请勿泄露。";
+                break;
+            default:
+                $content = "您本次的验证码是".$code."，请于10分钟内填写。请勿泄露。";
+                break;
+        }
+        $res = Sms::SendSms( $phone, $content );
+        if( $res )
+        {
+            $user = session('userInfo');
+            $sms = new History();
+            $sms->companyid = $user?$user->companyid:0;
+            $sms->userid = $user?$user['id']:0;
+            $sms->type = 1;
+            $sms->content = $content;
+            $sms->code = $code;
+            $sms->phone = $phone;
+            $sms->created_at = date("Y-m-d H:i:s");
+            $sms->save();
+            responseData(StatusCode::SUCCESS,'发送成功');
 
         }else
         {
-            $rowCount =  History::whereRaw("DATE_FORMAT(created_at,'%Y-%m-%d %H:%i') = ? and phone = ? ",array( $time, $phone))->count();
-            if( $rowCount > config('configure.sms_Icount') )
-            {
-                responseData(StatusCode::ERROR,'频繁操作导致发送失败...');
-            }else
-            {
-                $code = Sms::create_code();
-                Cache::put('tel_'.$phone,$code,config('configure.sms_cache'));
-                switch ( $type )
-                {
-                    case "1":
-                        $content = "温馨提示:您注册验证码为：" . $code . "请勿向他人泄露！";
-                        break;
-                    case "2":
-                        $content = "温馨提示:您修改手机号码的验证码为：" . $code . "请勿向他人泄露！";
-                        break;
-                    case "3":
-                        $content = "温馨提示:您修改密码的验证码为：" . $code . "请勿向他人泄露！";
-                        break;
-                    case "4":
-                        $content = "温馨提示:您登陆的验证码为：" . $code . "请勿向他人泄露！";
-                        break;
-                }
-                $res = Sms::SendSms( $phone, $content );
-                if( $res )
-                {
-                    $user = session('userInfo');
-                    $sms = new History();
-                    $sms->companyid = $user?$user->companyid:0;
-                    $sms->userid = $user?$user['id']:0;
-                    $sms->type = 1;
-                    $sms->content = $content;
-                    $sms->code = $code;
-                    $sms->phone = $phone;
-                    $sms->created_at = date("Y-m-d H:i:s");
-                    $sms->save();
-                    responseData(StatusCode::SUCCESS,'发送成功');
-
-                }else
-                {
-                    responseData(StatusCode::ERROR,'发送失败...');
-                }
-            }
+            responseData(StatusCode::ERROR,'发送失败...');
         }
     }
 }

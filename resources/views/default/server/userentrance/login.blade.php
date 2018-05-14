@@ -57,7 +57,7 @@
                                     <button class="layui-btn loginButton" type="button" id="btn_submit1">登录</button>
                                 </div>
                                 <div class="layui-form-item loginLink clearfix">
-                                    <a href="page/index/forgetPwd.html" class="fl">忘记密码？</a>
+                                    <a href="{{route('recover-pass')}}" class="fl">忘记密码？</a>
                                     <a href="{{route('register')}}" class="fr">还没有账号？快去注册吧 >></a>
                                 </div>
                             </form>
@@ -78,7 +78,7 @@
                                     <button class="layui-btn loginButton" type="button" id="btn_submit2">登录</button>
                                 </div>
                                 <div class="layui-form-item loginLink clearfix">
-                                    <a href="page/index/forgetPwd.html" class="fl">忘记密码？</a>
+                                    <a href="{{route('recover-pass')}}" class="fl">忘记密码？</a>
                                     <a href="{{route('register')}}" class="fr">还没有账号？快去注册吧 >></a>
                                 </div>
                             </form>

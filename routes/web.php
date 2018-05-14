@@ -15,6 +15,7 @@ Route::group(['namespace' => 'Server'], function () {
     Route::match(['get', 'post'], 'register', 'RegisterController@register')->name('register');//注册页面
     Route::match(['get', 'post'], 'login', 'LoginController@login')->name('login');//登录
     Route::get('signout', 'LoginController@signOut')->name('signout');//登出
+    Route::match(['get', 'post'],'recover-pass', 'RecoverPassController@recoverPass')->name('recover-pass');//忘记密码
     //发短信
     Route::put('sms/code', 'PublicController@sendSms')->name('sms-code');
     //中间件登录认证路由

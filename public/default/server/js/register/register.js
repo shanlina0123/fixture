@@ -1,3 +1,9 @@
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
+
 $(".form").Validform({
     btnSubmit:'#btn_submit',
     postonce: true,
@@ -20,29 +26,30 @@ $(".form").Validform({
         }
     }
 });
-
-layui.use(['form'], function() {
+var layer;
+layui.use(['form','layer'], function() {
         form = layui.form;
-    //60秒倒计时
-    $(".msgUncode").click(function() {
-        $me = $(this);
-        time()
-    });
-
-})
-
-//60秒倒计时
+        layer = layui.layer;
+});
+/**
+ * 倒计时
+ * @type {number}
+ */
 var wait = 60;
-function time() {
-    if (wait == 0) {
+function time()
+{
+    if (wait == 0)
+    {
         $me.removeAttr("disabled");
+        $("#phone").attr("readonly", false);
         $me.text("获取短信验证码");
         $me.css({
             "background": "#19aa4b",
             "border-color": "#19aa4b"
         });
         wait = 60;
-    } else {
+    }else
+    {
         $me.attr("disabled", true);
         $me.text("重新发送(" + wait + ")");
         $me.css({
@@ -50,9 +57,42 @@ function time() {
             "border-color": "#ccc"
         });
         wait--;
-        setTimeout(function() {
-                time()
-            },
-            1000)
+        setTimeout(function(){time()}, 1000)
     }
-};
+}
+
+//60秒倒计时
+$(".msgUncode").click(function() {
+    $me = $(this);
+    $me.attr("disabled", true);
+    var ret = /^1[34578][0-9]{9}$/;
+    var phone = $("#phone").val();
+    if(!ret.test(phone))
+    {
+        layer.msg('手机号码有误');
+    }else
+    {
+        var url = $me.data('url');
+        var type = $me.data('type');
+        $.ajax({
+            url:url,
+            type:"PUT",
+            data:{phone:phone,type:type},
+            dataType:"json",
+            success: function( data )
+            {
+                if( data.status != 1 )
+                {
+                    $me.removeAttr("disabled");
+                    layer.msg(data.messages);
+                }else
+                {
+                    time();
+                    $("#phone").attr("readonly", true);
+                    $("#phone").addClass('layui-disabled');
+                }
+            }
+        });
+    }
+
+});

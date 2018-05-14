@@ -33,14 +33,14 @@
                         @endif
                     </div>
                 </div>
-                <form class="form layui-form" method="post" action="{{route('register')}}">
+                <form class="form layui-form" method="post" action="{{route('recover-pass')}}">
                     {{csrf_field()}}
                     <div class="layui-form-item">
-                        <input type="number" class="layui-input" placeholder="手机号"  id="phone" name="phone" datatype="m"  nullmsg="请输入手机号码" errormsg="手机号码有误" autocomplete="off">
+                        <input type="number" class="layui-input" placeholder="手机号" id="phone" name="phone" datatype="m"  nullmsg="请输入手机号码" errormsg="手机号码有误" autocomplete="off">
                     </div>
                     <div class="layui-form-item clearfix">
                         <input type="text" name="code" lay-verify="title" autocomplete="off" placeholder="短信验证码" class="layui-input codeInput fl">
-                        <button type="button" class="layui-btn msgUncode fr" data-url="{{route('sms-code')}}" data-type="1" >发送验证码</button>
+                        <button type="button" type="button" class="layui-btn msgUncode fr" data-url="{{route('sms-code')}}" data-type="4" >发送验证码</button>
                     </div>
                     <div class="layui-form-item">
                         <input type="password" class="layui-input" name="password" datatype="*6-12" placeholder="请输入6-12位字母+数字(区分大小写)" nullmsg="请输入密码" errormsg="密码范围在6~12位之间"  autocomplete="off">
@@ -48,12 +48,8 @@
                     <div class="layui-form-item">
                         <input type="password" class="layui-input" name="password_confirmation" datatype="*" placeholder="确认密码" recheck="password" nullmsg="请输入密码" errormsg="您两次输入的账号密码不一致" autocomplete="off">
                     </div>
-                    <div class="registDeel">
-                        <input type="checkbox" lay-skin="primary" datatype="*" errormsg="请选择"  name="agree">
-                        <a href="javascript:;">用户注册协议</a>
-                    </div>
                     <div class="layui-form-item loginBtn">
-                        <button type="button" class="layui-btn loginButton" id="btn_submit">立即注册</button>
+                        <button type="button" class="layui-btn loginButton" id="btn_submit">立即提交</button>
                     </div>
                 </form>
             </div>

@@ -25,8 +25,15 @@ class UserBusiness extends ServerBase
      }
 
 
+    /**
+     * @param $data
+     * @param $where
+     * @return mixed
+     * 修改密码
+     */
      public function setPass( $data, $where )
      {
          return User::where($where)->update( $data );
      }
+
 }

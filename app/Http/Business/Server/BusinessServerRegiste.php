@@ -18,11 +18,6 @@ class BusinessServerRegiste extends ServerBase
      */
      public function userSave( $data )
      {
-        /* $code = Cache::get('tel_'.$data['phone']);
-         if( $data['code'] != $code )
-         {
-             return false;
-         }*/
          $res = new User();
          $res->uuid = create_uuid();
          $res->phone = $data['phone'];

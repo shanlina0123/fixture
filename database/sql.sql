@@ -1,6 +1,6 @@
 /*
 SQLyog 企业版 - MySQL GUI v8.14 
-MySQL - 5.5.59 : Database - xxs_fixture
+MySQL - 5.5.5-10.1.31-MariaDB : Database - fixture
 *********************************************************************
 */
 
@@ -12,9 +12,9 @@ MySQL - 5.5.59 : Database - xxs_fixture
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`xxs_fixture` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`fixture` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
 
-USE `xxs_fixture`;
+USE `fixture`;
 
 /*Table structure for table `fixture_activity` */
 
@@ -22,16 +22,19 @@ DROP TABLE IF EXISTS `fixture_activity`;
 
 CREATE TABLE `fixture_activity` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uuid` char(32) DEFAULT NULL COMMENT '创建者id',
+  `uuid` char(32) NOT NULL COMMENT '创建者id',
   `createuserid` int(11) DEFAULT NULL COMMENT '创建者id',
   `companyid` int(11) DEFAULT NULL COMMENT '公司id',
   `storeid` int(11) DEFAULT NULL COMMENT '门店id',
   `cityid` int(11) DEFAULT NULL COMMENT '市id',
   `participatoryid` int(11) DEFAULT NULL COMMENT '活动参与方式id ',
   `title` varchar(200) DEFAULT NULL COMMENT '标题',
+  `showurl` varchar(255) DEFAULT NULL COMMENT '封面图',
   `resume` varchar(255) DEFAULT NULL COMMENT '摘要 简述',
   `content` text COMMENT '内容',
-  `status` tinyint(1) DEFAULT '1' COMMENT '状态 默认1，1所有显示  0所有不显示  2只对成员显示',
+  `isopen` tinyint(1) DEFAULT '1' COMMENT '是否公开 默认1  1所有显示  0只对成员显示',
+  `status` tinyint(1) DEFAULT '1' COMMENT '状态 默认1，0不显示 1显示',
+  `userid` int(11) DEFAULT NULL COMMENT '用户id,对应用户表id',
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='活动';
@@ -46,7 +49,7 @@ CREATE TABLE `fixture_activity_inrecord` (
   `id` int(11) DEFAULT NULL,
   `uuid` char(32) DEFAULT NULL,
   `activityid` int(11) DEFAULT NULL COMMENT '活动id',
-  `followuserid` int(11) DEFAULT NULL COMMENT '观光团id',
+  `userid` int(11) DEFAULT NULL COMMENT '观光团id,对应用户user表的id',
   `created_at` datetime DEFAULT NULL COMMENT '创建时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='观光团参与的活动';
 
@@ -59,6 +62,8 @@ DROP TABLE IF EXISTS `fixture_client`;
 CREATE TABLE `fixture_client` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `uuid` char(32) DEFAULT NULL COMMENT '唯一索引id',
+  `companyid` int(11) DEFAULT NULL COMMENT '公司id',
+  `storeid` int(11) DEFAULT NULL COMMENT '门店id',
   `sourcecateid` int(11) DEFAULT NULL COMMENT '客户来源分类 活动预约 观光团',
   `sourceid` int(11) DEFAULT NULL COMMENT '客户来源',
   `phone` varchar(30) DEFAULT NULL COMMENT '手机号',
@@ -67,11 +72,36 @@ CREATE TABLE `fixture_client` (
   `roomshap` varchar(20) DEFAULT NULL COMMENT '几室几厅几厨几卫',
   `content` text COMMENT '预约内容 （参观{xx工地}、免费量房、装修报价）',
   `wechatopenid` varchar(255) DEFAULT NULL COMMENT '微信openid',
+  `followstatusid` int(3) DEFAULT '4' COMMENT '客户跟进状态 ，默认4，对应 data_client_followstatus表，表中的4代表 未联系',
+  `followcontent` varchar(255) DEFAULT NULL COMMENT '客户跟进备注',
+  `userid` int(11) DEFAULT NULL COMMENT '邀请者id,对应用户user表id',
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='C端客户';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='C端活动录入的客户';
 
 /*Data for the table `fixture_client` */
+
+insert  into `fixture_client`(`id`,`uuid`,`companyid`,`storeid`,`sourcecateid`,`sourceid`,`phone`,`name`,`area`,`roomshap`,`content`,`wechatopenid`,`followstatusid`,`followcontent`,`userid`,`created_at`) values (3,'333',4,6,1,1,'15061025220','到完全',NULL,NULL,'大旗网大旗网 ',NULL,1,'的武器的',NULL,NULL);
+
+/*Table structure for table `fixture_client_follow` */
+
+DROP TABLE IF EXISTS `fixture_client_follow`;
+
+CREATE TABLE `fixture_client_follow` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `uuid` char(32) DEFAULT NULL COMMENT 'uuid',
+  `client_id` int(11) NOT NULL COMMENT '客户id',
+  `remarks` varchar(255) DEFAULT NULL COMMENT '备注',
+  `followstatus_id` int(11) NOT NULL COMMENT '跟进状态id',
+  `follow_userid` int(11) NOT NULL COMMENT '跟进用户id',
+  `follow_username` varchar(30) DEFAULT NULL COMMENT '跟进人',
+  `created_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='客户跟进记录';
+
+/*Data for the table `fixture_client_follow` */
+
+insert  into `fixture_client_follow`(`id`,`uuid`,`client_id`,`remarks`,`followstatus_id`,`follow_userid`,`follow_username`,`created_at`) values (1,'c1fe9073b9e721e14563d5b2c8a87b91',3,'测山川得到的武器的',3,17,NULL,'2018-05-03 06:50:18'),(2,'43f85ba1bb6805501c43483fbcfa6fea',3,'哈哈哈',2,17,NULL,'2018-05-03 07:08:44'),(3,'b5e464f758a19cd8ce011154857ddedf',3,'都完全户外群和',1,17,'哈哈','2018-05-11 09:50:58'),(4,'f66d2449f1eb85aae4f7e2a06514340f',3,'发的vv',3,17,'哈哈','2018-05-11 09:51:46'),(5,'8b6af6055617e8fdb9d48e61f4d05f21',3,'的武器的',1,17,'哈哈','2018-05-11 09:52:54');
 
 /*Table structure for table `fixture_company` */
 
@@ -97,11 +127,11 @@ CREATE TABLE `fixture_company` (
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   `updated_at` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='公司';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='公司';
 
 /*Data for the table `fixture_company` */
 
-insert  into `fixture_company`(`id`,`uuid`,`vipmechanismid`,`provinceid`,`cityid`,`coucntryid`,`name`,`fullname`,`contacts`,`phone`,`addr`,`fulladdr`,`resume`,`logo`,`clientappid`,`deadline`,`created_at`,`updated_at`) values (1,'31645b462d8411e88aa754e1adc540fa',1,1,1,1,'积木家','西安积木家信息科技有限公司','总-张三','','龙首源8号','陕西省西安市龙首源8号','在互联网家装行业垂直市场，积木家专注为年轻人提供高品质低价格的互联网整居全包装修服务。',NULL,NULL,'2019-03-22 11:35:23','2018-03-22 11:35:41',NULL),(2,'a06291162d8411e88aa754e1adc540fa',1,1,1,2,'蘑菇家','西安蘑菇网科技有限公司','总-张四','','未央湖2号','陕西省西安市未央湖2号','整体家装,就选蘑菇加。蘑菇加,亚厦股份旗下互联网家装品牌。',NULL,NULL,'2019-03-22 11:37:26','2018-03-22 11:37:36',NULL);
+insert  into `fixture_company`(`id`,`uuid`,`vipmechanismid`,`provinceid`,`cityid`,`coucntryid`,`name`,`fullname`,`contacts`,`phone`,`addr`,`fulladdr`,`resume`,`logo`,`clientappid`,`deadline`,`created_at`,`updated_at`) values (1,'31645b462d8411e88aa754e1adc540fa',1,1,1,1,'积木家','西安积木家信息科技有限公司','总-张三','','龙首源8号','陕西省西安市龙首源8号','在互联网家装行业垂直市场，积木家专注为年轻人提供高品质低价格的互联网整居全包装修服务。',NULL,NULL,'2019-03-22 11:35:23','2018-03-22 11:35:41',NULL),(2,'a06291162d8411e88aa754e1adc540fa',1,1,1,2,'蘑菇家','西安蘑菇网科技有限公司','总-张四','','未央湖2号','陕西省西安市未央湖2号','整体家装,就选蘑菇加。蘑菇加,亚厦股份旗下互联网家装品牌。',NULL,NULL,'2019-03-22 11:37:26','2018-03-22 11:37:36',NULL),(3,'95bf5307ef7f4da54716d40867620444',NULL,140000,140200,140211,'啥活动','啥活动商场','的武器的',NULL,'的地位得到完全得到','山西大同市南郊区','的武器大全我青蛙打网球我的武器',NULL,'32222wwwww',NULL,'2018-03-25 09:44:30','2018-03-25 09:44:30'),(4,'6b5783e0af9dd8beaf17519748f26630',NULL,120000,120100,120102,'啊啊啊','啊啊啊','的武器大全',NULL,'达娃打网球的','天津市辖区河东区','的武器大全的武器大全我','user/6b5783e0af9dd8beaf17519748f26630/REu5U5P99U73ffA45DhsnTBIPl7LxGYUjdKC0L9Z.jpeg','aaasddd2222222',NULL,'2018-03-25 10:12:07','2018-03-30 10:20:26'),(5,'7d8438aec28f5638e7b1d2d3a7dc2ca0',NULL,610000,610100,610112,'小灰灰','小灰灰','tttttt',NULL,'gshs trgwsy','陕西西安市未央区','ttttttttttttttttttt','user/7d8438aec28f5638e7b1d2d3a7dc2ca0/N2RaYv6jqJbXQSaTXKQ2PeMMDMv5POWr4PXJWYXp.jpeg','0jk12390000000000000000000',NULL,'2018-03-27 06:01:40','2018-03-27 06:01:40');
 
 /*Table structure for table `fixture_company_stagetemplate` */
 
@@ -111,15 +141,18 @@ CREATE TABLE `fixture_company_stagetemplate` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uuid` char(32) DEFAULT NULL COMMENT '唯一索引',
   `companyid` int(11) DEFAULT NULL COMMENT '公司id',
+  `defaulttemplateid` int(11) DEFAULT NULL COMMENT '系统模板id，对应系统模板 stagetemplate 表id',
   `name` varchar(255) DEFAULT NULL COMMENT '名称',
+  `isdefault` tinyint(1) DEFAULT '0' COMMENT '是否属于自定义默认模板 1是 0否',
+  `issystem` tinyint(1) DEFAULT '0' COMMENT '1系统添加的模板0自定义添加的模板',
   `status` tinyint(1) DEFAULT '1' COMMENT '状态 默认1 ，1启用 0禁用',
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COMMENT='公司 - 自定义阶段模板名称';
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8 COMMENT='公司 - 自定义阶段模板名称';
 
 /*Data for the table `fixture_company_stagetemplate` */
 
-insert  into `fixture_company_stagetemplate`(`id`,`uuid`,`companyid`,`name`,`status`,`created_at`) values (1,'e62180be2e8411e8b20154e1adc540fa',1,'自定义模板jimu1',1,'2018-03-23 18:28:18'),(2,'e621829a2e8411e8b20154e1adc540fa',1,'自定义模板jimu2',1,'2018-03-23 18:28:18'),(3,'e621830f2e8411e8b20154e1adc540fa',2,'自定义模板mogu1',1,'2018-03-23 18:28:18'),(4,'e621833c2e8411e8b20154e1adc540fa',2,'自定义模板mogu2',1,'2018-03-23 18:28:18');
+insert  into `fixture_company_stagetemplate`(`id`,`uuid`,`companyid`,`defaulttemplateid`,`name`,`isdefault`,`issystem`,`status`,`created_at`) values (1,'e62180be2e8411e8b20154e1adc540fa',4,1,'自定义模板jimu1',0,1,1,'2018-03-23 18:28:18'),(2,'e621829a2e8411e8b20154e1adc540fa',1,NULL,'自定义模板jimu2',1,0,1,'2018-03-23 18:28:18'),(3,'e621830f2e8411e8b20154e1adc540fa',2,NULL,'自定义模板mogu1',0,0,1,'2018-03-23 18:28:18'),(13,'4bf2ea68c47daa849c06038141515913',4,NULL,'标准01',1,0,1,'2018-03-29 08:03:57'),(17,'2b8ec069a6fe332e75215a313fa948ce',4,NULL,'测试模板',0,0,1,'2018-05-09 18:37:00'),(26,'5dcd864bcb19e90f7ae9dfedc15aa563',4,2,'其他阶段模板',0,1,1,'2018-05-10 14:23:04');
 
 /*Table structure for table `fixture_company_stagetemplate_tag` */
 
@@ -131,15 +164,16 @@ CREATE TABLE `fixture_company_stagetemplate_tag` (
   `companyid` int(11) DEFAULT NULL COMMENT '公司id',
   `stagetemplateid` int(11) DEFAULT NULL COMMENT '自动以阶段模板id',
   `name` varchar(100) DEFAULT NULL COMMENT '自定义阶段名称',
+  `sort` int(11) DEFAULT NULL COMMENT '排序',
   `status` tinyint(1) DEFAULT '1' COMMENT '状态 默认1 ，1启用 0禁用',
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   `updated_at` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 COMMENT='公司 - 自定义模板阶段';
+) ENGINE=InnoDB AUTO_INCREMENT=116 DEFAULT CHARSET=utf8 COMMENT='公司 - 自定义模板阶段';
 
 /*Data for the table `fixture_company_stagetemplate_tag` */
 
-insert  into `fixture_company_stagetemplate_tag`(`id`,`uuid`,`companyid`,`stagetemplateid`,`name`,`status`,`created_at`,`updated_at`) values (1,'e639b3b42e8411e8b20154e1adc540fa',1,1,'jimu阶段1',1,'2018-03-23 18:28:18',NULL),(2,'e63a38992e8411e8b20154e1adc540fa',1,1,'jimu阶段2',1,'2018-03-23 18:28:18',NULL),(11,'e63a39462e8411e8b20154e1adc540fa',1,1,'jimu阶段3',1,'2018-03-23 18:28:18',NULL),(12,'e63a3a402e8411e8b20154e1adc540fa',1,1,'jimu阶段4',1,'2018-03-23 18:28:18',NULL),(13,'e63a3a982e8411e8b20154e1adc540fa',1,1,'jimu阶段5',1,'2018-03-23 18:28:18',NULL),(14,'e63a3ae22e8411e8b20154e1adc540fa',1,2,'jimu阶段6',1,'2018-03-23 18:28:18',NULL),(15,'e63a3b2c2e8411e8b20154e1adc540fa',1,2,'jimu阶段7',1,'2018-03-23 18:28:18',NULL),(16,'e63a3b6f2e8411e8b20154e1adc540fa',1,2,'jimu阶段8',1,'2018-03-23 18:28:18',NULL),(17,'e63a3bb22e8411e8b20154e1adc540fa',1,2,'jimu阶段9',1,'2018-03-23 18:28:18',NULL),(18,'e63a3bf92e8411e8b20154e1adc540fa',2,3,'mogu阶段1',1,'2018-03-23 18:28:18',NULL),(19,'e63a3c3f2e8411e8b20154e1adc540fa',2,3,'mogu阶段2',1,'2018-03-23 18:28:18',NULL),(20,'e63a3c862e8411e8b20154e1adc540fa',2,3,'mogu阶段3',1,'2018-03-23 18:28:18',NULL),(21,'e63a3cc92e8411e8b20154e1adc540fa',2,4,'mogu阶段4',1,'2018-03-23 18:28:18',NULL),(22,'e63a3d0c2e8411e8b20154e1adc540fa',2,4,'mogu阶段5',1,'2018-03-23 18:28:18',NULL),(23,'e63a3d4f2e8411e8b20154e1adc540fa',2,4,'mogu阶段6',1,'2018-03-23 18:28:18',NULL),(24,'e63a3f802e8411e8b20154e1adc540fa',2,4,'mogu阶段7',1,'2018-03-23 18:28:18',NULL);
+insert  into `fixture_company_stagetemplate_tag`(`id`,`uuid`,`companyid`,`stagetemplateid`,`name`,`sort`,`status`,`created_at`,`updated_at`) values (1,'e639b3b42e8411e8b20154e1adc540fa',1,1,'jimu阶段1',NULL,1,'2018-03-23 18:28:18',NULL),(2,'e63a38992e8411e8b20154e1adc540fa',1,1,'jimu阶段2',NULL,1,'2018-03-23 18:28:18',NULL),(11,'e63a39462e8411e8b20154e1adc540fa',1,1,'jimu阶段3',NULL,1,'2018-03-23 18:28:18',NULL),(12,'e63a3a402e8411e8b20154e1adc540fa',1,1,'jimu阶段4',NULL,1,'2018-03-23 18:28:18',NULL),(13,'e63a3a982e8411e8b20154e1adc540fa',1,1,'jimu阶段5',NULL,1,'2018-03-23 18:28:18',NULL),(14,'e63a3ae22e8411e8b20154e1adc540fa',1,2,'jimu阶段6',NULL,1,'2018-03-23 18:28:18',NULL),(15,'e63a3b2c2e8411e8b20154e1adc540fa',1,2,'jimu阶段7',NULL,1,'2018-03-23 18:28:18',NULL),(16,'e63a3b6f2e8411e8b20154e1adc540fa',1,2,'jimu阶段8',NULL,1,'2018-03-23 18:28:18',NULL),(17,'e63a3bb22e8411e8b20154e1adc540fa',1,2,'jimu阶段9',NULL,1,'2018-03-23 18:28:18',NULL),(18,'e63a3bf92e8411e8b20154e1adc540fa',2,3,'mogu阶段1',NULL,1,'2018-03-23 18:28:18',NULL),(19,'e63a3c3f2e8411e8b20154e1adc540fa',2,3,'mogu阶段2',NULL,1,'2018-03-23 18:28:18',NULL),(20,'e63a3c862e8411e8b20154e1adc540fa',2,3,'mogu阶段3',NULL,1,'2018-03-23 18:28:18',NULL),(90,'0ae3165436040a191d61573e40924f68',4,13,'设1',0,1,'2018-05-09 18:30:45','2018-05-09 18:30:45'),(91,'2deca56ba90e25d71236d4853bab5076',4,13,'签2',1,1,'2018-05-09 18:30:45','2018-05-09 18:30:45'),(92,'3a49ae14d7c53da3397b26fbe8253786',4,13,'拆3',2,1,'2018-05-09 18:30:45','2018-05-09 18:30:45'),(93,'ef8248301a41123123de121390fb26c5',4,13,'水4',3,1,'2018-05-09 18:30:45','2018-05-09 18:30:45'),(94,'52b9374f3aba837a3fa3649ef4ba2fd2',4,13,'泥5',4,1,'2018-05-09 18:30:45','2018-05-09 18:30:45'),(95,'8d512d54fac8474648171523d8afb205',4,13,'油6',5,1,'2018-05-09 18:30:45','2018-05-09 18:30:45'),(96,'e978b701ed1ab9df8828768180202b74',4,13,'安7',6,1,'2018-05-09 18:30:45','2018-05-09 18:30:45'),(97,'57ef3b8a1c9634ee09efd58387712779',4,13,'完成',7,1,'2018-05-09 18:30:45','2018-05-09 18:30:45'),(98,'a6c64c6af085496279779775f67f249e',4,17,'00',0,1,'2018-05-09 18:37:00',NULL),(99,'d63e8bd81b833cbb11d024fc6f2599a2',4,17,'01',1,1,'2018-05-09 18:37:00',NULL),(100,'7765db901f4b01ab96e2e3215841d5ef',4,17,'02',2,1,'2018-05-09 18:37:00',NULL),(101,'0a8d015db392f6670384f01a97da0a42',4,17,'03',3,1,'2018-05-09 18:37:00',NULL),(102,'fe18b28671c4e196bc1afbcc7940c229',4,17,'04',4,1,'2018-05-09 18:37:00',NULL),(103,'f405e3fd18f467a06a59584b2f18e329',4,17,'05',5,1,'2018-05-09 18:37:00',NULL),(112,'a30ba402771b5865912c9a4cf693db8b',4,26,'签约',0,1,'2018-05-10 14:23:04',NULL),(113,'25942f03a2c316f28a679b7a9cf303e8',4,26,'软装',1,1,'2018-05-10 14:23:04',NULL),(114,'575592cb75d4c11fd4439dfd3874ae00',4,26,'入住',2,1,'2018-05-10 14:23:04',NULL),(115,'f42456ec034c3f5fc9f5a8ee15d5f4fa',4,26,'完工',3,1,'2018-05-10 14:23:04',NULL);
 
 /*Table structure for table `fixture_conf_pc` */
 
@@ -212,7 +246,7 @@ CREATE TABLE `fixture_data_authorityscan` (
   `status` tinyint(1) DEFAULT '1' COMMENT '状态 默认1 ，1启用 0禁用',
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='数据源 - 视野';
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='数据源 - 视野';
 
 /*Data for the table `fixture_data_authorityscan` */
 
@@ -229,11 +263,27 @@ CREATE TABLE `fixture_data_city` (
   `status` tinyint(1) DEFAULT '1' COMMENT '状态 默认1 ，1启用 0禁用',
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='数据源 - 城市';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='数据源 - 城市';
 
 /*Data for the table `fixture_data_city` */
 
-insert  into `fixture_data_city`(`id`,`name`,`provinceid`,`status`,`created_at`) values (1,'西安市\r\n',1,1,'2018-03-19 16:45:53');
+insert  into `fixture_data_city`(`id`,`name`,`provinceid`,`status`,`created_at`) values (1,'西安市',1,1,'2018-03-19 16:45:53'),(2,'太原市',2,1,'2018-05-08 17:02:31'),(3,'北京市',3,1,'2018-05-08 17:03:02');
+
+/*Table structure for table `fixture_data_client_followstatus` */
+
+DROP TABLE IF EXISTS `fixture_data_client_followstatus`;
+
+CREATE TABLE `fixture_data_client_followstatus` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL COMMENT '名称',
+  `status` tinyint(1) DEFAULT '1' COMMENT '状态 默认1 ，1启用 0禁用',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='数据源 - 客户跟进状态';
+
+/*Data for the table `fixture_data_client_followstatus` */
+
+insert  into `fixture_data_client_followstatus`(`id`,`name`,`status`,`created_at`) values (1,'已联系',1,NULL),(2,'已上门',1,NULL),(3,'无效',1,NULL),(4,'未联系',1,NULL);
 
 /*Table structure for table `fixture_data_country` */
 
@@ -263,7 +313,7 @@ CREATE TABLE `fixture_data_participatory` (
   `status` tinyint(1) DEFAULT '1' COMMENT '状态 默认1 ，1启用 0禁用',
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='数据源 - 活动参与方式';
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='数据源 - 活动参与方式';
 
 /*Data for the table `fixture_data_participatory` */
 
@@ -279,11 +329,9 @@ CREATE TABLE `fixture_data_position` (
   `status` tinyint(1) DEFAULT '1' COMMENT '状态 默认1 ，1启用 0禁用',
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COMMENT='数据源 - 职位';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='数据源 - 职位';
 
 /*Data for the table `fixture_data_position` */
-
-insert  into `fixture_data_position`(`id`,`name`,`status`,`created_at`) values (1,'项目经理',1,'2018-03-19 16:36:44'),(2,'家装顾问',1,'2018-03-19 16:36:44'),(3,'项目监理',1,'2018-03-19 16:36:44'),(4,'设计师',1,'2018-03-19 16:36:44'),(5,'营销主管',1,'2018-03-19 16:36:44'),(6,'设计师主管',1,'2018-03-19 16:36:44'),(7,'业务',1,'2018-03-19 16:36:44'),(8,'客服主管',1,'2018-03-19 16:36:44'),(9,'资深设计师',1,'2018-03-19 16:36:44'),(10,'工长',1,'2018-03-19 16:36:44'),(11,'水电工',1,'2018-03-19 16:36:44'),(12,'设计总监',1,'2018-03-19 16:36:44'),(13,'油漆工',1,'2018-03-19 16:36:44'),(14,'客服',1,'2018-03-19 16:36:44'),(15,'泥工',1,'2018-03-19 16:36:44'),(16,'木工',1,'2018-03-19 16:36:44'),(17,'总经理',1,'2018-03-19 16:36:44'),(18,'瓦工',1,'2018-03-19 16:36:44'),(19,'质量总监',1,'2018-03-19 16:36:44'),(20,'董事长',1,'2018-03-19 16:36:44'),(21,'区域经理',1,'2018-03-19 16:36:44'),(22,'工程总监',1,'2018-03-19 16:36:44');
 
 /*Table structure for table `fixture_data_province` */
 
@@ -295,11 +343,11 @@ CREATE TABLE `fixture_data_province` (
   `status` tinyint(1) DEFAULT '1' COMMENT '状态 默认1 ，1启用 0禁用',
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='数据源 - 省份';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='数据源 - 省份';
 
 /*Data for the table `fixture_data_province` */
 
-insert  into `fixture_data_province`(`id`,`name`,`status`,`created_at`) values (1,'陕西省\r\n',1,'2018-03-19 16:45:30');
+insert  into `fixture_data_province`(`id`,`name`,`status`,`created_at`) values (1,'陕西省',1,'2018-03-19 16:45:30'),(2,'山西省',1,'2018-05-08 17:03:53'),(3,'北京省',1,'2018-05-09 17:04:16');
 
 /*Table structure for table `fixture_data_renovationmode` */
 
@@ -311,7 +359,7 @@ CREATE TABLE `fixture_data_renovationmode` (
   `status` tinyint(1) DEFAULT '1' COMMENT '状态 默认1 ，1启用 0禁用',
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='数据源 - 装修方式';
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='数据源 - 装修方式';
 
 /*Data for the table `fixture_data_renovationmode` */
 
@@ -327,7 +375,7 @@ CREATE TABLE `fixture_data_roomstyle` (
   `status` tinyint(1) DEFAULT '1' COMMENT '状态 默认1 ，1启用 0禁用',
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COMMENT='数据源 - 户型风格';
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COMMENT='数据源 - 户型风格';
 
 /*Data for the table `fixture_data_roomstyle` */
 
@@ -343,7 +391,7 @@ CREATE TABLE `fixture_data_roomtype` (
   `status` tinyint(1) DEFAULT '1' COMMENT '状态 默认1 ，1启用 0禁用',
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='数据源 - 户型';
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='数据源 - 户型';
 
 /*Data for the table `fixture_data_roomtype` */
 
@@ -356,14 +404,15 @@ DROP TABLE IF EXISTS `fixture_data_source`;
 CREATE TABLE `fixture_data_source` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL COMMENT '名称',
+  `sourcecateid` int(11) DEFAULT NULL COMMENT '来源分类id  对应sourcecate表id',
   `status` tinyint(1) DEFAULT '1' COMMENT '状态 默认1 ，1启用 0禁用',
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='数据源 - 客户来源';
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='数据源 - 客户来源';
 
 /*Data for the table `fixture_data_source` */
 
-insert  into `fixture_data_source`(`id`,`name`,`status`,`created_at`) values (1,'预约参观',1,'2018-03-19 16:42:04'),(2,'免费量房',1,'2018-03-19 16:42:04'),(3,'我要报名',1,'2018-03-19 16:42:04'),(4,'装修报价',1,'2018-03-19 16:42:04');
+insert  into `fixture_data_source`(`id`,`name`,`sourcecateid`,`status`,`created_at`) values (1,'预约参观',NULL,1,'2018-03-19 16:42:04'),(2,'免费量房',NULL,1,'2018-03-19 16:42:04'),(3,'我要报名',NULL,1,'2018-03-19 16:42:04'),(4,'装修报价',NULL,1,'2018-03-19 16:42:04');
 
 /*Table structure for table `fixture_data_sourcecate` */
 
@@ -375,11 +424,9 @@ CREATE TABLE `fixture_data_sourcecate` (
   `status` tinyint(1) DEFAULT '1' COMMENT '状态 默认1 ，1启用 0禁用',
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='数据源 - 客户来源分类';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='数据源 - 客户来源分类';
 
 /*Data for the table `fixture_data_sourcecate` */
-
-insert  into `fixture_data_sourcecate`(`id`,`name`,`status`,`created_at`) values (1,'姓名客户',1,'2018-03-19 16:42:24'),(2,'关注客户',1,'2018-03-19 16:42:24');
 
 /*Table structure for table `fixture_data_stagetemplate` */
 
@@ -390,13 +437,14 @@ CREATE TABLE `fixture_data_stagetemplate` (
   `uuid` char(32) DEFAULT NULL COMMENT '唯一索引',
   `name` varchar(255) DEFAULT NULL COMMENT '名称',
   `status` tinyint(1) DEFAULT '1' COMMENT '状态 默认1 ，1启用 0禁用',
+  `isdefault` tinyint(1) DEFAULT '0' COMMENT '1默认 0不是默认',
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COMMENT='数据源 - 默认阶段模板名称';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='数据源 - 默认阶段模板名称';
 
 /*Data for the table `fixture_data_stagetemplate` */
 
-insert  into `fixture_data_stagetemplate`(`id`,`uuid`,`name`,`status`,`created_at`) values (1,'0d8455612e8411e8b20154e1adc540fa','标准阶段模板',1,'2018-03-23 18:22:15'),(2,'0d8456152e8411e8b20154e1adc540fa','其他阶段模板',1,'2018-03-23 18:22:15');
+insert  into `fixture_data_stagetemplate`(`id`,`uuid`,`name`,`status`,`isdefault`,`created_at`) values (1,'0d8455612e8411e8b20154e1adc540fa','标准阶段模板',1,1,'2018-03-23 18:22:15'),(2,'0d8456152e8411e8b20154e1adc540fa','其他阶段模板',1,0,'2018-03-23 18:22:15');
 
 /*Table structure for table `fixture_data_stagetemplate_tag` */
 
@@ -408,15 +456,16 @@ CREATE TABLE `fixture_data_stagetemplate_tag` (
   `stagetemplateid` int(11) DEFAULT NULL COMMENT '自动以阶段模板id',
   `name` varchar(100) DEFAULT NULL COMMENT '自定义阶段名称',
   `resume` varchar(100) DEFAULT NULL COMMENT '简述',
+  `sort` int(11) DEFAULT NULL COMMENT '排序',
   `status` tinyint(1) DEFAULT '1' COMMENT '状态 默认1 ，1启用 0禁用',
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   `updated_at` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 COMMENT='数据源 - 默认模板阶段';
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COMMENT='数据源 - 默认模板阶段';
 
 /*Data for the table `fixture_data_stagetemplate_tag` */
 
-insert  into `fixture_data_stagetemplate_tag`(`id`,`uuid`,`stagetemplateid`,`name`,`resume`,`status`,`created_at`,`updated_at`) values (1,'187c83292e8411e8b20154e1adc540fa',1,'签约','包括了解装修公司等',1,'2018-03-23 18:22:33',NULL),(2,'187c84152e8411e8b20154e1adc540fa',1,'设计','确定房子风格类型',1,'2018-03-23 18:22:33',NULL),(11,'187c845f2e8411e8b20154e1adc540fa',1,'拆改','拆墙、砌墙、铲墙皮、拆暖气、换塑钢窗',1,'2018-03-23 18:22:33',NULL),(12,'187c854c2e8411e8b20154e1adc540fa',1,'水电','开线槽、铺设管道',1,'2018-03-23 18:22:33',NULL),(13,'187c85ff2e8411e8b20154e1adc540fa',1,'泥木','瓷砖、吊顶',1,'2018-03-23 18:22:33',NULL),(14,'187c867b2e8411e8b20154e1adc540fa',1,'油漆','油漆',1,'2018-03-23 18:22:33',NULL),(15,'187c86e82e8411e8b20154e1adc540fa',1,'安装','橱柜、木门等安装',1,'2018-03-23 18:22:33',NULL),(16,'187c87552e8411e8b20154e1adc540fa',1,'软装','家具家电等',1,'2018-03-23 18:22:33',NULL),(17,'187c87bc2e8411e8b20154e1adc540fa',1,'入住','入住新房',1,'2018-03-23 18:22:33',NULL),(18,'187c88372e8411e8b20154e1adc540fa',1,'完工','结束装修',1,'2018-03-23 18:22:33',NULL),(19,'187c88ab2e8411e8b20154e1adc540fa',2,'签约','包括了解装修公司等',1,'2018-03-23 18:22:33',NULL),(20,'187c89202e8411e8b20154e1adc540fa',2,'软装','家具家电等',1,'2018-03-23 18:22:33',NULL),(21,'187c89942e8411e8b20154e1adc540fa',2,'入住','入住新房',1,'2018-03-23 18:22:33',NULL),(22,'187c8a092e8411e8b20154e1adc540fa',2,'完工','结束装修',1,'2018-03-23 18:22:33',NULL);
+insert  into `fixture_data_stagetemplate_tag`(`id`,`uuid`,`stagetemplateid`,`name`,`resume`,`sort`,`status`,`created_at`,`updated_at`) values (1,'187c83292e8411e8b20154e1adc540fa',1,'签约','包括了解装修公司等',NULL,1,'2018-03-23 18:22:33',NULL),(2,'187c84152e8411e8b20154e1adc540fa',1,'设计','确定房子风格类型',NULL,1,'2018-03-23 18:22:33',NULL),(11,'187c845f2e8411e8b20154e1adc540fa',1,'拆改','拆墙、砌墙、铲墙皮、拆暖气、换塑钢窗',NULL,1,'2018-03-23 18:22:33',NULL),(12,'187c854c2e8411e8b20154e1adc540fa',1,'水电','开线槽、铺设管道',NULL,1,'2018-03-23 18:22:33',NULL),(13,'187c85ff2e8411e8b20154e1adc540fa',1,'泥木','瓷砖、吊顶',NULL,1,'2018-03-23 18:22:33',NULL),(14,'187c867b2e8411e8b20154e1adc540fa',1,'油漆','油漆',NULL,1,'2018-03-23 18:22:33',NULL),(15,'187c86e82e8411e8b20154e1adc540fa',1,'安装','橱柜、木门等安装',NULL,1,'2018-03-23 18:22:33',NULL),(16,'187c87552e8411e8b20154e1adc540fa',1,'软装','家具家电等',NULL,1,'2018-03-23 18:22:33',NULL),(17,'187c87bc2e8411e8b20154e1adc540fa',1,'入住','入住新房',NULL,1,'2018-03-23 18:22:33',NULL),(18,'187c88372e8411e8b20154e1adc540fa',1,'完工','结束装修',NULL,1,'2018-03-23 18:22:33',NULL),(19,'187c88ab2e8411e8b20154e1adc540fa',2,'签约','包括了解装修公司等',NULL,1,'2018-03-23 18:22:33',NULL),(20,'187c89202e8411e8b20154e1adc540fa',2,'软装','家具家电等',NULL,1,'2018-03-23 18:22:33',NULL),(21,'187c89942e8411e8b20154e1adc540fa',2,'入住','入住新房',NULL,1,'2018-03-23 18:22:33',NULL),(22,'187c8a092e8411e8b20154e1adc540fa',2,'完工','结束装修',NULL,1,'2018-03-23 18:22:33',NULL);
 
 /*Table structure for table `fixture_data_vipmechanism` */
 
@@ -428,11 +477,9 @@ CREATE TABLE `fixture_data_vipmechanism` (
   `status` tinyint(1) DEFAULT '1' COMMENT '状态 默认1 ，1启用 0禁用',
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='数据源 - 会员机制';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='数据源 - 会员机制';
 
 /*Data for the table `fixture_data_vipmechanism` */
-
-insert  into `fixture_data_vipmechanism`(`id`,`name`,`status`,`created_at`) values (1,'标准版',1,'2018-03-19 16:43:02'),(2,'专业版',1,'2018-03-19 16:43:02'),(3,'定制版',1,'2018-03-19 16:43:02');
 
 /*Table structure for table `fixture_dynamic` */
 
@@ -448,16 +495,18 @@ CREATE TABLE `fixture_dynamic` (
   `participatoryid` int(11) DEFAULT NULL COMMENT '活动参与方式id ',
   `tablesign` tinyint(1) DEFAULT NULL COMMENT '表 1用户  2参与者  ',
   `createuserid` int(11) DEFAULT NULL COMMENT '创建者id 用户 参与者  ',
-  `title` varchar(200) DEFAULT NULL COMMENT '标题',
-  `resume` varchar(255) DEFAULT NULL,
+  `title` varchar(200) DEFAULT NULL COMMENT '标题 活动',
+  `resume` varchar(255) DEFAULT NULL COMMENT '简要文本 活动',
   `content` text COMMENT '内容',
   `type` tinyint(1) DEFAULT '0' COMMENT '类型 0工地动态 1活动动态',
   `status` tinyint(1) DEFAULT '1' COMMENT '状态 默认1，1显示  0不显示  2只对成员显示',
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='动态';
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8 COMMENT='动态';
 
 /*Data for the table `fixture_dynamic` */
+
+insert  into `fixture_dynamic`(`id`,`uuid`,`companyid`,`storeid`,`sitetid`,`activityid`,`participatoryid`,`tablesign`,`createuserid`,`title`,`resume`,`content`,`type`,`status`,`created_at`) values (21,'50bb8352407bc1a2156e66a6fe2702a2',4,0,17,NULL,NULL,1,17,NULL,NULL,'新建工地：感谢业主大大信任，金色润城今日开工啦。大吉大利，家宅平安!',0,1,'2018-03-29 03:55:49'),(22,'f16370ba2f8916fc126b5a95745f44f0',4,NULL,17,NULL,NULL,1,17,NULL,NULL,'分为氛围',0,1,'2018-03-30 09:07:26'),(26,'308653f32a347b4dabc5342934aeb024',4,0,24,NULL,NULL,1,17,NULL,NULL,'新建工地：感谢业主大大信任，hdaudh今日开工啦。大吉大利，家宅平安!',0,1,'2018-05-08 19:14:50'),(28,'3055103262e31b5ef0d958c48e77cb43',4,NULL,25,NULL,NULL,1,17,NULL,NULL,'fdwefwe',0,1,'2018-05-09 14:47:26'),(29,'a07e60a35f523d1734a6314533e9e572',4,NULL,24,NULL,NULL,1,17,NULL,NULL,'的大范围',0,1,'2018-05-09 14:53:45'),(30,'6548406accf57ed9dfda029269810bd2',4,NULL,24,NULL,NULL,1,17,NULL,NULL,'是带我去带我去的',0,1,'2018-05-09 15:37:20'),(31,'31e33f09da267b7524ed22aa08f223a6',4,NULL,22,NULL,NULL,1,17,NULL,NULL,'得的',0,1,'2018-05-09 15:41:01'),(32,'e7628b9c378e5ed5c6b825b90bb8003e',4,NULL,22,NULL,NULL,1,17,NULL,NULL,'嗯我让他吩咐',0,1,'2018-05-09 15:42:32'),(34,'c1db63168bd7735d7683b9c39436cc20',4,6,19,NULL,NULL,1,17,NULL,NULL,'新建工地：感谢业主大大信任，测试工地今日开工啦。大吉大利，家宅平安!',0,1,'2018-05-10 14:53:09'),(35,'ca3716bf1e4ca4f479c0de46f78a1638',4,6,19,NULL,NULL,1,17,NULL,NULL,'测试跟新',0,1,'2018-05-10 14:57:13'),(36,'c60e4f92b8ae1e0e69f8478cbf64bf0f',4,6,19,NULL,NULL,1,17,NULL,NULL,'和AH',0,1,'2018-05-11 17:02:29');
 
 /*Table structure for table `fixture_dynamic_comment` */
 
@@ -489,9 +538,11 @@ CREATE TABLE `fixture_dynamic_images` (
   `type` tinyint(1) DEFAULT '0' COMMENT '文件类型 ，默认0，0图片 1视频',
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='动态-图片视频';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='动态-图片视频';
 
 /*Data for the table `fixture_dynamic_images` */
+
+insert  into `fixture_dynamic_images`(`id`,`dynamicid`,`ossurl`,`type`,`created_at`) values (1,28,'site/28/dynamic/Fa0MmqDUdjyV8FFm4UEmnWHYFBSyOItfbVhYq6Jh.jpeg',0,'2018-05-09 14:47:26'),(2,28,'site/28/dynamic/M0Ej6VCceeRU634rhInLu9RpoBpe6vCFPg1H7H63.jpeg',0,'2018-05-09 14:47:26'),(3,30,'site/6548406accf57ed9dfda029269810bd2/dynamic/Plzs9caqXfhI7vZJlFvMdbtaBg1Q2tmWvishWNmP.jpeg',0,'2018-05-09 15:37:20'),(4,31,'site/31/dynamic/OqRfMMTCARvWmqW3Y490iYn9WZsndlQE8Y6znwCy.jpeg',0,'2018-05-09 15:41:01'),(5,32,'site/e7628b9c378e5ed5c6b825b90bb8003e/dynamic/TirOHAqSxHINd0jjCtTSOvx7f4w6jkxXwmr6Bd1w.jpeg',0,'2018-05-09 15:42:33'),(6,35,'site/8198a8edea026af729baa9bce46f9574/dynamic/wNjYjSeDvafkuPmXwlRnA6AtfuFz9cF8zR4uABx3.jpeg',0,'2018-05-10 14:57:13');
 
 /*Table structure for table `fixture_dynamic_statistics` */
 
@@ -510,31 +561,29 @@ CREATE TABLE `fixture_dynamic_statistics` (
 
 /*Data for the table `fixture_dynamic_statistics` */
 
-/*Table structure for table `fixture_filter_authorityoperation` */
+/*Table structure for table `fixture_filter_function` */
 
-DROP TABLE IF EXISTS `fixture_filter_authorityoperation`;
+DROP TABLE IF EXISTS `fixture_filter_function`;
 
-CREATE TABLE `fixture_filter_authorityoperation` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uuid` char(32) DEFAULT NULL COMMENT '唯一索引id',
-  `itemid` int(11) DEFAULT NULL COMMENT '业务编号',
-  `name` varchar(255) DEFAULT NULL COMMENT '名称 ',
-  `pid` int(11) DEFAULT NULL COMMENT '父类id ',
-  `level` tinyint(1) DEFAULT NULL COMMENT '级别',
-  `ismenu` tinyint(1) DEFAULT NULL COMMENT '是否显示在菜单  默认1 ，1显示 0不显示',
-  `sort` int(11) DEFAULT NULL COMMENT '排序',
-  `status` tinyint(1) DEFAULT '1' COMMENT '状态 是否有效   默认1，1启用 0禁用',
-  `isdefault` tinyint(1) DEFAULT '1' COMMENT '是否通用功能 ，默认1  ，1是 0不是',
-  `modulename` varchar(100) DEFAULT NULL COMMENT '模块名称',
-  `controlname` varchar(100) DEFAULT NULL,
-  `actionname` varchar(100) DEFAULT NULL COMMENT '方法名称',
-  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+CREATE TABLE `fixture_filter_function` (
+  `id` int(11) NOT NULL COMMENT '编号',
+  `uuid` char(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '姓名',
+  `name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '名称',
+  `pid` int(11) DEFAULT NULL COMMENT '父类id',
+  `sort` int(11) DEFAULT '2' COMMENT '视野,默认2， 0全部 1城市 2个人  ',
+  `ismenu` tinyint(1) DEFAULT NULL COMMENT '是否菜单显示 1显示 0不显示',
+  `menuname` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '菜单显示名称',
+  `level` tinyint(1) DEFAULT NULL COMMENT '层级',
+  `controller` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '接口地址  和真实一样',
+  `url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '访问路径',
+  `status` tinyint(1) DEFAULT '1' COMMENT '状态 1可用 0 不可用',
+  `created_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8 COMMENT='过滤 - 业务功能';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='过滤 - 功能';
 
-/*Data for the table `fixture_filter_authorityoperation` */
+/*Data for the table `fixture_filter_function` */
 
-insert  into `fixture_filter_authorityoperation`(`id`,`uuid`,`itemid`,`name`,`pid`,`level`,`ismenu`,`sort`,`status`,`isdefault`,`modulename`,`controlname`,`actionname`,`created_at`) values (1,'a22fc6422dbc11e88aa754e1adc540fa',1,'项目管理',0,1,1,1,1,1,'Server',NULL,NULL,'2018-03-22 18:31:17'),(2,'a22fc7b02dbc11e88aa754e1adc540fa',2,'系统设置',0,1,1,2,1,1,'Server',NULL,NULL,'2018-03-22 18:31:17'),(3,'a22fc8212dbc11e88aa754e1adc540fa',3,'数据分析',0,1,1,3,1,1,'Server',NULL,NULL,'2018-03-22 18:31:17'),(4,'a22fc8722dbc11e88aa754e1adc540fa',4,'会员中心',0,1,1,4,1,1,'Server',NULL,NULL,'2018-03-22 18:31:17'),(5,'a22fc8c32dbc11e88aa754e1adc540fa',5,'消息通知',0,1,1,5,1,1,'Server',NULL,NULL,'2018-03-22 18:31:17'),(6,'a22fc9182dbc11e88aa754e1adc540fa',100,'活动管理',1,2,1,1,1,1,'Server','Activity','index','2018-03-22 18:31:17'),(7,'a22fc9772dbc11e88aa754e1adc540fa',101,'活动列表',100,3,0,1,1,1,'Server','Activity','index','2018-03-22 18:31:17'),(8,'a22fc9cf2dbc11e88aa754e1adc540fa',102,'新建活动',100,3,0,2,1,1,'Server','Activity','create,store','2018-03-22 18:31:17'),(9,'a22fca282dbc11e88aa754e1adc540fa',103,'修改活动',100,3,0,3,1,1,'Server','Activity','edit,update','2018-03-22 18:31:17'),(10,'a22fca8a2dbc11e88aa754e1adc540fa',104,'活动详情',100,3,0,4,1,1,'Server','Activity','show','2018-03-22 18:31:17'),(11,'a22fcadb2dbc11e88aa754e1adc540fa',200,'工地管理',1,2,1,2,1,1,'Server','Site','index','2018-03-22 18:31:17'),(12,'a22fcb2d2dbc11e88aa754e1adc540fa',201,'工地列表',200,3,0,1,1,1,'Server','Site','index','2018-03-22 18:31:17'),(13,'a22fcb7a2dbc11e88aa754e1adc540fa',202,'新建工地',200,3,1,2,1,1,'Server','Site','create,store','2018-03-22 18:31:17'),(14,'a22fcbee2dbc11e88aa754e1adc540fa',203,'修改工地',200,3,0,3,1,1,'Server','Site','edit,update','2018-03-22 18:31:17'),(15,'a22fcc402dbc11e88aa754e1adc540fa',204,'删除工地',200,3,0,4,1,1,'Server','Site','destory','2018-03-22 18:31:17'),(16,'a22fcc912dbc11e88aa754e1adc540fa',205,'更新工地',200,3,0,5,1,1,'Server','Site','需要开发人员自定义','2018-03-22 18:31:17'),(17,'a22fcce52dbc11e88aa754e1adc540fa',300,'阶段模板管理',1,2,0,3,1,1,'Server','Stagetemplate','index','2018-03-22 18:31:17'),(18,'a22fcd362dbc11e88aa754e1adc540fa',301,'模板列表',300,3,0,1,1,1,'Server','Stagetemplate','index','2018-03-22 18:31:17'),(19,'a22fcd842dbc11e88aa754e1adc540fa',302,'新增模板',300,3,0,2,1,1,'Server','Stagetemplate','create,store','2018-03-22 18:31:17'),(20,'a22fcdd22dbc11e88aa754e1adc540fa',303,'修改模板',300,3,0,3,1,1,'Server','Stagetemplate','edit,update','2018-03-22 18:31:17'),(21,'a22fce232dbc11e88aa754e1adc540fa',304,'删除模板',300,3,0,4,1,1,'Server','Stagetemplate','destory','2018-03-22 18:31:17'),(22,'a22fce6d2dbc11e88aa754e1adc540fa',400,'客户预约',1,2,1,4,1,1,'Server','Client','index','2018-03-22 18:31:17'),(23,'a22fceba2dbc11e88aa754e1adc540fa',401,'客户列表',400,3,0,1,1,1,'Server','Client','index','2018-03-22 18:31:17'),(24,'a22fcf0b2dbc11e88aa754e1adc540fa',402,'一键已读',400,3,0,2,1,1,'Server','Client','需要开发人员自定义','2018-03-22 18:31:17'),(25,'a22fcf592dbc11e88aa754e1adc540fa',500,'门店管理',2,2,1,5,1,1,'Server','Store','index','2018-03-22 18:31:17'),(26,'a22fcfa72dbc11e88aa754e1adc540fa',501,'门店列表',500,3,0,1,1,1,'Server','Store','index','2018-03-22 18:31:17'),(27,'a22fcff42dbc11e88aa754e1adc540fa',502,'添加门店',500,3,0,2,1,1,'Server','Store','create,store','2018-03-22 18:31:17'),(28,'a22fd0422dbc11e88aa754e1adc540fa',503,'修改门店',500,3,0,3,1,1,'Server','Store','edit,update','2018-03-22 18:31:17'),(29,'a22fd08f2dbc11e88aa754e1adc540fa',504,'删除门店',500,3,0,4,1,1,'Server','Store','destory','2018-03-22 18:31:17'),(30,'a22fd0dd2dbc11e88aa754e1adc540fa',505,'门店详情',500,3,0,5,1,1,'Server','Store','show','2018-03-22 18:31:17'),(31,'a22fd1352dbc11e88aa754e1adc540fa',600,'用户管理',2,2,0,6,1,1,'Server','User','index','2018-03-22 18:31:17'),(32,'a22fd1b42dbc11e88aa754e1adc540fa',601,'用户列表',600,3,0,1,1,1,'Server','User','index','2018-03-22 18:31:17'),(33,'a22fd2132dbc11e88aa754e1adc540fa',602,'新增用户',600,3,0,2,1,1,'Server','User','create,store','2018-03-22 18:31:17'),(34,'a22fd2612dbc11e88aa754e1adc540fa',603,'修改用户',600,3,0,3,1,1,'Server','User','edit,update','2018-03-22 18:31:17'),(35,'a22fd2ae2dbc11e88aa754e1adc540fa',604,'删除用户',600,3,0,4,1,1,'Server','User','destory','2018-03-22 18:31:17'),(36,'a22fd3112dbc11e88aa754e1adc540fa',605,'设置状态',600,3,0,5,1,1,'Server','User','需要开发人员自定义','2018-03-22 18:31:17'),(37,'a22fd3ba2dbc11e88aa754e1adc540fa',700,'角色管理',2,2,1,7,1,1,'Server','Filter','index','2018-03-22 18:31:17'),(38,'a22fd4082dbc11e88aa754e1adc540fa',701,'角色列表',700,3,0,1,1,1,'Server','Filter','index','2018-03-22 18:31:17'),(39,'a22fd4552dbc11e88aa754e1adc540fa',702,'新增角色',700,3,0,2,1,1,'Server','Filter','create,store','2018-03-22 18:31:17'),(40,'a22fd4a32dbc11e88aa754e1adc540fa',703,'修改角色',700,3,0,3,1,1,'Server','Filter','edit,update','2018-03-22 18:31:17'),(41,'a22fd4f12dbc11e88aa754e1adc540fa',704,'删除角色',700,3,0,4,1,1,'Server','Filter','destory','2018-03-22 18:31:17'),(42,'a22fd5422dbc11e88aa754e1adc540fa',800,'配置权限',2,2,0,8,1,1,'Server','Filter','index','2018-03-22 18:31:17'),(43,'a22fd58f2dbc11e88aa754e1adc540fa',801,'勾选权限',800,3,0,1,1,1,'Server','Filter','需要开发人员自定义','2018-03-22 18:31:17'),(44,'a22fd5e02dbc11e88aa754e1adc540fa',900,'数据分析',3,2,1,9,0,1,'Server','Analysis','index','2018-03-22 18:31:17'),(45,'a22fd62e2dbc11e88aa754e1adc540fa',901,'客户分析',900,3,1,1,0,1,'Server','Analysis','index','2018-03-22 18:31:17'),(46,'a22fd67c2dbc11e88aa754e1adc540fa',902,'工地分析',900,3,1,2,0,1,'Server','Analysis','需要开发人员自定义','2018-03-22 18:31:17'),(47,'a22fd6d42dbc11e88aa754e1adc540fa',903,'内部人员营销排行',900,3,1,3,0,1,'Server','Analysis','需要开发人员自定义','2018-03-22 18:31:17'),(48,'a22fd7282dbc11e88aa754e1adc540fa',904,'活动分析',900,3,1,4,0,1,'Server','Analysis','需要开发人员自定义','2018-03-22 18:31:17'),(49,'a22fd7792dbc11e88aa754e1adc540fa',1000,'会员中心',4,2,1,10,1,1,'Server','Vip','index','2018-03-22 18:31:17'),(50,'a22fd7c72dbc11e88aa754e1adc540fa',1001,'会员机制',1000,3,1,1,1,1,'Server','Vip','index','2018-03-22 18:31:17'),(51,'a22fd8152dbc11e88aa754e1adc540fa',2000,'消息通知',5,2,1,11,1,1,'Server','Message','index','2018-03-22 18:31:17'),(52,'a22fd8662dbc11e88aa754e1adc540fa',2001,'通知消息',2000,3,1,1,1,1,'Server','Message','index','2018-03-22 18:31:17'),(53,'a22fd8b02dbc11e88aa754e1adc540fa',2002,'一键已读',2000,3,0,2,1,1,'Server','Message','需要开发人员自定义','2018-03-22 18:31:17'),(54,'a22fd9012dbc11e88aa754e1adc540fa',3000,'咨询消息',5,2,1,12,1,1,'Server','Message','index','2018-03-22 18:31:17'),(55,'a22fd94e2dbc11e88aa754e1adc540fa',3001,'消息列表',3000,3,0,1,1,1,'Server','Message','index','2018-03-22 18:31:17'),(56,'a22fd9a02dbc11e88aa754e1adc540fa',3002,'回复消息',3000,3,0,2,1,1,'Server','Message','需要开发人员自定义','2018-03-22 18:31:17');
+insert  into `fixture_filter_function`(`id`,`uuid`,`name`,`pid`,`sort`,`ismenu`,`menuname`,`level`,`controller`,`url`,`status`,`created_at`) values (1,NULL,'角色管理',0,1,1,'角色管理',1,'RolesController','/roles',1,'2018-05-09 15:07:00'),(2,NULL,'用户管理',0,2,1,'用户管理',1,'AdminController','/admin',1,'2018-05-09 15:08:10'),(200,NULL,'列表',2,2,1,'用户列表',2,'AdminController','/admin/list',1,'2018-05-09 15:11:27'),(201,NULL,'新增',2,2,1,'新增',NULL,'AdminController',NULL,1,'2018-05-10 11:10:46');
 
 /*Table structure for table `fixture_filter_role` */
 
@@ -542,90 +591,58 @@ DROP TABLE IF EXISTS `fixture_filter_role`;
 
 CREATE TABLE `fixture_filter_role` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uuid` char(32) DEFAULT NULL COMMENT '唯一索引id',
+  `uuid` char(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '姓名',
+  `name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '公司id 对应公司表company的id',
+  `status` tinyint(1) DEFAULT '1' COMMENT '状态 1可用 0 不可用',
+  `isdefault` tinyint(1) DEFAULT '0' COMMENT '是否默认 1默认 0非默认 ， 默认的不能删除',
   `companyid` int(11) DEFAULT NULL COMMENT '公司id',
   `storeid` int(11) DEFAULT NULL COMMENT '门店id',
-  `name` varchar(255) DEFAULT NULL COMMENT '名称',
-  `status` tinyint(1) DEFAULT '1' COMMENT '状态  默认1，1启用 0禁用',
-  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
-  `updated_at` datetime DEFAULT NULL COMMENT '修改时间',
+  `cityid` int(11) DEFAULT NULL COMMENT '市id',
+  `userid` int(11) DEFAULT NULL COMMENT '创建者id,对应用户user表id',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='过滤 - 自定义角色';
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='过滤 - 角色';
 
 /*Data for the table `fixture_filter_role` */
 
-insert  into `fixture_filter_role`(`id`,`uuid`,`companyid`,`storeid`,`name`,`status`,`created_at`,`updated_at`) values (1,'507be0e82d8d11e88aa754e1adc540fa',1,1,'自定义项目管理员',1,'2018-03-22 12:56:57',NULL),(2,'554c05d22d8d11e88aa754e1adc540fa',1,2,'自定义系统管理员',1,'2018-03-22 12:56:59',NULL),(3,'593754bf2d8d11e88aa754e1adc540fa',1,3,'自定义数据分析管理员',1,'2018-03-22 12:57:02',NULL),(4,'5d41b7d92d8d11e88aa754e1adc540fa',1,4,'自定义会员管理员',1,'2018-03-22 12:57:04',NULL),(5,'60bf7c392d8d11e88aa754e1adc540fa',2,5,'自定义消息管理员',1,'2018-03-22 12:57:06',NULL),(6,'d72f25fc2d8d11e88aa754e1adc540fa',2,6,'自定义门店管理员',1,'2018-03-22 13:00:13',NULL),(7,'ed34f9172d8d11e88aa754e1adc540fa',2,7,'自定义门店管理员',1,'2018-03-22 13:00:30',NULL);
+insert  into `fixture_filter_role`(`id`,`uuid`,`name`,`status`,`isdefault`,`companyid`,`storeid`,`cityid`,`userid`,`created_at`,`updated_at`) values (1,'4a7fd8cb371511e89ce094de807e34a0','管理员',1,1,NULL,NULL,NULL,NULL,'2018-04-03 16:02:01',NULL),(2,'4a800506371511e89ce094de807e34a0','门店管理员',1,1,NULL,NULL,NULL,NULL,'2018-04-03 16:02:01','0000-00-00 00:00:00'),(32,'bc6f3e38dd19753a848c5e3cc09abe48','操作员',1,0,NULL,NULL,NULL,NULL,'2018-05-10 20:49:45','2018-05-10 20:50:45');
 
-/*Table structure for table `fixture_filter_role_default` */
+/*Table structure for table `fixture_filter_role_function` */
 
-DROP TABLE IF EXISTS `fixture_filter_role_default`;
+DROP TABLE IF EXISTS `fixture_filter_role_function`;
 
-CREATE TABLE `fixture_filter_role_default` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uuid` char(32) DEFAULT NULL COMMENT '唯一索引id',
-  `name` varchar(255) DEFAULT NULL COMMENT '名称',
-  `status` tinyint(1) DEFAULT '1' COMMENT '状态  默认1，1启用 0禁用',
-  `isallowdel` tinyint(1) DEFAULT '0' COMMENT '是否允许删除 1可以 0不可以',
-  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+CREATE TABLE `fixture_filter_role_function` (
+  `id` bigint(11) NOT NULL AUTO_INCREMENT,
+  `uuid` char(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '姓名',
+  `roleid` int(11) DEFAULT NULL COMMENT '角色id 对应role表id',
+  `functionid` int(11) DEFAULT NULL COMMENT '功能id 对应功能表function的id',
+  `islook` tinyint(1) DEFAULT '1' COMMENT '视野范围，默认3,1全部 2城市 3门店 4部分门店',
+  `created_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='过滤 - 默认角色';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='过滤 - 角色功能';
 
-/*Data for the table `fixture_filter_role_default` */
+/*Data for the table `fixture_filter_role_function` */
 
-insert  into `fixture_filter_role_default`(`id`,`uuid`,`name`,`status`,`isallowdel`,`created_at`) values (1,'5bedf8942dbd11e88aa754e1adc540fa','超级管理员',1,0,'2018-03-22 12:56:53'),(2,'6222f3bf2dbd11e88aa754e1adc540fa','门店管理员',1,0,'2018-03-22 18:39:38');
+/*Table structure for table `fixture_log_message` */
 
-/*Table structure for table `fixture_filter_roleauthority` */
+DROP TABLE IF EXISTS `fixture_log_message`;
 
-DROP TABLE IF EXISTS `fixture_filter_roleauthority`;
-
-CREATE TABLE `fixture_filter_roleauthority` (
+CREATE TABLE `fixture_log_message` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uuid` char(32) DEFAULT NULL COMMENT '唯一索引',
-  `authorityoperationitemid` int(11) DEFAULT NULL COMMENT '业务功能id 0代表所有功能，个别的使用具体itemid值',
-  `roleid` int(11) DEFAULT NULL COMMENT '角色id',
-  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `uuid` char(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nickname` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `typename` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '关注  、赞、评论',
+  `typeid` tinyint(1) DEFAULT NULL COMMENT '类型id 1关注 2赞 3 评论',
+  `siteid` int(11) DEFAULT NULL COMMENT '来源工地id,工地名称',
+  `sitename` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `activityid` int(11) DEFAULT NULL COMMENT '来源活动id',
+  `activityname` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '来源活动名称',
+  `created_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8 COMMENT='过滤 - 自定义角色权限';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='消息 - 通知';
 
-/*Data for the table `fixture_filter_roleauthority` */
-
-insert  into `fixture_filter_roleauthority`(`id`,`uuid`,`authorityoperationitemid`,`roleid`,`created_at`) values (1,'5bef36f42dc011e88aa754e1adc540fa',1,1,'2018-03-22 19:01:23'),(2,'5bef38272dc011e88aa754e1adc540fa',100,1,'2018-03-22 19:01:23'),(3,'5bef38942dc011e88aa754e1adc540fa',101,1,'2018-03-22 19:01:23'),(4,'5bef38de2dc011e88aa754e1adc540fa',102,1,'2018-03-22 19:01:23'),(5,'5bef39252dc011e88aa754e1adc540fa',103,1,'2018-03-22 19:01:23'),(6,'5bef39612dc011e88aa754e1adc540fa',104,1,'2018-03-22 19:01:23'),(7,'5bef39a72dc011e88aa754e1adc540fa',200,1,'2018-03-22 19:01:23'),(8,'5bef39e32dc011e88aa754e1adc540fa',201,1,'2018-03-22 19:01:23'),(9,'5bef3a492dc011e88aa754e1adc540fa',202,1,'2018-03-22 19:01:23'),(10,'5bef3a892dc011e88aa754e1adc540fa',203,1,'2018-03-22 19:01:23'),(11,'5bef3ac82dc011e88aa754e1adc540fa',204,1,'2018-03-22 19:01:23'),(12,'5bef3b082dc011e88aa754e1adc540fa',205,1,'2018-03-22 19:01:23'),(13,'5bef3b4b2dc011e88aa754e1adc540fa',300,1,'2018-03-22 19:01:23'),(14,'5bef3b8a2dc011e88aa754e1adc540fa',301,1,'2018-03-22 19:01:23'),(15,'5bef3c302dc011e88aa754e1adc540fa',302,1,'2018-03-22 19:01:23'),(16,'5bef3c702dc011e88aa754e1adc540fa',303,1,'2018-03-22 19:01:23'),(17,'5bef3cab2dc011e88aa754e1adc540fa',304,1,'2018-03-22 19:01:23'),(18,'5bef3ceb2dc011e88aa754e1adc540fa',400,1,'2018-03-22 19:01:23'),(19,'5bef3d272dc011e88aa754e1adc540fa',401,1,'2018-03-22 19:01:23'),(20,'5bef3d632dc011e88aa754e1adc540fa',402,1,'2018-03-22 19:01:23'),(21,'5bef3d9f2dc011e88aa754e1adc540fa',2,2,'2018-03-22 19:01:23'),(22,'5bef3dde2dc011e88aa754e1adc540fa',500,2,'2018-03-22 19:01:23'),(23,'5bef3e1a2dc011e88aa754e1adc540fa',501,2,'2018-03-22 19:01:23'),(24,'5bef3e562dc011e88aa754e1adc540fa',502,2,'2018-03-22 19:01:23'),(25,'5bef3e922dc011e88aa754e1adc540fa',503,2,'2018-03-22 19:01:23'),(26,'5bef3ed22dc011e88aa754e1adc540fa',504,2,'2018-03-22 19:01:23'),(27,'5bef3f0d2dc011e88aa754e1adc540fa',505,2,'2018-03-22 19:01:23'),(28,'5bef3f4d2dc011e88aa754e1adc540fa',600,2,'2018-03-22 19:01:23'),(29,'5bef3f852dc011e88aa754e1adc540fa',601,2,'2018-03-22 19:01:23'),(30,'5bef3fc52dc011e88aa754e1adc540fa',602,2,'2018-03-22 19:01:23'),(31,'5bef40012dc011e88aa754e1adc540fa',603,2,'2018-03-22 19:01:23'),(32,'5bef403d2dc011e88aa754e1adc540fa',604,2,'2018-03-22 19:01:23'),(33,'5bef40752dc011e88aa754e1adc540fa',605,2,'2018-03-22 19:01:23'),(34,'5bef40b52dc011e88aa754e1adc540fa',700,2,'2018-03-22 19:01:23'),(35,'5bef40fb2dc011e88aa754e1adc540fa',701,2,'2018-03-22 19:01:23'),(36,'5bef41372dc011e88aa754e1adc540fa',702,2,'2018-03-22 19:01:23'),(37,'5bef41702dc011e88aa754e1adc540fa',703,2,'2018-03-22 19:01:23'),(38,'5bef41af2dc011e88aa754e1adc540fa',704,2,'2018-03-22 19:01:23'),(39,'5bef41eb2dc011e88aa754e1adc540fa',800,2,'2018-03-22 19:01:23'),(40,'5bef42272dc011e88aa754e1adc540fa',801,2,'2018-03-22 19:01:23'),(41,'5bef42662dc011e88aa754e1adc540fa',3,3,'2018-03-22 19:01:23'),(42,'5bef42a22dc011e88aa754e1adc540fa',900,3,'2018-03-22 19:01:23'),(43,'5bef42de2dc011e88aa754e1adc540fa',901,3,'2018-03-22 19:01:23'),(44,'5bef431a2dc011e88aa754e1adc540fa',902,3,'2018-03-22 19:01:23'),(45,'5bef43562dc011e88aa754e1adc540fa',903,3,'2018-03-22 19:01:23'),(46,'5bef43962dc011e88aa754e1adc540fa',904,3,'2018-03-22 19:01:23'),(47,'5bef43d52dc011e88aa754e1adc540fa',4,4,'2018-03-22 19:01:23'),(48,'5bef44112dc011e88aa754e1adc540fa',1000,4,'2018-03-22 19:01:23'),(49,'5bef444d2dc011e88aa754e1adc540fa',1001,4,'2018-03-22 19:01:23'),(50,'5bef44892dc011e88aa754e1adc540fa',5,5,'2018-03-22 19:01:23'),(51,'5bef44c52dc011e88aa754e1adc540fa',2000,5,'2018-03-22 19:01:23'),(52,'5bef45042dc011e88aa754e1adc540fa',2001,5,'2018-03-22 19:01:23'),(53,'5bef45402dc011e88aa754e1adc540fa',2002,5,'2018-03-22 19:01:23'),(54,'5bef45802dc011e88aa754e1adc540fa',0,6,'2018-03-22 19:01:23'),(55,'5bef45bf2dc011e88aa754e1adc540fa',0,7,'2018-03-22 19:01:23');
-
-/*Table structure for table `fixture_filter_roleauthority_default` */
-
-DROP TABLE IF EXISTS `fixture_filter_roleauthority_default`;
-
-CREATE TABLE `fixture_filter_roleauthority_default` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uuid` char(32) DEFAULT NULL COMMENT '唯一索引',
-  `roleid` int(11) DEFAULT NULL COMMENT '默认角色id',
-  `authorityoperationitemid` int(11) DEFAULT NULL COMMENT '业务功能id 0代表所有功能，个别的使用具体itemid值',
-  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='过滤 - 默认角色权限';
-
-/*Data for the table `fixture_filter_roleauthority_default` */
-
-insert  into `fixture_filter_roleauthority_default`(`id`,`uuid`,`roleid`,`authorityoperationitemid`,`created_at`) values (1,'c21cd5b32dbd11e88aa754e1adc540fa',1,0,'2018-03-22 18:42:33'),(2,'16db02932dbe11e88aa754e1adc540fa',2,0,'2018-03-22 18:42:36');
-
-/*Table structure for table `fixture_filter_userauth` */
-
-DROP TABLE IF EXISTS `fixture_filter_userauth`;
-
-CREATE TABLE `fixture_filter_userauth` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uuid` char(32) DEFAULT NULL COMMENT '唯一索引',
-  `userid` int(11) DEFAULT NULL COMMENT '用户id',
-  `roleid` int(11) DEFAULT NULL COMMENT '角色id',
-  `roleflag` tinyint(1) DEFAULT '0' COMMENT '角色分类 ，默认0， 0默认角色  1自动以角色',
-  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
-  `updated_at` datetime DEFAULT NULL COMMENT '修改时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COMMENT='过滤 - 用户角色';
-
-/*Data for the table `fixture_filter_userauth` */
-
-insert  into `fixture_filter_userauth`(`id`,`uuid`,`userid`,`roleid`,`roleflag`,`created_at`,`updated_at`) values (1,'3b00cccd2e4011e8b20154e1adc540fa',1,1,0,'2018-03-23 10:16:43',NULL),(2,'3b00ce2a2e4011e8b20154e1adc540fa',2,1,0,'2018-03-23 10:16:43',NULL),(3,'3b00ce982e4011e8b20154e1adc540fa',3,2,0,'2018-03-23 10:16:43',NULL),(4,'3b00cede2e4011e8b20154e1adc540fa',5,2,0,'2018-03-23 10:16:43',NULL),(5,'3b00cf2c2e4011e8b20154e1adc540fa',7,2,0,'2018-03-23 10:16:43',NULL),(6,'3b00cf722e4011e8b20154e1adc540fa',9,2,0,'2018-03-23 10:16:43',NULL),(7,'3b00cfb52e4011e8b20154e1adc540fa',11,2,0,'2018-03-23 10:16:43',NULL),(8,'3b00cff82e4011e8b20154e1adc540fa',13,2,0,'2018-03-23 10:16:43',NULL),(9,'3b00d03b2e4011e8b20154e1adc540fa',15,2,0,'2018-03-23 10:16:43',NULL),(10,'3b00d07b2e4011e8b20154e1adc540fa',4,1,1,'2018-03-23 10:16:43',NULL),(11,'3b00d0be2e4011e8b20154e1adc540fa',6,2,1,'2018-03-23 10:16:43',NULL),(12,'3b00d1122e4011e8b20154e1adc540fa',8,3,1,'2018-03-23 10:16:43',NULL),(13,'3b00d1872e4011e8b20154e1adc540fa',10,4,1,'2018-03-23 10:16:43',NULL),(14,'3b00d1c62e4011e8b20154e1adc540fa',12,5,1,'2018-03-23 10:16:43',NULL),(15,'3b00d2092e4011e8b20154e1adc540fa',14,6,1,'2018-03-23 10:16:43',NULL),(16,'3b00d2492e4011e8b20154e1adc540fa',16,7,1,'2018-03-23 10:16:43',NULL);
+/*Data for the table `fixture_log_message` */
 
 /*Table structure for table `fixture_log_vipupgrade` */
 
@@ -642,39 +659,6 @@ CREATE TABLE `fixture_log_vipupgrade` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员机制升级记录';
 
 /*Data for the table `fixture_log_vipupgrade` */
-
-/*Table structure for table `fixture_loginvalidate` */
-
-DROP TABLE IF EXISTS `fixture_loginvalidate`;
-
-CREATE TABLE `fixture_loginvalidate` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `uuid` char(32) DEFAULT NULL COMMENT '唯一索引',
-  `table` varchar(100) DEFAULT NULL COMMENT '表名称',
-  `tablesign` tinyint(1) DEFAULT NULL COMMENT '表标识 1用户  2参与者  3观光团',
-  `wechatopenid` varchar(100) DEFAULT NULL COMMENT '微信openid',
-  `type` tinyint(1) DEFAULT '1' COMMENT '类型，默认1， 0=B端用户  1=C端用户',
-  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='B-C端分发登录';
-
-/*Data for the table `fixture_loginvalidate` */
-
-/*Table structure for table `fixture_ouristparty` */
-
-DROP TABLE IF EXISTS `fixture_ouristparty`;
-
-CREATE TABLE `fixture_ouristparty` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uuid` char(32) DEFAULT NULL COMMENT '唯一索引id',
-  `nickname` varchar(200) DEFAULT NULL COMMENT '昵称',
-  `faceimg` longtext COMMENT '头像',
-  `wechatopenid` varchar(255) DEFAULT NULL COMMENT '微信openid',
-  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='观光团';
-
-/*Data for the table `fixture_ouristparty` */
 
 /*Table structure for table `fixture_qa_feedback` */
 
@@ -701,8 +685,9 @@ CREATE TABLE `fixture_site` (
   `uuid` char(32) DEFAULT NULL COMMENT '唯一索引id',
   `companyid` int(11) DEFAULT NULL COMMENT '公司id',
   `storeid` int(11) DEFAULT NULL COMMENT '门店id',
-  `stagetemplateid` int(11) DEFAULT NULL COMMENT '阶段id （最新一次）  默认阶段模板id 或 自定义阶段模板id',
-  `isdefaulttemplate` tinyint(1) DEFAULT '0' COMMENT '是否默认的阶段模板id',
+  `cityid` int(11) DEFAULT NULL COMMENT '市id',
+  `stageid` int(11) DEFAULT NULL COMMENT '阶段id （最新一次）  ',
+  `stagetemplateid` int(11) DEFAULT NULL COMMENT '阶段模板id',
   `roomtypeid` int(11) DEFAULT NULL COMMENT '户型id',
   `roomstyleid` int(11) DEFAULT NULL COMMENT '风格id',
   `renovationmodeid` int(11) DEFAULT NULL COMMENT '装修方式id',
@@ -723,9 +708,11 @@ CREATE TABLE `fixture_site` (
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   `updated_at` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='工地';
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COMMENT='工地';
 
 /*Data for the table `fixture_site` */
+
+insert  into `fixture_site`(`id`,`uuid`,`companyid`,`storeid`,`cityid`,`stageid`,`stagetemplateid`,`roomtypeid`,`roomstyleid`,`renovationmodeid`,`budget`,`housename`,`name`,`addr`,`lng`,`lat`,`doornumber`,`acreage`,`roomshap`,`explodedossurl`,`isopen`,`stagetype`,`isfinish`,`createuserid`,`created_at`,`updated_at`) values (1,'8535cee4506ab19f7699a2edc4cf4f26',NULL,6,NULL,NULL,1,1,2,2,111,NULL,NULL,'二分五分',NULL,NULL,'范围范围发','11.00','1室1厅1厨1卫',NULL,0,0,0,17,'2018-03-25 09:27:51','2018-03-25 09:27:51'),(17,'919af2486be879365be7dcd4430bb33e',4,6,NULL,2,1,4,4,1,13,NULL,'金色润城','龙首南路101',NULL,NULL,'202','80.00','3室1厅1厨1卫','site/919af2486be879365be7dcd4430bb33e/info/bmk9XtuCIFhDkfRRvPWZMfg6dcr7WKF6N2EzHGk0.jpeg',1,0,0,17,'2018-03-29 03:55:49','2018-05-11 17:56:03'),(19,'8198a8edea026af729baa9bce46f9574',4,6,1,113,26,2,1,1,30,NULL,'测试工地','陕西省西安市新城区龙首中路龙首东北住宅小区(宫园1号东)','108.950134277','34.290740967','208','202.00','1室1厅1厨1卫','site/8198a8edea026af729baa9bce46f9574/info/E0WMzmwvzfcXV9x0Ud2Mfg1w9bkSsbUXkJlAZPxs.jpeg',1,0,0,17,'2018-05-10 14:53:09','2018-05-11 17:02:37');
 
 /*Table structure for table `fixture_site_followrecord` */
 
@@ -734,31 +721,34 @@ DROP TABLE IF EXISTS `fixture_site_followrecord`;
 CREATE TABLE `fixture_site_followrecord` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uuid` char(32) DEFAULT NULL COMMENT '唯一索引id',
+  `companyid` int(11) DEFAULT NULL COMMENT '公司id',
+  `storeid` int(11) DEFAULT NULL COMMENT '门店id',
   `siteid` int(11) DEFAULT NULL COMMENT '工地id',
-  `followuserid` int(11) DEFAULT NULL COMMENT '观光团id',
+  `cityid` int(11) DEFAULT NULL COMMENT '市id',
+  `userid` int(11) DEFAULT NULL COMMENT '观光团id，对应用户user表id',
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='观光团关注的工地';
 
 /*Data for the table `fixture_site_followrecord` */
 
-/*Table structure for table `fixture_site_participant` */
+/*Table structure for table `fixture_site_invitation` */
 
-DROP TABLE IF EXISTS `fixture_site_participant`;
+DROP TABLE IF EXISTS `fixture_site_invitation`;
 
-CREATE TABLE `fixture_site_participant` (
+CREATE TABLE `fixture_site_invitation` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uuid` char(32) DEFAULT NULL COMMENT '唯一索引',
+  `uuid` char(32) DEFAULT NULL COMMENT '唯一索引id',
+  `companyid` int(11) DEFAULT NULL COMMENT '公司id',
+  `storeid` int(11) DEFAULT NULL COMMENT '门店id',
+  `cityid` int(11) DEFAULT NULL COMMENT '市id',
   `siteid` int(11) DEFAULT NULL COMMENT '工地id',
-  `positionid` int(11) DEFAULT NULL COMMENT '职位id',
-  `nickname` varchar(255) DEFAULT NULL COMMENT '昵称',
-  `faceimg` longtext COMMENT '头像',
-  `wechatopenid` varchar(255) DEFAULT NULL COMMENT '微信openid',
+  `userid` int(11) DEFAULT NULL COMMENT '邀请者id，对应用户user表id',
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='工地参与者（团队成员）';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='参与者被邀请的工地';
 
-/*Data for the table `fixture_site_participant` */
+/*Data for the table `fixture_site_invitation` */
 
 /*Table structure for table `fixture_site_stageschedule` */
 
@@ -770,15 +760,36 @@ CREATE TABLE `fixture_site_stageschedule` (
   `dynamicid` int(11) DEFAULT NULL COMMENT '动态id',
   `siteid` int(11) DEFAULT NULL COMMENT '工地id',
   `stagetagid` int(11) DEFAULT NULL COMMENT '阶段id',
-  `isstagedefault` tinyint(1) DEFAULT '0' COMMENT '是否默认阶段模板的阶段',
   `tablesign` tinyint(1) DEFAULT NULL COMMENT '表 1用户  2参与者  ',
   `stageuserid` int(11) DEFAULT NULL COMMENT '更新着id  用户表 和参与者表',
   `positionid` int(11) DEFAULT NULL COMMENT '阶段更新者职位id',
-  `created_at` int(11) DEFAULT NULL COMMENT '创建时间',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='工地阶段进度记录';
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COMMENT='工地阶段进度记录';
 
 /*Data for the table `fixture_site_stageschedule` */
+
+insert  into `fixture_site_stageschedule`(`id`,`uuid`,`dynamicid`,`siteid`,`stagetagid`,`tablesign`,`stageuserid`,`positionid`,`created_at`) values (13,'2f5410ec7c0822250d87a8e2254cac3d',21,17,12,1,17,17,'2018-03-29 03:55:49'),(14,'41527906932cabb2532d3b8729a05e3e',22,17,2,1,17,NULL,'2018-03-30 09:07:26'),(15,'6ed24d7bfa496677bff6f5c414402e4d',34,19,112,1,17,17,'2018-05-10 14:53:09'),(16,'ba19375b1f310758f34a7da1d7756030',35,19,113,1,17,NULL,'2018-05-10 14:57:13'),(17,'46e29562dcc5c02fcac10281d61fc829',36,19,114,1,17,NULL,'2018-05-11 17:02:29');
+
+/*Table structure for table `fixture_sms_history` */
+
+DROP TABLE IF EXISTS `fixture_sms_history`;
+
+CREATE TABLE `fixture_sms_history` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `companyid` int(11) DEFAULT NULL COMMENT '公司id',
+  `userid` int(11) DEFAULT NULL COMMENT '用户id',
+  `type` tinyint(1) DEFAULT '0' COMMENT '1用户发送 0 系统后台发送',
+  `content` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '发送短信内容',
+  `code` int(6) NOT NULL COMMENT '验证码',
+  `phone` char(11) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '手机号码',
+  `created_at` datetime NOT NULL COMMENT '发送时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='发送短息表';
+
+/*Data for the table `fixture_sms_history` */
+
+insert  into `fixture_sms_history`(`id`,`companyid`,`userid`,`type`,`content`,`code`,`phone`,`created_at`) values (1,4,NULL,1,'温馨提示:您修改手机号码的验证码为：864966请勿向他人泄露！',864966,'2147483647','2018-05-11 14:25:04'),(2,4,NULL,1,'温馨提示:您修改手机号码的验证码为：272636请勿向他人泄露！',272636,'2147483647','2018-05-11 14:26:23'),(3,4,NULL,1,'温馨提示:您修改手机号码的验证码为：920843请勿向他人泄露！',920843,'15094014770','2018-05-11 14:27:27'),(4,4,NULL,1,'温馨提示:您修改手机号码的验证码为：186661请勿向他人泄露！',186661,'15094014770','2018-05-11 14:31:06'),(5,4,NULL,1,'温馨提示:您修改手机号码的验证码为：092115请勿向他人泄露！',92115,'15094014770','2018-05-11 15:44:02'),(6,4,NULL,1,'温馨提示:您修改手机号码的验证码为：7784请勿向他人泄露！',7784,'15094014770','2018-05-11 15:45:03'),(7,4,NULL,1,'温馨提示:您修改手机号码的验证码为：0418请勿向他人泄露！',418,'15094014770','2018-05-11 15:46:45'),(8,4,NULL,1,'温馨提示:您修改手机号码的验证码为：2162请勿向他人泄露！',2162,'15094014770','2018-05-11 15:49:47'),(9,4,NULL,1,'温馨提示:您修改手机号码的验证码为：9743请勿向他人泄露！',9743,'15094014770','2018-05-11 15:51:53'),(10,4,NULL,1,'温馨提示:您修改手机号码的验证码为：6819请勿向他人泄露！',6819,'15094014770','2018-05-11 15:57:38'),(11,4,NULL,1,'温馨提示:您修改手机号码的验证码为：7510请勿向他人泄露！',7510,'15094014770','2018-05-11 16:01:40'),(12,4,NULL,1,'温馨提示:您修改密码的验证码为：4815请勿向他人泄露！',4815,'15094014770','2018-05-11 16:16:25'),(13,4,17,1,'温馨提示:您修改密码的验证码为：8318请勿向他人泄露！',8318,'15094014770','2018-05-11 16:24:40'),(14,4,17,1,'温馨提示:您修改密码的验证码为：7293请勿向他人泄露！',7293,'15094014770','2018-05-11 16:26:33'),(15,4,17,1,'温馨提示:您修改密码的验证码为：5224请勿向他人泄露！',5224,'15094014770','2018-05-11 16:27:23'),(16,4,17,1,'温馨提示:您修改密码的验证码为：9270请勿向他人泄露！',9270,'15094014770','2018-05-11 16:28:09'),(17,4,17,1,'温馨提示:您修改密码的验证码为：7266请勿向他人泄露！',7266,'15094014770','2018-05-11 16:30:35'),(18,4,17,1,'温馨提示:您修改密码的验证码为：5821请勿向他人泄露！',5821,'15094014770','2018-05-11 16:31:17'),(19,4,17,1,'温馨提示:您修改密码的验证码为：4467请勿向他人泄露！',4467,'15094014770','2018-05-11 16:34:30'),(20,4,17,1,'温馨提示:您修改密码的验证码为：7568请勿向他人泄露！',7568,'15094014770','2018-05-11 16:34:42'),(21,4,17,1,'温馨提示:您修改密码的验证码为：4812请勿向他人泄露！',4812,'15094014770','2018-05-11 16:44:37'),(22,0,0,1,'温馨提示:您登陆的验证码为：7010请勿向他人泄露！',7010,'15094014770','2018-05-11 17:32:23'),(23,0,0,1,'温馨提示:您登陆的验证码为：4476请勿向他人泄露！',4476,'15094014770','2018-05-11 17:40:25'),(24,0,0,1,'温馨提示:您登陆的验证码为：3613请勿向他人泄露！',3613,'15094014770','2018-05-11 17:51:08');
 
 /*Table structure for table `fixture_store` */
 
@@ -795,11 +806,11 @@ CREATE TABLE `fixture_store` (
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='门店';
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8 COMMENT='门店';
 
 /*Data for the table `fixture_store` */
 
-insert  into `fixture_store`(`id`,`uuid`,`companyid`,`cityid`,`name`,`addr`,`fulladdr`,`created_at`,`updated_at`) values (1,'a85dd50e2d8411e88aa754e1adc540fa',1,1,'jimu门店1','未央区凤城八路1号','陕西省西安市未央区凤城八路1号','2018-03-22 11:47:57',NULL),(2,'b2aed97b2d8411e88aa754e1adc540fa',1,1,'jimu门店2','未央区太华北路3号','陕西省西安市未央区太华北路3号','2018-03-22 11:47:59',NULL),(3,'b6e64fc32d8411e88aa754e1adc540fa',1,1,'jimu门店3','高新区高新一路4号','陕西省西安市高新区高新一路4号','2018-03-22 11:48:01',NULL),(4,'c29d944d2d8411e88aa754e1adc540fa',1,1,'jimu门店4','高新区软件园5号','陕西省西安市高新区软件园5号','2018-03-22 11:48:04',NULL),(5,'c7e845222d8411e88aa754e1adc540fa',2,1,'mogu门店1','高科广场1座','陕西省西安市高科广场1座','2018-03-22 11:57:34',NULL),(6,'cb1d59752d8411e88aa754e1adc540fa',2,1,'mogu门店2','新时代广场2座','陕西省西安市新时代广场2座','2018-03-22 11:57:37',NULL),(7,'ce36ae552d8411e88aa754e1adc540fa',2,1,'mogu门店3','智慧广场3座','陕西省西安市智慧广场3座','2018-03-22 11:57:39',NULL);
+insert  into `fixture_store`(`id`,`uuid`,`companyid`,`cityid`,`name`,`addr`,`fulladdr`,`created_at`,`updated_at`) values (1,'a85dd50e2d8411e88aa754e1adc540fa',1,1,'苗伟伟的店1','未央区凤城八路12号','陕西省西安市未央区凤城八路12号','2018-05-10 14:49:18','2018-05-10 14:49:18'),(2,'b2aed97b2d8411e88aa754e1adc540fa',1,2,'jimu门店2','未央区太华北路3号','陕西省西安市未央区太华北路3号','2018-03-22 11:47:59',NULL),(3,'b6e64fc32d8411e88aa754e1adc540fa',1,1,'jimu门店3','高新区高新一路4号','山西省西安市高新区高新一路4号','2018-05-10 11:54:51','0000-00-00 00:00:00'),(4,'c29d944d2d8411e88aa754e1adc540fa',1,1,'jimu门店4','高新区软件园5号','陕西省西安市高新区软件园5号','2018-03-22 11:48:04',NULL),(6,'c7e845222d8411e88aa754e1adc540fa',4,1,'mogu门店1','高科广场1座','陕西省西安市高科广场1座','2018-03-22 11:57:34',NULL),(30,'7e3668095f13ad7279dd6ba1fce5e9f1',1,1,'吾问无为谓','南门','陕西省西安市南门','2018-05-09 15:55:13',NULL),(34,'fd2b2c19da0c4bb54e4f5fa7194bbebd',1,1,'哈哈哈1','哈哈哈哈哈哈','陕西省西安市哈哈哈哈哈哈','2018-05-10 10:33:04','2018-05-10 10:33:04'),(39,'604b688af8bdaef526b11c3c381c1562',1,1,'对的的店等等233','请问231','北京省北京市请问231','2018-05-10 14:52:05',NULL),(40,'e0412b0b781f740c80ae95b03df10218',1,1,'1233','123213','陕西省西安市123213','2018-05-10 14:53:48','2018-05-10 14:53:48');
 
 /*Table structure for table `fixture_user` */
 
@@ -811,24 +822,63 @@ CREATE TABLE `fixture_user` (
   `companyid` int(11) DEFAULT NULL COMMENT '公司id',
   `storeid` int(11) DEFAULT NULL COMMENT '门店id',
   `cityid` int(11) DEFAULT NULL COMMENT '市id',
+  `positionid` int(11) DEFAULT NULL COMMENT '职位id',
   `username` varchar(20) DEFAULT NULL COMMENT '用户账号，系统自动生成 字母+数字，随机字符串 ',
   `phone` varchar(30) DEFAULT NULL COMMENT '手机号',
   `password` char(32) DEFAULT NULL COMMENT '密码',
-  `nickname` varchar(100) DEFAULT NULL COMMENT '昵称',
+  `nickname` varchar(200) DEFAULT NULL COMMENT '姓名/昵称',
   `resume` varchar(255) DEFAULT NULL COMMENT '个人简介',
   `faceimg` longtext COMMENT '头像',
   `wechatopenid` varchar(100) DEFAULT NULL COMMENT '微信openid',
-  `isadmin` tinyint(1) DEFAULT NULL COMMENT '是否管理员，无默认， 0非管理员  1门店管理员 2总管理员  ',
-  `isblankout` tinyint(1) DEFAULT '1' COMMENT '是否作废 ，默认1,1正常 0作废',
+  `isadmin` tinyint(1) DEFAULT '0' COMMENT '是否系统默认管理员，无默认，0不是 1是',
+  `isadminafter` tinyint(1) DEFAULT '0' COMMENT '是否后端创建过来的 1是 0不是',
+  `type` tinyint(1) DEFAULT '1' COMMENT '类型 0B端用户 1C端用户 ',
+  `roleid` int(11) DEFAULT NULL COMMENT '角色id  对应role表id',
+  `isinvitationed` tinyint(1) DEFAULT '0' COMMENT '是否是被邀请的参与者 1是 0不是',
+  `isowner` tinyint(1) DEFAULT '0' COMMENT 'C端用户，是否业主 1是 0否',
+  `isdefault` tinyint(1) DEFAULT '0' COMMENT '是否默认 0否 1是',
   `status` tinyint(1) DEFAULT '1' COMMENT '当前进行中账号状态 ，默认1, 1启用 0禁用',
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   `updated_at` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COMMENT='用户';
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COMMENT='用户';
 
 /*Data for the table `fixture_user` */
 
-insert  into `fixture_user`(`id`,`uuid`,`companyid`,`storeid`,`cityid`,`username`,`phone`,`password`,`nickname`,`resume`,`faceimg`,`wechatopenid`,`isadmin`,`isblankout`,`status`,`created_at`,`updated_at`) values (1,'30b06afa2e3b11e8b20154e1adc540fa',1,NULL,1,'supperadmin','18092013099','69f59c3285a0b5ed113d013cd7caa018','admin','我们加油！',NULL,NULL,2,1,1,'2018-03-23 09:40:38','2018-03-20 09:39:10'),(2,'30b06bff2e3b11e8b20154e1adc540fa',2,NULL,1,'supperadmin','15002960399','69f59c3285a0b5ed113d013cd7caa018','admin','我们加油！',NULL,NULL,2,1,1,'2018-03-23 09:40:38','2018-03-22 02:34:16'),(3,'30b06c372e3b11e8b20154e1adc540fa',1,1,1,'jinmu1','18092013098','69f59c3285a0b5ed113d013cd7caa018','积木1','积木家庭1我们加油！',NULL,NULL,1,1,1,'2018-03-23 09:40:38',NULL),(4,'30b06d152e3b11e8b20154e1adc540fa',1,1,1,'jinmuauto1','18092013097','69f59c3285a0b5ed113d013cd7caa018','积木自定义1','积木家庭自定义1我们加油！',NULL,NULL,1,1,1,'2018-03-23 09:40:38',NULL),(5,'30b06e2c2e3b11e8b20154e1adc540fa',1,2,1,'jinmu2','18092013096','69f59c3285a0b5ed113d013cd7caa018','积木2','积木家庭2我们加油！',NULL,NULL,1,1,1,'2018-03-23 09:40:38',NULL),(6,'30b06ea02e3b11e8b20154e1adc540fa',1,2,1,'jinmuauto2','18092013095','69f59c3285a0b5ed113d013cd7caa018','积木自定义2','积木家庭自定义2我们加油！',NULL,NULL,1,1,1,'2018-03-23 09:40:38',NULL),(7,'30b06eff2e3b11e8b20154e1adc540fa',1,3,1,'jinmu3','18092013094','69f59c3285a0b5ed113d013cd7caa018','积木3','积木家庭3我们加油！',NULL,NULL,1,1,1,'2018-03-23 09:40:38',NULL),(8,'30b06f5b2e3b11e8b20154e1adc540fa',1,3,1,'jinmuauto3','18092013093','69f59c3285a0b5ed113d013cd7caa018','积木自定义3','积木家庭自定义3我们加油！',NULL,NULL,1,1,1,'2018-03-23 09:40:38',NULL),(9,'30b06fba2e3b11e8b20154e1adc540fa',1,4,1,'jinmu4','18092013092','69f59c3285a0b5ed113d013cd7caa018','积木4','积木家庭4我们加油！',NULL,NULL,1,1,1,'2018-03-23 09:40:38',NULL),(10,'30b070322e3b11e8b20154e1adc540fa',1,4,1,'jinmuauto4','18092013091','69f59c3285a0b5ed113d013cd7caa018','积木自定义4','积木家庭自定义4我们加油！',NULL,NULL,1,1,1,'2018-03-23 09:40:38',NULL),(11,'30b070b12e3b11e8b20154e1adc540fa',2,5,1,'jinmu5','15002960398','69f59c3285a0b5ed113d013cd7caa018','积木5','积木家庭5我们加油！',NULL,NULL,1,1,1,'2018-03-23 09:40:38',NULL),(12,'30b071452e3b11e8b20154e1adc540fa',2,5,1,'jinmuauto5','15002960397','69f59c3285a0b5ed113d013cd7caa018','积木自定义5','积木家庭自定义5我们加油！',NULL,NULL,1,1,1,'2018-03-23 09:40:38',NULL),(13,'30b0722a2e3b11e8b20154e1adc540fa',2,6,1,'jinmu6','15002960396','69f59c3285a0b5ed113d013cd7caa018','积木6','积木家庭6我们加油！',NULL,NULL,1,1,1,'2018-03-23 09:40:38',NULL),(14,'30b072f02e3b11e8b20154e1adc540fa',2,6,1,'jinmuauto6','15002960395','69f59c3285a0b5ed113d013cd7caa018','积木自定义6','积木家庭自定义6我们加油！',NULL,NULL,1,1,1,'2018-03-23 09:40:38',NULL),(15,'30b073882e3b11e8b20154e1adc540fa',2,7,1,'jinmu7','15002960394','69f59c3285a0b5ed113d013cd7caa018','积木7','积木家庭7我们加油！',NULL,NULL,1,1,1,'2018-03-23 09:40:38',NULL),(16,'30b074262e3b11e8b20154e1adc540fa',2,7,1,'jinmuauto7','15002960393','69f59c3285a0b5ed113d013cd7caa018','积木自定义7','积木家庭自定义7我们加油！',NULL,NULL,1,1,1,'2018-03-23 09:40:38',NULL);
+insert  into `fixture_user`(`id`,`uuid`,`companyid`,`storeid`,`cityid`,`positionid`,`username`,`phone`,`password`,`nickname`,`resume`,`faceimg`,`wechatopenid`,`isadmin`,`isadminafter`,`type`,`roleid`,`isinvitationed`,`isowner`,`isdefault`,`status`,`created_at`,`updated_at`) values (1,'30b06afa2e3b11e8b20154e1adc540fa',1,6,1,NULL,'supperadmin','18092013099','2e31d1a90952288bd5341f2a084d9fae','管理员','我们加油！',NULL,NULL,0,1,0,2,0,0,1,1,'2018-03-23 09:40:38','2018-05-11 00:26:10'),(2,'30b06bff2e3b11e8b20154e1adc540fa',2,NULL,1,NULL,'supperadmin','15002960399','69f59c3285a0b5ed113d013cd7caa018','管理员','我们加油！',NULL,NULL,1,1,0,1,0,0,1,1,'2018-03-23 09:40:38','2018-03-22 02:34:16'),(3,'30b06c372e3b11e8b20154e1adc540fa',1,1,1,NULL,'jinmu1','18092013098','69f59c3285a0b5ed113d013cd7caa018','积木1','积木家庭1我们加油！',NULL,NULL,1,1,0,1,0,0,0,1,'2018-03-23 09:40:38','2018-05-11 00:09:45'),(4,'30b06d152e3b11e8b20154e1adc540fa',1,1,1,NULL,'jinmuauto1','18092013097','69f59c3285a0b5ed113d013cd7caa018','积木自定义1','积木家庭自定义1我们加油！',NULL,NULL,1,1,0,1,0,0,0,1,'2018-03-23 09:40:38',NULL),(5,'30b06e2c2e3b11e8b20154e1adc540fa',1,2,1,NULL,'jinmu2','18092013096','69f59c3285a0b5ed113d013cd7caa018','积木2','积木家庭2我们加油！',NULL,NULL,1,1,0,1,0,0,0,1,'2018-03-23 09:40:38',NULL),(6,'30b06ea02e3b11e8b20154e1adc540fa',1,2,1,NULL,'jinmuauto2','18092013095','69f59c3285a0b5ed113d013cd7caa018','积木自定义2','积木家庭自定义2我们加油！',NULL,NULL,1,1,0,1,0,0,0,1,'2018-03-23 09:40:38',NULL),(7,'30b06eff2e3b11e8b20154e1adc540fa',1,3,1,NULL,'jinmu3','18092013094','69f59c3285a0b5ed113d013cd7caa018','积木3','积木家庭3我们加油！',NULL,NULL,1,1,0,1,0,0,0,1,'2018-03-23 09:40:38',NULL),(8,'30b06f5b2e3b11e8b20154e1adc540fa',1,3,1,NULL,'jinmuauto3','18092013093','69f59c3285a0b5ed113d013cd7caa018','积木自定义3','积木家庭自定义3我们加油！',NULL,NULL,1,1,0,1,0,0,0,1,'2018-03-23 09:40:38',NULL),(9,'30b06fba2e3b11e8b20154e1adc540fa',1,4,1,NULL,'jinmu4','18092013092','69f59c3285a0b5ed113d013cd7caa018','积木4','积木家庭4我们加油！',NULL,NULL,1,1,0,1,0,0,0,1,'2018-03-23 09:40:38',NULL),(10,'30b070322e3b11e8b20154e1adc540fa',1,4,1,NULL,'jinmuauto4','18092013091','69f59c3285a0b5ed113d013cd7caa018','积木自定义4','积木家庭自定义4我们加油！',NULL,NULL,1,1,0,1,0,0,0,1,'2018-03-23 09:40:38',NULL),(11,'30b070b12e3b11e8b20154e1adc540fa',2,5,1,NULL,'jinmu5','15002960398','69f59c3285a0b5ed113d013cd7caa018','积木5','积木家庭5我们加油！',NULL,NULL,1,1,0,1,0,0,0,1,'2018-03-23 09:40:38',NULL),(12,'30b071452e3b11e8b20154e1adc540fa',2,5,1,NULL,'jinmuauto5','15002960397','69f59c3285a0b5ed113d013cd7caa018','积木自定义5','积木家庭自定义5我们加油！',NULL,NULL,1,1,0,1,0,0,0,1,'2018-03-23 09:40:38',NULL),(13,'30b0722a2e3b11e8b20154e1adc540fa',2,6,1,NULL,'jinmu6','15002960396','69f59c3285a0b5ed113d013cd7caa018','积木6','积木家庭6我们加油！',NULL,NULL,1,1,0,1,0,0,0,1,'2018-03-23 09:40:38',NULL),(14,'30b072f02e3b11e8b20154e1adc540fa',2,6,1,NULL,'jinmuauto6','15002960395','69f59c3285a0b5ed113d013cd7caa018','积木自定义6','积木家庭自定义6我们加油！',NULL,NULL,1,1,0,1,0,0,0,1,'2018-03-23 09:40:38',NULL),(15,'30b073882e3b11e8b20154e1adc540fa',2,7,1,NULL,'jinmu7','15002960394','69f59c3285a0b5ed113d013cd7caa018','积木7','积木家庭7我们加油！',NULL,NULL,1,1,0,1,0,0,0,1,'2018-03-23 09:40:38',NULL),(16,'30b074262e3b11e8b20154e1adc540fa',2,7,1,NULL,'jinmuauto7','15002960393','69f59c3285a0b5ed113d013cd7caa018','积木自定义7','积木家庭自定义7我们加油！',NULL,NULL,1,1,0,1,0,0,0,1,'2018-03-23 09:40:38',NULL),(17,'17f441f7a5be0505e4e1c09654384d24',4,6,1,NULL,'yyz_47002','15094014770','69f59c3285a0b5ed113d013cd7caa018','哈哈',NULL,NULL,NULL,1,1,0,1,0,0,0,1,'2018-03-25 08:18:12','2018-05-11 16:34:58'),(18,'834bc9447ffb0520dc4a6441fbc15aff',5,NULL,NULL,NULL,NULL,'18691895593','5bb133ced94fa40723c44056ac035fb8',NULL,NULL,NULL,NULL,1,1,0,1,0,0,0,1,'2018-03-27 05:59:52','2018-03-27 06:01:40'),(19,'f599007a71208c9857939ef8722e05fc',NULL,NULL,NULL,NULL,'yyz_4700','15094014700','69f59c3285a0b5ed113d013cd7caa018',NULL,NULL,NULL,NULL,1,1,0,NULL,0,0,0,1,'2018-05-08 16:02:37','2018-05-08 16:02:37'),(20,'f19f3b8c72ff34f5d1a662656d434185',NULL,NULL,NULL,NULL,'yyz_4777','15094014777','9dc3e47661a34d3dede92bcb1c712761',NULL,NULL,NULL,NULL,1,1,0,NULL,0,0,0,1,'2018-05-08 16:03:58','2018-05-08 16:03:58');
+
+/*Table structure for table `fixture_user_store` */
+
+DROP TABLE IF EXISTS `fixture_user_store`;
+
+CREATE TABLE `fixture_user_store` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uuid` char(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '唯一索引',
+  `storeid` int(11) DEFAULT NULL COMMENT '门店id,对应门店store表id',
+  `userid` int(11) DEFAULT NULL COMMENT 'B端用户id,对应用户user表id',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户 - 拥有的门店（以后针对视野为部分门店时的扩展表）';
+
+/*Data for the table `fixture_user_store` */
+
+/*Table structure for table `fixture_user_token` */
+
+DROP TABLE IF EXISTS `fixture_user_token`;
+
+CREATE TABLE `fixture_user_token` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uuid` char(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '唯一索引',
+  `token` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '生成的token',
+  `expiration` int(11) DEFAULT NULL COMMENT '过期时间',
+  `userid` char(11) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户id',
+  `type` tinyint(1) DEFAULT '1' COMMENT '类型，默认1， 0=B端用户  1=C端用户',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户 - token';
+
+/*Data for the table `fixture_user_token` */
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

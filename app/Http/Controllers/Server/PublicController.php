@@ -127,7 +127,7 @@ class PublicController extends ServerBaseController
                 }
                 \Sms::getCode($data['phone'],$data['type']);
                 break;
-            case 4: //密码登陆
+            case 4: //密码登陆 忘记密码
                 $where['type'] = 0;
                 $where['isinvitationed'] = 0;
                 $where['isadminafter'] = 1;

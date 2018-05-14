@@ -26,7 +26,6 @@ class BusinessServerLogin extends ServerBase
          $where['isinvitationed'] = 0;
          $where['isadminafter'] = 1;
          $res = User::where($where)->first();
-         $res->islook=0;
          if( $res )
          {
              if( $res->status !=1 )
@@ -35,6 +34,7 @@ class BusinessServerLogin extends ServerBase
                  $obj->msg = '账号已被禁用';
                  return $obj;
              }
+             $res->islook=0;
              session(['userInfo'=>$res]);
              $obj->status = 1;
              $obj->msg = '登陆成功';

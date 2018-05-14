@@ -27,43 +27,40 @@ layui.use(['layer','form'], function() {
             content: $(".popWrap")
         })
     });
-    //60秒倒计时
+   //60秒倒计时
     $(".msgUncode").click(function() {
         $me = $(this);
+        $me.attr("disabled", true);
         var ret = /^1[34578][0-9]{9}$/;
         var phone = $("#phone").val();
         if(!ret.test(phone))
         {
             layer.msg('手机号码有误');
-            return;
-        }
-        time()
-        var url = $me.data('url');
-        var type = $me.data('type');
-        $.ajax({
-            url:url,
-            type:"PUT",
-            data:{phone:phone,type:type},
-            dataType:"json",
-            success: function( data )
-            {
-                if( data.status != 1 )
+        }else
+        {
+            var url = $me.data('url');
+            var type = $me.data('type');
+            $.ajax({
+                url:url,
+                type:"PUT",
+                data:{phone:phone,type:type},
+                dataType:"json",
+                success: function( data )
                 {
-                    $me.removeAttr("disabled");
-                    $me.text("获取短信验证码");
-                    $me.css({
-                        "background": "#19aa4b",
-                        "border-color": "#19aa4b"
-                    });
-                    wait = 0;
-                    layer.msg(data.messages);
-                }else
-                {
-                    $("#phone").attr("readonly", true);
-                    $("#phone").addClass('layui-disabled');
+                    if( data.status != 1 )
+                    {
+                        $me.removeAttr("disabled");
+                        layer.msg(data.messages);
+                    }else
+                    {
+                        time();
+                        $("#phone").attr("readonly", true);
+                        $("#phone").addClass('layui-disabled');
+                    }
                 }
-            }
-        });
+            });
+        }
+
     });
 
 });
@@ -78,6 +75,7 @@ function time()
     if (wait == 0)
     {
         $me.removeAttr("disabled");
+        $("#phone").attr("readonly", false);
         $me.text("获取短信验证码");
         $me.css({
             "background": "#19aa4b",
@@ -96,6 +94,7 @@ function time()
         setTimeout(function(){time()}, 1000)
     }
 }
+
 
 /**
  * 表单验证
