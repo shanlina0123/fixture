@@ -9,6 +9,7 @@
 namespace App\Http\Business\Server;
 use App\Http\Business\Common\ServerBase;
 use App\Http\Model\Company\Company;
+use App\Http\Model\Store\Store;
 use App\Http\Model\User\User;
 use Illuminate\Support\Facades\DB;
 
@@ -22,7 +23,7 @@ class CompanyBusiness extends ServerBase
     public function setCompany( $data )
     {
         $userInfo = session('userInfo');
-        if( $userInfo->isadmin != 2 )
+        if( $userInfo->isadmin != 1 )
         {
             return false;
         }
@@ -52,7 +53,7 @@ class CompanyBusiness extends ServerBase
                 $res->coucntryid = $data['coucntryid'];
                 $res->name = $data['name'];
                 $res->fullname = $data['fullname'];
-                $res->contacts = $data['contacts'];
+                $res->phone = $data['phone'];
                 $res->addr = $data['addr'];
                 $res->fulladdr = $data['fulladdr'];
                 $res->resume = $data['resume'];
@@ -90,28 +91,36 @@ class CompanyBusiness extends ServerBase
                 $obj->coucntryid = $data['coucntryid'];
                 $obj->name = $data['name'];
                 $obj->fullname = $data['fullname'];
-                $obj->contacts = $data['contacts'];
+                $obj->phone = $data['phone'];
                 $obj->addr = $data['addr'];
                 $obj->fulladdr = $data['fulladdr'];
                 $obj->resume = $data['resume'];
-                $obj->clientappid = $data['clientappid'];
                 $obj->save();
+                //添加门店
+                $store = new Store();
+                $store->uuid = create_uuid();
+                $store->companyid = $obj->id;
+                $store->cityid = $obj->cityid;
+                $store->name = $obj->fullname;
+                $store->addr = $obj->addr;
+                $store->fulladdr = $obj->fulladdr;
+                $store->save();
                 //修改用户表
                 $user->companyid = $obj->id;
+                $user->storeid = $store->id;
+                $user->cityid = $store->cityid;
                 $user->save();
                 //修改session
                 $userInfo = session('userInfo');
                 $userInfo->companyid = $obj->id;
+                $userInfo->storeid = $store->id;
+                $userInfo->cityid = $store->cityid;
                 session(['userInfo'=>$userInfo]);
                 DB::commit();
                 return true;
 
             }catch( Exception $e )
             {
-                //修改session
-                $userInfo = session('userInfo');
-                $userInfo->companyid = null;
-                session(['userInfo'=>$userInfo]);
                 DB::rollBack();
                 return false;
             }

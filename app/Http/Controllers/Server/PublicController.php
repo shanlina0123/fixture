@@ -2,9 +2,13 @@
 namespace App\Http\Controllers\Server;
 use App\Http\Business\Server\PublicBusiness;
 use App\Http\Controllers\Common\ServerBaseController;
+use App\Http\Model\Data\City;
+use App\Http\Model\Data\Country;
+use App\Http\Model\Data\Province;
 use App\Http\Model\User\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+ini_set('max_execution_time', '0');
 class PublicController extends ServerBaseController
 {
     /**
@@ -147,4 +151,45 @@ class PublicController extends ServerBaseController
         }
         responseData(\StatusCode::ERROR,'发送失败');
     }
+
+    /*public function city()
+    {
+
+        $json = file_get_contents('default/server/json/city.json');
+        $json = json_decode($json);
+        foreach ( $json as $key=>$row )
+        {
+            //省
+            $Province = new Province;
+            $Province->id = trim($key);
+            $Province->name = trim($row->name);
+            $Province->status = 1;
+            $Province->created_at = date("Y-m-d H:i:s");
+            $Province->save();
+            //市
+            foreach ( $row->child as $ck=>$cv )
+            {
+                $city = new City;
+                $city->id = trim($ck);
+                $city->name = trim($cv->name);
+                $city->provinceid = trim($key);
+                $city->status = 1;
+                $city->created_at = date("Y-m-d H:i:s");
+                $city->save();
+                //区县
+                foreach ( $cv->child as $ak=>$av )
+                {
+                    $area = new Country;
+                    $area->id = trim($ak);
+                    $area->name = trim($av);
+                    $area->cityid = trim($ck);
+                    $area->status = 1;
+                    $area->created_at = date("Y-m-d H:i:s");
+                    $area->save();
+                }
+
+            }
+        }
+        dd( $json  );
+    }*/
 }

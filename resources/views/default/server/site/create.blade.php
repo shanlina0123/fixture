@@ -172,5 +172,5 @@
 @endsection
 @section('js')
     <script type="text/javascript" src="{{pix_asset('server/plugins/validform/Validform_v5.3.2_min.js',false)}}"></script>
-    <script src="{{pix_asset('server/js/site/site.js')}}"></script>
+    <script type="text/javascript" src="{{pix_asset('server/js/site/site.js')}}"></script>
 @endsection

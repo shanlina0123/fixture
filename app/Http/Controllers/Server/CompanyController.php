@@ -28,7 +28,6 @@ class CompanyController extends ServerBaseController
         {
             $request->validate([
                 'name' => 'required',
-                'contacts' => 'required',
             ]);
             $data = trimValue(array_except($request->all(),['_token']));
             $res = $this->company->setCompany($data);
