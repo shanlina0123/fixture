@@ -23,8 +23,8 @@ class Sms
         $sig = $this->sig( $phone, $random, $time );
         $post_data['sig'] = $sig;
         $post_data['tel'] = ['mobile'=>$phone,'nationcode'=>'86'];
-        $post_data['time'] = $time+360000000;
-        $post_data['type'] = 0;
+        $post_data['time'] = $time;
+        $post_data['tpl_id'] = 121053;
         $url = $this->url.'?sdkappid='.$this->appid.'&random='.$random;
         return $this->sendCurlPost( $url, $post_data );
     }

@@ -12,6 +12,9 @@
 */
 //PC端服务路由
 Route::group(['namespace' => 'Server'], function () {
+    //微信第三方推荐verify_ticket地址
+    Route::any('wx/verify_ticket', 'WxTicketController@verifyTicket');
+    //注册登陆
     Route::match(['get', 'post'], 'register', 'RegisterController@register')->name('register');//注册页面
     Route::match(['get', 'post'], 'login', 'LoginController@login')->name('login');//登录
     Route::get('signout', 'LoginController@signOut')->name('signout');//登出

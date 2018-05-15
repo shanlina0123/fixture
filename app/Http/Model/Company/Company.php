@@ -10,4 +10,5 @@ class Company extends Model
     protected $guarded = ['id'];
     protected $table = 'company';
     public $timestamps = true;
+
 }
