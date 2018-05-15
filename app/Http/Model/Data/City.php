@@ -17,4 +17,13 @@ class City extends Model
     protected $guarded = ['id'];
     protected $table = 'data_city';
     public $timestamps = false;
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * 关联省份
+     */
+    public function CityToProvince()
+    {
+        return $this->belongsTo('App\Http\Model\Data\Province','provinceid','id');
+    }
 }

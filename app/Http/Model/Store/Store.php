@@ -18,4 +18,23 @@ class Store extends Model
         'created_at','updated_at'
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * 关联城市
+     */
+    public function StoreToCity()
+    {
+        return $this->belongsTo('App\Http\Model\Data\City','cityid','id');
+    }
+
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * 关联省份
+     */
+    public function StoreToProvince()
+    {
+        return $this->belongsTo('App\Http\Model\Data\Province','provinceid','id');
+    }
+
 }

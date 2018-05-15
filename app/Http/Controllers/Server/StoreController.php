@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Server;
-use App\Http\Business\Server\AdminBusiness;
+use App\Http\Business\Server\StoreBusiness;
 use App\Http\Controllers\Common\ServerBaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -38,7 +38,7 @@ class StoreController extends ServerBaseController
         if($this->request->ajax()){
             responseAjax($dataSource);
         }
-        return view('server.store.index',compact('list'))->with("errorMsg",$errorMsg);
+        return view('server.store.index',compact('list'))->with("errorMsg",json_encode($errorMsg));
     }
 
     /***
@@ -65,13 +65,14 @@ class StoreController extends ServerBaseController
         if($user->isadmin==0) {
             if (strlen($user->companyid) == 0 ||
                 strlen($user->cityid) == 0 ||
+                strlen($user->provinceid) == 0 ||
                 strlen($user->storeid) == 0
             ) {
                 return  responseCData(\StatusCode::PARAM_ERROR,"用户信息不完整",null);
             }
         }
 
-        $list=$this->store_business->index($user->isadmin,$user->companyid,$user->cityid,$user->storeid,$user->islook,$page,$data);
+        $list=$this->store_business->index($user->isadmin,$user->companyid,$user->provinceid,$user->cityid,$user->storeid,$user->islook,$page,$data);
         return   responseCData(\StatusCode::SUCCESS,"",$list);
     }
 
@@ -86,13 +87,15 @@ class StoreController extends ServerBaseController
     public  function  store()
     {
         //获取请求参数
-        $data=$this->getData(["cityid","name"],$this->request->all());
+        $data=$this->getData(["cityid","provinceid","name","addr"],$this->request->all());
         //验证规则
         $validator = Validator::make($data,[
             "cityid"=>'required|numeric',
+            "provinceid"=>'required|numeric',
             "name"=>'required|max:100|min:1',
             "addr"=>'present|max:100|min:1'
         ],['cityid.required'=>'城市id不能为空','cityid.numeric'=>'城市id只能是数字格式',
+            'provinceid.required'=>'省id不能为空','provinceid.numeric'=>'省id只能是数字格式',
             'name.required'=>'名称不能为空','name.max'=>'名称长度不能大于100个字符','name.min'=>'名称长度不能小于1个字符',
             'addr.present'=>'地址不能缺少','addr.max'=>'地址长度不能大于100个字符','addr.min'=>'地址长度不能小于1个字符',
             ]);
@@ -116,7 +119,7 @@ class StoreController extends ServerBaseController
     public  function  update($uuid)
     {
         //获取请求参数
-        $data=$this->getData(["cityid","name"],$this->request->all());
+        $data=$this->getData(["cityid","provinceid","name","addr"],$this->request->all());
         //拼接验证数据集
         $validateData=array_merge(["uuid"=>$uuid],$data);
 
@@ -124,11 +127,14 @@ class StoreController extends ServerBaseController
         $validator = Validator::make($validateData,[
             "uuid"=>'required|max:32|min:1',
             "cityid"=>'required|numeric',
+            "provinceid"=>'required|numeric',
             "name"=>'required|max:100|min:1',
-
+            "addr"=>'present|max:100|min:1'
         ],['uuid.required'=>'uuid不能为空','uuid.max'=>'uuid长度不能大于32个字符','uuid.min'=>'姓名长度不能小于1个字符',
             'cityid.required'=>'市id不能为空','cityid.numeric'=>'市id只能是数字格式',
-            'name.required'=>'名称不能为空','name.max'=>'名称长度不能大于100个字符','name.min'=>'名称长度不能小于1个字符',]);
+            'provinceid.required'=>'省id不能为空','provinceid.numeric'=>'省id只能是数字格式',
+            'name.required'=>'名称不能为空','name.max'=>'名称长度不能大于100个字符','name.min'=>'名称长度不能小于1个字符',
+            'addr.present'=>'地址不能缺少','addr.max'=>'地址长度不能大于100个字符','addr.min'=>'地址长度不能小于1个字符',]);
 
         //进行验证
         if ($validator->fails()) {

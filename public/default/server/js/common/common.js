@@ -19,7 +19,7 @@ $.ajaxSetup({
  * 获取数据ajax-get请求
  * @author laixm
  */
-$.sanjiGetJSON = function (url,data,callback){
+$.getJSON = function (url,data,callback){
     $.ajax({
         url:url,
         type:"get",

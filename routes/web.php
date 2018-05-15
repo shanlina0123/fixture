@@ -63,6 +63,12 @@ Route::group(['namespace' => 'Server'], function () {
             Route::put("admin/{uuid}","AdminController@update")->name("admin-update");//修改-执行
             Route::delete("admin/{uuid}","AdminController@delete")->name("admin-delete");//删除-执行
             Route::put("admin/setting/{uuid}","AdminController@setting")->name("admin-setting");//设置-执行
+            //门店
+            Route::get("store","StoreController@index")->name("store-index");//列表
+            Route::post("store/search","StoreController@index")->name("store-search-index");//搜索列表
+            Route::post("store","StoreController@store")->name("store-store");//新增-执行
+            Route::put("store/{uuid}","StoreController@update")->name("store-update");//修改-执行
+            Route::delete("store/{uuid}","StoreController@delete")->name("store-delete");//删除-执行
         });
     });
 });
