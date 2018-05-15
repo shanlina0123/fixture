@@ -14,6 +14,10 @@
 Route::group(['namespace' => 'Server'], function () {
     //微信第三方推荐verify_ticket地址
     Route::any('wx/verify_ticket', 'WxTicketController@verifyTicket');
+    //发起授权
+    Route::get('wx/authorize', 'WxAuthorizeController@WxAuthorize')->name('wx-authorize');
+    //授权回调
+    Route::any('wx/authorize/back', 'WxAuthorizeController@WxAuthorizeBack');
     //注册登陆
     Route::match(['get', 'post'], 'register', 'RegisterController@register')->name('register');//注册页面
     Route::match(['get', 'post'], 'login', 'LoginController@login')->name('login');//登录
@@ -29,6 +33,8 @@ Route::group(['namespace' => 'Server'], function () {
         Route::match(['get', 'post'], 'user/set-pass', 'UserController@setPass')->name('set-pass'); //修改密码
         //中间件权限认证路由
         Route::group(['middleware' => ['checkAuth']], function () {
+            //微信认证页面
+            Route::get('user/authorize', 'UserController@userAuthorize')->name('user-authorize');
             Route::any('upload-temp-img', 'PublicController@uploadImgToTemp');   //上传图片
             //工地
             Route::resource('site', 'SiteController');//工地管理

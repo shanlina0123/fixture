@@ -133,10 +133,37 @@
 .editBtns {
   width: 100px;
 }
-
-.readonly{
-  background-color: #f2f2f2;
+.toppart {
+  background-color: #eee;
 }
-.disabled{
-  background-color: #f2f2f2;
+.toppart .righttext {
+  padding-left: 20px;
+  padding-top: 25px;
+}
+.toppart .bottomBtns {
+  margin-top: 10px;
+}
+.toppart .bottomBtns a {
+  display: inline-block;
+  width: 100px;
+  height: 35px;
+  line-height: 35px;
+  text-align: center;
+  border-radius: 5px;
+  margin-right: 15px;
+  background-color: #fff;
+  border: 1px solid #e2e2e2;
+}
+.bottomnotice {
+  margin-top: 20px;
+}
+.bottomnotice .warmnotice {
+  font-size: 14px;
+}
+.bottomnotice .noticetext {
+  font-size: 20px;
+  padding: 15px 0;
+}
+.bottomnotice .noticeitem p {
+  line-height: 25px;
 }
