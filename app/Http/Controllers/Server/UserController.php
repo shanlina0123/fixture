@@ -107,4 +107,14 @@ class UserController extends ServerBaseController
             }
         }
     }
+
+
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * 小程序授权页面
+     */
+    public function userAuthorize()
+    {
+        return view('server.user.userauthorize');
+    }
 }

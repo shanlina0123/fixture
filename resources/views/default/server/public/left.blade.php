@@ -33,6 +33,7 @@
             </dl>
         </li>
         <li class="layui-nav-item"><a href="{{route('company-setting')}}">资料设置</a></li>
+        <li class="layui-nav-item"><a href="{{route('user-authorize')}}">授权信息</a></li>
         <li class="layui-nav-item"><a href="{{route('store-index')}}">门店管理</a></li>
         <li class="layui-nav-item"><a href="{{route('roles-index')}}">角色管理</a></li>
         <li class="layui-nav-item"><a href="{{route('admin-index')}}">用户管理</a></li>

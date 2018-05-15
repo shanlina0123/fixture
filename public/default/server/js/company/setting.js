@@ -27,7 +27,7 @@ $.get('/default/server/json/city.json',function ( data )
                         $("#src").attr('src', res.data.src);
                     }else
                     {
-                        $("#companyLogo").append('<div class="uploadImg layui-inline fl"><img  id="src" src="'+res.data.src+'" class="layui-upload-img"> </div>');
+                        $("#companyLogo").append('<div class="uploadImg layui-inline fl"><img width="230" height="132" id="src" src="'+res.data.src+'" class="layui-upload-img"> </div>');
                     }
                     $("#logo").val(res.data.name);
                     //console.log(res)

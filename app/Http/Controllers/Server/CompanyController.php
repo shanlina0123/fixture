@@ -31,18 +31,18 @@ class CompanyController extends ServerBaseController
             ]);
             $data = trimValue(array_except($request->all(),['_token']));
             $res = $this->company->setCompany($data);
-            if( $res == true )
+            if( $res->ststus == 1 )
             {
                 if( $data['returnUrl'] )
                 {
                     return redirect($data['returnUrl']);
                 }else
                 {
-                    return redirect()->route('company-setting')->with('msg','修改成功');
+                    return redirect()->route('company-setting')->with('msg',$res->msg);
                 }
             }else
             {
-                return redirect()->route('company-setting')->with('msg','修改失败');
+                return redirect()->route('company-setting')->with('msg',$res->msg);
             }
 
         }else

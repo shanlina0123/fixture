@@ -68,7 +68,7 @@
                     <i class="layui-icon"></i>
                     <p>点击上传，或将文件拖拽到此处</p>
                 </div>
-                @if( $data && $data->logo )  <div class="uploadImg layui-inline fl"><img  id="src" src="{{getImgUrl($data?$data->logo:'')}}" class="layui-upload-img"> </div> @endif
+                @if( $data && $data->logo )  <div class="uploadImg layui-inline fl"><img  id="src" width="230" height="132" src="{{getImgUrl($data?$data->logo:'')}}" class="layui-upload-img"> </div> @endif
             </div>
 
             <div class="submitButWrap">

@@ -9,6 +9,7 @@
 namespace App\Http\Business\Server;
 use App\Http\Business\Common\ServerBase;
 use App\Http\Model\Company\Company;
+use App\Http\Model\Site\Site;
 use App\Http\Model\Store\Store;
 use App\Http\Model\User\User;
 use Illuminate\Support\Facades\DB;
@@ -22,10 +23,13 @@ class CompanyBusiness extends ServerBase
      */
     public function setCompany( $data )
     {
+        $obj = new \stdClass();
         $userInfo = session('userInfo');
         if( $userInfo->isadmin != 1 )
         {
-            return false;
+            $obj->ststus = 0;
+            $obj->msg = '非管理员不可操作';
+            return $obj;
         }
         //根据用户信息查询
         $userInfo = session('userInfo');
@@ -35,6 +39,9 @@ class CompanyBusiness extends ServerBase
         {
             try{
                 $res = Company::find($companyId);
+                //查询是否写入工地
+                $storeID = Store::where(['companyid'=>$res->id,'isdefault'=>1])->value('id');
+                $site = Site::where(['companyid'=>$res->id,'storeid'=>$storeID])->count();
                 if( $data['logo'] )
                 {
                     $upload = new \Upload();
@@ -48,27 +55,40 @@ class CompanyBusiness extends ServerBase
                         $res->logo = 'user/'.$res->uuid.'/'.$data['logo'];
                     }
                 }
-                $res->provinceid = $data['provinceid'];
-                $res->cityid = $data['cityid'];
-                $res->coucntryid = $data['coucntryid'];
-                $res->name = $data['name'];
-                $res->fullname = $data['fullname'];
-                $res->phone = $data['phone'];
-                $res->addr = $data['addr'];
-                $res->fulladdr = $data['fulladdr'];
-                $res->resume = $data['resume'];
-
-                if( $res->save() )
+                if( $site )
                 {
-                    return true;
+                    $obj->ststus = 1;
+                    $obj->msg = '公司所在的地区已经添加了项目不能修改';
 
                 }else
                 {
-                    return false;
+                    $res->provinceid = $data['provinceid'];
+                    $res->cityid = $data['cityid'];
+                    $res->coucntryid = $data['coucntryid'];
+                    $res->addr = $data['addr'];
+                    $res->fulladdr = $data['fulladdr'];
+                    $obj->ststus = 1;
+                    $obj->msg = '修改成功';
+                }
+                $res->name = $data['name'];
+                $res->phone = $data['phone'];
+                $res->fullname = $data['fullname'];
+                $res->resume = $data['resume'];
+                if( $res->save() )
+                {
+                    return $obj;
+
+                }else
+                {
+                    $obj->ststus = 0;
+                    $obj->msg = '修改失败';
+                    return $obj;
                 }
             }catch(Exception $e )
             {
-                return false;
+                $obj->ststus = 0;
+                $obj->msg = '修改失败';
+                return $obj;
             }
         }else
         {
@@ -117,12 +137,17 @@ class CompanyBusiness extends ServerBase
                 $userInfo->cityid = $store->cityid;
                 session(['userInfo'=>$userInfo]);
                 DB::commit();
-                return true;
+
+                $obj->ststus = 1;
+                $obj->msg = '修改成功';
+                return $obj;
 
             }catch( Exception $e )
             {
                 DB::rollBack();
-                return false;
+                $obj->ststus = 0;
+                $obj->msg = '修改失败';
+                return $obj;
             }
         }
     }

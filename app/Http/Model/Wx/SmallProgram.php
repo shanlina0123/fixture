@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Model\Company;
+namespace App\Http\Model\Wx;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Company extends Model
+class SmallProgram extends Model
 {
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
-    protected $table = 'company';
+    protected $table = 'small_program';
     public $timestamps = true;
 
 }
