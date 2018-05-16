@@ -76,8 +76,15 @@ class CompanyBusiness extends ServerBase
                 $res->resume = $data['resume'];
                 if( $res->save() )
                 {
+                    if(  $obj->ststus == 1 )
+                    {
+                        //修改session
+                        $userInfo = session('userInfo');
+                        $userInfo->provinceid = $res->provinceid;
+                        $userInfo->cityid = $res->cityid;
+                        session(['userInfo'=>$userInfo]);
+                    }
                     return $obj;
-
                 }else
                 {
                     $obj->ststus = 0;
@@ -133,6 +140,7 @@ class CompanyBusiness extends ServerBase
                 //修改session
                 $userInfo = session('userInfo');
                 $userInfo->companyid = $obj->id;
+                $userInfo->provinceid = $obj->provinceid;
                 $userInfo->storeid = $store->id;
                 $userInfo->cityid = $store->cityid;
                 session(['userInfo'=>$userInfo]);

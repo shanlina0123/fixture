@@ -10,6 +10,7 @@ use App\Http\Controllers\Common\ServerBaseController;
 use App\Http\Model\Wx\SmallProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Mockery\Exception;
 
 class WxAuthorizeController extends ServerBaseController
 {
@@ -76,7 +77,7 @@ class WxAuthorizeController extends ServerBaseController
         //声明使用POST方式来进行发送
         curl_setopt($ch, CURLOPT_POST, 1);
         //发送什么数据呢
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataObj);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($dataObj));
         //忽略证书
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
@@ -163,19 +164,47 @@ class WxAuthorizeController extends ServerBaseController
             $data = json_decode($data,true);
             if( array_has( $data,'authorization_info') )
             {
-                $wx = new SmallProgram();
-                $wx->companyid = session('userInfo')->companyid;
-                $wx->authorization_info = $data['authorization_info'];
-                $wx->authorizer_appid = $data['authorizer_appid'];
-                $wx->authorizer_access_token = $data['authorizer_access_token'];
-                $wx->expires_in = $data['expires_in'];
-                $wx->authorizer_refresh_token = $data['authorizer_refresh_token'];
-                $wx->func_info = json_encode($data['func_info']);
-                if( $wx->save() )
+                $data = $data['authorization_info'];
+                try{
+                    $companyID = session('userInfo')->companyid;
+                    $wx = SmallProgram::where(['companyid'=>$companyID,'authorizer_appid'=>$data['authorizer_appid']])->first();
+                    if( !$wx )
+                    {
+                        $wx = new SmallProgram();
+                    }
+                    $wx->companyid = $companyID;
+                    $wx->authorization_info = json_encode($data);
+                    $wx->authorizer_appid = $data['authorizer_appid'];
+                    $wx->authorizer_access_token = $data['authorizer_access_token'];
+                    $wx->expires_in = $data['expires_in'];
+                    $wx->authorizer_refresh_token = $data['authorizer_refresh_token'];
+                    $wx->func_info = json_encode($data['func_info']);
+                    //用户信息
+                    $info = $this->wxInfo( $data['authorizer_appid'] );
+                    if( $info )
+                    {
+                        $wx->authorizer_info = json_encode($info);
+                        $wx->nick_name =  $info['nick_name'];
+                        $wx->head_img =  $info['head_img'];
+                        $wx->verify_type_info =  $info['verify_type_info']['id'];
+                        $wx->user_name =  $info['user_name'];
+                        $wx->principal_name = $info['principal_name'];
+                    }
+                    //设置小程序地址
+                    $setUrl = $this->setUrl();
+                    $wx->seturl = $setUrl?1:0;
+                    if( $wx->save() )
+                    {
+                        return redirect()->route('user/authorize');
+                    }
+
+                    return redirect()->back()->with('msg','授权回调写入失败');
+
+                }catch ( Exception $e )
                 {
-                    return redirect()->route('user/authorize');
+                    return redirect()->back()->with('msg','授权回调写入失败');
                 }
-                return redirect()->back()->with('msg','授权回调写入失败');
+
             }else
             {
                 return redirect()->back()->with('msg','授权回调失败');
@@ -184,6 +213,52 @@ class WxAuthorizeController extends ServerBaseController
         {
             return redirect()->back()->with('msg','授权回调失败');
         }
+    }
+
+    /**
+     * 小程序信息
+     */
+    public function wxInfo( $authorizer_appid )
+    {
+        $url = 'https://api.weixin.qq.com/cgi-bin/component/api_get_authorizer_info?component_access_token='.$this->component_access_token;
+        $post['component_appid'] = $this->appid;
+        $post['authorizer_appid'] = $authorizer_appid;
+        $data = $this->CurlPost( $url, $post );
+        if( $data )
+        {
+            $data = json_decode($data,true);
+            if( !array_has( $data,'authorizer_info') )
+            {
+                $data = false;
+            }
+            return $data['authorizer_info'];
+        }
+        return false;
+    }
+
+
+    /**
+     * 设置小程序地址
+     */
+    public function setUrl( $acctoken )
+    {
+        $url = 'https://api.weixin.qq.com/wxa/modify_domain?access_token='.$acctoken;
+        $post['action'] = 'set';
+        $post['requestdomain'] = config('wxconfig.requestdomain');
+        $post['wsrequestdomain'] = config('wxconfig.wsrequestdomain');
+        $post['uploaddomain'] = config('wxconfig.uploaddomain');
+        $post['downloaddomain'] = config('wxconfig.downloaddomain');
+        $data = $this->CurlPost( $url, $post );
+        if( $data )
+        {
+            $data = json_decode($data,true);
+            if( $data['errcode'] == 0 )
+            {
+                return true;
+            }
+            return false;
+        }
+        return false;
     }
 
 }
