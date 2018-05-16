@@ -78,6 +78,12 @@ Route::group(['namespace' => 'Server'], function () {
             Route::post("store","StoreController@store")->name("store-store");//新增-执行
             Route::put("store/{uuid}","StoreController@update")->name("store-update");//修改-执行
             Route::delete("store/{uuid}","StoreController@delete")->name("store-delete");//删除-执行
+            //属性
+            Route::get("data","DataController@index")->name("data-index");//列表
+            Route::get("data/edit/{cateid}","DataController@edit")->name("data-edit");//详情列表
+            Route::put("data/{id}","DataController@update")->name("data-update");//修改+新增-执行
+            Route::delete("data/{id}","DataController@delete")->name("data-delete");//删除-执行
+
         });
     });
 });

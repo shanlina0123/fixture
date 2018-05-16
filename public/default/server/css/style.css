@@ -167,3 +167,6 @@
 .bottomnotice .noticeitem p {
   line-height: 25px;
 }
+.readonly{
+  background-color:#f2f2f2;
+}

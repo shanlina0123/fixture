@@ -37,6 +37,6 @@
         <li class="layui-nav-item"><a href="{{route('store-index')}}">门店管理</a></li>
         <li class="layui-nav-item"><a href="{{route('roles-index')}}">角色管理</a></li>
         <li class="layui-nav-item"><a href="{{route('admin-index')}}">用户管理</a></li>
-        <li class="layui-nav-item"><a href="../system/settingList.html">系统属性</a></li>
+        <li class="layui-nav-item"><a href="{{route('data-index')}}">系统属性</a></li>
     </ul>
 </div>
