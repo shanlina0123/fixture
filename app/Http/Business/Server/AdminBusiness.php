@@ -151,7 +151,8 @@ class AdminBusiness extends ServerBase
             $admin["status"]=$data["status"];
             $admin["password"] = optimizedSaltPwd("admin",$data['password']);
             $admin["companyid"]=$companyid;
-            $admin["cityid"]=$cityid;
+            $admin["cityid"]=$storeData["cityid"];
+            $admin["provinceid"]=$storeData["provinceid"];
             $admin["created_at"] = date("Y-m-d H:i:s");
 
             //录入数据
@@ -222,6 +223,8 @@ class AdminBusiness extends ServerBase
             $admin["nickname"] = $data["nickname"];
             $admin["roleid"] = $data["roleid"];
             $admin["storeid"] = $data["storeid"];
+            $admin["cityid"]=$storeData["cityid"];
+            $admin["provinceid"]=$storeData["provinceid"];
             $admin["isadmin"]=$row["roleid"]==1?1:0;
             $admin["isadminafter"]=1;
             $admin["type"]=0;

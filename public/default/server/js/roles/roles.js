@@ -72,7 +72,7 @@ layui.use(['form', 'layer', 'jquery'], function () {
         layer.confirm('确定要删除吗？', {
             btn: ['确定', '取消']
         }, function () {
-            $.deleteJSON(url,function(data){
+            $.deleteJSON(url,"",function(data){
                 if(data.status===1){
                     $(that).parents("tr").remove();
                     layer.msg(data.messages,{icon: 1,time: 1000});

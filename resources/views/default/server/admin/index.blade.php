@@ -6,7 +6,7 @@
         <div class="addBtnWrap">
             <button type="button" class="layui-btn addBtn">新增用户</button>
             <div class="topSort layui-inline">
-                <form class="layui-form " id="searchForm" action="{{route('admin-search-index')}}" method="post">
+                <form class="layui-form " action="{{route('admin-search-index')}}" method="post"  id="searchForm">
                     <div class="layui-inline">
                         <label class="layui-form-label" style="font-size: 14px;">姓名筛选</label>
                         <div class="layui-input-inline">
@@ -59,6 +59,7 @@
                                 <input type="checkbox"    name="status" lay-skin="switch" lay-text="ON|OFF" lay-filter="rowStatus" url="{{route('admin-setting','uuid')}}">
                             @endif
                         @endif
+                    </td>
                     <td>
                         @if($item->isdefault==1)
                             默认
@@ -93,9 +94,12 @@
                 <label class="layui-form-label" style="font-size: 14px;">角色</label>
                 <div class="layui-input-inline">
                     <select name="modules" lay-verify="required" lay-search="" id="roleid">
-                        @if($list['roleList']!=null) @foreach($list['roleList'] as $k=>$item)
-                            <option value="{{$item->id}}">{{$item->name}}</option>
-                        @endforeach @else
+                        @if($list['roleList']!=null)
+                            <option value="0">请选择</option>
+                            @foreach($list['roleList'] as $k=>$item)
+                                <option value="{{$item->id}}">{{$item->name}}</option>
+                            @endforeach
+                        @else
                              <option value="0">请选择</option>
                         @endif
                     </select>

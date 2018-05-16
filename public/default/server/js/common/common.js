@@ -19,7 +19,7 @@ $.ajaxSetup({
  * 获取数据ajax-get请求
  * @author laixm
  */
-$.sanjiGetJSON = function (url,data,callback){
+$.getJSON = function (url,data,callback){
     $.ajax({
         url:url,
         type:"get",
@@ -78,10 +78,12 @@ $.putJSON = function(url,data,callback){
  * 删除数据的ajax-delete请求
  * @author laixm
  */
-$.deleteJSON = function(url,callback){
+$.deleteJSON = function(url,dataPara,callback){
+    var dataParam=isString(dataPara)?dataPara:JSON.stringify(dataPara);
     $.ajax({
         url:url,
         type:"delete",
+        data:dataParam,
         contentType:"application/json",
         dataType:"json",
         success:function(msg){
@@ -129,16 +131,17 @@ var getAttrUrl = function(obj,key)
 }
 
 //获取当前Form属性的实际url
-var setAttrFormUrl = function(obj,form,key)
+var setAttrFormUrl = function(obj,form,key,action)
 {
     var that = $(obj);
     var key=key?key:"uuid";
+    var action=action?action:"action"
     //tr的数据
     var tr = $(that).parents("tr");
     var keyValue=$(tr).attr(key);
     //编辑url
-    var url= form.attr("action").replace(key,keyValue);
-    form.attr("action",url);
+    var url= form.attr(action).replace(key,keyValue);
+    form.attr(action,url);
 }
 
 
