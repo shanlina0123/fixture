@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Server;
 use App\Http\Business\Server\CompanyBusiness;
 use App\Http\Controllers\Common\ServerBaseController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+
 class CompanyController extends ServerBaseController
 {
     /**

@@ -149,11 +149,11 @@ class SiteController extends ServerBaseController
         $data = new \stdClass();
         $companyId = $this->userInfo->companyid;
         //户型
-        $data->roomType = $this->site->getRoomType();
+        $data->roomType = $this->site->getRoomType($companyId);
         //装修风格
-        $data->roomStyle = $this->site->getRoomStyle();
+        $data->roomStyle = $this->site->getRoomStyle($companyId);
         //装修方式
-        $data->renovationMode = $this->site->getRenovationMode();
+        $data->renovationMode = $this->site->getRenovationMode($companyId);
         //公司模板
         $data->companyTemplate = $this->site->getCompanyStageTemplate( $this->userInfo );
         $data->info = $this->site->editSite( $id,$companyId );

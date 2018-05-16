@@ -45,6 +45,7 @@ class UserController extends ServerBaseController
                 return redirect()->route('user-info')->with('msg','验证码不正确');
             }
             $data['phone'] = $phone;
+            $data['token'] = create_uuid();
             $where['uuid'] = $userInfo->uuid;
             $where['companyid'] = $userInfo->companyid;
             $where['id'] = $userInfo['id'];
@@ -53,7 +54,9 @@ class UserController extends ServerBaseController
             {
                 Cache::forget('tel_'.$phone);
                 $userInfo->phone = $phone;
+                $userInfo->token = $data['token'];
                 session(['userInfo'=>$userInfo]);
+                Cache::put('userToken'.$userInfo['id'],['token'=>$data['token'],'type'=>2],config('session.lifetime'));
                 return redirect()->route('user-info')->with('msg','修改成功');
             }else
             {
@@ -96,10 +99,14 @@ class UserController extends ServerBaseController
             $where['companyid'] = $userInfo->companyid;
             $where['id'] = $userInfo['id'];
             $data['password'] = optimizedSaltPwd($this->request->input('password'),config('configure.salt'));
+            $data['token'] = create_uuid();
             $res = $this->user->setPass( $data,$where );
             if( $res )
             {
                 Cache::forget('tel_'.$phone);
+                $userInfo->token = $data['token'];
+                session(['userInfo'=>$userInfo]);
+                Cache::put('userToken'.$userInfo['id'],['token'=>$data['token'],'type'=>2],config('session.lifetime'));
                 return redirect()->route('set-pass')->with('msg','修改成功');
             }else
             {
