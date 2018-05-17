@@ -122,6 +122,8 @@ class UserController extends ServerBaseController
      */
     public function userAuthorize()
     {
-        return view('server.user.userauthorize');
+        $userInfo = session('userInfo');
+        $data = $this->user->getAuthorizeStatus( $userInfo );
+        return view('server.user.userauthorize',compact('data'));
     }
 }

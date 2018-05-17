@@ -100,6 +100,12 @@ class WxAuthorizeController extends ServerBaseController
      */
     public function WxAuthorize()
     {
+        $user = session('userInfo');
+        $data = SmallProgram::where('companyid',$user->companyid)->first();
+        if( $data &&  $data->status != 1 )
+        {
+            return redirect()->route('user-authorize')->with('msg','您已授权成功');
+        }
         $code = $this->pre_auth_code();
         if( $code )
         {
@@ -203,20 +209,20 @@ class WxAuthorizeController extends ServerBaseController
                         return redirect()->route('user-authorize');
                     }
 
-                    return redirect()->back()->with('msg','授权回调写入失败');
+                    return redirect()->route('user-authorize')->with('msg','授权回调写入失败');
 
                 }catch ( Exception $e )
                 {
-                    return redirect()->back()->with('msg','授权回调写入失败');
+                    return redirect()->route('user-authorize')->with('msg','授权回调写入失败');
                 }
 
             }else
             {
-                return redirect()->back()->with('msg','授权回调失败');
+                return redirect()->route('user-authorize')->with('msg','授权回调失败');
             }
         }else
         {
-            return redirect()->back()->with('msg','授权回调失败');
+            return redirect()->route('user-authorize')->with('msg','授权回调失败');
         }
     }
 
