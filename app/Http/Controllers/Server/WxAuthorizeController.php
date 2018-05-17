@@ -35,6 +35,7 @@ class WxAuthorizeController extends ServerBaseController
             $access_token = Cache::get('component_access_token');
         }else
         {
+
             $url = 'https://api.weixin.qq.com/cgi-bin/component/api_component_token';
             $post['component_appid'] = $this->appid;
             $post['component_appsecret'] = $this->secret;
@@ -102,7 +103,7 @@ class WxAuthorizeController extends ServerBaseController
         $code = $this->pre_auth_code();
         if( $code )
         {
-            $url = 'https://mp.weixin.qq.com/cgi-bin/componentloginpage?component\_appid='.$this->appid.'&pre\_auth\_code='.$code.'&redirect\_uri='.$this->url.'&auth\_type=2';
+            $url = 'https://mp.weixin.qq.com/cgi-bin/componentloginpage?component_appid='.$this->appid.'&pre_auth_code='.$code.'&redirect_uri='.$this->url;
             return redirect($url);
 
         }else
@@ -120,7 +121,7 @@ class WxAuthorizeController extends ServerBaseController
     {
         if( Cache::has('pre_auth_code') )
         {
-            $pre_auth_code = Cache::put('pre_auth_code');
+            $pre_auth_code = Cache::get('pre_auth_code');
 
         }else
         {
@@ -154,7 +155,7 @@ class WxAuthorizeController extends ServerBaseController
      */
     public function WxAuthorizeBack( Request $request )
     {
-        $code = $request->input('code');
+        $code = $request->input('auth_code');
         $url = 'https://api.weixin.qq.com/cgi-bin/component/api_query_auth?component_access_token='.$this->component_access_token;
         $post['component_appid'] = $this->appid;
         $post['authorization_code'] = $code;
@@ -185,17 +186,21 @@ class WxAuthorizeController extends ServerBaseController
                     {
                         $wx->authorizer_info = json_encode($info);
                         $wx->nick_name =  $info['nick_name'];
-                        $wx->head_img =  $info['head_img'];
+                        $wx->head_img = array_has($info,'head_img')?$info['head_img']:'';
+                        $wx->qrcode_url = array_has($info,'qrcode_url')?$info['qrcode_url']:'';
                         $wx->verify_type_info =  $info['verify_type_info']['id'];
                         $wx->user_name =  $info['user_name'];
                         $wx->principal_name = $info['principal_name'];
                     }
                     //设置小程序地址
-                    $setUrl = $this->setUrl();
+                    $setUrl = $this->setUrl(  $data['authorizer_access_token']  );
                     $wx->seturl = $setUrl?1:0;
+                    //提交代码
+                    $code = $this->upCode( $data['authorizer_appid'] );
+                    $wx->iscode = $code?1:0;
                     if( $wx->save() )
                     {
-                        return redirect()->route('user/authorize');
+                        return redirect()->route('user-authorize');
                     }
 
                     return redirect()->back()->with('msg','授权回调写入失败');
@@ -248,6 +253,33 @@ class WxAuthorizeController extends ServerBaseController
         $post['wsrequestdomain'] = config('wxconfig.wsrequestdomain');
         $post['uploaddomain'] = config('wxconfig.uploaddomain');
         $post['downloaddomain'] = config('wxconfig.downloaddomain');
+        $data = $this->CurlPost( $url, $post );
+        if( $data )
+        {
+            $data = json_decode($data,true);
+            if( $data['errcode'] == 0 )
+            {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+
+    /**
+     * 上传代码
+     * $appid 授权用户的appid
+     */
+    public function upCode( $appid )
+    {
+        $url = 'https://api.weixin.qq.com/wxa/commit?access_token='.$this->component_access_token;
+        $ext_json['extAppid'] = $this->appid;
+        $ext_json['ext'] = ['appid'=> $appid ];
+        $post['template_id'] = 0; //模板id
+        $post['ext_json'] = json_encode($ext_json,JSON_FORCE_OBJECT);
+        $post['user_version'] = 'v1.0';
+        $post['user_desc'] = '云易装';
         $data = $this->CurlPost( $url, $post );
         if( $data )
         {

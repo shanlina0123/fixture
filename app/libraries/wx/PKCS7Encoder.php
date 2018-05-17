@@ -1,11 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2018/5/15
- * Time: 16:29
- */
-
+/************************************************************
+ * PKCS7Encoder class
+ *
+ * 提供基于PKCS7算法的加解密接口.
+ ************************************************************/
 class PKCS7Encoder
 {
     public static $block_size = 32;
@@ -47,4 +45,5 @@ class PKCS7Encoder
         }
         return substr($text, 0, (strlen($text) - $pad));
     }
+
 }

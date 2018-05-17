@@ -1,15 +1,15 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2018/5/15
- * Time: 15:08
- */
+
+/************************************************************
+ * Prpcrypt class
+ *
+ * 提供接收和推送给公众平台消息的加解密接口.
+ ************************************************************/
 class Prpcrypt
 {
     public $key;
 
-    function Prpcrypt($k)
+    function __construct($k)
     {
         $this->key = base64_decode($k . "=");
     }

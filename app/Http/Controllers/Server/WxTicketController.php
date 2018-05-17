@@ -9,39 +9,12 @@ namespace App\Http\Controllers\Server;
 use App\Http\Controllers\Common\ServerBaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class WxTicketController extends ServerBaseController
 {
     public function verifyTicket( Request $request )
     {
-
-        $json = '{
-    "authorization_info": {
-        "authorizer_appid": "wxf8b4f85f3a794e77",
-        "authorizer_access_token": "QXjUqNqfYVH0yBE1iI_7vuN_9gQbpjfK7hYwJ3P7xOa88a89-Aga5x1NMYJyB8G2yKt1KCl0nPC3W9GJzw0Zzq_dBxc8pxIGUNi_bFes0qM",
-        "expires_in": 7200,
-        "authorizer_refresh_token": "dTo-YCXPL4llX-u1W1pPpnp8Hgm4wpJtlR6iV0doKdY",
-        "func_info": [
-            {
-                "funcscope_category": {
-                    "id": 1
-                }
-            },
-            {
-                "funcscope_category": {
-                    "id": 2
-                }
-            },
-            {
-                "funcscope_category": {
-                    "id": 3
-                }
-            }
-        ]
-    }
-}';
-
-        dd( json_decode($json,true) );
         //配置
         $encodingAesKey = config('wxconfig.encodingAesKey');
         $token = config('wxconfig.token');
@@ -54,17 +27,14 @@ class WxTicketController extends ServerBaseController
         $encryptMsg   = file_get_contents('php://input');
 
         $pc = new \WXBizMsgCrypt( $token, $encodingAesKey, $appId );
-
         $xml_tree = new \DOMDocument();
         $xml_tree->loadXML($encryptMsg);
         $array_e = $xml_tree->getElementsByTagName('Encrypt');
         $encrypt = $array_e->item(0)->nodeValue;
 
-
         $format = "<xml><ToUserName><![CDATA[toUser]]></ToUserName><Encrypt><![CDATA[%s]]></Encrypt></xml>";
         $from_xml = sprintf($format, $encrypt);
 
-        $this->logResult('/form.log', $from_xml);
         // 第三方收到公众号平台发送的消息
         $msg = '';
         $errCode = $pc->decryptMsg($msg_sign, $timeStamp, $nonce, $from_xml, $msg);
@@ -74,20 +44,25 @@ class WxTicketController extends ServerBaseController
             $xml->loadXML($msg);
             $array_e = $xml->getElementsByTagName('ComponentVerifyTicket');
             $component_verify_ticket = $array_e->item(0)->nodeValue;
-            Cache::put('ticket',$component_verify_ticket);
-            file_put_contents('/ticket.log', $component_verify_ticket);
-            $this->logResult('/msgmsg.log','解密后的component_verify_ticket是：'.$component_verify_ticket);
+            Cache::put('ticket',$component_verify_ticket,11);
             echo 'success';
 
         } else
         {
             $this->logResult('/error.log','解密后失败：'.$errCode);
-            print($errCode . "\n");
+            echo "false";
         }
     }
 
     public function logResult( $path, $data )
     {
         file_put_contents($path, '['.date('Y-m-d :h:i:s',time()).']'.$data."\r\n",FILE_APPEND);
+    }
+
+
+    public function message()
+    {
+        Log::error('111111111111');
+        echo 'success';
     }
 }
