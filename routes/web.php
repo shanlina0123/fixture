@@ -30,6 +30,8 @@ Route::group(['namespace' => 'Server'], function () {
     //中间件登录认证路由
     Route::group(['middleware' => ['checkUser']], function () {
         Route::get('/', 'IndexController@index')->name('index'); //入口
+        Route::get('wx/upcode/{appid}', 'WxAuthorizeController@upCode')->name('wx-upcode');
+        Route::get('wx/category/{token}', 'WxAuthorizeController@getCategory');
         Route::match(['get', 'post'], 'company/setting', 'CompanyController@companySetting')->name('company-setting');  //公司信息设置
         Route::match(['get', 'post'], 'user/info', 'UserController@userInfo')->name('user-info'); //个人资料跟换电话
         Route::match(['get', 'post'], 'user/set-pass', 'UserController@setPass')->name('set-pass'); //修改密码

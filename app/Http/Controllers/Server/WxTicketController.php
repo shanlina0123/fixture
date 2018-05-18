@@ -25,7 +25,6 @@ class WxTicketController extends WxBaseController
      */
     public function __construct( WxAuthorize $wxAuthorize )
     {
-        parent::__construct( false );
         $this->wxAuthorize = $wxAuthorize;
     }
 
@@ -78,11 +77,9 @@ class WxTicketController extends WxBaseController
                     SmallProgram::where('authorizer_appid',$authorizer_appid)->update(['status'=>1]);
                     break;
                 case 'updateauthorized'://跟新授权
-                    $array_appid = $xml->getElementsByTagName('AuthorizerAppid');
-                    $appid = $array_appid->item(0)->nodeValue;
                     $array_code = $xml->getElementsByTagName('AuthorizationCode');
                     $code = $array_code->item(0)->nodeValue;
-                    $this->upWxAuthorize( $appid, $code );
+                    $this->upWxAuthorize( $code );
                     break;
                 default:
                     echo "false"; die();
@@ -109,48 +106,13 @@ class WxTicketController extends WxBaseController
     }
 
     /**
-     * 小程序信息
-     */
-    public function wxInfo( $authorizer_appid )
-    {
-        $url = 'https://api.weixin.qq.com/cgi-bin/component/api_get_authorizer_info?component_access_token='.$this->component_access_token;
-        $post['component_appid'] = $this->appid;
-        $post['authorizer_appid'] = $authorizer_appid;
-        $data = $this->CurlPost( $url, $post );
-        if( $data )
-        {
-            $data = json_decode($data,true);
-            if( !array_has( $data,'authorizer_info') )
-            {
-                $data = false;
-            }
-            return $data['authorizer_info'];
-        }
-        return false;
-    }
-
-    /**
      * @param $appid
      * @param $code
      * 更新授权
      */
-    public function upWxAuthorize( $appid, $code )
+    public function upWxAuthorize( $code )
     {
-        $component_access_token = $this->getAccessToken();
-        $url = 'https://api.weixin.qq.com/cgi-bin/component/api_query_auth?component_access_token='.$component_access_token;
-        $post['component_appid'] = $this->appid;
-        $post['authorization_code'] = $code;
-        $data = $this->CurlPost( $url, $post );
-        if( $data )
-        {
-            $data = json_decode($data,true);
-            if( array_has( $data,'authorization_info') )
-            {
-                $data = $data['authorization_info'];
-                $info = $this->wxInfo( $appid );
-                $this->wxAuthorize->WxAuthorizeBack( $data, $info, '', '' );
-            }
-        }
+        $this->wxAuthorize->WxAuthorizeBack( $code );
     }
 
 

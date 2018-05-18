@@ -15,6 +15,9 @@
                     <a href="{{route('wx-authorize')}}" class="btnlink">授权</a>
                 @else
                     <a href="javascript:;" class="btnlink">已授权</a>
+                    @if( $data->iscode == 0 )
+                     <a href="{{route('wx-upcode',$data->authorizer_appid)}}" class="btnlink">提交代码</a>
+                    @endif
                 @endif
                 <a href="https://mp.weixin.qq.com/wxopen/waregister?action=step1" class="btnlink" target="_blank">注册小程序</a>
                 <a href="" class="btnlink">升级</a>

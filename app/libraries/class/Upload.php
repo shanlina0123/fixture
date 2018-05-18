@@ -32,7 +32,7 @@ class Upload
                 case "user"://用户
                     $filePath  = $this->filepath.'/'.'user/'.$uuid;
                     break;
-                case "activity"://配置文件
+                case "activity"://活动
                     $filePath  = $this->filepath.'/'.'activity/'.$uuid;
                     break;
                 default:
