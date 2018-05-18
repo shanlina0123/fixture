@@ -9,6 +9,7 @@
 namespace App\Http\Business\Server;
 use App\Http\Business\Common\ServerBase;
 use App\Http\Model\Wx\SmallProgram;
+use Illuminate\Support\Facades\Cache;
 use Mockery\Exception;
 
 class WxAuthorize extends ServerBase
@@ -72,5 +73,112 @@ class WxAuthorize extends ServerBase
     }
 
 
+    /**
+     * @param $appid
+     * @param $refresh_token
+     * @return bool
+     * 刷新最新的token
+     */
+    public function refreshUserToken( $appid, $refresh_token )
+    {
+        $componentAccessToken = $this->componentAccessToken();
+        $url = 'https://api.weixin.qq.com/cgi-bin/component/api_authorizer_token?component_access_token='.$componentAccessToken;
+        $post['component_appid'] = config('wxconfig.appId');
+        $post['authorizer_appid'] = $appid;
+        $post['authorizer_refresh_token'] = $refresh_token;
+        $data = wxPostCurl( $url, $post );
+        if( $data )
+        {
+            $data = json_decode($data,true);
+            if( array_has( $data,'authorizer_access_token') )
+            {
+                //更新数据库
+                $res = SmallProgram::where('authorizer_appid',$appid)->first();
+                $res->authorizer_access_token = $data['authorizer_access_token'];
+                $res->authorizer_refresh_token = $data['authorizer_refresh_token'];
+                $res->expires_in = time()+(int)$data['expires_in'];
+                $res->save();
+                $authorizer_access_token = $data['authorizer_access_token'];
 
+            }else
+            {
+                $authorizer_access_token = false;
+            }
+        }else
+        {
+            $authorizer_access_token = false;
+        }
+        return $authorizer_access_token;
+    }
+
+
+    /**
+     * 获取用户最新的accesstokne
+     * $appID appid
+     * $conmpanyID 公司id
+     */
+    public function getUserAccessToken( $appID=null, $conmpanyID=null )
+    {
+        //appid 查询
+        if( $appID )
+        {
+            $where['authorizer_appid'] = $appID;
+        }
+        //公司id查询
+        if( $conmpanyID )
+        {
+            $where['companyid'] = $conmpanyID;
+        }
+        if( empty($where) )
+        {
+            return false;
+        }
+        $res = SmallProgram::where($where)->select('authorizer_appid','expires_in','authorizer_refresh_token','authorizer_access_token')->first();
+        if( $res )
+        {
+            if( $res->expires_in <= time() )
+            {
+                //刷新token
+                return $this->refreshUserToken( $res->authorizer_appid,$res->authorizer_refresh_token );
+            }
+            return $res->authorizer_access_token;
+        }
+        return false;
+    }
+
+    /**
+     * @return string
+     * 获取token
+     */
+    public function componentAccessToken()
+    {
+        if( Cache::has('component_access_token') )
+        {
+            $access_token = Cache::get('component_access_token');
+
+        }else
+        {
+            $url = 'https://api.weixin.qq.com/cgi-bin/component/api_component_token';
+            $post['component_appid'] = config('wxconfig.appId');
+            $post['component_appsecret'] = config('wxconfig.secret');
+            $post['component_verify_ticket'] = Cache::get('ticket');
+            $data = wxPostCurl( $url, $post );
+            if( $data )
+            {
+                $data = json_decode($data,true);
+                if( array_has( $data,'component_access_token') )
+                {
+                    Cache::put('component_access_token',$data['component_access_token'],$data['expires_in']/60);
+                    $access_token = $data['component_access_token'];
+                }else
+                {
+                    $access_token = '';
+                }
+            }else
+            {
+                $access_token = '';
+            }
+        }
+        return $access_token;
+    }
 }
