@@ -10,13 +10,6 @@ use Illuminate\Support\Facades\Validator;
  * 项目管理 - 活动管理
  * Class ActivityController
  * @package App\Http\Controllers\Server
- * ajax请求返回状态码说明
- * 0 执行成功
- * 1 执行失败
- * 100 参数错误
- * 101 业务错误
- * 102 数据权限错误
- * 200+ 未其他错误
  */
 class ActivityController extends ServerBaseController
 {

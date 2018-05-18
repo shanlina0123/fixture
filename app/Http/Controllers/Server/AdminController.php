@@ -26,7 +26,7 @@ class AdminController extends ServerBaseController
     }
 
     /***
-     * 获取用户列表
+     * 获取列表
      */
     public function index()
     {
@@ -52,7 +52,7 @@ class AdminController extends ServerBaseController
         $validator = Validator::make($data,[
             "nickname"=>'max:100|min:0',
             "storeid"=>'numeric',
-        ],['nickname.max'=>'姓名长度不能大于100个字符','nickname.min'=>'姓名长度不能小于1个字符',
+        ],['nickname.max'=>'姓名长度不能大于100个字符','nickname.min'=>'姓名长度不能小于0个字符',
             'storeid.numeric'=>'门店id只能是数字格式']);
         //进行验证
         if ($validator->fails()) {

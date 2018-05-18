@@ -147,7 +147,7 @@ a:focus {
 .layui-form-item {
   position: relative;
 }
-/*.Validform_checktip {
+.Validform_checktip {
   display: none;
 }
 .Validform_error {
@@ -159,7 +159,7 @@ a:focus {
 }
 .Validform_error i {
   vertical-align: middle;
-}*/
+}
 .forLineheight {
   line-height: 38px;
 }
@@ -215,6 +215,6 @@ a:focus {
   box-sizing: content-box;
   border: 1px solid #e2e2e2;
 }
-.layui-body{
-  min-widows: 1000px;
+.imgnotice {
+  color: #c2c2c2;
 }

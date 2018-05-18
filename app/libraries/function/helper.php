@@ -293,3 +293,99 @@ function searchFilter($str)
     $search = str_replace('%',"\\%",$search);
     return $search;
 }
+
+/**
+ * 发送HTTP请求方法
+ * @param  string $url    请求URL
+ * @param  array  $params 请求参数
+ * @param  string $method 请求方法GET/POST
+ * @return array  $data   响应数据
+ */
+function httpRequest($url, $params, $method = 'GET', $header = array(), $multi = false){
+    $opts = array(
+        CURLOPT_TIMEOUT        => 30,
+        CURLOPT_RETURNTRANSFER => 1,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => false,
+        CURLOPT_HTTPHEADER     => $header
+    );
+    /* 根据请求类型设置特定参数 */
+    switch(strtoupper($method)){
+        case 'GET':
+            $opts[CURLOPT_URL] = $url . '?' . http_build_query($params);
+            break;
+        case 'POST':
+            //判断是否传输文件
+            $params = $multi ? $params : http_build_query($params);
+            $opts[CURLOPT_URL] = $url;
+            $opts[CURLOPT_POST] = 1;
+            $opts[CURLOPT_POSTFIELDS] = $params;
+            break;
+        default:
+            return false;// throw new Exception('不支持的请求方式！');
+    }
+
+    /* 初始化并执行curl请求 */
+    $ch = curl_init();
+    curl_setopt_array($ch, $opts);
+    $data  = curl_exec($ch);
+    $error = curl_error($ch);
+    curl_close($ch);
+    if($error)  return false;//throw new Exception('请求发生错误：' . $error);
+    return  $data;
+}
+
+//视野查看
+function lookWhere($isadmin,$companyid,$cityid,$storeid,$islook)
+{
+    $where=array();
+    //管理员/视野条件1全部 2城市 3门店
+    if($isadmin==0) {
+        switch ($islook) {
+            case 1:
+                $where["companyid"] = $companyid;
+                break;
+            case 2:
+                $where["cityid"] = $cityid;
+                break;
+            case 3:
+                $where["storeid"] = $storeid;
+                break;
+            default:
+                $where["storeid"] = $storeid;
+                break;
+        }
+    }
+    return $where;
+}
+
+
+/***
+ * 图片转成base64编码
+ * @param $image_file
+ * @return string
+ * 调用：
+ * $img = 'test.jpg';
+    $base64_img = base64EncodeImage($img);
+    echo '<img src="' . $base64_img . '" />';
+ */
+function base64EncodeImage ($image_file) {
+    $base64_image = '';
+    $image_info = getimagesize($image_file);
+    $image_data = fread(fopen($image_file, 'r'), filesize($image_file));
+    $base64_image = 'data:' . $image_info['mime'] . ';base64,' . chunk_split(base64_encode($image_data));
+    return $base64_image;
+}
+
+//动态生成微信二维码
+function getWxapCode($accress_token,$userid)
+{
+    $apiUrl="https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=".$accress_token;
+    $postData=[
+        "scene"=>$userid,
+        "page"=>config('configure.wxCode.prizepage'),
+        "width"=>config('configure.wxCode.width'),
+     ];
+    return httpRequest($apiUrl,$postData,"post");
+
+}

@@ -151,7 +151,7 @@ class StoreController extends ServerBaseController
 
 
     /***
-     * 删除用户
+     * 删除
      */
     public function  delete($uuid)
     {

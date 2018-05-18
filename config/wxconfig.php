@@ -9,5 +9,9 @@ return [
     'encodingAesKey'=>111,
     'appId'=>11,
     'secret'=>33,
-    'url'=>00
+    'url'=>00,
+    "wxCode"=>[
+        "prizepage"=>"pages/index/prize",
+        "width"=>"50"
+    ]
 ];
