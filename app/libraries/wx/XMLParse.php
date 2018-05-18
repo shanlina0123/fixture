@@ -1,13 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2018/5/15
- * Time: 16:15
- */
-
+/************************************************************
+ * XMLParse class
+ *
+ * 提供提取消息格式中的密文及生成回复消息格式的接口.
+ ************************************************************/
 class XMLParse
 {
+
     /**
      * 提取出xml数据包中的加密消息
      * @param string $xmltext 待提取的xml字符串
@@ -46,4 +45,5 @@ class XMLParse
                    </xml>";
         return sprintf($format, $encrypt, $signature, $timestamp, $nonce);
     }
+
 }

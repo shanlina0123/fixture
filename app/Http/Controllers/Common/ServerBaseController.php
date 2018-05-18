@@ -5,9 +5,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 class ServerBaseController extends Controller
 {
-     public static $adminCache = 120;
-     public static $adminPage = 10;
-
     /**
      *  缓存 //工地  Cache::tags($tag) $tag = 'site'.$user->companyid;
      *  公司查询店铺 Cache::get('storeCompany'.$user->companyid)

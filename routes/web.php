@@ -14,6 +14,8 @@
 Route::group(['namespace' => 'Server'], function () {
     //微信第三方推荐verify_ticket地址
     Route::any('wx/verify_ticket', 'WxTicketController@verifyTicket');
+    //通过该URL接收公众号或小程序消息和事件推送
+    Route::any('wx/{appid}/callback/message', 'WxTicketController@message');
     //发起授权
     Route::get('wx/authorize', 'WxAuthorizeController@WxAuthorize')->name('wx-authorize');
     //授权回调

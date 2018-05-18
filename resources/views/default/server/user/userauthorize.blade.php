@@ -3,11 +3,19 @@
 @section('content')
 <div class="main">
     <div class="toppart clearfix">
-        <img src="{{pix_asset('server/images/wx.png')}}" class="leftimg fl">
+        @if( $data && $data->head_img )
+            <img src="{{$data->head_img}}" class="leftimg fl">
+        @else
+            <img src="{{pix_asset('server/images/wx.png')}}" class="leftimg fl">
+        @endif
         <div class="righttext fl">
-            <div class="topname">小程序名称：小程序</div>
+            <div class="topname">小程序名称：{{$data?$data->principal_name:'小程序'}}</div>
             <div class="bottomBtns">
-                <a href="{{route('wx-authorize')}}" class="btnlink">授权</a>
+                @if( $data == false || $data->status == 1 )
+                    <a href="{{route('wx-authorize')}}" class="btnlink">授权</a>
+                @else
+                    <a href="javascript:;" class="btnlink">已授权</a>
+                @endif
                 <a href="https://mp.weixin.qq.com/wxopen/waregister?action=step1" class="btnlink" target="_blank">注册小程序</a>
                 <a href="" class="btnlink">升级</a>
             </div>

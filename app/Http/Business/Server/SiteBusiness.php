@@ -158,15 +158,15 @@ class SiteBusiness extends ServerBase
     /**
      * 户型
      */
-    public function getRoomType()
+    public function getRoomType( $companyId )
     {
-        if( Cache::get('roomType') )
+        if( Cache::get('roomType'.$companyId) )
         {
-            $roomType = Cache::get('roomType');
+            $roomType = Cache::get('roomType'.$companyId);
         }else
         {
-            $roomType = RoomType::where('status',1)->select('id','name')->get();
-            Cache::put('roomType',$roomType,config('configure.sCache'));
+            $roomType = RoomType::where(['status'=>1,'companyid'=>$companyId])->select('id','name')->get();
+            Cache::put('roomType'.$companyId,$roomType,config('configure.sCache'));
         }
         return $roomType;
     }
@@ -174,15 +174,15 @@ class SiteBusiness extends ServerBase
     /**
      * 装修风格
      */
-    public function getRoomStyle()
+    public function getRoomStyle( $companyId )
     {
-        if( Cache::get('roomStyle') )
+        if( Cache::get('roomStyle'.$companyId) )
         {
-            $roomStyle = Cache::get('roomStyle');
+            $roomStyle = Cache::get('roomStyle'.$companyId);
         }else
         {
-            $roomStyle = RoomStyle::where('status',1)->select('id','name')->get();
-            Cache::put('roomStyle',$roomStyle,config('configure.sCache'));
+            $roomStyle = RoomStyle::where(['status'=>1,'companyid'=>$companyId])->select('id','name')->get();
+            Cache::put('roomStyle'.$companyId,$roomStyle,config('configure.sCache'));
         }
         return $roomStyle;
     }
@@ -191,15 +191,15 @@ class SiteBusiness extends ServerBase
      * @return mixed
      *
      */
-    public function getRenovationMode()
+    public function getRenovationMode( $companyId )
     {
-        if( Cache::get('renovationMode') )
+        if( Cache::get('renovationMode'.$companyId) )
         {
-            $renovationMode = Cache::get('renovationMode');
+            $renovationMode = Cache::get('renovationMode'.$companyId);
         }else
         {
-            $renovationMode = RenovationMode::where('status',1)->select('id','name')->get();
-            Cache::put('renovationMode',$renovationMode,config('configure.sCache'));
+            $renovationMode = RenovationMode::where(['status'=>1,'companyid'=>$companyId])->select('id','name')->get();
+            Cache::put('renovationMode'.$companyId,$renovationMode,config('configure.sCache'));
         }
         return $renovationMode;
     }

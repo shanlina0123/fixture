@@ -9,9 +9,17 @@
 namespace App\Http\Business\Server;
 use App\Http\Business\Common\ServerBase;
 use App\Http\Model\Company\Company;
+use App\Http\Model\Company\CompanyStageTemplate;
+use App\Http\Model\Company\CompanyStageTemplateTag;
+use App\Http\Model\Data\RenovationMode;
+use App\Http\Model\Data\RoomStyle;
+use App\Http\Model\Data\RoomType;
+use App\Http\Model\Data\SelectDefault;
+use App\Http\Model\Data\StageTemplate;
 use App\Http\Model\Site\Site;
 use App\Http\Model\Store\Store;
 use App\Http\Model\User\User;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class CompanyBusiness extends ServerBase
@@ -69,6 +77,11 @@ class CompanyBusiness extends ServerBase
                     $res->fulladdr = $data['fulladdr'];
                     $obj->ststus = 1;
                     $obj->msg = '修改成功';
+
+                    //用户信息
+                    $user->provinceid = $res->provinceid;
+                    $user->cityid = $res->cityid;
+
                 }
                 $res->name = $data['name'];
                 $res->phone = $data['phone'];
@@ -76,8 +89,10 @@ class CompanyBusiness extends ServerBase
                 $res->resume = $data['resume'];
                 if( $res->save() )
                 {
+                    $user->token = create_uuid();
+                    $user->save();
+                    Cache::put('userToken'.$user->id,['token'=>$user->token,'type'=>1],config('session.lifetime'));
                     return $obj;
-
                 }else
                 {
                     $obj->ststus = 0;
@@ -126,20 +141,90 @@ class CompanyBusiness extends ServerBase
                 $store->fulladdr = $obj->fulladdr;
                 $store->save();
                 //修改用户表
+                $user->provinceid = $obj->provinceid;
                 $user->companyid = $obj->id;
                 $user->storeid = $store->id;
-                $user->cityid = $store->cityid;
+                $user->cityid = $obj->cityid;
+                $user->token = create_uuid();
                 $user->save();
-                //修改session
-                $userInfo = session('userInfo');
-                $userInfo->companyid = $obj->id;
-                $userInfo->storeid = $store->id;
-                $userInfo->cityid = $store->cityid;
-                session(['userInfo'=>$userInfo]);
+                //添加默认模板
+                $res = StageTemplate::where(['isdefault'=>1,'status'=>1])->with('stageTemplateToTemplateTag')->first();
+                if( $res )
+                {
+                    $template = new CompanyStageTemplate;
+                    $template->uuid = create_uuid();
+                    $template->companyid = $obj->id;
+                    $template->name = $res->name;
+                    $template->defaulttemplateid = $res->id;
+                    $template->issystem = 1;
+                    $template->isdefault = 1;
+                    $template->created_at = date("Y-m-d H:i:s");
+                    $template->save();
+                    $tag = array();
+                    foreach ($res->stageTemplateToTemplateTag as $k => $row) {
+                        $tag[$k]['uuid'] = create_uuid();
+                        $tag[$k]['companyid'] = $obj->id;
+                        $tag[$k]['stagetemplateid'] = $template->id;
+                        $tag[$k]['name'] = $row->name;
+                        $tag[$k]['sort'] = $k;
+                        $tag[$k]['created_at'] = date("Y-m-d H:i:s");
+                    }
+                    CompanyStageTemplateTag::insert($tag);
+                }
+                //添加属性信息
+                $selectData = SelectDefault::where('status',1)->get();
+                $roomRenov = array(); //装修方式
+                $roomStyle = array(); //装修风格
+                $roomType = array(); //户型
+                foreach ( $selectData as $k=>$rowData )
+                {
+                    if( $rowData->pid != 0 )
+                    {
+                        switch ( (int)$rowData->pid )
+                        {
+                            case 1:
+                                $roomRenov[$k]['name'] = $rowData->name;
+                                $roomRenov[$k]['status'] = 1;
+                                $roomRenov[$k]['companyid'] = $obj->id;
+                                $roomRenov[$k]['created_at'] = date("Y-m-d H:i:s");
+                                $roomRenov[$k]['updated_at'] = date("Y-m-d H:i:s");
+                                break;
+                            case 2:
+                                $roomStyle[$k]['name'] = $rowData->name;
+                                $roomStyle[$k]['status'] = 1;
+                                $roomStyle[$k]['companyid'] = $obj->id;
+                                $roomStyle[$k]['created_at'] = date("Y-m-d H:i:s");
+                                $roomStyle[$k]['updated_at'] = date("Y-m-d H:i:s");
+                                break;
+                            case 3:
+                                $roomType[$k]['name'] = $rowData->name;
+                                $roomType[$k]['status'] = 1;
+                                $roomType[$k]['companyid'] = $obj->id;
+                                $roomType[$k]['created_at'] = date("Y-m-d H:i:s");
+                                $roomType[$k]['updated_at'] = date("Y-m-d H:i:s");
+                                break;
+                        }
+                    }
+                }
+                if(count($roomRenov))
+                {
+                    RenovationMode::insert($roomRenov);
+                }
+                if(count($roomStyle))
+                {
+                    RoomStyle::insert($roomStyle);
+                }
+                if(count($roomType))
+                {
+                    RoomType::insert($roomType);
+                }
+                //清除缓存
+                Cache::tags(["Data-CateList",'siteTemplate'.$obj->id,'roomType'.$obj->id,'roomStyle'.$obj->id,'renovationMode'.$obj->id])->flush();
                 DB::commit();
 
                 $obj->ststus = 1;
                 $obj->msg = '修改成功';
+                Cache::put('userToken'.$user->id,['token'=>$user->token,'type'=>1],config('session.lifetime'));
                 return $obj;
 
             }catch( Exception $e )

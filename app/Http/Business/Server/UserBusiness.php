@@ -9,6 +9,7 @@
 namespace App\Http\Business\Server;
 use App\Http\Business\Common\ServerBase;
 use App\Http\Model\User\User;
+use App\Http\Model\Wx\SmallProgram;
 
 class UserBusiness extends ServerBase
 {
@@ -36,4 +37,14 @@ class UserBusiness extends ServerBase
          return User::where($where)->update( $data );
      }
 
+
+    /**
+     * @param $user
+     * @return mixed
+     * 认证信息
+     */
+     public function getAuthorizeStatus( $user )
+     {
+         return SmallProgram::where('companyid',$user->companyid)->first();
+     }
 }
