@@ -3,8 +3,7 @@
         <li class="layui-nav-item">
             <a href="javascript:;">活动管理</a>
             <dl class="layui-nav-child">
-                <dd><a href="">宣传活动</a></dd>
-                <dd><a href="../activity/lucky.html">幸运抽奖</a></dd>
+                <dd><a href="{{route('lucky-index')}}">幸运抽奖</a></dd>
             </dl>
         </li>
         <li class="layui-nav-item">
@@ -22,16 +21,16 @@
                 <dd><a href="../client/luckClientList.html">抽奖客户</a></dd>
             </dl>
         </li>
-        <li class="layui-nav-item">
-            <a href="javascript:;">数据分析</a>
-            <dl class="layui-nav-child">
-                <dd><a href="">数据概览</a></dd>
-                <dd><a href="">客户分析</a></dd>
-                <dd><a href="">工地分析</a></dd>
-                <dd><a href="">营销排行</a></dd>
-                <dd><a href="">活动分析</a></dd>
-            </dl>
-        </li>
+        {{--<li class="layui-nav-item">--}}
+            {{--<a href="javascript:;">数据分析</a>--}}
+            {{--<dl class="layui-nav-child">--}}
+                {{--<dd><a href="">数据概览</a></dd>--}}
+                {{--<dd><a href="">客户分析</a></dd>--}}
+                {{--<dd><a href="">工地分析</a></dd>--}}
+                {{--<dd><a href="">营销排行</a></dd>--}}
+                {{--<dd><a href="">活动分析</a></dd>--}}
+            {{--</dl>--}}
+        {{--</li>--}}
         <li class="layui-nav-item"><a href="{{route('company-setting')}}">资料设置</a></li>
         <li class="layui-nav-item"><a href="{{route('user-authorize')}}">授权信息</a></li>
         <li class="layui-nav-item"><a href="{{route('store-index')}}">门店管理</a></li>

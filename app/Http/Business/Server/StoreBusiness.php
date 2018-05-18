@@ -148,7 +148,7 @@ class StoreBusiness extends ServerBase
             if ($storeid !== false) {
                 DB::commit();
                 //删除缓存
-                Cache::tags(["Store-PageList"])->flush();
+                Cache::tags(["Store-PageList","Admin-StoreList"])->flush();
             } else {
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR, "新增失败");
@@ -194,7 +194,7 @@ class StoreBusiness extends ServerBase
             if ($rs !== false) {
                 DB::commit();
                 //删除缓存
-                Cache::tags(["Store-PageList"])->flush();
+                Cache::tags(["Store-PageList","Admin-StoreList"])->flush();
             } else {
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR, "修改失败");
@@ -240,7 +240,7 @@ class StoreBusiness extends ServerBase
             {
                 DB::commit();
                 //删除缓存
-                Cache::tags(["Store-PageList"])->flush();
+                Cache::tags(["Store-PageList","Admin-StoreList"])->flush();
             }else{
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR,"删除失败");
