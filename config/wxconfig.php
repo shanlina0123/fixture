@@ -19,6 +19,9 @@ return [
     'address'=>'pages/index/index',//审核代码地址
     'tag'=>'装修',//审核代码标签
     'title'=>'装修',//小程序页面的标题
+    'template_id'=>'0',//小程序模板id
+    'version'=>'1.0',//小程序模板版本
+    'desc'=>'云易装v1.0',//小程序模板版本描述
     "wxCode"=>[
             "prizepage"=>"pages/index/prize",
             "width"=>"50"

@@ -80,13 +80,14 @@ class WxAuthorize extends ServerBase
     /**
      * @return string
      * 预授权code
+     * $ID 用户id
      */
-    public function preAuthCode()
+    public function preAuthCode( $ID )
     {
 
-        if( Cache::has('pre_auth_code') )
+        if( Cache::has('pre_auth_code'.$ID) )
         {
-            $pre_auth_code = Cache::get('pre_auth_code');
+            $pre_auth_code = Cache::get('pre_auth_code'.$ID);
 
         }else
         {
@@ -98,7 +99,7 @@ class WxAuthorize extends ServerBase
                 $data = json_decode($data,true);
                 if( array_has( $data,'pre_auth_code') )
                 {
-                    Cache::put('pre_auth_code',$data['pre_auth_code'],$data['expires_in']/60);
+                    Cache::put('pre_auth_code'.$ID ,$data['pre_auth_code'],$data['expires_in']/60);
                     $pre_auth_code = $data['pre_auth_code'];
 
                 }else
@@ -162,7 +163,7 @@ class WxAuthorize extends ServerBase
                     //设置小程序地址
                     $setUrl = $this->setUrl( $data['authorizer_access_token']  );
                     //提交代码
-                    $code = $this->upCodeLine( $data['authorizer_access_token'] );
+                    $upCode = $this->upCode( $data['authorizer_appid'], $data['authorizer_access_token'] );
                     //写入数据库
                     $wx = SmallProgram::where(['authorizer_appid'=>$data['authorizer_appid']])->first();
                     if( !$wx )
@@ -190,17 +191,31 @@ class WxAuthorize extends ServerBase
                         $wx->principal_name = $info['principal_name'];
                     }
                     $wx->seturl = $setUrl?1:0;
-                    //代码推送
-                    if( $code->status == 1 )
+
+                    //提交审核
+                    if( $upCode == true )
                     {
-                        $wx->iscode = 2;
-                        $wx->auditid = $code->auditid;
+                        $wx->uploadcode = 1;
+                        $sourcecode = $this->upCodeLine( $data['authorizer_access_token'] );
+                        //代码推送
+                        if( $sourcecode->status == 1 )
+                        {
+                            $wx->sourcecode = 2;
+                            $wx->auditid = $sourcecode->auditid;
+                            $wx->errmsg = $sourcecode->msg;
+
+                        }else
+                        {
+                            $wx->sourcecode = 0;
+                            $wx->errmsg = $sourcecode->msg;
+                        }
 
                     }else
                     {
-                        $wx->iscode = 0;
+                        $wx->uploadcode = 0;
+                        $wx->sourcecode = 0;
+                        $wx->errmsg = '代码提交失败';
                     }
-                    $wx->errmsg = $code->msg;
                     return $wx->save();
                 }else
                 {
@@ -274,29 +289,30 @@ class WxAuthorize extends ServerBase
      */
 
     /**
-     * 上传测试代码
+     * 上传代码
      * $appid 授权用户的appid
      */
-    public function upCode( $appid, $token=null )
+    public function upCode( $appid, $token=null, $anual=false )
     {
         if( !$token )
         {
             $token = $this->getUserAccessToken($appid);
+            $anual = true;
         }
         $url = 'https://api.weixin.qq.com/wxa/commit?access_token='.$token;
         $ext_json['extAppid'] = $this->extAppid;
         $ext_json['ext'] = ['appid'=> $appid ];
-        $post['template_id'] = 0; //模板id
+        $post['template_id'] = config('wxconfig.template_id'); //模板id
         $post['ext_json'] = json_encode($ext_json,JSON_FORCE_OBJECT);
-        $post['user_version'] = 'v1.0';
-        $post['user_desc'] = '云易装';
+        $post['user_version'] = config('wxconfig.version');
+        $post['user_desc'] = config('wxconfig.desc');
         $data = wxPostCurl( $url, $post );
         if( $data )
         {
             $data = json_decode($data,true);
             if( $data['errcode'] == 0 )
             {
-                if( !$token )
+                if( $anual )
                 {
                      return $this->setCodeStatus( $appid );
                 }
@@ -312,42 +328,84 @@ class WxAuthorize extends ServerBase
      * @param $token
      * 发布代码
      */
-    public function upCodeLine( $token )
+    public function upCodeLine( $token, $appid=null, $anual=false )
     {
+        //$appid为真就表示手动提交的
+        if( $appid )
+        {
+            $token = $this->getUserAccessToken($appid);
+            $anual = true;
+        }
         $obj = new \stdClass();
-        $item  = $this->getWxUserCategory( $token );
+        $item = $this->getWxUserCategory( $token );
         if( $item == false || count($item) == 0 )
         {
             $obj->status = 0;
             $obj->msg = '请完善小程序用户信息';
             return $obj;
         }
-
         $url = 'https://api.weixin.qq.com/wxa/submit_audit?access_token='.$token;
         $post['item_list'] = [
-            'address'=>config('wxconfig.address'),
-            'tag'=>config('wxconfig.tag'),
-            'first_class'=>$item['first_class'],
-            'second_class'=>$item['second_class'],
-            'first_id'=>$item['first_id'],
-            'second_id'=>$item['second_id'],
-            'title'=>config('wxconfig.title')
+                ['address'=>config('wxconfig.address'),
+                'tag'=>config('wxconfig.tag'),
+                'first_class'=>$item[0]['first_class'],
+                'second_class'=>$item[0]['second_class'],
+                'first_id'=>$item[0]['first_id'],
+                'second_id'=>$item[0]['second_id'],
+                'title'=>config('wxconfig.title')
+                 ]
         ];
-
         $data = wxPostCurl($url,$post);
         if( $data )
         {
             $data = json_decode($data,true);
             if($data['errcode'] == 0 )
             {
+                //$anual为真就表示手动提交的
+                if( $anual )
+                {
+                    $obj->status = 1;
+                    $obj->msg = '提交成功';
+                    SmallProgram::where('authorizer_appid',$appid)->update(['sourcecode'=>2,'errmsg'=>'审核中','auditid'=>$data['auditid']]);
+                    return $obj;
+                }
                 $obj->status = 1;
                 $obj->auditid = $data['auditid'];
                 $obj->msg = '审核中';
                 return $obj;
+            }else
+            {
+                $obj->status = 0;
+                switch ( (int)$data['errcode'] )
+                {
+                    case -1:
+                         $obj->msg = '系统繁忙';
+                         break;
+                    case 85009:
+                         $obj->msg = '已经有正在审核的版本';
+                         break;
+                    case 85077:
+                         $obj->msg = '小程序类目信息失效（类目中含有官方下架的类目，请重新选择类目）';
+                         break;
+                    case 86002:
+                        $obj->msg = '小程序还未设置昵称、头像、简介。请先设置完后再重新提交。';
+                        break;
+                    case 85085:
+                        $obj->mg = '近7天提交审核的小程序数量过多，请耐心等待审核完毕后再次提交';
+                        break;
+                    default:
+                        $obj->msg = '发布失败';
+                        break;
+                }
+                if( $anual )
+                {
+                    SmallProgram::where('authorizer_appid',$appid)->update(['errmsg'=>$obj->msg]);
+                }
+                return $obj;
             }
         }
         $obj->status = 0;
-        $obj->msg = '提交失败';
+        $obj->msg = '发布失败';
         return $obj;
     }
     /**
@@ -358,7 +416,7 @@ class WxAuthorize extends ServerBase
         $res = SmallProgram::where('authorizer_appid',$appid)->first();
         if( $res )
         {
-            $res->iscode = 1;
+            $res->uploadcode = 1;
             if( $res->save() )
             {
                 return true;
@@ -368,6 +426,28 @@ class WxAuthorize extends ServerBase
         return false;
     }
 
+    /**
+     * @param $appid
+     * @param $sourcecode
+     * @param $msg
+     * @return bool
+     * 审核结果
+     */
+    public function wxExamine( $appid,$sourcecode,$msg )
+    {
+        $res = SmallProgram::where('authorizer_appid',$appid)->first();
+        if( $res )
+        {
+            $res->sourcecode = $sourcecode;
+            $res->errmsg = $msg;
+            if( $res->save() )
+            {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
 
     /**
      * @param $token
@@ -378,12 +458,15 @@ class WxAuthorize extends ServerBase
     {
         $url = 'https://api.weixin.qq.com/wxa/get_category?access_token='.$token;
         $data = getCurl($url);
-        if( $data )
+        list($header, $body) = explode("\r\n\r\n", $data, 2);
+        //var_dump($body);
+        if( $body )
         {
-            $data = json_decode($data,true);
-            if($data['errcode'] == 0 )
+            $body = json_decode($body,true);
+
+            if($body['errcode'] == 0 )
             {
-               return $data['category_list'];
+               return $body['category_list'];
             }
         }
         return false;

@@ -32,7 +32,7 @@ class WxAuthorizeController extends WxBaseController
         {
             return redirect()->route('user-authorize')->with('msg','您已授权成功');
         }
-        $code = $this->wx->preAuthCode();
+        $code = $this->wx->preAuthCode( $user['id'] );
         if( $code )
         {
             $url = $this->wx->QRCodeUrl( $code );
@@ -55,6 +55,8 @@ class WxAuthorizeController extends WxBaseController
         $res = $this->wx->WxAuthorizeBack( $code );
         if( $res )
         {
+            //清除授权码
+            Cache::forget('pre_auth_code'.session('userInfo')['id']);
             return redirect()->route('user-authorize')->with('msg','授权成功');
 
         }else
@@ -64,10 +66,57 @@ class WxAuthorizeController extends WxBaseController
     }
 
 
-    public function getCategory( $token )
+    /**
+     * @param $appid
+     * @return \Illuminate\Http\RedirectResponse
+     * 手动提交代码
+     */
+    public function upCode( $appid )
     {
-        $a = $this->wx->getWxUserCategory($token);
-        dd( $a );
+        $user = session('userInfo');
+        $isUploadCode = SmallProgram::where(['authorizer_appid'=>$appid,'companyid'=>$user->companyid])->first();
+        if( $isUploadCode )
+        {
+            if( $isUploadCode->uploadcode == 1 )
+            {
+                return redirect()->route('user-authorize')->with('msg','代码已提交不能重复提交');
+            }
+            $res = $this->wx->upCode( $appid );
+            if( $res )
+            {
+                return redirect()->route('user-authorize')->with('msg','代码提交成功');
+            }
+            return redirect()->route('user-authorize')->with('msg','代码提交失败');
+
+        }else
+        {
+            return redirect()->back()->with('msg','地址不存在');
+        }
+    }
+
+
+    /**
+     * @param $appid
+     * @return \Illuminate\Http\RedirectResponse
+     * 手动发布代码
+     */
+    public function upSourceCode( $appid )
+    {
+        $user = session('userInfo');
+        $isUploadCode = SmallProgram::where(['authorizer_appid'=>$appid,'companyid'=>$user->companyid])->first();
+        if( $isUploadCode )
+        {
+            if( $isUploadCode->sourcecode != 0 )
+            {
+                return redirect()->route('user-authorize')->with('msg',$isUploadCode->errmsg);
+            }
+            $res = $this->wx->upCodeLine( '', $appid );
+            return redirect()->route('user-authorize')->with('msg',$res->msg);
+
+        }else
+        {
+            return redirect()->back()->with('msg','地址不存在');
+        }
     }
 
 }

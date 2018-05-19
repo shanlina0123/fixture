@@ -99,10 +99,31 @@ class WxTicketController extends WxBaseController
     }
 
 
-    public function message()
+    /**
+     * 发布代码审核消息通知
+     */
+    public function message( $appid )
     {
-        Log::error('111111111111');
-        echo 'success';
+        $postStr = file_get_contents("php://input");
+        libxml_disable_entity_loader(true);
+        $postObj = simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
+        if( trim($postStr->MsgType) == 'event' )
+        {
+            $even = trim($postObj->Event);
+            if( $even == 'weapp_audit_success' )
+            {
+                $sourcecode = 1;
+                $msg = '审核通过';
+            }else
+            {
+                $sourcecode = 0;
+                $msg = trim($postObj->Reason);
+            }
+            $res = $this->wxAuthorize->wxExamine($appid,$sourcecode,$msg);
+            if( $res )  echo 'success';
+            else  echo 'fail';
+        }
+        echo 'fail';
     }
 
     /**

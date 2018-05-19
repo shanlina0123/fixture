@@ -406,7 +406,7 @@ function wxPostCurl( $url , $dataObj )
     //声明使用POST方式来进行发送
     curl_setopt($ch, CURLOPT_POST, 1);
     //发送什么数据呢
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($dataObj));
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($dataObj,JSON_UNESCAPED_UNICODE));
     //忽略证书
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
