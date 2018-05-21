@@ -21,6 +21,7 @@ use App\Http\Model\Dynamic\DynamicImages;
 use App\Http\Model\Dynamic\DynamicStatistics;
 use App\Http\Model\Site\Site;
 use App\Http\Model\Site\SiteFollowrecord;
+use App\Http\Model\Site\SiteInvitation;
 use App\Http\Model\Site\SiteParticipant;
 use App\Http\Model\Site\SiteStageschedule;
 use Illuminate\Support\Facades\Cache;
@@ -45,7 +46,6 @@ class SiteBusiness extends StoreBase
             $site->storeid = $data['storeid'];
             $site->stageid = $data['stageid'];
             $site->stagetemplateid = $data['stagetemplateid'];
-            $site->isdefaulttemplate = $data['isdefaulttemplate'];
             $site->isopen = $data['isopen'];
             $site->doornumber = $data['doornumber'];
             $site->name = $data['name'];
@@ -73,7 +73,6 @@ class SiteBusiness extends StoreBase
             $progress->dynamicid = $dynamic->id;
             $progress->siteid = $site->id;
             $progress->stagetagid = $data['stageid'];
-            $progress->isstagedefault = $data['isdefaulttemplate'];
             $progress->tablesign = 1;
             $progress->stageuserid = $site->createuserid;
             $progress->positionid = $site->createuserid;
@@ -109,9 +108,6 @@ class SiteBusiness extends StoreBase
                 [
                  'siteToDynamicStatistics'=>function( $query ){
                      $query->select('siteid','linkednum','follownum');
-                 },
-                 'siteToDataTag'=>function( $query ){
-                     $query->select('id','stagetemplateid','name');
                  },
                  'siteToCommpanyTag'=>function( $query ){
                      $query->select('id','stagetemplateid','name');
@@ -152,7 +148,7 @@ class SiteBusiness extends StoreBase
                     $dynamic->delete();
                 }
                 //删除工地参与者
-                SiteParticipant::where('siteid',$res->id)->delete();
+                SiteInvitation::where('siteid',$res->id)->delete();
                 //删除工地阶段记录
                 SiteStageschedule::where('siteid',$res->id)->delete();
                 //删除观光团关注的工地
@@ -226,22 +222,13 @@ class SiteBusiness extends StoreBase
         if( $res )
         {
             $res->store = $res->siteToStore?$res->siteToStore->name:'';//关联店铺
-            if( $res->isdefaulttemplate )
-            {
-                //系统模板
-                $res->tag = StageTemplate::where('id',$res->stagetemplateid)->with(['stageTemplateToTemplateTag'=>function($query){
-                        $query->orderBy('sort','asc')->select('id','name','stagetemplateid');
-                    }])->select('id','name')->first();
-            }else
-            {
-                //公司模板
-                $res->tag = CompanyStageTemplate::where(['companyid'=>$data['companyid'],'id'=>$res->stagetemplateid])->with(['stageTemplateToTemplateTag'=>function($query){
-                    $query->orderBy('sort','asc')->select('id','name','stagetemplateid');
-                }])->select('id','name')->first();
-            }
-            $res->roomStyle = $this->getRoomStyle(); //装修风格
-            $res->renovationMode = $this->getRenovationMode();//装修方式
-            $res->roomType = $this->getRoomType(); //户型
+            //公司模板
+            $res->tag = CompanyStageTemplate::where(['companyid'=>$data['companyid'],'id'=>$res->stagetemplateid])->with(['stageTemplateToTemplateTag'=>function($query){
+                $query->orderBy('sort','asc')->select('id','name','stagetemplateid');
+            }])->select('id','name')->first();
+            $res->roomStyle = $this->getRoomStyle( $data['companyid'] ); //装修风格
+            $res->renovationMode = $this->getRenovationMode( $data['companyid'] );//装修方式
+            $res->roomType = $this->getRoomType( $data['companyid'] ); //户型
             return $res;
 
         }else
@@ -254,15 +241,15 @@ class SiteBusiness extends StoreBase
     /**
      * 户型
      */
-    public function getRoomType()
+    public function getRoomType( $companyId )
     {
-        if( Cache::get('roomType') )
+        if( Cache::get('roomType'.$companyId) )
         {
-            $roomType = Cache::get('roomType');
+            $roomType = Cache::get('roomType'.$companyId);
         }else
         {
-            $roomType = RoomType::where('status',1)->select('id','name')->get();
-            Cache::put('roomType',$roomType,config('configure.sCache'));
+            $roomType = RoomType::where(['status'=>1,'companyid'=>$companyId])->select('id','name')->get();
+            Cache::put('roomType'.$companyId,$roomType,config('configure.sCache'));
         }
         return $roomType;
     }
@@ -270,32 +257,32 @@ class SiteBusiness extends StoreBase
     /**
      * 装修风格
      */
-    public function getRoomStyle()
+    public function getRoomStyle( $companyId )
     {
-        if( Cache::get('roomStyle') )
+        if( Cache::get('roomStyle'.$companyId) )
         {
-            $roomStyle = Cache::get('roomStyle');
+            $roomStyle = Cache::get('roomStyle'.$companyId);
         }else
         {
-            $roomStyle = RoomStyle::where('status',1)->select('id','name')->get();
-            Cache::put('roomStyle',$roomStyle,config('configure.sCache'));
+            $roomStyle = RoomStyle::where(['status'=>1,'companyid'=>$companyId])->select('id','name')->get();
+            Cache::put('roomStyle'.$companyId,$roomStyle,config('configure.sCache'));
         }
         return $roomStyle;
     }
 
     /**
      * @return mixed
-     * 装修方式
+     *
      */
-    public function getRenovationMode()
+    public function getRenovationMode( $companyId )
     {
-        if( Cache::get('renovationMode') )
+        if( Cache::get('renovationMode'.$companyId) )
         {
-            $renovationMode = Cache::get('renovationMode');
+            $renovationMode = Cache::get('renovationMode'.$companyId);
         }else
         {
-            $renovationMode = RenovationMode::where('status',1)->select('id','name')->get();
-            Cache::put('renovationMode',$renovationMode,config('configure.sCache'));
+            $renovationMode = RenovationMode::where(['status'=>1,'companyid'=>$companyId])->select('id','name')->get();
+            Cache::put('renovationMode'.$companyId,$renovationMode,config('configure.sCache'));
         }
         return $renovationMode;
     }
@@ -384,15 +371,8 @@ class SiteBusiness extends StoreBase
                 }
             ]
         )->first();
-        if( $res->isdefaulttemplate )
-        {
-            //系统模板
-            $res->tag = StageTemplateTag::orderBy('sort','asc')->where('stagetemplateid',$res->stagetemplateid)->select('stagetemplateid','id','name')->get();
-        }else
-        {
-            //公司模板
-            $res->tag = CompanyStageTemplateTag::orderBy('sort','asc')->where(['stagetemplateid'=>$res->stagetemplateid,'companyid'=>$res->companyid])->get();
-        }
+        //公司模板
+        $res->tag = CompanyStageTemplateTag::orderBy('sort','asc')->where(['stagetemplateid'=>$res->stagetemplateid,'companyid'=>$res->companyid])->get();
         //动态
        /* $comment = Dynamic::where(['companyid'=>$res->companyid,'storeid'=>$res->storeid,'sitetid'=>$res->id,'type'=>0])->with(
             [

@@ -9,11 +9,9 @@ use Illuminate\Support\Facades\Validator;
 class TemplateController extends StoreBaseController
 {
     protected $template;
-    protected $userInfo;
-    protected $request;
-    public function __construct( TemplateBusiness $template, Request $request )
+    public function __construct( TemplateBusiness $template )
     {
-        $this->request = $request;
+        parent::__construct();
         $this->template = $template;
     }
 
@@ -23,6 +21,7 @@ class TemplateController extends StoreBaseController
     public function defaultTemplate()
     {
         $data = trimValue( $this->request->all() );
+        $data['companyid'] = $this->apiUser->companyid;
         $validator = Validator::make(
             $data,
             [
@@ -48,6 +47,7 @@ class TemplateController extends StoreBaseController
     public function templateList()
     {
         $data = trimValue( $this->request->all() );
+        $data['companyid'] = $this->apiUser->companyid;
         $validator = Validator::make(
             $data,
             [
@@ -73,6 +73,7 @@ class TemplateController extends StoreBaseController
     public function templateSet()
     {
         $data = trimValue( $this->request->all() );
+        $data['companyid'] = $this->apiUser->companyid;
         $validator = Validator::make(
             $data,
             [
@@ -109,6 +110,7 @@ class TemplateController extends StoreBaseController
     public function templateDestroy()
     {
         $data = trimValue( $this->request->all() );
+        $data['companyid'] = $this->apiUser->companyid;
         $validator = Validator::make(
             $data,
             [
