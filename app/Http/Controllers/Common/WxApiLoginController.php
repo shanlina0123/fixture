@@ -1,17 +1,21 @@
 <?php
-namespace App\Http\Controllers\Store;
-use App\Http\Business\Store\UserBusiness;
-use App\Http\Controllers\Common\StoreBaseController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
+/**
+ * Created by PhpStorm.
+ * User: Administrator
+ * Date: 2018/5/22
+ * Time: 10:04
+ */
 
-class LoginController extends StoreBaseController
+namespace App\Http\Controllers\Common;
+use App\Http\Business\Common\WxApiLogin;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+class WxApiLoginController extends Controller
 {
 
     protected $user;
-    public function __construct(UserBusiness $user)
+    public function __construct(WxApiLogin $user)
     {
-        parent::__construct();
         $this->user = $user;
     }
 
@@ -26,7 +30,8 @@ class LoginController extends StoreBaseController
             $openid = $request->input('openid');
             $nickname = $request->input('nickname');
             $faceimg = $request->input('faceimg');
-            $res = $this->user->userLogin( $openid, $nickname, $faceimg );
+            $companyid = $request->input('companyid');
+            $res = $this->user->userLogin( $openid, $nickname, $faceimg, $companyid );
             responseData(\StatusCode::SUCCESS,"用户信息", $res );
         }else
         {
