@@ -6,13 +6,12 @@
  * Time: 11:26
  */
 
-namespace App\Http\Business\Server;
-use App\Http\Business\Common\ServerBase;
+namespace App\Http\Business\Common;
 use App\Http\Model\Wx\SmallProgram;
 use Illuminate\Support\Facades\Cache;
 use Mockery\Exception;
 
-class WxAuthorize extends ServerBase
+class WxAuthorize
 {
 
     public $appid;
@@ -29,6 +28,7 @@ class WxAuthorize extends ServerBase
         $this->url = config('wxconfig.url');
         $this->component_access_token = $this->getAccessToken();
     }
+
 
 
     /**
@@ -67,7 +67,6 @@ class WxAuthorize extends ServerBase
         }
         return $access_token;
     }
-
 
     /**
      * --------------------------------------------------------------------

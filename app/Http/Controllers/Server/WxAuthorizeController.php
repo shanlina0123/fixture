@@ -6,7 +6,7 @@
  * Time: 11:20
  */
 namespace App\Http\Controllers\Server;
-use App\Http\Business\Server\WxAuthorize;
+use App\Http\Business\Common\WxAuthorize;
 use App\Http\Controllers\Common\WxBaseController;
 use App\Http\Model\Wx\SmallProgram;
 use Illuminate\Http\Request;

@@ -6,7 +6,6 @@
  * Time: 10:10
  */
 namespace App\Http\Business\Common;
-use App\Http\Business\Server\WxAuthorize;
 use App\Http\Model\User\User;
 use App\Http\Model\User\UserToken;
 use Illuminate\Support\Facades\Cache;
