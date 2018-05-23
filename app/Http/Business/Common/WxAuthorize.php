@@ -579,8 +579,7 @@ class WxAuthorize
             "page"=>config('configure.wxCode.prizepage'),
             "width"=>config('configure.wxCode.width'),
         ];
-       $rs= wxPostCurl($apiUrl,$postData);
-       return json_decode($rs);
+        return wxPostCurl($apiUrl,$postData);
     }
 
     /**
