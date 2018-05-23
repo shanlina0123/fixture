@@ -31,7 +31,7 @@ return [
      * ----------------------------
      */
     "pix_asset"=>"default/",//css js 目录
-    "cssVersion"=>"003",//css版本
+    "cssVersion"=>"004",//css版本
     "jsVersion"=>"001",//js版本
 
 

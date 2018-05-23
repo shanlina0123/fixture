@@ -23,7 +23,7 @@ class ApiCheck
                 $request->attributes->add(['apiUser'=>$res]);//添加api用户信息
                 if( $res->expiration <= time() )
                 {
-                    responseData(\StatusCode::TOKEN_ERROR,"token失效");
+                    responseData(\StatusCode::TOKEN_OVERDUE,"token失效");
                 }
                 Cache::put($res->tokenToUser->token,$res,config('configure.sCache'));
             }else
