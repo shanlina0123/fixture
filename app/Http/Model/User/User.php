@@ -30,5 +30,14 @@ class User extends Model
         return $this->belongsTo('App\Http\Model\Store\Store','storeid','id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * 关联职位
+     */
+    public function userToPosition()
+    {
+        return $this->belongsTo('App\Http\Model\Data\Position','positionid','id');
+    }
+
 }
     

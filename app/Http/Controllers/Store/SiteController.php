@@ -9,11 +9,9 @@ use Illuminate\Support\Facades\Validator;
 class SiteController extends StoreBaseController
 {
     protected $site;
-    protected $userInfo;
-    protected $request;
-    public function __construct( SiteBusiness $site, Request $request )
+    public function __construct( SiteBusiness $site )
     {
-        $this->request = $request;
+        parent::__construct();
         $this->site = $site;
     }
 
@@ -23,6 +21,8 @@ class SiteController extends StoreBaseController
     public function store()
     {
         $data = trimValue( $this->request->all() );
+        $data['companyid'] = $this->apiUser->companyid;
+        $data['storeid'] = $this->apiUser->storeid;
         $validator = Validator::make(
             $data,[
                 'companyid'=>'bail|required|numeric',//公司
@@ -34,7 +34,6 @@ class SiteController extends StoreBaseController
                 'doornumber'=>'bail|present|max:100',//门牌
                 'stageid'=>'bail|required|numeric',//阶段id
                 'stagetemplateid'=>'bail|required|numeric',//默认阶段模板id 或 自定义阶段模板id
-                'isdefaulttemplate'=>'bail|required|numeric|max:1',//是否默认的阶段模板id
                 'isopen'=>'bail|required|numeric',//是否公开
             ],[
                 'companyid.required'=>'公司信息未获取到',
@@ -49,8 +48,6 @@ class SiteController extends StoreBaseController
                 'stageid.numeric'=>'阶段数据类型不正确',
                 'stagetemplateid.required'=>'请选择模板',
                 'stagetemplateid.numeric'=>'模板数据类型不正确',
-                'isdefaulttemplate.required'=>'请选择模板类型',
-                'isdefaulttemplate.numeric'=>'模板类型数据类型不正确',
                 'isopen.required'=>'请选择是否公开',
             ]
         );
@@ -77,6 +74,8 @@ class SiteController extends StoreBaseController
     public function siteList()
     {
         $data = trimValue( $this->request->all() );
+        $data['companyid'] = $this->apiUser->companyid;
+        $data['storeid'] = $this->apiUser->storeid;
         $validator = Validator::make(
             $data,
             [
@@ -105,6 +104,8 @@ class SiteController extends StoreBaseController
     public function siteDestroy()
     {
         $data = trimValue( $this->request->all() );
+        $data['companyid'] = $this->apiUser->companyid;
+        $data['storeid'] = $this->apiUser->storeid;
         $validator = Validator::make(
             $data,
             [
@@ -141,6 +142,8 @@ class SiteController extends StoreBaseController
     public function isOpen()
     {
         $data = trimValue( $this->request->all() );
+        $data['companyid'] = $this->apiUser->companyid;
+        $data['storeid'] = $this->apiUser->storeid;
         $validator = Validator::make(
             $data,
             [
@@ -178,6 +181,8 @@ class SiteController extends StoreBaseController
     public function isFinish()
     {
         $data = trimValue( $this->request->all() );
+        $data['companyid'] = $this->apiUser->companyid;
+        $data['storeid'] = $this->apiUser->storeid;
         $validator = Validator::make(
             $data,
             [
@@ -215,6 +220,8 @@ class SiteController extends StoreBaseController
     public function siteEdit()
     {
         $data = trimValue( $this->request->all() );
+        $data['companyid'] = $this->apiUser->companyid;
+        $data['storeid'] = $this->apiUser->storeid;
         $validator = Validator::make(
             $data,
             [
@@ -245,6 +252,8 @@ class SiteController extends StoreBaseController
     public function siteUpdate()
     {
         $data = trimValue( $this->request->all() );
+        $data['companyid'] = $this->apiUser->companyid;
+        $data['storeid'] = $this->apiUser->storeid;
         $validator = Validator::make(
             $data,
             [
@@ -309,6 +318,8 @@ class SiteController extends StoreBaseController
     public function siteInfo()
     {
         $data = trimValue( $this->request->all() );
+        $data['companyid'] = $this->apiUser->companyid;
+        $data['storeid'] = $this->apiUser->storeid;
         $validator = Validator::make(
             $data,
             [
@@ -339,6 +350,8 @@ class SiteController extends StoreBaseController
     public function siteDynamic()
     {
         $data = trimValue( $this->request->all() );
+        $data['companyid'] = $this->apiUser->companyid;
+        $data['storeid'] = $this->apiUser->storeid;
         $validator = Validator::make(
             $data,
             [

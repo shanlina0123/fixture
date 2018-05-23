@@ -13,16 +13,18 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+/*Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
-});
+});*/
 
-
-/**
- * B端
- */
-Route::group(['namespace' => 'Store'], function () {
-
+Route::post('user/login', 'Common\WxApiLoginController@login');//登陆
+Route::group(['middleware'=>'ApiCheck'], function () {
+    /**
+     * --------------------------
+     * B端
+     * --------------------------
+     */
+    Route::group(['namespace' => 'Store'], function () {
     //工地
     Route::post('site/store', 'SiteController@store');//发布工地
     Route::get('site/site-list', 'SiteController@siteList');//工地列表
@@ -41,5 +43,23 @@ Route::group(['namespace' => 'Store'], function () {
     Route::post('template/template-list', 'TemplateController@templateList');//添加工模板列表
     Route::post('template/template-set', 'TemplateController@templateSet');//模板设置默认
     Route::post('template/template-destroy', 'TemplateController@templateDestroy');//模板删除
+    });
 
+    /**
+     * -----------------------------
+     * C端
+     * -----------------------------
+     */
+    Route::group(['namespace' => 'Client'], function () {
+        //工地动态
+        Route::get('client/dynamic-list', 'SiteDynamiController@getDynamicList');
+        //删除评论
+        Route::delete('client/dynamic-comment-destroy', 'SiteDynamicCommentController@commentDestroy');
+        //发布评论
+        Route::post('client/dynamic-comment-add', 'SiteDynamicCommentController@commentAdd');
+        //点赞
+        Route::post('client/dynamic-fabulous', 'SiteDynamicStatistics@Fabulous');
+    });
 });
+
+

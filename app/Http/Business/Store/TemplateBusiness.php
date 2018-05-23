@@ -25,20 +25,10 @@ class TemplateBusiness extends StoreBase
         //Cache::flush();
         $tag = 'defaultTemplateHome'.$data['companyid'];
         $value = Cache::tags($tag)->remember( $tag,config('configure.sCache'), function() use( $data ){
-            $data = CompanyStageTemplate::where(['companyid'=>$data['companyid'],'isdefault'=>1])->with(['stageTemplateToTemplateTag'=>function($query){
+            return CompanyStageTemplate::where(['companyid'=>$data['companyid'],'isdefault'=>1])->with(['stageTemplateToTemplateTag'=>function($query){
                 $query->orderBy('sort','asc')->select('id','name','stagetemplateid');
             }])->first();
-            if( $data )
-            {
-                return $data;
 
-            }else
-            {
-                $data = StageTemplate::where('status',1)->with(['stageTemplateToTemplateTag'=>function($query){
-                        $query->orderBy('sort','asc')->select('id','name','stagetemplateid');
-                    }])->first();
-                return $data;
-            }
         });
         return $value;
     }
@@ -55,15 +45,10 @@ class TemplateBusiness extends StoreBase
         $tag = 'templateListHome'.$data['companyid'];
         $value = Cache::tags($tag)->remember( $tag,config('configure.sCache'), function() use( $data ){
             $obj = new \stdClass();
-            //公司定义
-            $obj->define = CompanyStageTemplate::where(['companyid'=>$data['companyid']])->with(['stageTemplateToTemplateTag'=>function($query){
-                $query->orderBy('sort','asc')->select('id','name','stagetemplateid');
+            $obj->default = StageTemplate::where('status',1)->with('stageTemplateToTemplateTag')->with(['stageTemplateToCompanyTemplate'=>function( $query ) use( $data ){
+                $query->where('companyid',$data['companyid']);
             }])->get();
-
-            //系统默认
-            $obj->default = StageTemplate::where('status',1)->with(['stageTemplateToTemplateTag'=>function($query){
-                $query->select('id','name','stagetemplateid');
-            }])->get();
+            $obj->definition = CompanyStageTemplate::where('companyid',$data['companyid'])->with('stageTemplateToTemplateTag')->orderBy('isdefault','desc')->orderBy('id','desc')->paginate(config('configure.sPage'));
             return $obj;
         });
         return $value;
@@ -108,6 +93,10 @@ class TemplateBusiness extends StoreBase
             if( !$res )
             {
                 responseData(\StatusCode::ERROR,'模板不存在');
+            }
+            if( $res->issystem == 1 )
+            {
+                responseData(\StatusCode::ERROR,'系统模板不能删除');
             }
             $tem = $res->delete();
             CompanyStageTemplateTag::where(['companyid'=>$data['companyid'],'stagetemplateid'=>$data['id']])->delete();

@@ -29,4 +29,32 @@ class Dynamic extends Model
     {
         return $this->hasMany('App\Http\Model\Dynamic\DynamicImages','dynamicid','id');
     }
+
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * 关联用户
+     */
+    public function dynamicToUser()
+    {
+        return $this->belongsTo('App\Http\Model\User\User','createuserid','id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * 关联工地
+     */
+    public function dynamicToSite()
+    {
+        return $this->belongsTo('App\Http\Model\Site\Site','sitetid','id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * 关联活动
+     */
+    public function dynamicToActivity()
+    {
+        return $this->belongsTo('App\Http\Model\Activity\Activity','activityid','id');
+    }
 }

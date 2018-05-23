@@ -12,14 +12,12 @@
 */
 //PC端服务路由
 Route::group(['namespace' => 'Server'], function () {
-    //微信第三方推荐verify_ticket地址
-    Route::any('wx/verify_ticket', 'WxTicketController@verifyTicket');
-    //通过该URL接收公众号或小程序消息和事件推送
-    Route::any('wx/{appid}/callback/message', 'WxTicketController@message');
-    //发起授权
-    Route::get('wx/authorize', 'WxAuthorizeController@WxAuthorize')->name('wx-authorize');
-    //授权回调
-    Route::any('wx/authorize/back', 'WxAuthorizeController@WxAuthorizeBack');
+
+    //微信第三方授权
+    Route::any('wx/verify_ticket', 'WxTicketController@verifyTicket');//微信第三方推荐verify_ticket地址
+    Route::any('wx/{appid}/callback/message', 'WxTicketController@message'); //通过该URL接收公众号或小程序消息和事件推送
+    Route::get('wx/authorize', 'WxAuthorizeController@WxAuthorize')->name('wx-authorize');//发起授权
+    Route::any('wx/authorize/back', 'WxAuthorizeController@WxAuthorizeBack');//授权回调
     //注册登陆
     Route::match(['get', 'post'], 'register', 'RegisterController@register')->name('register');//注册页面
     Route::match(['get', 'post'], 'login', 'LoginController@login')->name('login');//登录
@@ -30,7 +28,12 @@ Route::group(['namespace' => 'Server'], function () {
     //中间件登录认证路由
     Route::group(['middleware' => ['checkUser']], function () {
         Route::get('/', 'IndexController@index')->name('index'); //入口
+        //微信代码管理
+        Route::get('wx/upcode/{appid}', 'WxAuthorizeController@upCode')->name('wx-upcode');//提交代码
+        Route::get('wx/upsourcecode/{appid}', 'WxAuthorizeController@upSourceCode')->name('wx-upsource-code');//发布代码
+        //公司信息
         Route::match(['get', 'post'], 'company/setting', 'CompanyController@companySetting')->name('company-setting');  //公司信息设置
+        //用户资料
         Route::match(['get', 'post'], 'user/info', 'UserController@userInfo')->name('user-info'); //个人资料跟换电话
         Route::match(['get', 'post'], 'user/set-pass', 'UserController@setPass')->name('set-pass'); //修改密码
         //中间件权限认证路由

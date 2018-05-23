@@ -25,7 +25,6 @@ class WxTicketController extends WxBaseController
      */
     public function __construct( WxAuthorize $wxAuthorize )
     {
-        parent::__construct( false );
         $this->wxAuthorize = $wxAuthorize;
     }
 
@@ -78,11 +77,9 @@ class WxTicketController extends WxBaseController
                     SmallProgram::where('authorizer_appid',$authorizer_appid)->update(['status'=>1]);
                     break;
                 case 'updateauthorized'://跟新授权
-                    $array_appid = $xml->getElementsByTagName('AuthorizerAppid');
-                    $appid = $array_appid->item(0)->nodeValue;
                     $array_code = $xml->getElementsByTagName('AuthorizationCode');
                     $code = $array_code->item(0)->nodeValue;
-                    $this->upWxAuthorize( $appid, $code );
+                    $this->upWxAuthorize( $code );
                     break;
                 default:
                     echo "false"; die();
@@ -102,31 +99,31 @@ class WxTicketController extends WxBaseController
     }
 
 
-    public function message()
-    {
-        Log::error('111111111111');
-        echo 'success';
-    }
-
     /**
-     * 小程序信息
+     * 发布代码审核消息通知
      */
-    public function wxInfo( $authorizer_appid )
+    public function message( $appid )
     {
-        $url = 'https://api.weixin.qq.com/cgi-bin/component/api_get_authorizer_info?component_access_token='.$this->component_access_token;
-        $post['component_appid'] = $this->appid;
-        $post['authorizer_appid'] = $authorizer_appid;
-        $data = $this->CurlPost( $url, $post );
-        if( $data )
+        $postStr = file_get_contents("php://input");
+        libxml_disable_entity_loader(true);
+        $postObj = simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
+        if( trim($postStr->MsgType) == 'event' )
         {
-            $data = json_decode($data,true);
-            if( !array_has( $data,'authorizer_info') )
+            $even = trim($postObj->Event);
+            if( $even == 'weapp_audit_success' )
             {
-                $data = false;
+                $sourcecode = 1;
+                $msg = '审核通过';
+            }else
+            {
+                $sourcecode = 0;
+                $msg = trim($postObj->Reason);
             }
-            return $data['authorizer_info'];
+            $res = $this->wxAuthorize->wxExamine($appid,$sourcecode,$msg);
+            if( $res )  echo 'success';
+            else  echo 'fail';
         }
-        return false;
+        echo 'fail';
     }
 
     /**
@@ -134,23 +131,9 @@ class WxTicketController extends WxBaseController
      * @param $code
      * 更新授权
      */
-    public function upWxAuthorize( $appid, $code )
+    public function upWxAuthorize( $code )
     {
-        $component_access_token = $this->getAccessToken();
-        $url = 'https://api.weixin.qq.com/cgi-bin/component/api_query_auth?component_access_token='.$component_access_token;
-        $post['component_appid'] = $this->appid;
-        $post['authorization_code'] = $code;
-        $data = $this->CurlPost( $url, $post );
-        if( $data )
-        {
-            $data = json_decode($data,true);
-            if( array_has( $data,'authorization_info') )
-            {
-                $data = $data['authorization_info'];
-                $info = $this->wxInfo( $appid );
-                $this->wxAuthorize->WxAuthorizeBack( $data, $info, '', '' );
-            }
-        }
+        $this->wxAuthorize->WxAuthorizeBack( $code );
     }
 
 
