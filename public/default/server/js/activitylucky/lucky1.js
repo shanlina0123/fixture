@@ -99,60 +99,15 @@ layui.use(['form', 'layer', 'jquery'], function () {
     //推广
     $(".spreadBtn").click(function () {
         var that=this;
-        var id=$(that).parents("tr").attr("id");
-        if(id!=$(".canvasContent").attr("toid"))
-        {
-            //清空已显示的canvas
-            $(".canvasContent").hide();
-            $(".canvasContent").html("");
-            $(".canvasContent").attr("toid",id);
-            //显示截屏，隐藏下载按钮
-            $("#createExtension").show();
-            $("#downloadExtension").hide();
-            //显示现在的H5
-            $(".h5Content").show();
-            //获取H5的动态数据
-            var url=$(that).attr("url");
-            $.getJSON(url,null,doExtension);
-        }else{
-            layer.open({
-                type: 1,
-                title: false,
-                closeBtn: 0,
-                shadeClose: true,
-                content: $("#extensionContent")
-            })
-        }
+        var url=$(that).attr("url");
+        $.getJSON(url,null,doExtension);
     })
-    //生成
+
+
+    //生成图
     $("#createExtension").click(function(){
-        var parent=$("#extensionContent");
-        var h5=$(".h5Content");
-            //绘图
-        html2canvas(h5, {
-            onrendered: function(canvas) {
-                //下载路径
-                $("#downloadExtension",parent).attr('href',canvas.toDataURL());
-                //下载名称
-                var sharetitle=$("#sharetitle",parent).html();
-                $("#downloadExtension",parent).attr('download',sharetitle) ;
-
-               //隐藏h5
-                $(".h5Content").hide();
-                //显示canvas
-                $(".canvasContent").html(canvas);
-                $(".canvasContent").show();
-
-                //显示下载按钮，隐藏截屏按钮
-                $("#createExtension").hide();
-                $("#downloadExtension").show();
-
-            }
-            //可以带上宽高截取你所需要的部分内容
-            //     ,
-            //     width: 300,
-            //     height: 300
-        });
+         //绘图
+          createPng();
     })
 
     //推广h5
@@ -187,10 +142,6 @@ layui.use(['form', 'layer', 'jquery'], function () {
                 $("#wxappcode",parent).attr("src",data.data.wxappcode);
                 $("#wxappcode",parent).show();
             }
-
-            //其他
-            $(".canvasContent",parent).attr("toid",data.data.lukData.id);
-
             layer.open({
                 type: 1,
                 title: false,
@@ -202,6 +153,33 @@ layui.use(['form', 'layer', 'jquery'], function () {
             layer.msg(data.messages, {icon: 2,time: 2000});
         }
     }
+
+
+   var createPng=function(){
+        var parent=$("#canvasContent");
+       html2canvas($(".h5Content"), {
+           onrendered: function(canvas) {
+               //把截取到的图片替换到a标签的路径下载
+               $("#downloadExtension").attr('href',canvas.toDataURL());
+               //下载下来的图片名字
+               $("#downloadExtension").attr('download',$("#sharetitle",parent).html()) ;
+               $("#extensionContent").hide();
+               parent.html(canvas);
+               layer.open({
+                   type: 1,
+                   title: false,
+                   closeBtn: 0,
+                   shadeClose: true,
+                   content: $("#extensionCanvas")
+               })
+
+           }
+           //可以带上宽高截取你所需要的部分内容
+           //     ,
+           //     width: 300,
+           //     height: 300
+       });
+   }
 
 
 });

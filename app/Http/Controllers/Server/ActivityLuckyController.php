@@ -128,7 +128,13 @@ class ActivityLuckyController extends ServerBaseController
         if($this->request->ajax()){
             responseAjax($dataSource);
         }
-        return view('server.activitylucky.edit',compact('list'))->with("errorMsg",json_encode($errorMsg));
+        if($list["luckData"]["isonline"]==1 )
+        {
+            return view('server.activitylucky.see',compact('list'))->with("errorMsg",json_encode($errorMsg));
+        }else{
+            return view('server.activitylucky.edit',compact('list'))->with("errorMsg",json_encode($errorMsg));
+        }
+
     }
 
     /***
@@ -166,60 +172,81 @@ class ActivityLuckyController extends ServerBaseController
     public function update($id)
     {
         //获取请求参数
-        $data=$this->getData(["storeid","title","resume","startdate","enddate","ispeoplelimit","peoplelimitnum","bgurl","winurl","loseurl",
+        $data=$this->getData(["storeid","title","resume","startdate","enddate","ispeoplelimit","peoplelimitnum","bgurl","makeurl","loseurl",
             "ischancelimit","chancelimitnum","everywinnum","winpoint","ishasconnectinfo",
             "prizelist",
-            "sharetitle","isonline","ispublic"],$this->request->all());
+            "sharetitle","isonline"],$this->request->all());
         //拼接验证数据集
         $validateData=array_merge(["id"=>$id],$data);
 
-        //验证规则
-        $validator = Validator::make($validateData,[
-            "id"=>'present|numeric',
-            "storeid"=>'required|numeric',
-            "title"=>'required|max:200|min:1',
-            "resume"=>'required|max:255|min:1',
-            "startdate"=>'required|date',
-            "enddate"=>'required|date',
-            "ispeoplelimit"=>'required|max:1|min:0',
-            "peoplelimitnum"=>'required|numeric',
-            "bgurl"=>"string",
-            "loseurl"=>"string",
-            "ischancelimit"=>'required|max:1|min:0',
-            "chancelimitnum"=>'required|numeric',
-            "everywinnum"=>'required|numeric',
-            "winpoint"=>'required|numeric',
-            "ishasconnectinfo"=>'required|max:2|min:1',
-            "prizelist"=>"present",
-            "sharetitle"=>"string",
-            "isonline"=>'required|max:1|min:0',
-            "ispublic"=>'required|max:1|min:0',
-        ],['id.required'=>'id不能为空','id.numeric'=>'id只能是数字格式',
-            'storeid.required'=>'门店id不能为空','storeid.numeric'=>'门店id只能是数字格式',
-            'title.required'=>'名称不能为空','title.max'=>'名称长度不能大于100个字符','title.min'=>'名称长度不能小于1个字符',
-            'resume.required'=>'简述不能为空','resume.max'=>'简述长度不能大于255个字符','resume.min'=>'简述长度不能小于1个字符',
-            'startdate.required'=>'开始时间不能为空','startdate.date'=>'开始时间只能是时间格式',
-            'enddate.required'=>'结束时间不能为空','enddate.date'=>'结束时间只能是时间格式',
-            'ispeoplelimit.required'=>'是否人数限制不能为空','ispeoplelimit.max'=>'是否人数不能大于1','ispeoplelimit.min'=>'是否人数不能小于0',
-            'peoplelimitnum.required'=>'人数不能为空','peoplelimitnum.numeric'=>'人数限制只能是数字格式',
-            'bgurl.string'=>'活动背景图只能是字符串',
-            'loseurl.string'=>'活动背景图只能是字符串',
-            'ischancelimit.required'=>'是否限制总抽奖机会不能为空','ischancelimit.max'=>'是否限制总抽奖机会不能大于1','ischancelimit.min'=>'是否限制总抽奖机会不能小于0',
-            'chancelimitnum.required'=>'每人最多的抽奖机会不能为空','chancelimitnum.numeric'=>'每人最多的抽奖机会只能是数字格式',
-            'everywinnum.required'=>'每人中奖次数不能为空','everywinnum.numeric'=>'每人中奖次数只能是数字格式',
-            'winpoint.required'=>'总中奖率不能为空','winpoint.numeric'=>'总中奖率只能是数字格式',
-            'ishasconnectinfo.required'=>'联系信息填写位置标识不能为空','ishasconnectinfo.max'=>'联系信息填写位置标识不能大于2','ishasconnectinfo.min'=>'联系信息填写位置标识不能小于1',
-            'prizelist.present'=>'微信分享标题只能是字符串',
-            'sharetitle.string'=>'微信分享标题只能是字符串',
-            'isonline.required'=>'是否上线不能为空','isonline.max'=>'是否上线不能大于1','isonline.min'=>'是否上线能小于0',
-            'ispublic.required'=>'是否发布不能为空','ispublic.max'=>'是否发布不能大于1','ispublic.min'=>'是否发布不能小于0',
-        ]);
+        if(strlen($data["isonline"])>0)
+        {
+            if(!in_array($data["isonline"],[0,1]))
+            {
+                responseData(\StatusCode::PARAM_ERROR,"验证失败","",["ispubic"=>"上线和下线值不符合预定义"]);
+            }
+            //发布验证
+            if($data["isonline"]==1)
+            {
+                //验证规则
+                $validator = Validator::make($validateData,[
+                    "id"=>'present|numeric',
+                    "storeid"=>'required|numeric',
+                    "title"=>'required|max:200|min:1',
+                    "resume"=>'required|max:255|min:1',
+                    "startdate"=>'required|date',
+                    "enddate"=>'required|date',
+                    "ispeoplelimit"=>'required|max:1|min:0',
+                    "peoplelimitnum"=>'required|numeric',
+                    "bgurl"=>"string",
+                    "makeurl"=>"string",
+                    "loseurl"=>"string",
+                    "ischancelimit"=>'required|max:1|min:0',
+                    "chancelimitnum"=>'required|numeric',
+                    "everywinnum"=>'required|numeric',
+                    "winpoint"=>'required|numeric',
+                    "ishasconnectinfo"=>'required|max:2|min:1',
+                    "prizelist"=>"present",
+                    "sharetitle"=>"string",
+                    "isonline"=>'required|max:1|min:0',
+                ],['id.required'=>'id不能为空','id.numeric'=>'id只能是数字格式',
+                    'storeid.required'=>'门店id不能为空','storeid.numeric'=>'门店id只能是数字格式',
+                    'title.required'=>'名称不能为空','title.max'=>'名称长度不能大于100个字符','title.min'=>'名称长度不能小于1个字符',
+                    'resume.required'=>'简述不能为空','resume.max'=>'简述长度不能大于255个字符','resume.min'=>'简述长度不能小于1个字符',
+                    'startdate.required'=>'开始时间不能为空','startdate.date'=>'开始时间只能是时间格式',
+                    'enddate.required'=>'结束时间不能为空','enddate.date'=>'结束时间只能是时间格式',
+                    'ispeoplelimit.required'=>'是否人数限制不能为空','ispeoplelimit.max'=>'是否人数不能大于1','ispeoplelimit.min'=>'是否人数不能小于0',
+                    'peoplelimitnum.required'=>'人数不能为空','peoplelimitnum.numeric'=>'人数限制只能是数字格式',
+                    'bgurl.string'=>'活动背景图只能是字符串',
+                    'makeurl.string'=>'立即抽奖图只能是字符串',
+                    'loseurl.string'=>'活动背景图只能是字符串',
+                    'ischancelimit.required'=>'是否限制总抽奖机会不能为空','ischancelimit.max'=>'是否限制总抽奖机会不能大于1','ischancelimit.min'=>'是否限制总抽奖机会不能小于0',
+                    'chancelimitnum.required'=>'每人最多的抽奖机会不能为空','chancelimitnum.numeric'=>'每人最多的抽奖机会只能是数字格式',
+                    'everywinnum.required'=>'每人中奖次数不能为空','everywinnum.numeric'=>'每人中奖次数只能是数字格式',
+                    'winpoint.required'=>'总中奖率不能为空','winpoint.numeric'=>'总中奖率只能是数字格式',
+                    'ishasconnectinfo.required'=>'联系信息填写位置标识不能为空','ishasconnectinfo.max'=>'联系信息填写位置标识不能大于2','ishasconnectinfo.min'=>'联系信息填写位置标识不能小于1',
+                    'prizelist.present'=>'微信分享标题只能是字符串',
+                    'sharetitle.string'=>'微信分享标题只能是字符串',
+                    'isonline.required'=>'是否上线不能为空','isonline.max'=>'是否上线不能大于1','isonline.min'=>'是否上线能小于0',
+                ]);
 
-        //默认值
-        $data["bgurl"]=$data["bgurl"]?$data["bgurl"]:config('configure.lucky.bgurl');
-        $data["makeurl"]=$data["makeurl"]?$data["makeurl"]:config('configure.lucky.makeurl');
-        $data["loseurl"]=$data["loseurl"]?$data["loseurl"]:config('configure.lucky.loseurl');
-        $data["sharetitle"]=$data["sharetitle"]?$data["sharetitle"]:$data["title"];
+            }else{
+                //验证规则
+                $validator = Validator::make($validateData,[
+                    "id"=>'present|numeric',
+                    "storeid"=>'required|numeric',
+                    "title"=>'required|max:200|min:1',
+                ],['id.required'=>'id不能为空','id.numeric'=>'id只能是数字格式',
+                    'storeid.required'=>'门店id不能为空','storeid.numeric'=>'门店id只能是数字格式',
+                    'title.required'=>'名称不能为空','title.max'=>'名称长度不能大于100个字符','title.min'=>'名称长度不能小于1个字符',
+                ]);
+            }
+
+        }else{
+            responseData(\StatusCode::PARAM_ERROR,"验证失败","",["ispubic"=>"暂存或发布的参数缺少"]);
+        }
+
+
 
         //进行验证
         if ($validator->fails()) {
@@ -236,7 +263,7 @@ class ActivityLuckyController extends ServerBaseController
         //获取业务数据
         $rs=$this->activitylucky_business->update($id,$user->id,$user->companyid,$user->cityid,$data);
         //接口返回结果
-        responseData(\StatusCode::SUCCESS,"修改成功",$rs);
+        responseData(\StatusCode::SUCCESS,"保存成功",$rs);
     }
 
 
@@ -253,7 +280,7 @@ class ActivityLuckyController extends ServerBaseController
 
         //进行验证
         if ($validator->fails()) {
-            responseData(\StatusCode::PARAM_ERROR,"参数错误");
+            responseData(\StatusCode::PARAM_ERROR,"参数错误",$validator->errors());
         }
         //获取业务数据
         $rs=$this->activitylucky_business->setting($id);
@@ -274,10 +301,30 @@ class ActivityLuckyController extends ServerBaseController
 
         //进行验证
         if ($validator->fails()) {
-            responseData(\StatusCode::PARAM_ERROR,"参数错误");
+            responseData(\StatusCode::PARAM_ERROR,"参数错误",$validator->errors());
         }
         //获取业务数据
         $this->activitylucky_business->delete($id);
+        //接口返回结果
+        responseData(\StatusCode::SUCCESS,"删除成功");
+    }
+
+    /***
+     * 删除奖项
+     */
+    public function  deleteprize($id)
+    {
+        //定义验证规则
+        $validator = Validator::make(["id"=>$id],[
+            'id' => 'required|numeric',
+        ],['id.required'=>'参数错误','id.numeric'=>'id只能是数字格式']);
+
+        //进行验证
+        if ($validator->fails()) {
+            responseData(\StatusCode::PARAM_ERROR,"参数错误",$validator->errors());
+        }
+        //获取业务数据
+        $this->activitylucky_business->deleteprize($id);
         //接口返回结果
         responseData(\StatusCode::SUCCESS,"删除成功");
     }
@@ -329,10 +376,4 @@ class ActivityLuckyController extends ServerBaseController
     }
 
 
-    /***
-     * 预览
-     */
-    public  function  show(){
-
-    }
 }
