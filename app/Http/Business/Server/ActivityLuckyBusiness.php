@@ -9,14 +9,13 @@
 namespace App\Http\Business\Server;
 
 use App\Http\Business\Common\ServerBase;
+use App\Http\Business\Common\WxAuthorize;
 use App\Http\Model\Activity\ActivityLucky;
 use App\Http\Model\Activity\ActivityLuckyPrize;
 use App\Http\Model\Company\Company;
 use App\Http\Model\Data\PrizeLevel;
 use App\Http\Model\Store\Store;
-use App\Http\Model\Wx\SmallProgram;
 use Illuminate\Support\Facades\Cache;
-use App\Http\Model\Data\Participatory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -531,16 +530,6 @@ class ActivityLuckyBusiness extends ServerBase
         return responseCData(\StatusCode::SUCCESS, "", $list);
     }
 
-
-    /***、
-     * 临时获取微信小程序accessToken
-     * @param $companyid
-     */
-    protected function getWxAccessToken($companyid)
-    {
-
-        return SmallProgram::where("companyid", $companyid)->value("authorizer_access_token");
-    }
 
 
 }
