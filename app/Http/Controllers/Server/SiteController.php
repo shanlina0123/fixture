@@ -11,18 +11,10 @@ class SiteController extends ServerBaseController
 {
 
     protected $site;
-    protected $userInfo;
-    public function __construct(SiteBusiness $site, Request $request )
+
+    public function __construct(SiteBusiness $site )
     {
-        $this->middleware(function ($request, $next) {
-            $userInfo = $request->session()->get('userInfo');
-            /*if( !$userInfo->companyid )
-            {
-                return redirect()->route('company-setting')->with(['msg'=>'请先完善公司信息','returnUrl'=>$request->url()]);
-            }*/
-            $this->userInfo = $userInfo;
-            return $next($request);
-        });
+        parent::__construct();
         $this->site = $site;
     }
 

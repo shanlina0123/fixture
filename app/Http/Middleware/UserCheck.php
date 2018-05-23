@@ -14,7 +14,7 @@ class UserCheck
         {
             return redirect()->route('login');
         }
-        //监听用户信息是否发生变化
+         //监听用户信息是否发生变化
          if ( Cache::has('userToken'.$userInfo['id']) )
          {
              $userToken = Cache::get('userToken'.$userInfo['id']);
@@ -36,7 +36,6 @@ class UserCheck
                  return redirect()->route('login');
              }
          }
-
         return $next($request);
     }
 }

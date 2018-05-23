@@ -20,6 +20,7 @@ class ActivityLuckyController extends ServerBaseController
     protected $request;
     public function __construct(Request $request)
     {
+        parent::__construct();
         $this->activitylucky_business =  new ActivityLuckyBusiness($request);
         $this->request = $request;
     }

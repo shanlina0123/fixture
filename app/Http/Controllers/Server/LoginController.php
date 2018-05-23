@@ -11,6 +11,7 @@ class LoginController extends ServerBaseController
     protected $user;
     public function __construct(BusinessServerLogin $user)
     {
+        parent::__construct();
         $this->user = $user;
     }
     /**
