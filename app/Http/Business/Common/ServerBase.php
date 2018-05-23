@@ -6,6 +6,8 @@ namespace App\Http\Business\Common;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use App\Http\Model\Data;
+use Illuminate\Support\Facades\Log;
+
 class ServerBase
 {
 
@@ -28,6 +30,37 @@ class ServerBase
         }
         return $modeData;
     }
+
+
+    /***
+     * 将tmp图片上传到uploads
+     * @param $uuid
+     * @param $name
+     * @param $type
+     * @return bool
+     */
+    public function tmpToUploads($uuid, $name,$type="site_info")
+    {
+        $upload = new \Upload();
+        $dbPath=$upload->uploadProductImage( $uuid, $name, $type);
+        if($dbPath)
+        {
+            return $dbPath."/".$name;
+        }else{
+            return false;
+        }
+    }
+
+    /***
+     * 删除
+     * @param $path
+     * @return bool
+     */
+   public function UoloadsDel($path)
+   {
+       $upload = new \Upload();
+       return $upload->delImg($path);
+   }
 
     /***
      * json返回

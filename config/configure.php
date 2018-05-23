@@ -52,25 +52,25 @@ return [
 
     //抽奖活动默认图
     "lucky"=>[
-        "companylogo"=>"uploads/default/lucky/defultlogo.jpg",
-        "bgurl"=>"uploads/default/lucky/prizebg.png",
-        "makeurl"=>"uploads/default/lucky/brginprize.png",//立即抽奖默认
-        "winurl"=>"uploads/default/lucky/gift.png",
-        "loseurl"=>"uploads/default/lucky/noprize.png",
+        "companylogo"=>"default/lucky/defultlogo.jpg",
+        "bgurl"=>"default/lucky/activebg.jpg",
+        "makeurl"=>"default/lucky/brginprize.png",//立即抽奖默认
+        "winurl"=>"default/lucky/gift.png",
+        "loseurl"=>"default/lucky/noprize.png",
         "prize"=>[
-            1=>"uploads/default/lucky/thanks.png",
-            2=>"uploads/default/lucky/prize1.png",
-            3=>"uploads/default/lucky/prize2.png",
-            4=>"uploads/default/lucky/prize3.png",
-            5=>"uploads/default/lucky/prize4.png",
-            6=>"uploads/default/lucky/prize5.png",
-            7=>"uploads/default/lucky/prize6.png",
-            8=>"uploads/default/lucky/prize7.png",
-            9=>"uploads/default/lucky/prize8.png",
+            1=>"default/lucky/prize9.png",
+            2=>"default/lucky/prize1.png",
+            3=>"default/lucky/prize2.png",
+            4=>"default/lucky/prize3.png",
+            5=>"default/lucky/prize4.png",
+            6=>"default/lucky/prize5.png",
+            7=>"default/lucky/prize6.png",
+            8=>"default/lucky/prize7.png",
+            9=>"default/lucky/prize8.png",
         ]
 
     ],
     //技术支持
-    "technology_support"=>"页面技术由西安灰熊家族网络科技提供（<a href='http://www.yygsoft.com'>点击了解</a>）提供，技术支持方仅能提供页面技术，不承担由活动引起的相关法律责任"
+    "technology_support"=>"页面技术由西安灰熊家族网络科技提供（<a href='http://www.yygsoft.com'  class='colorbule' target=''>点击了解</a>）提供，技术支持方仅能提供页面技术，不承担由活动引起的相关法律责任"
 
 ];

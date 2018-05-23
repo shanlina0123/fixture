@@ -91,8 +91,9 @@ Route::group(['namespace' => 'Server'], function () {
             Route::get("lucky/create","ActivityLuckyController@create")->name("lucky-create");//进入添加页
             Route::put("lucky/{id}","ActivityLuckyController@update")->name("lucky-update");//修改+新增-执行
             Route::delete("lucky/{id}","ActivityLuckyController@delete")->name("lucky-delete");//删除-执行
+            Route::delete("lucky/prize/{id}","ActivityLuckyController@deleteprize")->name("lucky-prize-delete");//删除奖项-执行
+            Route::put("lucky/setting/{id}","ActivityLuckyController@setting")->name("lucky-setting");//上线/下线
             Route::get("lucky/extension/{id}","ActivityLuckyController@extension")->name("lucky-extension");//推广详情
-            Route::get("lucky/show/{id}","ActivityLuckyController@show")->name("lucky-show");//手机效果预览
         });
     });
 });

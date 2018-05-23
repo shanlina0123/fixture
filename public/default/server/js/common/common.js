@@ -157,6 +157,17 @@ var setFormUrl = function(form,key)
     form.attr("action",url);
 }
 
+//设置将auto的actiont值重置后给action
+var setAutoToFormUrl=function(form,key)
+{
+    var key=key?key:"uuid";
+    //tr的数据
+    var keyValue=form.attr(key);
+    //编辑url
+    var url= form.attr("autoActioin").replace(key,keyValue);
+    form.attr("action",url);
+}
+
 //判断对象是否是字符串
 function isString(obj){
     return Object.prototype.toString.call(obj) === "[object String]";

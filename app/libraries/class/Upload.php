@@ -24,16 +24,24 @@ class Upload
             switch ( $type )
             {
                 case "site_info": //工地封面图片
-                    $filePath  = $this->filepath.'/'.'site/'.$uuid.'/info';
+                    $dbPath='site/'.$uuid.'/info';
+                    $filePath  = $this->filepath.'/'.$dbPath;
                     break;
                 case "site_dynamic": //工地动态图片 $uuid 动态的id
-                    $filePath = $this->filepath.'/'.'site/'.$uuid.'/dynamic';
+                    $dbPath='site/'.$uuid.'/dynamic';
+                    $filePath = $this->filepath.'/'.$dbPath;
                     break;
                 case "user"://用户
-                    $filePath  = $this->filepath.'/'.'user/'.$uuid;
+                    $dbPath='user/'.$uuid;
+                    $filePath  = $this->filepath.'/'.$dbPath;
                     break;
-                case "activity"://配置文件
-                    $filePath  = $this->filepath.'/'.'activity/'.$uuid;
+                case "lucky"://抽奖活动
+                    $dbPath='lucky/'.$uuid;
+                    $filePath  = $this->filepath.'/'.$dbPath;
+                    break;
+                case "activity"://宣传活动
+                    $dbPath='activity/'.$uuid;
+                    $filePath  = $this->filepath.'/'.$dbPath;
                     break;
                 default:
                     return false;
@@ -44,7 +52,7 @@ class Upload
                 $res = $this->uploads( $filePath, $fileFrom, $name, $alias );
                 if( $res )
                 {
-                    return true;
+                    return $dbPath;
                 }else
                 {
                     return false;

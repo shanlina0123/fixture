@@ -365,3 +365,6 @@
   margin: 10px auto;
   cursor: pointer;
 }
+.readonly{
+  background-color:#f2f2f2;
+}
