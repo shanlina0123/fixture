@@ -98,6 +98,10 @@ Route::group(['namespace' => 'Server'], function () {
             Route::delete("lucky/prize/{id}","ActivityLuckyController@deleteprize")->name("lucky-prize-delete");//删除奖项-执行
             Route::put("lucky/setting/{id}","ActivityLuckyController@setting")->name("lucky-setting");//上线/下线
             Route::get("lucky/extension/{id}","ActivityLuckyController@extension")->name("lucky-extension");//推广详情
+            //Vip
+            Route::get("vip","VipController@index")->name("vip-index");//列表
+            //通知
+            Route::get("notice","NoticeController@index")->name("notice-index");//列表
         });
     });
 });

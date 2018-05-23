@@ -48,7 +48,7 @@ class ActivityLuckyBusiness extends ServerBase
         //redis缓存返回
         $list["luckyList"] = Cache::tags($tag)->remember($tagKey, config('configure.sCache'), function () use ($isadmin, $storeid, $where, $data, $tag1) {
             //查詢
-            $queryModel = ActivityLucky::orderBy('id', 'asc');
+            $queryModel = ActivityLucky::orderBy('id', 'desc');
             //视野条件
             if ($isadmin == 0) {
                 $queryModel = $queryModel->where($where);
