@@ -6,7 +6,7 @@
  * Time: 11:20
  */
 namespace App\Http\Controllers\Server;
-use App\Http\Business\Server\WxAuthorize;
+use App\Http\Business\Common\WxAuthorize;
 use App\Http\Controllers\Common\WxBaseController;
 use App\Http\Model\Wx\SmallProgram;
 use Illuminate\Http\Request;
@@ -116,6 +116,27 @@ class WxAuthorizeController extends WxBaseController
         }else
         {
             return redirect()->back()->with('msg','地址不存在');
+        }
+    }
+
+    /**
+     * @param $auditid
+     * 查询审核代码的状态
+     */
+    public function auditid( Request $request )
+    {
+        $user = session('userInfo');
+        $auditid = $request->input('auditid');
+        $type = $request->input('type');
+        $res = SmallProgram::where(['auditid'=>$auditid,'companyid'=>$user->companyid])->first();
+        if( $res )
+        {
+            $res = $this->wx->getAuditid( $res->authorizer_appid, $auditid, $type );
+            responseData(\StatusCode::SUCCESS,'审核代码状态',$res );
+
+        }else
+        {
+            responseData(\StatusCode::ERROR,'审核代码不存在');
         }
     }
 

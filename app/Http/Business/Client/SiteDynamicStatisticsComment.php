@@ -8,33 +8,33 @@
 
 namespace App\Http\Business\Client;
 use App\Http\Business\Common\ClientBase;
+use App\Http\Model\Dynamic\DynamicStatistics;
+
 class SiteDynamicStatistics extends ClientBase
 {
 
     /**
      * 点赞
      */
-    public function Fabulous()
+    public function Fabulous( $data )
     {
-        $data = trimValue( $this->request->all() );
-        $validator = Validator::make(
-            $data,[
-                'dynamicid'=>'required|numeric',//动态
-                'siteid'=>'required|numeric',//工地id
-                'pid'=>'present',//pid
-                'content'=>'required',//地址
-            ]
-        );
-        $data['createuserid'] = $this->apiUser->id;
-        if ($validator->fails())
+
+        $where['dynamicid'] = $data['dynamicid'];
+        $statistics = DynamicStatistics::where($where)->first();
+        if( $statistics )
         {
-            responseData(\StatusCode::CHECK_FORM,'验证失败');
-        }
-        $res = $this->dynamicComment->commentAdd($data);
-        if( $res )
+            $statistics->thumbsupnum = $statistics->thumbsupnum+1;
+            return $statistics->save();
+        }else
         {
-            responseData(\StatusCode::SUCCESS,'评论成功');
+            $statistics = new DynamicStatistics();
+            $statistics->dynamicid = $data['dynamicid'];
+            $statistics->siteid = $data['siteid'];
+            $statistics->linkednum = 0;
+            $statistics->commentnum = 0;
+            $statistics->thumbsupnum = 1;
+            $statistics->follownum = 0;
+            return $statistics->save();
         }
-        responseData(\StatusCode::ERROR,'评论失败');
     }
 }

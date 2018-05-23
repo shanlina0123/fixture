@@ -31,6 +31,7 @@ Route::group(['namespace' => 'Server'], function () {
         //微信代码管理
         Route::get('wx/upcode/{appid}', 'WxAuthorizeController@upCode')->name('wx-upcode');//提交代码
         Route::get('wx/upsourcecode/{appid}', 'WxAuthorizeController@upSourceCode')->name('wx-upsource-code');//发布代码
+        Route::get('wx/auditid', 'WxAuthorizeController@auditid');//发布代码审核状态查询
         //公司信息
         Route::match(['get', 'post'], 'company/setting', 'CompanyController@companySetting')->name('company-setting');  //公司信息设置
         //用户资料

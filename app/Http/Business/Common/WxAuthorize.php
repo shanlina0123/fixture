@@ -6,13 +6,12 @@
  * Time: 11:26
  */
 
-namespace App\Http\Business\Server;
-use App\Http\Business\Common\ServerBase;
+namespace App\Http\Business\Common;
 use App\Http\Model\Wx\SmallProgram;
 use Illuminate\Support\Facades\Cache;
 use Mockery\Exception;
 
-class WxAuthorize extends ServerBase
+class WxAuthorize
 {
 
     public $appid;
@@ -29,6 +28,7 @@ class WxAuthorize extends ServerBase
         $this->url = config('wxconfig.url');
         $this->component_access_token = $this->getAccessToken();
     }
+
 
 
     /**
@@ -67,7 +67,6 @@ class WxAuthorize extends ServerBase
         }
         return $access_token;
     }
-
 
     /**
      * --------------------------------------------------------------------
@@ -473,6 +472,24 @@ class WxAuthorize extends ServerBase
     }
 
 
+    /**
+     * 查询审核状态
+     */
+    public function getAuditid( $appid, $auditid, $type='get' )
+    {
+        $token = $this->getUserAccessToken($appid);
+        $urlPost = 'https://api.weixin.qq.com/wxa/get_auditstatus?access_token='.$token;
+        $urlGet = 'https://api.weixin.qq.com/wxa/get_latest_auditstatus?access_token='.$token;
+        $post['auditid'] = $auditid;
+        if( $type == 'get' )
+        {
+            return getCurl($urlGet);
+        }else
+        {
+            return wxPostCurl($urlPost,$post);
+        }
+
+    }
 
     /**
      * --------------------------------------------------------------------------
@@ -564,6 +581,36 @@ class WxAuthorize extends ServerBase
         ];
        $rs= wxPostCurl($apiUrl,$postData);
        return json_decode($rs);
+    }
+
+    /**
+     * ---------------------------------------------
+     *
+     * 换取openid
+     *
+     * ---------------------------------------------
+     */
+    public function getOpenid( $appid, $code )
+    {
+        $url = 'https://api.weixin.qq.com/sns/component/jscode2session?appid='.$appid.'&js_code='.$code.'&grant_type=authorization_code&component_appid='.$this->appid.'&component_access_token='.$this->component_access_token;
+        $data = getCurl($url,0);
+        if( $data )
+        {
+            $data = json_decode($data,true);
+            if( array_has( $data,'openid') )
+            {
+                $companyid = SmallProgram::where(['authorizer_appid'=>$appid])->value('companyid');
+                $res['companyid'] = $companyid;
+                $res['openid'] = $data['openid'];
+                return $res;
+            }else
+            {
+                return false;
+            }
+        }else
+        {
+            return false;
+        }
     }
 
 }

@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 });*/
 
 Route::post('user/login', 'Common\WxApiLoginController@login');//登陆
+Route::post('user/openid', 'Common\WxApiLoginController@getOpenid');//登陆
 Route::group(['middleware'=>'ApiCheck'], function () {
     /**
      * --------------------------
@@ -58,7 +59,7 @@ Route::group(['middleware'=>'ApiCheck'], function () {
         //发布评论
         Route::post('client/dynamic-comment-add', 'SiteDynamicCommentController@commentAdd');
         //点赞
-        Route::post('client/dynamic-fabulous', 'SiteDynamicStatistics@Fabulous');
+        Route::post('client/dynamic-fabulous', 'SiteDynamicStatisticsCommentController@Fabulous');
     });
 });
 
