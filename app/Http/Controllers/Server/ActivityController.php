@@ -20,6 +20,7 @@ class ActivityController extends ServerBaseController
     protected $request;
     public function __construct(Request $request)
     {
+        parent::__construct();
         $this->activity =  new ActivityBusiness($request);
         $this->request = $request;
     }

@@ -21,6 +21,7 @@ class DataController extends ServerBaseController
     protected $request;
     public function __construct(Request $request)
     {
+        parent::__construct();
         $this->data_business =  new DataBusiness($request);
         $this->request = $request;
     }

@@ -21,6 +21,7 @@ class FilterController extends ServerBaseController
      */
     public function __construct(FilterBusiness $filter)
     {
+        parent::__construct();
         $this->filter = $filter;
     }
 

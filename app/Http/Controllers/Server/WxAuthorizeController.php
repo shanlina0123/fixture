@@ -18,6 +18,15 @@ class WxAuthorizeController extends WxBaseController
     public function __construct( WxAuthorize $wx )
     {
         $this->wx = $wx;
+        //判断公司信息是否完善
+        $this->middleware(function ($request, $next) {
+            $userInfo = $request->session()->get('userInfo');
+            if( !$userInfo->companyid && $userInfo->isadmin = 1 )
+            {
+                return redirect()->route('company-setting');
+            }
+            return $next($request);
+        });
     }
 
     /**

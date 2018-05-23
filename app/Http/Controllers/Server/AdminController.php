@@ -21,6 +21,7 @@ class AdminController extends ServerBaseController
     protected $request;
     public function __construct(Request $request)
     {
+        parent::__construct();
         $this->admin_business =  new AdminBusiness($request);
         $this->request = $request;
     }

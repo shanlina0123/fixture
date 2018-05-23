@@ -21,6 +21,7 @@ class RolesController extends ServerBaseController
     protected $request;
     public function __construct(Request $request)
     {
+        parent::__construct();
         $this->roles_business =  new RolesBusiness($request);
         $this->request = $request;
     }

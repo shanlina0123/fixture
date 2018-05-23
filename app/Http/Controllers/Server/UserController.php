@@ -11,6 +11,7 @@ class UserController extends ServerBaseController
     protected $user;
     public function __construct( UserBusiness $user, Request $request)
     {
+        parent::__construct();
         $this->request = $request;
         $this->user = $user;
     }

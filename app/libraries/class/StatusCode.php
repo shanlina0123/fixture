@@ -19,7 +19,7 @@ class StatusCode
     const PARAM_ERROR=3;//参数错误
     const DB_ERROR=4;//数据库错误失败
     const EMPTY_ERROR=5;//空数据
-    const TOKEN_ERROR=6;//token错误 token失效
+    const TOKEN_ERROR=6;//token错误
     const REQUEST_ERROR=7;//非法请求
     const CATCH_ERROR=8;//catch异常
     const EXIST_ERROR=9;//已存在
@@ -34,5 +34,6 @@ class StatusCode
     const TOKEN_EMPTY=18;//token为空
     const AUTH_NOT_DEFINED_ERROR=19;//未定义暂未开放
     const ROLE_HIDDEN=20;//角色已禁用
+    const TOKEN_OVERDUE=21;//token失效
 
 }

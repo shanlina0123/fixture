@@ -21,6 +21,7 @@ class StoreController extends ServerBaseController
     protected $request;
     public function __construct(Request $request)
     {
+        parent::__construct();
         $this->store_business =  new StoreBusiness($request);
         $this->request = $request;
     }

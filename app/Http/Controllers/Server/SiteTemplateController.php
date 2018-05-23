@@ -12,14 +12,10 @@ class SiteTemplateController extends ServerBaseController
     protected $template;
     protected $userInfo;
     protected $request;
-    public function __construct( SiteTemplateBusiness $template )
+    public function __construct( SiteTemplateBusiness $template,Request $request )
     {
-        $this->middleware(function ($request, $next) {
-            $userInfo = $request->session()->get('userInfo');
-            $this->userInfo = $userInfo;
-            $this->request = $request;
-            return $next($request);
-        });
+        parent::__construct();
+        $this->request = $request;
         $this->template = $template;
     }
 

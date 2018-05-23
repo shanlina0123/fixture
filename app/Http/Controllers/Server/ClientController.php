@@ -10,16 +10,11 @@ class ClientController extends ServerBaseController
 {
 
     protected $client;
-    protected $userInfo;
     protected $request;
-    public function __construct( ClientBusiness $client )
+    public function __construct( ClientBusiness $client, Request $request )
     {
-        $this->middleware(function ($request, $next) {
-            $userInfo = $request->session()->get('userInfo');
-            $this->userInfo = $userInfo;
-            $this->request = $request;
-            return $next($request);
-        });
+        parent::__construct();
+        $this->request = $request;
         $this->client = $client;
     }
     /**
