@@ -6,6 +6,7 @@
  * Time: 10:10
  */
 namespace App\Http\Business\Common;
+use App\Http\Business\Server\WxAuthorize;
 use App\Http\Model\User\User;
 use App\Http\Model\User\UserToken;
 use Illuminate\Support\Facades\Cache;
@@ -15,7 +16,7 @@ class WxApiLogin
      * @param $openid
      * openid登陆
      */
-    public function userLogin( $openid, $nickname, $faceimg, $companyid )
+    public function userLogin( $openid, $companyid )
     {
         if( !$openid || !$companyid )
         {
@@ -56,8 +57,6 @@ class WxApiLogin
             $user = new User();
             $user->uuid = create_uuid();
             $user->companyid = $companyid;
-            $user->nickname = $nickname;
-            $user->faceimg = $faceimg;
             $user->wechatopenid = $openid;
             $user->isadmin = 0;
             $user->isadminafter = 0;
@@ -80,5 +79,14 @@ class WxApiLogin
             }
             responseData(\StatusCode::ERROR,"登陆失败");
         }
+    }
+
+    /**
+     * 获取openid
+     */
+    public function Openid( $appID, $code )
+    {
+        $wx = new WxAuthorize();
+        return $wx->getOpenid( $appID, $code );
     }
 }

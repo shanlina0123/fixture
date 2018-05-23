@@ -28,14 +28,30 @@ class WxApiLoginController extends Controller
         if( $request->method() === 'POST' )
         {
             $openid = $request->input('openid');
-            $nickname = $request->input('nickname');
-            $faceimg = $request->input('faceimg');
             $companyid = $request->input('companyid');
-            $res = $this->user->userLogin( $openid, $nickname, $faceimg, $companyid );
+            $res = $this->user->userLogin( $openid, $companyid );
             responseData(\StatusCode::SUCCESS,"用户信息", $res );
         }else
         {
             responseData(\StatusCode::REQUEST_ERROR,"非法请求");
+        }
+    }
+
+    /**
+     * @param Request $request
+     * 获取用户openid
+     */
+    public function getOpenid( Request $request  )
+    {
+        $appID = $request->input('appid');
+        $code = $request->input('code');
+        $res = $this->user->Openid( $appID, $code );
+        if( $res )
+        {
+            responseData(\StatusCode::SUCCESS,"请求OPENID成功", $res );
+        }else
+        {
+            responseData(\StatusCode::ERROR,"请求OPENID失败", $res );
         }
     }
 }

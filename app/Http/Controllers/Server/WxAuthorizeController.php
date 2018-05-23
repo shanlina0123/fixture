@@ -119,4 +119,25 @@ class WxAuthorizeController extends WxBaseController
         }
     }
 
+    /**
+     * @param $auditid
+     * 查询审核代码的状态
+     */
+    public function auditid( Request $request )
+    {
+        $user = session('userInfo');
+        $auditid = $request->input('auditid');
+        $type = $request->input('type');
+        $res = SmallProgram::where(['auditid'=>$auditid,'companyid'=>$user->companyid])->first();
+        if( $res )
+        {
+            $res = $this->wx->getAuditid( $res->authorizer_appid, $auditid, $type );
+            responseData(\StatusCode::SUCCESS,'审核代码状态',$res );
+
+        }else
+        {
+            responseData(\StatusCode::ERROR,'审核代码不存在');
+        }
+    }
+
 }

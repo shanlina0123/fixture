@@ -473,6 +473,24 @@ class WxAuthorize extends ServerBase
     }
 
 
+    /**
+     * 查询审核状态
+     */
+    public function getAuditid( $appid, $auditid, $type='get' )
+    {
+        $token = $this->getUserAccessToken($appid);
+        $urlPost = 'https://api.weixin.qq.com/wxa/get_auditstatus?access_token='.$token;
+        $urlGet = 'https://api.weixin.qq.com/wxa/get_latest_auditstatus?access_token='.$token;
+        $post['auditid'] = $auditid;
+        if( $type == 'get' )
+        {
+            return getCurl($urlGet);
+        }else
+        {
+            return wxPostCurl($urlPost,$post);
+        }
+
+    }
 
     /**
      * --------------------------------------------------------------------------
@@ -553,5 +571,35 @@ class WxAuthorize extends ServerBase
         return $authorizer_access_token;
     }
 
+
+    /**
+     * ---------------------------------------------
+     *
+     * 换取openid
+     *
+     * ---------------------------------------------
+     */
+    public function getOpenid( $appid, $code )
+    {
+        $url = 'https://api.weixin.qq.com/sns/component/jscode2session?appid='.$appid.'&js_code='.$code.'&grant_type=authorization_code&component_appid='.$this->appid.'&component_access_token='.$this->component_access_token;
+        $data = getCurl($url,0);
+        if( $data )
+        {
+            $data = json_decode($data,true);
+            if( array_has( $data,'openid') )
+            {
+                $companyid = SmallProgram::where(['authorizer_appid'=>$appid])->value('companyid');
+                $res['companyid'] = $companyid;
+                $res['openid'] = $data['openid'];
+                return $res;
+            }else
+            {
+                return false;
+            }
+        }else
+        {
+            return false;
+        }
+    }
 
 }
