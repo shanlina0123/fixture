@@ -9,4 +9,7 @@ Homestead.json
 .idea/modules.xml
 .idea/fixture.iml
 public/temp
-public/uploads
+public/uploads/site/
+public/uploads/lucky/
+public/uploads/user/
+public/uploads/activity/

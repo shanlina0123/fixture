@@ -505,7 +505,6 @@ class ActivityLuckyBusiness extends ServerBase
      */
     public function extension($id, $userid, $companyid, $tag = "AcitivityLuck-Prize")
     {
-        Cache::flush();
         $tagKey = base64_encode(mosaic("", $tag, $id));
         $uploads = config("configure.uploads");
         $list["uploads"] = $uploads;

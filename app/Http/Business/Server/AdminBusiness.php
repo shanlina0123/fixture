@@ -238,6 +238,10 @@ class AdminBusiness extends ServerBase
                 DB::commit();
                 //删除缓存
                 Cache::tags(["Admin-PageList"])->flush();
+
+                //修改token
+                Cache::put('userToken'.$row['id'],['token'=>$row['token'],'type'=>1],config('session.lifetime'));
+
             } else {
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR, "修改失败");
@@ -282,6 +286,8 @@ class AdminBusiness extends ServerBase
                 DB::commit();
                 //删除缓存
                 Cache::tags(["Admin-PageList"])->flush();
+                //修改token
+                Cache::put('userToken'.$adminData['id'],['token'=>$adminData['token'],'type'=>1],config('session.lifetime'));
                 return ["status"=>$admin["status"]];
             } else {
                 DB::rollBack();
@@ -354,6 +360,8 @@ class AdminBusiness extends ServerBase
                 DB::commit();
                 //删除缓存
                 Cache::tags(["Admin-PageList"])->flush();
+                //修改token
+                Cache::put('userToken'.$row['id'],['token'=>$row['token'],'type'=>2],config('session.lifetime'));
             }else{
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR,"删除失败");
