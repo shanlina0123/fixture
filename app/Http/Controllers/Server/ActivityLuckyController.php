@@ -344,6 +344,7 @@ class ActivityLuckyController extends ServerBaseController
         if($this->request->ajax()){
             responseAjax($dataSource);
         }
+
         return view('server.activitylucky.extension',compact('list'))->with("errorMsg",json_encode($errorMsg));
     }
 

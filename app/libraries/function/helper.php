@@ -377,17 +377,6 @@ function base64EncodeImage ($image_file) {
     return $base64_image;
 }
 
-//动态生成微信二维码
-function getWxapCode($accress_token,$userid)
-{
-    $apiUrl="https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=".$accress_token;
-    $postData=[
-        "scene"=>$userid,
-        "page"=>config('configure.wxCode.prizepage'),
-        "width"=>config('configure.wxCode.width'),
-     ];
-    return wxPostCurl($apiUrl,$postData);
-}
 
 /***
  * @param $url

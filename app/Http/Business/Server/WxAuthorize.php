@@ -553,5 +553,17 @@ class WxAuthorize extends ServerBase
         return $authorizer_access_token;
     }
 
+   //动态生成微信二维码
+    public function getWxappCode($accress_token,$lukyid)
+    {
+        $apiUrl="https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=".$accress_token;
+        $postData=[
+            "scene"=>$lukyid,
+            "page"=>config('configure.wxCode.prizepage'),
+            "width"=>config('configure.wxCode.width'),
+        ];
+       $rs= wxPostCurl($apiUrl,$postData);
+       return json_decode($rs);
+    }
 
 }

@@ -316,7 +316,7 @@ class ActivityLuckyBusiness extends ServerBase
                 }
 
                 //添加
-                $defaultPrizeImg=config('configure.lucky.prize');
+                $defaultPrizeImg = config('configure.lucky.prize');
                 foreach ($data["prizelist"] as $k => $v) {
                     $prizeData = array();
                     if ($v["id"]) {
@@ -346,7 +346,7 @@ class ActivityLuckyBusiness extends ServerBase
                         $prizeData["num"] = $v["num"];
                         $prizeData["levelid"] = $v["levelid"];
                         $prizeData["levelname"] = $levelListData[$v["levelid"]]["name"];
-                        $prizeData["picture"] = $v["picture"]? $pictures[$v["levelid"]] : $defaultPrizeImg[$v["levelid"]];
+                        $prizeData["picture"] = $v["picture"] ? $pictures[$v["levelid"]] : $defaultPrizeImg[$v["levelid"]];
                         $prizeData["userid"] = $userid;
                         $prizeData["created_at"] = date("Y-m-d H:i:s");
                         $rspResult = ActivityLuckyPrize::create($prizeData);
@@ -357,7 +357,7 @@ class ActivityLuckyBusiness extends ServerBase
 
             } else {
                 $rsp[] = 1;
-                $prizeIds=[];
+                $prizeIds = [];
             }
             //结果处理
             if ($rs !== false && !in_array(false, $rsp, true)) {
@@ -508,23 +508,26 @@ class ActivityLuckyBusiness extends ServerBase
     {
         Cache::flush();
         $tagKey = base64_encode(mosaic("", $tag, $id));
-        $uploads=config("configure.uploads");
-        $list["uploads"]=$uploads;
-        $list["lukData"] = ActivityLucky::where("id", $id)->select("id","sharetitle","title","bgurl","storeid")->first();
-        $list["lukData"]["bgurl"] = $list["lukData"]["bgurl"]?$uploads."/". $list["lukData"]["bgurl"]:"";
-        $list["lukData"]["storename"]=Store::where("id",$list["lukData"]["storeid"])->value("name");
-        $list["lukData"]["sharetitle"]=$list["lukData"]["sharetitle"]?$list["lukData"]["sharetitle"]:$list["lukData"]["title"];
+        $uploads = config("configure.uploads");
+        $list["uploads"] = $uploads;
+        $list["lukData"] = ActivityLucky::where("id", $id)->select("id", "sharetitle", "title", "bgurl", "storeid")->first();
+        $list["lukData"]["bgurl"] = $list["lukData"]["bgurl"] ? $uploads . "/" . $list["lukData"]["bgurl"] : "";
+        $list["lukData"]["storename"] = Store::where("id", $list["lukData"]["storeid"])->value("name");
+        $list["lukData"]["sharetitle"] = $list["lukData"]["sharetitle"] ? $list["lukData"]["sharetitle"] : $list["lukData"]["title"];
         //奖项数据
-        $list["prizeList"] = Cache::tags($tag)->remember($tagKey, config('configure.sCache'), function () use ($id, $userid, $companyid,$uploads) {
+        $list["prizeList"] = Cache::tags($tag)->remember($tagKey, config('configure.sCache'), function () use ($id, $userid, $companyid, $uploads) {
             //查詢
             return ActivityLuckyPrize::where("activityluckyid", $id)->select(DB::raw("levelid,CONCAT('$uploads','/',picture) as picture"))->orderBy('id', 'asc')->get();
         });
 
         //获取公司信息
         $list["logo"] = Company::where("id", $companyid)->value("logo");
-        $list["logo"]=$list["logo"]?$uploads."/".$list["logo"]:"";
-            //获取小程序二维码
-        $list["wxappcode"]="";
+        $list["logo"] = $list["logo"] ? $uploads . "/" . $list["logo"] : "";
+        //获取小程序二维码
+        $wx = new  WxAuthorize();
+        $accessToken = $wx->getUserAccessToken(null, $companyid);
+        $wxcode = $accessToken ? $wx->getWxappCode($accessToken, $list["lukData"]["id"]) : "";
+        $list["wxappcode"] =$wxcode;
         return responseCData(\StatusCode::SUCCESS, "", $list);
     }
 
