@@ -503,7 +503,7 @@ class ActivityLuckyBusiness extends ServerBase
      * 获取扩展详情
      * @return mixed
      */
-    public function extension($id, $userid, $companyid, $tag = "AcitivityLuck-Prize")
+    public function extension($id,$companyid, $tag = "AcitivityLuck-Prize")
     {
         $tagKey = base64_encode(mosaic("", $tag, $id));
         $uploads = config("configure.uploads");
@@ -513,11 +513,10 @@ class ActivityLuckyBusiness extends ServerBase
         $list["lukData"]["storename"] = Store::where("id", $list["lukData"]["storeid"])->value("name");
         $list["lukData"]["sharetitle"] = $list["lukData"]["sharetitle"] ? $list["lukData"]["sharetitle"] : $list["lukData"]["title"];
         //奖项数据
-        $list["prizeList"] = Cache::tags($tag)->remember($tagKey, config('configure.sCache'), function () use ($id, $userid, $companyid, $uploads) {
+        $list["prizeList"] = Cache::tags($tag)->remember($tagKey, config('configure.sCache'), function () use ($id, $companyid, $uploads) {
             //查詢
             return ActivityLuckyPrize::where("activityluckyid", $id)->select(DB::raw("levelid,CONCAT('$uploads','/',picture) as picture"))->orderBy('id', 'asc')->get();
         });
-
         //获取公司信息
         $list["logo"] = Company::where("id", $companyid)->value("logo");
         $list["logo"] = $list["logo"] ? $uploads . "/" . $list["logo"] : "";

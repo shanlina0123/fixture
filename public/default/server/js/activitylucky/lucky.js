@@ -166,7 +166,7 @@ layui.use(['form', 'layer', 'jquery'], function () {
             $(".priceitem",parent).find("img").attr("src",toitemurl);
             //奖项
             $.each(data.data.prizeList,function(i,n){
-                n["picture"]? $("#extensionPrize"+n["levelid"],parent).attr("src",n["picture"]):"";
+                n["picture"]? $("#extensionPrize"+i,parent).attr("src",n["picture"]):"";
             })
             //标题
             $("#sharetitle",parent).html(data.data.lukData.sharetitle);

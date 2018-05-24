@@ -382,15 +382,13 @@ class ActivityLuckyController extends ServerBaseController
         $user=getUserInfo();
         //非管理员参数验证
         if($user->isadmin==0) {
-            if (strlen($user->companyid) == 0 || $user->companyid==0 ||
-                strlen($user->cityid) == 0 || $user->cityid==0 ||
-                strlen($user->storeid) == 0 || $user->storeid==0
+            if (strlen($user->companyid) == 0 || $user->companyid==0
             ) {
                 return  responseCData(\StatusCode::PARAM_ERROR,"用户信息不完整",null);
             }
         }
 
-        return $this->activitylucky_business->extension($id,$user->userid,$user->companyid,$id);
+        return $this->activitylucky_business->extension($id,$user->companyid);
     }
 
 

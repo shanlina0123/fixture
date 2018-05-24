@@ -100,15 +100,15 @@
             <p class="erweimanotice">扫描下方二维码参与抽奖</p>
             <div class="prizepart" id="prizewapbg">
                 <div class="prizeinner clearfix">
+                    <div class="priceitem fl"  ><img id="extensionPrize0" src="" class="itemimg" ></div>
                     <div class="priceitem fl"  ><img id="extensionPrize1" src="" class="itemimg" ></div>
                     <div class="priceitem fl"  ><img id="extensionPrize2" src="" class="itemimg" ></div>
                     <div class="priceitem fl"  ><img id="extensionPrize3" src="" class="itemimg" ></div>
-                    <div class="priceitem fl"  ><img id="extensionPrize4" src="" class="itemimg" ></div>
                     <div class="priceitem fl"  ><img id="wxappcode" src="" class="itemimg" ></div>
-                    <div class="priceitem fl"  ><img id="extensionPrize5" src="" class="itemimg"></div>
+                    <div class="priceitem fl"  ><img id="extensionPrize4" src="" class="itemimg"></div>
+                    <div class="priceitem fl"  ><img id="extensionPrize5" src="" class="itemimg" ></div>
                     <div class="priceitem fl"  ><img id="extensionPrize6" src="" class="itemimg" ></div>
                     <div class="priceitem fl"  ><img id="extensionPrize7" src="" class="itemimg" ></div>
-                    <div class="priceitem fl"  ><img id="extensionPrize8" src="" class="itemimg" ></div>
                 </div>
             </div>
             <img id="companyLogo" src="" class="poplog" style="display: none;">
