@@ -36,8 +36,8 @@ class ClientAppointmentController extends ClientBaseController
             'companyid'=>'bail|required|numeric',//公司
             'sourcecateid'=>'bail|required|numeric',//客户来源分类
             'sourceid'=>'bail|required|numeric',//客户来源
-            'phone'=>'bail|regex:/^1[345789][0-9]{9}$/',//电话
-            'name'=>'bail|present|regex:/^[\u4e00-\u9fa5]{1,10}$/',//姓名
+            'phone'=>'bail|required|regex:/^1[345789][0-9]{9}$/',//电话
+            'name'=>'bail|present|max:10',//姓名
             'area'=>'sometimes|bail|present|max:11',//面积
             'content'=>'bail|required',//内容
             'wechatopenid'=>'bail|required',//openid
@@ -50,7 +50,7 @@ class ClientAppointmentController extends ClientBaseController
             'sourceid.required'=>'客户来源数据类型必填',
             'phone.regex'=>'手机号码有误',
             'name.present'=>'缺少用户名',
-            'name.regex'=>'用户名有误',
+            'name.max'=>'用户名有误',
             'area.max'=>'面积格式有误',
             'content.required'=>'内容不能为空',
             'wechatopenid.required'=>'用户openid不能为空',
