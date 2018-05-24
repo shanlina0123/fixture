@@ -20,11 +20,11 @@ function getListen() {
                 red.show();
             }else{
                 red.hide();
-                outListenTime=8000;
+                outListenTime=10000;
             }
         }else{
             red.hide();
-            outListenTime=8000;
+            outListenTime=10000;
         }
     })
 }
