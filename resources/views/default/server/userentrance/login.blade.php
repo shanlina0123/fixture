@@ -13,6 +13,23 @@
     <link rel="stylesheet" href="{{pix_asset('server/css/base.css')}}">
     <link rel="stylesheet" href="{{pix_asset('server/css/login.css')}}">
     <script type="text/javascript" src="{{pix_asset('server/plugins/jquery/jquery-2.1.4.min.js',false)}}"></script>
+    <style>
+        body {
+            background-color: #193c6d;
+            filter: progid: DXImageTransform.Microsoft.gradient(gradientType=1, startColorstr='#003073', endColorstr='#029797');
+            background-image: url(//img.alicdn.com/tps/TB1d.u8MXXXXXXuXFXXXXXXXXXX-1900-790.jpg);
+            background-size: 100%;
+            background-image: -webkit-gradient(linear, 0 0, 100% 100%, color-stop(0, #003073), color-stop(100%, #029797));
+            background-image: -webkit-linear-gradient(135deg, #003073, #029797);
+            background-image: -moz-linear-gradient(45deg, #003073, #029797);
+            background-image: -ms-linear-gradient(45deg, #003073 0, #029797 100%);
+            background-image: -o-linear-gradient(45deg, #003073, #029797);
+            background-image: linear-gradient(135deg, #003073, #029797);
+            text-align: center;
+            margin: 0px;
+            overflow: hidden;
+        }
+    </style>
 </head>
 <body>
 <!--[if lt IE 7]>
@@ -92,5 +109,7 @@
 <script type="text/javascript" src="{{pix_asset('server/plugins/layui/layui.js',false)}}"></script>
 <script type="text/javascript" src="{{pix_asset('server/plugins/validform/Validform_v5.3.2_min.js',false)}}"></script>
 <script type="text/javascript" src="{{pix_asset('server/js/login/login.js')}}"></script>
+<script type="text/javascript" src="{{pix_asset('server/plugins/jquery/three.min.js')}}"></script>
+<script type="text/javascript" src="{{pix_asset('server/plugins/jquery/css3.js')}}"></script>
 </body>
 </html>

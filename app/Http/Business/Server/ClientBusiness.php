@@ -8,6 +8,8 @@
 
 namespace App\Http\Business\Server;
 use App\Http\Business\Common\ServerBase;
+use App\Http\Model\Activity\ActivityLuckyNum;
+use App\Http\Model\Activity\ActivityLuckyRecord;
 use App\Http\Model\Client\Client;
 use App\Http\Model\Client\ClientFollow;
 use App\Http\Model\Data\ClientFollowStatus;
@@ -90,6 +92,132 @@ class ClientBusiness extends ServerBase
             return $data;
         });
         return $value;
+    }
+
+    /**
+     * @param $user
+     * @param $request
+     * @return mixed
+     * 抽奖客户
+     */
+    public function getLuckyClient( $user,$request )
+    {
+        $tag = 'luckyClient'.$user->companyid;
+        //Cache::tags([$tag])->flush();
+        $where = $tag.$request->input('page').$request->input('k').$request->input('status').$request->input('iswin');
+        $value = Cache::tags($tag)->remember( $tag.$where,config('configure.sCache'), function() use( $user, $request ){
+            //网站管理员
+            if( $user->isadmin == 1 )
+            {
+                $sWhere['companyid'] =  $user->companyid;
+            }else
+            {
+                //检测权限
+                if( !empty($user->islook) )
+                {
+                    //存在
+                    switch ( (int)$user->islook )
+                    {
+                        case 1://全部
+                            $sWhere['companyid'] =  $user->companyid;
+                            break;
+                        case 2://城市
+                            $sWhere['companyid'] =  $user->companyid;
+                            $sWhere['cityid'] =  $user->cityid;
+                            break;
+                        case 3://门店
+                            $sWhere['companyid'] =  $user->companyid;
+                            $sWhere['storeid'] =  $user->storeid;
+                            break;
+                        default://默认
+                            $sWhere['companyid'] =  $user->companyid;
+                            $sWhere['storeid'] =  $user->storeid;
+                            break;
+                    }
+                }else
+                {
+                    //不存在
+                    $sWhere['companyid'] =  $user->companyid;
+                    $sWhere['storeid'] =  $user->storeid;
+                }
+            }
+
+            $sql = Client::where( $sWhere )->orderBy('id','desc')->with('clientToStatus')->whereHas('clientToLuckyNum',function( $query ) use($request){
+
+                if( $request->input('iswin') != '' )
+                {
+                    $query->where('iswin',$request->input('iswin'));
+                }
+
+            });
+            //判断查询
+            $k = trim($request->input('k'));
+            if( $k )
+            {
+                if( is_numeric($k) )
+                {
+                    $sql->where('phone','like','%'.$k.'%');
+                }else
+                {
+                    $sql->where('name','like','%'.$k.'%');
+                }
+            }
+            //状态
+            $status = $request->input('status');
+            if( $status )
+            {
+                $sql->where('followstatusid',$status);
+            }
+
+            $data = $sql->paginate(config('configure.sPage'));
+            return $data;
+        });
+        return $value;
+    }
+
+    /**
+     * 客户日志
+     */
+    public function getLuckyClientLog(  $user, $id  )
+    {
+        //网站管理员
+        if( $user->isadmin == 1 )
+        {
+            $sWhere['companyid'] =  $user->companyid;
+        }else
+        {
+            //检测权限
+            if( !empty($user->islook) )
+            {
+                //存在
+                switch ( (int)$user->islook )
+                {
+                    case 1://全部
+                        $sWhere['companyid'] =  $user->companyid;
+                        break;
+                    case 2://城市
+                        $sWhere['companyid'] =  $user->companyid;
+                        $sWhere['cityid'] =  $user->cityid;
+                        break;
+                    case 3://门店
+                        $sWhere['companyid'] =  $user->companyid;
+                        $sWhere['storeid'] =  $user->storeid;
+                        break;
+                    default://默认
+                        $sWhere['companyid'] =  $user->companyid;
+                        $sWhere['storeid'] =  $user->storeid;
+                        break;
+                }
+            }else
+            {
+                //不存在
+                $sWhere['companyid'] =  $user->companyid;
+                $sWhere['storeid'] =  $user->storeid;
+            }
+        }
+        $sWhere['uuid'] = $id;
+        return Client::where( $sWhere )->orderBy('id','desc')->with('clientToStatus','clientToLuckyNum','clientToLuckyRecord')->first();
+
     }
 
     /**
@@ -203,12 +331,23 @@ class ClientBusiness extends ServerBase
             $swhere['companyid'] = $user->companyid;
             $swhere['storeid'] =  $user->storeid;
         }
-        $res = Client::where($swhere)->delete();
-        if( $res )
+        try{
+            $res = Client::where($swhere)->first();
+            if( $res )
+            {
+                DB::beginTransaction();
+                ActivityLuckyNum::where('clientid',$res->id)->delete();
+                ActivityLuckyRecord::where('clientid',$res->id)->delete();
+                $res->delete();
+                DB::commit();
+                return true;
+            }else
+            {
+                return false;
+            }
+        }catch (\Exception $e)
         {
-            return true;
-        }else
-        {
+            DB::rollBack();
             return false;
         }
     }

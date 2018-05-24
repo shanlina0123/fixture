@@ -36,9 +36,14 @@ class ClientController extends ServerBaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function getLuckyClient()
     {
-        //
+        $status = $this->client->getClientStatus();
+        $data = $this->client->getLuckyClient( $this->userInfo, $this->request );
+        $where['k'] = $this->request->input('k');
+        $where['status'] = $this->request->input('status');
+        $where['iswin'] = $this->request->input('iswin');
+        return view('server.client.lucky',compact('data','status','where'));
     }
 
     /**
@@ -47,9 +52,10 @@ class ClientController extends ServerBaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function getLuckyClientLog( $id )
     {
-        //
+        $row = $this->client->getLuckyClientLog( $this->userInfo, $id );
+        return view('server.client.luckylog',compact('row'));
     }
 
     /**
@@ -119,7 +125,7 @@ class ClientController extends ServerBaseController
         $res = $this->client->destroyClient( $user, $id );
         if( $res == true )
         {
-            Cache::tags(['client'.$user->companyid])->flush();
+            Cache::tags(['client'.$user->companyid,'luckyClient'.$user->companyid])->flush();
             return 'success';
         }else
         {
