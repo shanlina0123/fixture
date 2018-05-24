@@ -5,6 +5,7 @@ use App\Http\Business\Server\DataBusiness;
 use App\Http\Controllers\Common\ServerBaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 /***
@@ -32,9 +33,9 @@ class DataController extends ServerBaseController
     public function index()
     {
         //获取列表数据
-        $dataSource=$this->getListData();
-        $list=$dataSource["data"];
-        $errorMsg=$dataSource["messages"];
+        $dataSource = $this->getListData();//数据集合
+        $list = $dataSource["data"];//数据
+        $errorMsg = $dataSource["messages"];//错误消息
         //处理ajax请求
         if($this->request->ajax()){
             responseAjax($dataSource);
@@ -47,19 +48,10 @@ class DataController extends ServerBaseController
      */
     public  function  getListData()
     {
-        //用户信息
-        $user=getUserInfo();
-        //非管理员参数验证
-        if($user->isadmin==0) {
-            if (strlen($user->companyid) == 0 ||$user->companyid==0) {
-                return  responseCData(\StatusCode::PARAM_ERROR,"用户信息不完整",null);
-            }
-        }
 
-        $list=$this->data_business->index($user->companyid);
+        $list=$this->data_business->index($this->user->companyid);
         return   responseCData(\StatusCode::SUCCESS,"",$list);
     }
-
 
     /***
      * 详情
@@ -89,18 +81,9 @@ class DataController extends ServerBaseController
         if ($validator->fails()) {
            return  responseCData(\StatusCode::PARAM_ERROR,"分类参数错误","",$validator->errors());
         }
-
-        //用户信息
-        $user=getUserInfo();
-        //非管理员参数验证
-        if (strlen($user->companyid) == 0 || $user->companyid==0) {
-             return  responseCData(\StatusCode::PARAM_ERROR,"用户信息不完整",null);
-        }
-        return $this->data_business->edit($user->companyid,$cateid);
+        return $this->data_business->edit($this->user->companyid,$cateid);
 
     }
-
-
 
 
     /***
@@ -128,15 +111,8 @@ class DataController extends ServerBaseController
             responseData(\StatusCode::PARAM_ERROR,"验证失败","",$validator->errors());
         }
 
-        //用户信息
-        $user=getUserInfo();
-        //非管理员参数验证
-        if (strlen($user->companyid) == 0 || $user->companyid==0) {
-            responseData(\StatusCode::PARAM_ERROR,"用户信息不完整",null);
-        }
-
         //获取业务数据
-        $rs=$this->data_business->update($id,$user->companyid,$data);
+        $rs=$this->data_business->update($id,$this->user->companyid,$data);
         //接口返回结果
         responseData(\StatusCode::SUCCESS,"修改成功",$rs);
     }

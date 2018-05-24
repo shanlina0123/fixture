@@ -113,17 +113,11 @@ layui.use(['form', 'layer', 'jquery'], function () {
     var checkForm = function (name,uuid) {
         if(uuid=="")
         {
-            layer.tips("请求错误", '#edit-btn', {
-                tips: [2, '#ff0000'],
-                time: 1000
-            });
+            layer.msg("请求错误", {icon: 2,time:800});
             return false;
         }
         if (name == "") {
-            layer.tips("名称不能为空", '#name', {
-                tips: [2, '#ff0000'],
-                time: 1000
-            });
+            layer.msg("名称不能为空", {icon: 2,time:800});
             return false;
         }
         return true;

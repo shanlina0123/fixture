@@ -1,4 +1,4 @@
-<div class="layui-logo"><img src="{{pix_asset('server/images/topLogo.png')}}"></div>
+<div class="layui-logo"><a href="{{route('index')}}"><img src="{{pix_asset('server/images/topLogo.png')}}"></a></div>
 <ul class="layui-nav layui-layout-right">
     <li class="layui-nav-item">
         <a href="{{route('vip-index')}}" title="会员中心"><img src="{{pix_asset('server/images/user.png')}}" width="32"></a>

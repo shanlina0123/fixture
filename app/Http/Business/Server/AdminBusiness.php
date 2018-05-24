@@ -24,43 +24,16 @@ class AdminBusiness extends ServerBase
      */
     public function index($isadmin,$companyid,$cityid,$storeid,$islook,$page,$data,$tag="Admin-PageList",$tag1="Admin-RoleList",$tag2="Admin-StoreList")
     {
+        //非管理员/视野条件1全部 2城市 3门店
+        $lookWhere = $this->lookWhere($isadmin, $companyid, $cityid, $storeid, $islook);
         $tagKey = base64_encode(mosaic("", $tag, $companyid,$cityid,$storeid,$islook,$page));
         //redis缓存返回
-        $list["userList"]= Cache::tags($tag)->remember($tagKey, config('configure.sCache'), function ()  use ($isadmin,$companyid,$cityid,$storeid,$islook,$data) {
+        $list["userList"]= Cache::tags($tag)->remember($tagKey, config('configure.sCache'), function ()  use ($lookWhere,$data) {
             //查詢
-            $queryModel=User::select("id","uuid", "nickname", "username", "roleid", "storeid", "isdefault", "status")
+            $queryModel=User::select("id","uuid", "nickname", "username", "roleid", "storeid", "isdefault", "status","created_at")
                 ->where(["isadminafter"=>1,"type"=>0,"isinvitationed"=>0]);
-            //管理员/视野条件1全部 2城市 3门店
-            if($isadmin==0)
-            {
-                switch($islook)
-                {
-                    case 1:
-                        $where["companyid"]=$companyid;
-                        break;
-                    case 2:
-                        $where["cityid"]=$cityid;
-                        break;
-                    case 3:
-                        $where["storeid"]=$storeid;
-                        //不能搜索其他店的
-                        if($storeid!=$data["storeid"])
-                        {
-                          unset($data["storeid"]);
-                        }
-                        break;
-                    default:
-                        $where["storeid"]=$storeid;
-                        //不能搜索其他店的
-                        if($storeid!=$data["storeid"])
-                        {
-                            unset($data["storeid"]);
-                        }
-                        break;
-                }
-                $queryModel=$queryModel->where($where);
-            }
-
+            //视野条件
+            $queryModel = $queryModel->where($lookWhere);
             if($data)
             {
                 $searchNickname=searchFilter($data['nickname']);
@@ -90,15 +63,16 @@ class AdminBusiness extends ServerBase
         });
 
         //获取角色数据
-        $list["roleList"] =Cache::get($tag1, function () use ($tag1) {
-            $roleList = FilterRole::where("status",1)->select("id", "name")->get();
+        $list["roleList"] =Cache::get($tag1, function () use ($lookWhere,$tag1) {
+            //视野条件
+            $roleList = FilterRole::where("status",1)->where($lookWhere)->select("id", "name")->get();
             Cache::put($tag1, $roleList, config('configure.sCache'));
             //返回数据库层查询结果
             return $roleList;
         });
         //获取门店数据
-        $list["storeList"] =Cache::get($tag2, function () use ($tag2) {
-            $storeList = Store::select("id", "name")->get();
+        $list["storeList"] =Cache::get($tag2, function () use ($lookWhere,$tag2) {
+            $storeList = Store::select(DB::raw('id,id as storeid,name'))->where($lookWhere)->get();
             Cache::put($tag2, $storeList, config('configure.sCache'));
             //返回数据库层查询结果
             return $storeList;
@@ -110,7 +84,7 @@ class AdminBusiness extends ServerBase
      * 新增用户 - 执行
      * @param $data
      */
-    public function store($companyid,$cityid,$wechatopenid,$data)
+    public function store($companyid,$data)
     {
         try {
             //开启事务

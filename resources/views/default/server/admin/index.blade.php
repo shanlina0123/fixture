@@ -39,6 +39,7 @@
                     <th>角色</th>
                     <th>门店</th>
                     <th>状态</th>
+                    <th>创建时间</th>
                     <th>操作</th>
                 </tr>
                 </thead>
@@ -60,6 +61,7 @@
                             @endif
                         @endif
                     </td>
+                    <td>@if($item->created_at!=null){{$item->created_at}} @endif</td>
                     <td>
                         @if($item->isdefault==1)
                             默认

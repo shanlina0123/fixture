@@ -24,32 +24,16 @@ class RolesBusiness extends ServerBase
      */
     public  function  index($isadmin,$companyid,$cityid,$storeid,$islook,$page,$tag = "Filter-RolePageList")
     {
+        //非管理员/视野条件1全部 2城市 3门店
+        $lookWhere = $this->lookWhere($isadmin, $companyid, $cityid, $storeid, $islook);
         //定义tag的key
         $tagKey = base64_encode(mosaic("", $tag, $companyid,$cityid,$storeid,$islook,$page));
         //redis缓存返回
-        return Cache::tags($tag)->remember($tagKey, config('configure.sCache'), function () use ($isadmin,$companyid,$cityid,$storeid,$islook) {
+        return Cache::tags($tag)->remember($tagKey, config('configure.sCache'), function () use ($lookWhere) {
             $queryModel=FilterRole::orderBy('id','asc');
-            //管理员/视野条件1全部 2城市 3门店
-            if($isadmin==0)
-            {
-                switch($islook)
-                {
-                    case 1:
-                        $where["companyid"]=$companyid;
-                        break;
-                    case 2:
-                        $where["cityid"]=$cityid;
-                        break;
-                    case 3:
-                        $where["storeid"]=$storeid;
-                        break;
-                    default:
-                        $where["storeid"]=$storeid;
-                        break;
-                }
-                $queryModel->where($where);
-            }
-
+            //视野条件
+            $queryModel = $queryModel->where($lookWhere);
+            //查询
             $list=$queryModel->paginate(config('configure.sPage'));
             //返回数据库层查询结果
             return $list;
@@ -60,7 +44,7 @@ class RolesBusiness extends ServerBase
      * 新增角色 - 执行
      * @param $data
      */
-    public  function  store($data)
+    public  function  store($userid,$companyid,$cityid,$storeid,$data)
     {
         try{
             //开启事务
@@ -72,22 +56,23 @@ class RolesBusiness extends ServerBase
             {
                 responseData(\StatusCode::EXIST_ERROR,"名称".$data["name"]."已存在");
             }
-
             //业务处理
-
             //整理新增数据
             $role["uuid"]=create_uuid();
             $role["name"]=$data["name"];
+            $role["companyid"]=$companyid;
+            $role["cityid"]=$cityid;
+            $role["storeid"]=$storeid;
+            $role["userid"]=$userid;
             $role["created_at"]=date("Y-m-d H:i:s");
             //录入数据
             $rs=FilterRole::create($role);
-
             //结果处理
             if($rs->id!==false)
             {
                 DB::commit();
                 //删除缓存
-                Cache::tags(["Filter-RoleFunctionList","Admin-RoleList"])->flush();
+                Cache::tags(["Filter-RolePageList","Filter-RoleFunctionList","Admin-RoleList"])->flush();
             }else{
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR,"新增失败");
@@ -142,7 +127,7 @@ class RolesBusiness extends ServerBase
             {
                 DB::commit();
                 //删除缓存
-                Cache::tags(["Filter-RoleFunctionList","Admin-RoleList"])->flush();
+                Cache::tags(["Filter-RolePageList","Filter-RoleFunctionList","Admin-RoleList"])->flush();
             }else{
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR,"修改失败");
@@ -196,7 +181,7 @@ class RolesBusiness extends ServerBase
             {
                 DB::commit();
                 //删除缓存
-                Cache::tags(["Filter-RoleFunctionList","Admin-RoleList"])->flush();
+                Cache::tags(["Filter-RolePageList","Filter-RoleFunctionList","Admin-RoleList"])->flush();
             }else{
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR,"删除失败");
@@ -241,7 +226,7 @@ class RolesBusiness extends ServerBase
             if ($rs !== false) {
                 DB::commit();
                 //删除缓存
-                Cache::tags(["Filter-RoleFunctionList","Admin-RoleList"])->flush();
+                Cache::tags(["Filter-RolePageList","Filter-RoleFunctionList","Admin-RoleList"])->flush();
                 return ["status"=>$admin["status"]];
             } else {
                 DB::rollBack();
@@ -381,7 +366,7 @@ class RolesBusiness extends ServerBase
             {
                 DB::commit();
                 //删除缓存
-                Cache::tags(["Filter-RoleFunctionList","Admin-RoleList"])->flush();
+                Cache::tags(["Filter-RolePageList","Filter-RoleFunctionList","Admin-RoleList"])->flush();
             } else {
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR, "勾选失败");

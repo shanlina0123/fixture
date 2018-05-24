@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Server;
 use App\Http\Controllers\Common\ServerBaseController;
+use Illuminate\Support\Facades\Cache;
 
 class IndexController extends ServerBaseController
 {
@@ -12,6 +13,7 @@ class IndexController extends ServerBaseController
      */
     public function index()
     {
+        Cache::flush();
         return view('server.index.index');
     }
 

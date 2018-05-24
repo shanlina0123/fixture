@@ -24,6 +24,7 @@ class ServerBaseController extends Controller
       *  引入权限认证
       */
     public $userInfo;
+    public $user;
     public function __construct()
     {
         //判断公司信息是否完善
@@ -34,8 +35,11 @@ class ServerBaseController extends Controller
                 return redirect()->route('company-setting')->with('msg','请完善资料');
             }
             $this->userInfo = $userInfo;
+            $this->user = $userInfo;
+            session("userInfo",$userInfo);
             return $next($request);
         });
+
     }
 
     /***
@@ -53,5 +57,9 @@ class ServerBaseController extends Controller
       echo    json_encode($responseData);
       die;
     }
+
+
+
+
 
 }

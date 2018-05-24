@@ -24,53 +24,20 @@ class StoreBusiness extends ServerBase
      */
     public function index($isadmin,$companyid,$provinceid,$cityid,$storeid,$islook,$page,$data,$tag="Store-PageList",$tag1="Store-ProvinceList",$tag2="Store-cityList")
     {
-        if($data)
-        {
-            $searchName=searchFilter($data['name']);
-        }else{
-            $searchName="";
-        }
+        //非管理员/视野条件1全部 2城市 3门店
+        $lookWhere = $this->lookWhere($isadmin, $companyid, $cityid, $storeid, $islook);
+        //搜索字段
+        $searchName=$data?searchFilter($data['name']):"";
+        //缓存key
         $tagKey = base64_encode(mosaic("", $tag, $searchName,$companyid,$provinceid,$cityid,$storeid,$islook,$page));
         //redis缓存返回
-        $list["storeList"]= Cache::tags($tag)->remember($tagKey, config('configure.sCache'), function ()  use ($isadmin,$companyid,$provinceid,$cityid,$storeid,$islook,$data,$searchName) {
+        $list["storeList"]= Cache::tags($tag)->remember($tagKey, config('configure.sCache'), function ()  use ($lookWhere,$data,$searchName) {
             $queryModel=Store::orderBy('id', 'asc');
-            //管理员/视野条件1全部 2城市 3门店
-            if($isadmin==0)
-            {
-                switch($islook)
-                {
-                    case 1:
-                        $where["companyid"]=$companyid;
-                        break;
-                    case 2:
-                        $where["cityid"]=$cityid;
-                        break;
-                    case 3:
-                        $where["id"]=$storeid;
-                        //不能搜索其他店的
-                        if($storeid!=$data["id"])
-                        {
-                          unset($data["id"]);
-                        }
-                        break;
-                    default:
-                        $where["id"]=$storeid;
-                        //不能搜索其他店的
-                        if($storeid!=$data["id"])
-                        {
-                            unset($data["id"]);
-                        }
-                        break;
-                }
-                $queryModel->where($where);
-            }
-
-
-          if($searchName)
-          {
-              $queryModel =$queryModel->where("name","like","%$searchName%");
-           }
-
+            //视野条件
+            $queryModel = $queryModel->where($lookWhere);
+            //搜索条件
+            $searchName?$queryModel =$queryModel->where("name","like","%$searchName%"):"";
+            //查询
             $list =$queryModel
                 ->with(["StoreToCity" => function ($query){
                     //关联角色
@@ -83,7 +50,6 @@ class StoreBusiness extends ServerBase
                 ->paginate(config('configure.sPage'));
             return $list;
         });
-
         //获取省份数据
         $list["provinceList"] =Cache::get($tag1, function () use ($tag1) {
             $provinceList = Province::where("status",1)->select("id", "name")->get();
@@ -118,7 +84,7 @@ class StoreBusiness extends ServerBase
      * 新增 - 执行
      * @param $data
      */
-    public function store($companyid,$cityid,$data)
+    public function store($companyid,$data)
     {
         try {
             //开启事务

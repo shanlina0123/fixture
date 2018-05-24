@@ -28,13 +28,14 @@ class StoreController extends ServerBaseController
 
     /***
      * 获取门店列表
+     * @return $this
      */
     public function index()
     {
         //获取列表数据
-        $dataSource=$this->getListData();
-        $list=$dataSource["data"];
-        $errorMsg=$dataSource["messages"];
+        $dataSource = $this->getListData();//数据集合
+        $list = $dataSource["data"];//数据
+        $errorMsg = $dataSource["messages"];//错误消息
         //处理ajax请求
         if($this->request->ajax()){
             responseAjax($dataSource);
@@ -44,6 +45,7 @@ class StoreController extends ServerBaseController
 
     /***
      * 获取列表数据集
+     * @return mixed
      */
     public  function  getListData()
     {
@@ -57,35 +59,15 @@ class StoreController extends ServerBaseController
         if ($validator->fails()) {
             return responseCData(\StatusCode::PARAM_ERROR,"验证失败","",$validator->errors());
         }
-
-        $page=$this->request->input("page");
-
-        //用户信息
-        $user=getUserInfo();
-
-        //非管理员参数验证
-        if($user->isadmin==0) {
-            if (strlen($user->companyid) == 0 || $user->companyid==0 ||
-                strlen($user->provinceid) == 0 || $user->provinceid==0 ||
-                strlen($user->cityid) == 0 || $user->cityid==0 ||
-                strlen($user->storeid) == 0 || $user->storeid==0
-            ) {
-                return  responseCData(\StatusCode::PARAM_ERROR,"用户信息不完整",null);
-            }
-        }
-
-
-        $list=$this->store_business->index($user->isadmin,$user->companyid,$user->provinceid,$user->cityid,$user->storeid,$user->islook,$page,$data);
+        //分页页码
+        $page = $this->request->input("page");
+        //业务调用
+        $list=$this->store_business->index($this->user->isadmin,$this->user->companyid,$this->user->provinceid,$this->user->cityid,$this->user->storeid,$this->user->islook,$page,$data);
         return   responseCData(\StatusCode::SUCCESS,"",$list);
     }
 
-
-
-
-
     /***
      * 新增 - 执行
-     * 测试：
      */
     public  function  store()
     {
@@ -106,11 +88,8 @@ class StoreController extends ServerBaseController
         if ($validator->fails()) {
             responseData(\StatusCode::PARAM_ERROR,"验证失败","",$validator->errors());
         }
-        //用户信息
-        $user=getUserInfo();
-
         //执行业务处理
-        $this->store_business->store($user->companyid,$user->cityid,$data);
+        $this->store_business->store($this->user->companyid,$data);
         //接口返回结果
         responseData(\StatusCode::SUCCESS,"新增成功");
     }

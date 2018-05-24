@@ -84,7 +84,7 @@ layui.use(['form', 'layer', 'jquery'], function () {
         var cityid = $("#cityid", form).val() * 1;
         var provinceid = $("#provinceid", form).val() * 1;
         //表单验证
-        if (checkForm(name, cityid)) {
+        if (checkForm(name,provinceid,cityid)) {
             $.ajaxSubmit(form, {cityid: cityid, provinceid: provinceid, name: name, addr: addr}, doStoreOrUpdate);
         }
     });
@@ -135,19 +135,17 @@ layui.use(['form', 'layer', 'jquery'], function () {
 
 
     //表单验证
-    var checkForm = function (name, cityid) {
+    var checkForm = function (name,provinceid, cityid) {
         if (name == "") {
-            layer.tips("名称不能为空", '#name', {
-                tips: [2, '#ff0000'],
-                time: 1000
-            });
+            layer.msg("名称不能为空", {icon: 2,time:800});
+            return false;
+        }
+        if (provinceid == "") {
+            layer.msg("省不能为空", {icon: 2,time:800});
             return false;
         }
         if (cityid == "") {
-            layer.tips("城市不能为空", '#name', {
-                tips: [2, '#ff0000'],
-                time: 1000
-            });
+            layer.msg("城市不能为空", {icon: 2,time:800});
             return false;
         }
         return true;
