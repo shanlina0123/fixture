@@ -126,8 +126,8 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" style="font-size: 14px;">状态</label>
                 <div class="layui-input-inline">
-                    <input type="radio"  id="status1" name="status"  value="1" title="启用"  lay-filter="isLookCheck" checked>
-                    <input type="radio"  id="status0" name="status"  value="0" title="锁定"  lay-filter="isLookCheck">
+                    <input type="radio"  id="status" name="status"  value="1" title="启用"  lay-filter="isLookCheck" checked>
+                    <input type="radio"  id="status" name="status"  value="0" title="锁定"  lay-filter="isLookCheck">
                 </div>
             </div>
             <div class="layui-form-item popSubmitBtn">
