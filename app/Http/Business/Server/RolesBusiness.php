@@ -32,7 +32,7 @@ class RolesBusiness extends ServerBase
         return Cache::tags($tag)->remember($tagKey, config('configure.sCache'), function () use ($lookWhere) {
             $queryModel=FilterRole::orderBy('id','asc');
             //视野条件
-            $queryModel = $queryModel->where($lookWhere);
+            $queryModel = $queryModel->where($lookWhere)->orWhere("id",1);
             //查询
             $list=$queryModel->paginate(config('configure.sPage'));
             //返回数据库层查询结果
