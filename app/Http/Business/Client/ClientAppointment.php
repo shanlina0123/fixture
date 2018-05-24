@@ -17,12 +17,12 @@ class ClientAppointment
     {
         $client = new Client();
         $client->companyid = $data['companyid'];
-        $client->storeid = array_has($data,'storeid')?$data['storeid']:'';
+        $client->storeid = array_has($data,'storeid')?$data['storeid']:0;
         $client->sourcecateid = $data['sourcecateid'];
         $client->sourceid = $data['sourceid'];
         $client->phone = $data['phone'];
         $client->name = $data['name'];
-        $client->area = array_has($data,'area')?$data['area']:'';
+        $client->area = array_has($data,'area')?$data['area']:0;
         $client->content = $data['content'];
         $client->wechatopenid = $data['wechatopenid'];
         $client->created_at = date("Y-m-d H:i:s");

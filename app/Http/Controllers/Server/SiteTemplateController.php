@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Cache;
 class SiteTemplateController extends ServerBaseController
 {
     protected $template;
-    protected $userInfo;
     protected $request;
     public function __construct( SiteTemplateBusiness $template,Request $request )
     {

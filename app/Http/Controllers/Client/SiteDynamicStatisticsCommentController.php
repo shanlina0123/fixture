@@ -9,7 +9,7 @@
 namespace App\Http\Controllers\Client;
 use App\Http\Business\Client\SiteDynamicStatistics;
 use App\Http\Controllers\Common\ClientBaseController;
-
+use Illuminate\Support\Facades\Validator;
 class SiteDynamicStatisticsCommentController extends ClientBaseController
 {
 

@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Business\Client\ClientAppointment;
 use App\Http\Controllers\Common\ClientBaseController;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 
 class ClientAppointmentController extends ClientBaseController
@@ -33,14 +34,14 @@ class ClientAppointmentController extends ClientBaseController
         $data['wechatopenid'] = $this->apiUser->wechatopenid;
         $validator = Validator::make(
             $data,[
-            'companyid'=>'bail|required|numeric',//公司
-            'sourcecateid'=>'bail|required|numeric',//客户来源分类
-            'sourceid'=>'bail|required|numeric',//客户来源
-            'phone'=>'bail|regex:/^1[345789][0-9]{9}$/',//电话
-            'name'=>'bail|present|regex:/^[\u4e00-\u9fa5]{1,10}$/',//姓名
-            'area'=>'sometimes|bail|present|max:11',//面积
-            'content'=>'bail|required',//内容
-            'wechatopenid'=>'bail|required',//openid
+            'companyid'=>'required|numeric',//公司
+            'sourcecateid'=>'required|numeric',//客户来源分类
+            'sourceid'=>'required|numeric',//客户来源
+            'phone'=>'required|regex:/^1[345789][0-9]{9}$/',//电话
+            'name'=>'present|max:10',//姓名
+            'area'=>'sometimes|numeric|between:1,99999999999',//面积
+            'content'=>'required',//内容
+            'wechatopenid'=>'required',//openid
         ],[
             'companyid.required'=>'公司信息未获取到',
             'companyid.numeric'=>'公司信息数据类型不正确',
@@ -49,9 +50,11 @@ class ClientAppointmentController extends ClientBaseController
             'sourceid.numeric'=>'客户来源数据类型不正确',
             'sourceid.required'=>'客户来源数据类型必填',
             'phone.regex'=>'手机号码有误',
+            'phone.required'=>'手机号码有误',
             'name.present'=>'缺少用户名',
-            'name.regex'=>'用户名有误',
-            'area.max'=>'面积格式有误',
+            'name.max'=>'用户名有误',
+            'area.between'=>'请输入实际面积',
+            'area.numeric'=>'面积为正整数',
             'content.required'=>'内容不能为空',
             'wechatopenid.required'=>'用户openid不能为空',
             ]
@@ -65,7 +68,7 @@ class ClientAppointmentController extends ClientBaseController
         $res = $this->clientAppointment->Appointment( $data );
         if( $res == true )
         {
-            Cache::tags(['site'.$data['companyid'],'siteHome'.$data['storeid']])->flush();
+            Cache::tags(['client'.$data['companyid']])->flush();
             responseData(\StatusCode::SUCCESS,'预约成功',$res);
         }else
         {
