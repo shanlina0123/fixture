@@ -22,6 +22,7 @@ class NoticeController extends ServerBaseController
     protected $request;
     public function __construct(Request $request)
     {
+        parent::__construct();
         $this->notice_business =  new NoticeBusiness($request);
         $this->request = $request;
     }
@@ -62,8 +63,28 @@ class NoticeController extends ServerBaseController
             }
         }
 
-        $list=$this->notice_business->index($user->isadmin,$user->companyid,$user->cityid,$user->storeid,$user->islook,$page);
+        $list=$this->notice_business->index($user->isadmin,$user->companyid,$user->cityid,$user->storeid,$user->islook);
         return   responseCData(\StatusCode::SUCCESS,"",$list);
+    }
+
+
+    //获取是否有未读的通知
+    public  function  listen($time)
+    {
+        //用户信息
+        $user=getUserInfo();
+        //非管理员参数验证
+        if($user->isadmin==0) {
+            if (strlen($user->companyid) == 0 || $user->companyid==0 ||
+                strlen($user->cityid) == 0 || $user->cityid==0 ||
+                strlen($user->storeid) == 0 || $user->storeid==0
+            ) {
+                return   responseData(\StatusCode::PARAM_ERROR,"用户信息不完整");
+            }
+        }
+
+        $data=$this->notice_business->listen($user->isadmin,$user->companyid,$user->cityid,$user->storeid,$user->islook);
+        return   responseData(\StatusCode::SUCCESS,"",$data);
     }
 
 
