@@ -198,12 +198,12 @@ class ActivityLuckyController extends ServerBaseController
                     "startdate"=>'required|date',
                     "enddate"=>'required|date',
                     "ispeoplelimit"=>'required|max:1|min:0',
-                    "peoplelimitnum"=>'required|numeric',
+                    "peoplelimitnum"=>'present|numeric',
                     "bgurl"=>"string",
                     "makeurl"=>"string",
                     "loseurl"=>"string",
                     "ischancelimit"=>'required|max:1|min:0',
-                    "chancelimitnum"=>'required|numeric',
+                    "chancelimitnum"=>'present|numeric',
                     "everywinnum"=>'required|numeric',
                     "winpoint"=>'required|numeric',
                     "ishasconnectinfo"=>'required|max:2|min:1',
@@ -217,12 +217,12 @@ class ActivityLuckyController extends ServerBaseController
                     'startdate.required'=>'开始时间不能为空','startdate.date'=>'开始时间只能是时间格式',
                     'enddate.required'=>'结束时间不能为空','enddate.date'=>'结束时间只能是时间格式',
                     'ispeoplelimit.required'=>'是否人数限制不能为空','ispeoplelimit.max'=>'是否人数不能大于1','ispeoplelimit.min'=>'是否人数不能小于0',
-                    'peoplelimitnum.required'=>'人数不能为空','peoplelimitnum.numeric'=>'人数限制只能是数字格式',
+                    'peoplelimitnum.present'=>'人数限制参数缺少','peoplelimitnum.numeric'=>'人数限制只能是数字格式',
                     'bgurl.string'=>'活动背景图只能是字符串',
                     'makeurl.string'=>'立即抽奖图只能是字符串',
                     'loseurl.string'=>'活动背景图只能是字符串',
                     'ischancelimit.required'=>'是否限制总抽奖机会不能为空','ischancelimit.max'=>'是否限制总抽奖机会不能大于1','ischancelimit.min'=>'是否限制总抽奖机会不能小于0',
-                    'chancelimitnum.required'=>'每人最多的抽奖机会不能为空','chancelimitnum.numeric'=>'每人最多的抽奖机会只能是数字格式',
+                    'chancelimitnum.present'=>'每人最多的抽奖机会参数缺少','chancelimitnum.numeric'=>'每人最多的抽奖机会只能是数字格式',
                     'everywinnum.required'=>'每人中奖次数不能为空','everywinnum.numeric'=>'每人中奖次数只能是数字格式',
                     'winpoint.required'=>'总中奖率不能为空','winpoint.numeric'=>'总中奖率只能是数字格式',
                     'ishasconnectinfo.required'=>'联系信息填写位置标识不能为空','ishasconnectinfo.max'=>'联系信息填写位置标识不能大于2','ishasconnectinfo.min'=>'联系信息填写位置标识不能小于1',
@@ -252,6 +252,22 @@ class ActivityLuckyController extends ServerBaseController
         //进行验证
         if ($validator->fails()) {
             responseData(\StatusCode::PARAM_ERROR,"验证失败","",$validator->errors());
+        }
+
+        if($data["ispeoplelimit"]==1)
+        {
+            if(!$data["peoplelimitnum"])
+            {
+                responseData(\StatusCode::PARAM_ERROR,"人数限制不能为空","",["ispeoplelimit"=>"人数限制不能为空"]);
+            }
+        }
+
+        if($data["ischancelimit"]==1)
+        {
+            if(!$data["chancelimitnum"])
+            {
+                responseData(\StatusCode::PARAM_ERROR,"每人最多的抽奖机会不能为空","",["ispeoplelimit"=>"每人最多的抽奖机会"]);
+            }
         }
 
         //用户信息

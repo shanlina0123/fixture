@@ -355,6 +355,8 @@ function lookWhere($isadmin,$companyid,$cityid,$storeid,$islook)
                 $where["storeid"] = $storeid;
                 break;
         }
+    }else{
+        $where["companyid"] = $companyid;
     }
     return $where;
 }
