@@ -288,7 +288,6 @@ class SiteBusiness extends ServerBase
             $dynamic->companyid = $data['companyid'];
             $dynamic->storeid = $data['storeid'];
             $dynamic->sitetid = $site->id;
-            $dynamic->tablesign = 1;
             $dynamic->createuserid = $data['createuserid'];
             $dynamic->content = '新建工地：感谢业主大大信任，'.$data['name'].'今日开工啦。大吉大利，家宅平安!';
             $dynamic->type = 0;
@@ -301,7 +300,6 @@ class SiteBusiness extends ServerBase
             $progress->dynamicid = $dynamic->id;
             $progress->siteid = $site->id;
             $progress->stagetagid = $data['stageid'];
-            $progress->tablesign = 1;
             $progress->stageuserid = $data['createuserid'];
             $progress->positionid = $data['createuserid'];
             $progress->created_at = date("Y-m-d H:i:s");
@@ -521,7 +519,6 @@ class SiteBusiness extends ServerBase
             $dynamic->companyid = $data['companyid'];
             $dynamic->storeid = $data['storeid'];
             $dynamic->sitetid = $site->id;
-            $dynamic->tablesign = 1;
             $dynamic->createuserid = $data['createuserid'];
             $dynamic->content = $data['content'];
             $dynamic->type = 0;
@@ -534,7 +531,6 @@ class SiteBusiness extends ServerBase
             $site_tag->dynamicid = $dynamic->id;
             $site_tag->siteid = $site->id;
             $site_tag->stagetagid = $data['stagetagid'];
-            $site_tag->tablesign = 1;
             $site_tag->stageuserid = $data['createuserid'];
             $site_tag->created_at = date("Y-m-d H:i:s");
             $site_tag->save();

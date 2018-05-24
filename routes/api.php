@@ -60,6 +60,8 @@ Route::group(['middleware'=>'ApiCheck'], function () {
         Route::post('client/dynamic-comment-add', 'SiteDynamicCommentController@commentAdd');
         //点赞
         Route::post('client/dynamic-fabulous', 'SiteDynamicStatisticsCommentController@Fabulous');
+        //预约
+        Route::post('client/appointment', 'ClientAppointmentController@Appointment');
     });
 });
 
