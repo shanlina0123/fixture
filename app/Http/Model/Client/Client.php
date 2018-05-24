@@ -39,4 +39,22 @@ class Client extends Model
     {
         return $this->hasMany('App\Http\Model\Client\ClientFollow','client_id','id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * 关联中奖
+     */
+    public function clientToLuckyNum()
+    {
+        return $this->belongsTo('App\Http\Model\Activity\ActivityLuckyNum','id','clientid');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * 关联日志
+     */
+    public function clientToLuckyRecord()
+    {
+        return $this->hasMany('App\Http\Model\Activity\ActivityLuckyRecord','clientid','id');
+    }
 }

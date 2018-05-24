@@ -62,6 +62,8 @@ Route::group(['namespace' => 'Server'], function () {
             Route::post('site/template-default/{id}', 'SiteTemplateController@templateDefault')->name('site-template-default');//模板设置默认
             //客户
             Route::resource('client', 'ClientController');//客户管理
+            Route::get('lucky/client','ClientController@getLuckyClient')->name('lucky-client');//活动客户
+            Route::get('lucky/client/log/{id}','ClientController@getLuckyClientLog')->name('lucky-client-log');//活动客户
             Route::post('map-address', 'PublicController@getMapAddress')->name('map-address');//获取腾讯地图搜索的地址
             //角色
             Route::get("roles","RolesController@index")->name("roles-index");//列表
