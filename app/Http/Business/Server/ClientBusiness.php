@@ -143,7 +143,7 @@ class ClientBusiness extends ServerBase
      */
     public function updateClient( $data, $user, $id  )
     {
-        if( $user->isadmin == 2 )
+        if( $user->isadmin == 1 )
         {
             $swhere['uuid'] = $id;
             $swhere['companyid'] = $user->companyid;
@@ -192,7 +192,7 @@ class ClientBusiness extends ServerBase
      */
     public function destroyClient( $user, $id )
     {
-        if( $user->isadmin == 2 )
+        if( $user->isadmin == 1 )
         {
             $swhere['uuid'] = $id;
             $swhere['companyid'] = $user->companyid;
