@@ -78,7 +78,7 @@
                                             <input type="radio" name="ispeoplelimit" value="1" title="限制" lay-filter="filterNum" >
                                         </div>
                                         <div class="layui-form-inline forLineheight hidden">
-                                            <input type="number" name="peoplelimitnum" class="layui-input" value="" />人参与
+                                            <input type="number"  name="peoplelimitnum" class="layui-input" value="" />人参与
                                         </div>
                                     </div>
                                     <div class="layui-form-item">

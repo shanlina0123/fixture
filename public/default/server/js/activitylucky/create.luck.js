@@ -29,6 +29,7 @@ layui.use(['form', 'layer', 'jquery', 'laydate', 'upload'], function () {
         }
     });
 
+
     //点击添加奖项设置
     $(".addPrize").click(function () {
         if ($(".priceTable tr").size() < 9) {

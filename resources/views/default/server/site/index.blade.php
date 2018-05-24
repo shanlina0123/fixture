@@ -8,7 +8,7 @@
     <!--项目描述-->
     <div class="projectWrap">
         当前项目数：<span>{{$data->total()}}</span>/<span>2</span>
-        <a href="../users/userCenter.html">升级为无限项目>></a>
+        <a href="{{route('vip-index')}}">升级为无限项目>></a>
     </div>
     <!--新增和筛选部分-->
     <div class="addBtnWrap">

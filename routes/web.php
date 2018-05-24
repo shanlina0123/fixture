@@ -34,6 +34,7 @@ Route::group(['namespace' => 'Server'], function () {
         Route::get('wx/auditid', 'WxAuthorizeController@auditid');//发布代码审核状态查询
         //公司信息
         Route::match(['get', 'post'], 'company/setting', 'CompanyController@companySetting')->name('company-setting');  //公司信息设置
+
         //用户资料
         Route::match(['get', 'post'], 'user/info', 'UserController@userInfo')->name('user-info'); //个人资料跟换电话
         Route::match(['get', 'post'], 'user/set-pass', 'UserController@setPass')->name('set-pass'); //修改密码
@@ -98,6 +99,12 @@ Route::group(['namespace' => 'Server'], function () {
             Route::delete("lucky/prize/{id}","ActivityLuckyController@deleteprize")->name("lucky-prize-delete");//删除奖项-执行
             Route::put("lucky/setting/{id}","ActivityLuckyController@setting")->name("lucky-setting");//上线/下线
             Route::get("lucky/extension/{id}","ActivityLuckyController@extension")->name("lucky-extension");//推广详情
+            //Vip
+            Route::get("vip","VipController@index")->name("vip-index");//列表
+            //通知
+            Route::get("notice","NoticeController@index")->name("notice-index");//列表
+            Route::get("notice/listen/{time}","NoticeController@listen")->name("notice-listen");//监听
+
         });
     });
 });
