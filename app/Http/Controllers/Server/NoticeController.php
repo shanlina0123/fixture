@@ -48,22 +48,8 @@ class NoticeController extends ServerBaseController
      */
     public  function  getListData()
     {
-
         $page=$this->request->input("page");
-
-        //用户信息
-        $user=getUserInfo();
-        //非管理员参数验证
-        if($user->isadmin==0) {
-            if (strlen($user->companyid) == 0 || $user->companyid==0 ||
-                strlen($user->cityid) == 0 || $user->cityid==0 ||
-                strlen($user->storeid) == 0 || $user->storeid==0
-            ) {
-                return  responseCData(\StatusCode::PARAM_ERROR,"用户信息不完整",null);
-            }
-        }
-
-        $list=$this->notice_business->index($user->isadmin,$user->companyid,$user->cityid,$user->storeid,$user->islook);
+        $list=$this->notice_business->index($this->userInfo->isadmin,$this->userInfo->companyid,$this->userInfo->cityid,$this->userInfo->storeid,$this->userInfo->islook);
         return   responseCData(\StatusCode::SUCCESS,"",$list);
     }
 
@@ -71,19 +57,7 @@ class NoticeController extends ServerBaseController
     //获取是否有未读的通知
     public  function  listen($time)
     {
-        //用户信息
-        $user=getUserInfo();
-        //非管理员参数验证
-        if($user->isadmin==0) {
-            if (strlen($user->companyid) == 0 || $user->companyid==0 ||
-                strlen($user->cityid) == 0 || $user->cityid==0 ||
-                strlen($user->storeid) == 0 || $user->storeid==0
-            ) {
-                return   responseData(\StatusCode::PARAM_ERROR,"用户信息不完整");
-            }
-        }
-
-        $data=$this->notice_business->listen($user->isadmin,$user->companyid,$user->cityid,$user->storeid,$user->islook);
+        $data=$this->notice_business->listen($this->userInfo->isadmin,$this->userInfo->companyid,$this->userInfo->cityid,$this->userInfo->storeid,$this->userInfo->islook);
         return   responseData(\StatusCode::SUCCESS,"",$data);
     }
 

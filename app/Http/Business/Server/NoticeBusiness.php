@@ -20,36 +20,16 @@ class NoticeBusiness extends ServerBase
      */
     public function index($isadmin,$companyid,$cityid,$storeid,$islook)
     {
+        //非管理员/视野条件1全部 2城市 3门店
+        $lookWhere = $this->lookWhere($isadmin, $companyid, $cityid, $storeid, $islook);
             //查詢
             $queryModel=Notice::orderBy('id', 'desc');
-            //管理员/视野条件1全部 2城市 3门店
-            if($isadmin==0)
-            {
-                switch($islook)
-                {
-                    case 1:
-                        $where["companyid"]=$companyid;
-                        break;
-                    case 2:
-                        $where["cityid"]=$cityid;
-                        break;
-                    case 3:
-                        $where["storeid"]=$storeid;
-                        break;
-                    default:
-                        $where["storeid"]=$storeid;
-                        break;
-                }
-                $queryModel=$queryModel->where($where);
-            }else{
-                $where["companyid"]=$companyid;
-            }
-
+            //视野条件
+            $queryModel=$queryModel->where($lookWhere);
             //修改已读
             $updateData["isread"]=1;
-            Notice::where($where)->update($updateData);
+            Notice::where($lookWhere)->update($updateData);
             Cache::tags(["Notice-IsHasNotice"])->flush();
-
             //查询列表
             $list =$queryModel
                 ->paginate(config('configure.sPage'));
@@ -70,32 +50,15 @@ class NoticeBusiness extends ServerBase
      */
     public function  listen($isadmin,$companyid,$cityid,$storeid,$islook,$tag="Notice-IsHasNotice")
     {
+        //非管理员/视野条件1全部 2城市 3门店
+        $lookWhere = $this->lookWhere($isadmin, $companyid, $cityid, $storeid, $islook);
         $tagKey = base64_encode(mosaic("", $tag, $companyid,$cityid,$storeid,$islook));
         //redis缓存返回
-        return Cache::tags($tag)->remember($tagKey, config('configure.sCache'), function ()  use ($isadmin,$companyid,$cityid,$storeid,$islook) {
+        return Cache::tags($tag)->remember($tagKey, config('configure.sCache'), function ()  use ($lookWhere) {
             //查詢
             $queryModel=Notice::where('isread', 0);
-            //管理员/视野条件1全部 2城市 3门店
-            if($isadmin==0)
-            {
-                switch($islook)
-                {
-                    case 1:
-                        $where["companyid"]=$companyid;
-                        break;
-                    case 2:
-                        $where["cityid"]=$cityid;
-                        break;
-                    case 3:
-                        $where["storeid"]=$storeid;
-                        break;
-                    default:
-                        $where["storeid"]=$storeid;
-                        break;
-                }
-                $queryModel=$queryModel->where($where);
-            }
-
+            //视野条件
+            $queryModel=$queryModel->where($lookWhere);
             //查询列表
             $count =$queryModel
                 ->count();
