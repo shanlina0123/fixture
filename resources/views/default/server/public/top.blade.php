@@ -7,7 +7,7 @@
         <a href="{{route('notice-index')}}" title="通知消息" url="{{route('notice-listen',strtotime(date('Y-m-d H:i:s')))}}" id="notice-listen"><img src="{{pix_asset('server/images/notice.png')}}" width="32"><span class="layui-badge-dot" style="position: relative; top: -3px; left: -3px;display: none;"></span></a>
     </li>
     <li class="layui-nav-item">
-        <a href="../notice/askNotice.html" title="咨询消息"><img src="{{pix_asset('server/images/message.png')}}" width="32"><span class="layui-badge-dot" style="position: relative; top: -3px; left: -3px;"></span></a>
+        <a href="{{route("message-index")}}" title="咨询消息"><img src="{{pix_asset('server/images/message.png')}}" width="32"><span class="layui-badge-dot" style="position: relative; top: -3px; left: -3px;"></span></a>
     </li>
     <li class="layui-nav-item">
         <a href="javascript:;">

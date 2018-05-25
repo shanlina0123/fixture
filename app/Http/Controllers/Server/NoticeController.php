@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Server;
-use App\Http\Business\Server\AdminBusiness;
 use App\Http\Business\Server\NoticeBusiness;
 use App\Http\Controllers\Common\ServerBaseController;
 use Illuminate\Http\Request;
@@ -10,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 
 /***
  * 提醒
- * Class AdminController
+ * Class NoticeController
  * @package App\Http\Controllers\Server
  */
 class NoticeController extends ServerBaseController

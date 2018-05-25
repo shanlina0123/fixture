@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Log;
 class NoticeBusiness extends ServerBase
 {
     /***
-     * 获取管理员列表
+     * 获取列表
      * @return mixed
      */
     public function index($isadmin,$companyid,$cityid,$storeid,$islook)

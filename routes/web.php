@@ -103,7 +103,8 @@ Route::group(['namespace' => 'Server'], function () {
             //通知
             Route::get("notice","NoticeController@index")->name("notice-index");//列表
             Route::get("notice/listen/{time}","NoticeController@listen")->name("notice-listen");//监听
-
+            //消息
+            Route::get("message","MessageController@index")->name("message-index");//列表
         });
     });
 });
