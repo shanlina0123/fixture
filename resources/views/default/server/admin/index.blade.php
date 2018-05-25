@@ -1,5 +1,5 @@
 @extends('server.layout.content')
-@section("title")角色管理@endsection
+@section("title")用户管理@endsection
 @section('content')
     <div class="main">
         <!--新增和筛选部分-->
