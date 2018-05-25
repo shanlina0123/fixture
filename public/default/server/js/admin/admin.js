@@ -12,22 +12,6 @@ layui.use(['form', 'layer', 'jquery'], function () {
         });
     }
 
-    //搜索
-    $(".searchBtn").click(function(){
-        var that=this;
-        var form=$("#searchForm");
-        var nickname=$("#nickname",form).val();
-        var storeid=$("#storeid",form).val();
-        $.postJSON($(form).attr("action"),{nickname:nickname,storeid:storeid},function(data){
-            if(data.status===1){
-                window.location.href=$("#listForm").attr("action");
-            }else{
-                layer.msg(data.messages, {icon: 2,time: 1000});
-            }
-        });
-
-    });
-
     //新增用户弹窗
     $(".addBtn").click(function() {
         layer.open({

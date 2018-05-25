@@ -2,15 +2,16 @@
 @section("title")门店管理@endsection
 @section('content')
     <div class="main">
+        <div style="display: none" id="errorMsg" content="{{$errorMsg}}"></div>
         <div class="addBtnWrap">
             <button type="button" class="layui-btn addBtn">新增门店</button>
             <div class="topSort layui-inline">
-                <form class="layui-form"  action="{{route('store-search-index')}}" method="post" id="searchForm" >
+                <form class="layui-form"  action="{{Request::url()}}" method="get" id="searchForm" >
                     <label class="layui-form-label" style="font-size: 14px;">门店筛选</label>
                     <div class="layui-input-inline">
-                        <input type="text" class="layui-input" id="name">
+                        <input type="text" class="layui-input"  name="name" id="name" value="{{$list["searchData"]["name"]}}">
                     </div>
-                    <button type="button" class="layui-btn searchBtn">查询</button>
+                    <button  class="layui-btn searchBtn">查询</button>
                 </form>
             </div>
         </div>

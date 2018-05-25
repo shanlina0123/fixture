@@ -43,28 +43,33 @@ class ActivityLuckyBusiness extends ServerBase
     {
         //非管理员/视野条件1全部 2城市 3门店
         $lookWhere = $this->lookWhere($isadmin, $companyid, $cityid, $storeid, $islook);
-
-        $tagKey = base64_encode(mosaic("", $tag, $companyid, $cityid, $storeid, $islook, $page));
+        //搜索字段
+        $searchTitle = $data ? searchFilter($data['title']) : "";
+        $searchIsOnline = $data ? $data["isonline"]: "";
+        $searchStoreid = $data ? $data["storeid"] : "";
+        $list["searchData"] =[
+            "title"=>$searchTitle,
+            "isonline"=>$searchIsOnline,
+            "storeid"=>$searchStoreid,
+        ];
+       //缓存key
+        $tagKey = base64_encode(mosaic("", $tag, $companyid, $cityid, $storeid, $islook,$searchTitle,$searchIsOnline,$searchStoreid, $page));
         //redis缓存返回
-        $list["luckyList"] = Cache::tags($tag)->remember($tagKey, config('configure.sCache'), function () use ($lookWhere, $data, $tag1) {
+        $list["luckyList"] = Cache::tags($tag)->remember($tagKey, config('configure.sCache'), function () use ($lookWhere, $searchTitle, $searchIsOnline, $searchStoreid, $data, $tag1) {
             //查詢
             $queryModel = ActivityLucky::orderBy('id', 'desc');
             //视野条件
             $queryModel->where($lookWhere);
             //搜索
-            if ($data) {
-                $searchTitle = searchFilter($data['title']);
-                $searchIspublic = $data["ispublic"];
-                $searchStoreid = $data["storeid"];
-                if ($searchTitle) {
-                    $queryModel = $queryModel->where("title", "like", "%$searchTitle%");
-                }
-                if (strlen($searchIspublic) > 0) {
-                    $queryModel = $queryModel->where("ispublic", $searchIspublic);
-                }
-                if ($searchStoreid) {
-                    $queryModel = $queryModel->where("storeid", $searchIspublic);
-                }
+            if ($searchTitle) {
+                $queryModel = $queryModel->where("title", "like", "%$searchTitle%");
+            }
+            if (in_array($searchIsOnline,[1,2])) {
+                $isonline=$searchIsOnline==1?1:0;
+                $queryModel = $queryModel->where("isonline", $isonline);
+            }
+            if ($searchStoreid) {
+                $queryModel = $queryModel->where("storeid", $searchStoreid);
             }
 
             //查询
@@ -83,7 +88,7 @@ class ActivityLuckyBusiness extends ServerBase
             //查詢
             $queryModel = Store::select(DB::raw("id,name,id as storeid"));
             //视野条件
-             $queryModel = $queryModel->where($lookWhere);
+            $queryModel = $queryModel->where($lookWhere);
             $list = $queryModel
                 ->orderBy('id', 'asc')
                 ->get();
@@ -116,7 +121,7 @@ class ActivityLuckyBusiness extends ServerBase
             //查詢
             $queryModel = Store::select(DB::raw("id,name,id as storeid"));
             //视野条件
-             $queryModel = $queryModel->where($lookWhere);
+            $queryModel = $queryModel->where($lookWhere);
             $list = $queryModel
                 ->orderBy('id', 'asc')
                 ->get();
@@ -187,7 +192,7 @@ class ActivityLuckyBusiness extends ServerBase
             DB::beginTransaction();
 
             //业务处理
-            $uploadClass=new \Upload();
+            $uploadClass = new \Upload();
 
             //检查活动、标题
             if ($id) {
@@ -356,12 +361,12 @@ class ActivityLuckyBusiness extends ServerBase
 
                 if ($id) {
                     //删除活动图
-                    $data["bgurl"] ? $uploadClass->delImg($rowData->bgurl):"";//活动背景图
-                    $data["makeurl"] ?$uploadClass->delImg($rowData->makeurl):"";//立即抽奖
-                    $data["loseurl"] ?$uploadClass->delImg($rowData->loseurl):"";//未中奖图
+                    $data["bgurl"] ? $uploadClass->delImg($rowData->bgurl) : "";//活动背景图
+                    $data["makeurl"] ? $uploadClass->delImg($rowData->makeurl) : "";//立即抽奖
+                    $data["loseurl"] ? $uploadClass->delImg($rowData->loseurl) : "";//未中奖图
                 }
                 //删除缓存
-                Cache::tags(["AcitivityLucky-PageList", "AcitivityLuck-Prize","AcitivityLuck-Extension-Prize"])->flush();
+                Cache::tags(["AcitivityLucky-PageList", "AcitivityLuck-Prize", "AcitivityLuck-Extension-Prize"])->flush();
                 return ["id" => $activityluckyid, "prizeIds" => $prizeIds, "isonline" => $lucky["isonline"], "listurl" => route("lucky-index")];
             } else {
                 DB::rollBack();
@@ -404,7 +409,7 @@ class ActivityLuckyBusiness extends ServerBase
             if ($rs !== false) {
                 DB::commit();
                 //删除缓存
-                Cache::tags(["AcitivityLucky-PageList", "AcitivityLuck-Prize","AcitivityLuck-Extension-Prize"])->flush();
+                Cache::tags(["AcitivityLucky-PageList", "AcitivityLuck-Prize", "AcitivityLuck-Extension-Prize"])->flush();
                 return ["isonline" => $updateData["isonline"]];
             } else {
                 DB::rollBack();
@@ -451,7 +456,7 @@ class ActivityLuckyBusiness extends ServerBase
                 (new \Upload())->delDir('lucky', $row->uuid);
 
                 //删除缓存
-                Cache::tags(["AcitivityLucky-PageList", "AcitivityLuck-Prize","AcitivityLuck-Extension-Prize"])->flush();
+                Cache::tags(["AcitivityLucky-PageList", "AcitivityLuck-Prize", "AcitivityLuck-Extension-Prize"])->flush();
             } else {
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR, "删除失败");
@@ -490,7 +495,7 @@ class ActivityLuckyBusiness extends ServerBase
                 //删除奖项原始图
                 (new \Upload())->delImg($row->picture);
                 //删除缓存
-                Cache::tags(["AcitivityLucky-PageList", "AcitivityLuck-Prize","AcitivityLuck-Extension-Prize"])->flush();
+                Cache::tags(["AcitivityLucky-PageList", "AcitivityLuck-Prize", "AcitivityLuck-Extension-Prize"])->flush();
             } else {
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR, "删除失败");
@@ -508,7 +513,7 @@ class ActivityLuckyBusiness extends ServerBase
      * 获取扩展详情
      * @return mixed
      */
-    public function extension($id,$companyid, $tag = "AcitivityLuck-Extension-Prize")
+    public function extension($id, $companyid, $tag = "AcitivityLuck-Extension-Prize")
     {
         $tagKey = base64_encode(mosaic("", $tag, $id));
         $uploads = config("configure.uploads");
@@ -520,7 +525,7 @@ class ActivityLuckyBusiness extends ServerBase
         //奖项数据
         $list["prizeList"] = Cache::tags($tag)->remember($tagKey, config('configure.sCache'), function () use ($id, $companyid, $uploads) {
             //查詢
-            return  ActivityLuckyPrize::where("activityluckyid", $id)->select(DB::raw("levelid,CONCAT('$uploads','/',picture) as picture"))->orderBy('id', 'asc')->get();
+            return ActivityLuckyPrize::where("activityluckyid", $id)->select(DB::raw("levelid,CONCAT('$uploads','/',picture) as picture"))->orderBy('id', 'asc')->get();
         });
         //获取公司信息
         $list["logo"] = Company::where("id", $companyid)->value("logo");
@@ -529,10 +534,9 @@ class ActivityLuckyBusiness extends ServerBase
         $wx = new  WxAuthorize();
         $accessToken = $wx->getUserAccessToken(null, $companyid);
         $wxcode = $accessToken ? $wx->getWxappCode($accessToken, $list["lukData"]["id"]) : "";
-        $list["wxappcode"] =$wxcode;
+        $list["wxappcode"] = $wxcode;
         return responseCData(\StatusCode::SUCCESS, "", $list);
     }
-
 
 
 }

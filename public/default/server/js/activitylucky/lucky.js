@@ -2,6 +2,16 @@ layui.use(['form', 'layer', 'jquery'], function () {
     var layuiForm = layui.form,
         layer = layui.layer,
         $ = layui.jquery;
+
+
+    //列表错误信息
+    var error = $("#errorMsg").attr("content");
+    if (error) {
+        layer.msg(error, {
+            icon: 2
+        });
+    }
+
     //进入添加页面
     $(".addBtn").click(function () {
         window.location.href = $(this).attr("url");

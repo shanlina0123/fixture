@@ -28,6 +28,9 @@ class StoreBusiness extends ServerBase
         $lookWhere = $this->lookWhere($isadmin, $companyid, $cityid, $storeid, $islook);
         //搜索字段
         $searchName=$data?searchFilter($data['name']):"";
+        $list["searchData"] =[
+            "name"=>$searchName,
+        ];
         //缓存key
         $tagKey = base64_encode(mosaic("", $tag, $searchName,$companyid,$provinceid,$cityid,$storeid,$islook,$page));
         //redis缓存返回

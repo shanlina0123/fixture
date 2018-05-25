@@ -11,21 +11,6 @@ layui.use(['form', 'layer', 'jquery'], function () {
         });
     }
 
-    //搜索
-    $(".searchBtn").click(function () {
-        var that = this;
-        var form = $("#searchForm");
-        var name = $("#name", form).val();
-        $.postJSON($(form).attr("action"), {name: name}, function (data) {
-            if (data.status === 1) {
-                window.location.href = $("#listForm").attr("action");
-            } else {
-                layer.msg(data.messages, {icon: 2, time: 1000});
-            }
-        });
-
-    });
-
     //选择省,显示市
     layuiForm.on('select(changeProvince)', function (data) {
         var form = $(data.elem).parents("form");

@@ -21,6 +21,7 @@
 @endsection
 @section('content')
     <div class="main">
+        <div style="display: none" id="errorMsg" content="{{$errorMsg}}"></div>
         <!--form切换-->
         <div class="formTab fl">
             <form class="layui-form"  id="0" method="put" action="{{route('lucky-update','id')}}" multiple="true"  autoActioin="{{route('lucky-update','id')}}">

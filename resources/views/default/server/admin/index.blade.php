@@ -2,29 +2,30 @@
 @section("title")用户管理@endsection
 @section('content')
     <div class="main">
+        <div style="display: none" id="errorMsg" content="{{$errorMsg}}"></div>
         <!--新增和筛选部分-->
         <div class="addBtnWrap">
             <button type="button" class="layui-btn addBtn">新增用户</button>
             <div class="topSort layui-inline">
-                <form class="layui-form " action="{{route('admin-search-index')}}" method="post"  id="searchForm">
+                <form class="layui-form " action="{{Request::url()}}" method="get"  id="searchForm">
                     <div class="layui-inline">
                         <label class="layui-form-label" style="font-size: 14px;">姓名筛选</label>
                         <div class="layui-input-inline">
-                            <input type="text" class="layui-input" id="nickname">
+                            <input type="text" class="layui-input" name="nickname" id="nickname" value="{{$list["searchData"]["nickname"]}}">
                         </div>
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label" style="font-size: 14px;">门店筛选</label>
                         <div class="layui-input-inline">
-                            <select name="modules" lay-verify="required" lay-search="" id="storeid">
-                                 <option value="0">全部</option>
+                            <select name="storeid" lay-verify="required" lay-search="" id="storeid">
+                                 <option value="" @if($list["searchData"]["storeid"]==0) selected @endif>全部</option>
                                 @if($list['storeList']!=null) @foreach($list['storeList'] as $k=>$item)
-                                    <option value="{{$item->id}}">{{$item->name}}</option>
+                                    <option value="{{$item->id}}" @if($list["searchData"]["storeid"]==$item->id) selected @endif>{{$item->name}}</option>
                                 @endforeach  @endif
                             </select>
                         </div>
                     </div>
-                    <button type="button" class="layui-btn searchBtn">查询</button>
+                    <button class="layui-btn searchBtn">查询</button>
                 </form>
             </div>
         </div>
