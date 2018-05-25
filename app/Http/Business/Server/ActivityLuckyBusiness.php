@@ -128,7 +128,7 @@ class ActivityLuckyBusiness extends ServerBase
             return $list;
         });
 
-        return responseCData(\StatusCode::SUCCESS, "", $list);
+       return $list;
     }
 
     /***
@@ -177,7 +177,8 @@ class ActivityLuckyBusiness extends ServerBase
         });
 
 
-        return responseCData(\StatusCode::SUCCESS, "", $list);
+        return $list;
+
     }
 
 

@@ -88,15 +88,15 @@ class ActivityLuckyController extends ServerBaseController
         if($this->request->ajax()){
             responseAjax($dataSource);
         }
-        return view('server.activitylucky.create',compact('list'))->with("errorMsg",json_encode($errorMsg));
+        return view('server.activitylucky.create',compact('list'))->with("errorMsg",$errorMsg);
     }
     /***
      * 获取添加列表数据集
      */
     public  function  getCreateData()
     {
-        return $this->activitylucky_business->create($this->userInfo->isadmin,$this->userInfo->companyid,$this->userInfo->cityid,$this->userInfo->storeid,$this->userInfo->islook);
-
+        $list= $this->activitylucky_business->create($this->userInfo->isadmin,$this->userInfo->companyid,$this->userInfo->cityid,$this->userInfo->storeid,$this->userInfo->islook);
+        return responseCData(\StatusCode::SUCCESS, "", $list);
     }
 
     /***
@@ -115,9 +115,9 @@ class ActivityLuckyController extends ServerBaseController
         }
         if($list["luckData"]["isonline"]==1 )
         {
-            return view('server.activitylucky.see',compact('list'))->with("errorMsg",json_encode($errorMsg));
+            return view('server.activitylucky.see',compact('list'))->with("errorMsg",$errorMsg);
         }else{
-            return view('server.activitylucky.edit',compact('list'))->with("errorMsg",json_encode($errorMsg));
+            return view('server.activitylucky.edit',compact('list'))->with("errorMsg",$errorMsg);
         }
 
     }
@@ -135,8 +135,8 @@ class ActivityLuckyController extends ServerBaseController
             return  responseCData(\StatusCode::PARAM_ERROR,"抽奖活动参数错误","",$validator->errors());
         }
 
-        return $this->activitylucky_business->edit($this->userInfo->isadmin,$this->userInfo->companyid,$this->userInfo->cityid,$this->userInfo->storeid,$this->userInfo->islook,$id);
-
+        $list= $this->activitylucky_business->edit($this->userInfo->isadmin,$this->userInfo->companyid,$this->userInfo->cityid,$this->userInfo->storeid,$this->userInfo->islook,$id);
+        return responseCData(\StatusCode::SUCCESS, "", $list);
     }
 
     /***

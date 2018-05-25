@@ -79,7 +79,7 @@
                                             <input type="radio" name="ispeoplelimit" value="1" title="限制" lay-filter="filterNum" >
                                         </div>
                                         <div class="layui-form-inline forLineheight hidden">
-                                            <input type="number"  name="peoplelimitnum" class="layui-input" value="" />人参与
+                                            <input type="number"  name="peoplelimitnum" class="layui-input" value="" min="1"  maxlength="5" max="99999"/>人参与
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
@@ -131,19 +131,19 @@
                                             <input type="radio" name="ischancelimit" value="1" title="限制" lay-filter="filterNum">
                                         </div>
                                         <div class="layui-form-inline forLineheight hidden">
-                                            每人最多有&nbsp;<input type="number" name="chancelimitnum" class="layui-input">次
+                                            每人最多有&nbsp;<input type="number" name="chancelimitnum" class="layui-input" min="1"  maxlength="5" max="99999">次
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
                                         <label class="layui-form-label" style="width:83px"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>每人抽奖次数</label>
                                         <div class="layui-form-inline forLineheight">
-                                            每人最多中奖&nbsp;<input type="number" name="everywinnum" class="layui-input ">次
+                                            每人最多中奖&nbsp;<input type="number" name="everywinnum" class="layui-input " min="1"  maxlength="5" max="99999">次
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
                                         <label class="layui-form-label"><i class="layui-icon"  style="font-size: 12px; color: #FF5722;">*</i>总中奖率</label>
                                         <div class="layui-form-inline forLineheight">
-                                            <input type="number" name="winpoint" class="layui-input ">% &nbsp;<span>每10次抽检3次获奖</span>
+                                            <input type="number" name="winpoint" class="layui-input " min="1"  maxlength="5" max="99999">% &nbsp;<span>每10次抽检3次获奖</span>
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
@@ -179,11 +179,11 @@
                                             <div class="layui-input-inline"><input type="text" name="name" class="layui-input" maxlength="200" nullmsg="请输入奖项名称" errormsg="输入有误超过了200个字符"></div>
                                         </td>
                                         <td>
-                                            <div class="layui-input-inline"><input type="number"  name="num" class="layui-input" maxlength="200" nullmsg="请输入奖项数量" ></div>
+                                            <div class="layui-input-inline"><input type="number"  name="num" class="layui-input" min="1"  maxlength="5" max="99999"  nullmsg="请输入奖项数量" ></div>
                                         </td>
                                         <td>
                                             <div class="layui-input-inline">
-                                                <select name="levelid" lay-verify="required" lay-search="" id="levelid"  maxlength="200" nullmsg="请选择奖项级别" >
+                                                <select name="levelid" lay-verify="required" lay-search="" id="levelid"   nullmsg="请选择奖项级别" >
                                                     <option value="">请选择</option>
                                                     @if($list['levelList']!=null) @foreach($list['levelList'] as $k=>$item)
                                                         <option value="{{$item->id}}">{{$item->name}}</option>
