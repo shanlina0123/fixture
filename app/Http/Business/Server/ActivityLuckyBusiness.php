@@ -187,6 +187,7 @@ class ActivityLuckyBusiness extends ServerBase
             DB::beginTransaction();
 
             //业务处理
+            $uploadClass=new \Upload();
 
             //检查活动、标题
             if ($id) {
@@ -352,6 +353,13 @@ class ActivityLuckyBusiness extends ServerBase
             //结果处理
             if ($rs !== false && !in_array(false, $rsp, true)) {
                 DB::commit();
+
+                if ($id) {
+                    //删除活动图
+                    $data["bgurl"] ? $uploadClass->delImg($rowData->bgurl):"";//活动背景图
+                    $data["makeurl"] ?$uploadClass->delImg($rowData->makeurl):"";//立即抽奖
+                    $data["loseurl"] ?$uploadClass->delImg($rowData->loseurl):"";//未中奖图
+                }
                 //删除缓存
                 Cache::tags(["AcitivityLucky-PageList", "AcitivityLuck-Prize","AcitivityLuck-Extension-Prize"])->flush();
                 return ["id" => $activityluckyid, "prizeIds" => $prizeIds, "isonline" => $lucky["isonline"], "listurl" => route("lucky-index")];
@@ -438,6 +446,10 @@ class ActivityLuckyBusiness extends ServerBase
             //结果处理
             if ($rs !== false) {
                 DB::commit();
+
+                //删除目录下所有文件
+                (new \Upload())->delDir('lucky', $row->uuid);
+
                 //删除缓存
                 Cache::tags(["AcitivityLucky-PageList", "AcitivityLuck-Prize","AcitivityLuck-Extension-Prize"])->flush();
             } else {
@@ -475,6 +487,8 @@ class ActivityLuckyBusiness extends ServerBase
             //结果处理
             if ($rs !== false) {
                 DB::commit();
+                //删除奖项原始图
+                (new \Upload())->delImg($row->picture);
                 //删除缓存
                 Cache::tags(["AcitivityLucky-PageList", "AcitivityLuck-Prize","AcitivityLuck-Extension-Prize"])->flush();
             } else {
