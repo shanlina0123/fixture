@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Server;
 use App\Http\Business\Server\ActivityLuckyBusiness;
 use App\Http\Controllers\Common\ServerBaseController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 /***
@@ -63,19 +64,7 @@ class ActivityLuckyController extends ServerBaseController
 
         $page=$this->request->input("page");
 
-        //用户信息
-        $user=getUserInfo();
-        //非管理员参数验证
-        if($user->isadmin==0) {
-            if (strlen($user->companyid) == 0 || $user->companyid==0 ||
-                strlen($user->cityid) == 0 || $user->cityid==0 ||
-                strlen($user->storeid) == 0 || $user->storeid==0
-            ) {
-                return  responseCData(\StatusCode::PARAM_ERROR,"用户信息不完整",null);
-            }
-        }
-
-        $list=$this->activitylucky_business->index($user->isadmin,$user->companyid,$user->cityid,$user->storeid,$user->islook,$page,$data);
+        $list=$this->activitylucky_business->index($this->userInfo->isadmin,$this->userInfo->companyid,$this->userInfo->cityid,$this->userInfo->storeid,$this->userInfo->islook,$page,$data);
         return   responseCData(\StatusCode::SUCCESS,"",$list);
     }
 
@@ -99,19 +88,7 @@ class ActivityLuckyController extends ServerBaseController
      */
     public  function  getCreateData()
     {
-        //用户信息
-        $user=getUserInfo();
-        //非管理员参数验证
-        if($user->isadmin==0) {
-            if (strlen($user->companyid) == 0 || $user->companyid==0 ||
-                strlen($user->cityid) == 0 || $user->cityid==0 ||
-                strlen($user->storeid) == 0 || $user->storeid==0
-            ) {
-                return  responseCData(\StatusCode::PARAM_ERROR,"用户信息不完整",null);
-            }
-        }
-
-        return $this->activitylucky_business->create($user->isadmin,$user->companyid,$user->cityid,$user->storeid,$user->islook);
+        return $this->activitylucky_business->create($this->userInfo->isadmin,$this->userInfo->companyid,$this->userInfo->cityid,$this->userInfo->storeid,$this->userInfo->islook);
 
     }
 
@@ -150,19 +127,8 @@ class ActivityLuckyController extends ServerBaseController
         if ($validator->fails()) {
             return  responseCData(\StatusCode::PARAM_ERROR,"抽奖活动参数错误","",$validator->errors());
         }
-        //用户信息
-        $user=getUserInfo();
-        //非管理员参数验证
-        if($user->isadmin==0) {
-            if (strlen($user->companyid) == 0 || $user->companyid==0 ||
-                strlen($user->cityid) == 0 || $user->cityid==0 ||
-                strlen($user->storeid) == 0 || $user->storeid==0
-            ) {
-                return  responseCData(\StatusCode::PARAM_ERROR,"用户信息不完整",null);
-            }
-        }
 
-        return $this->activitylucky_business->edit($user->isadmin,$user->companyid,$user->cityid,$user->storeid,$user->islook,$id);
+        return $this->activitylucky_business->edit($this->userInfo->isadmin,$this->userInfo->companyid,$this->userInfo->cityid,$this->userInfo->storeid,$this->userInfo->islook,$id);
 
     }
 
@@ -270,15 +236,8 @@ class ActivityLuckyController extends ServerBaseController
             }
         }
 
-        //用户信息
-        $user=getUserInfo();
-        //非管理员参数验证
-        if (strlen($user->companyid) == 0 || $user->companyid==0) {
-            responseData(\StatusCode::PARAM_ERROR,"用户信息不完整",null);
-        }
-
         //获取业务数据
-        $rs=$this->activitylucky_business->update($id,$user->id,$user->companyid,$user->cityid,$data);
+        $rs=$this->activitylucky_business->update($id,$this->userInfo->id,$this->userInfo->companyid,$this->userInfo->cityid,$data);
         //接口返回结果
         responseData(\StatusCode::SUCCESS,"保存成功",$rs);
     }
@@ -378,17 +337,8 @@ class ActivityLuckyController extends ServerBaseController
         if ($validator->fails()) {
             return  responseCData(\StatusCode::PARAM_ERROR,"抽奖活动参数错误","",$validator->errors());
         }
-        //用户信息
-        $user=getUserInfo();
-        //非管理员参数验证
-        if($user->isadmin==0) {
-            if (strlen($user->companyid) == 0 || $user->companyid==0
-            ) {
-                return  responseCData(\StatusCode::PARAM_ERROR,"用户信息不完整",null);
-            }
-        }
 
-        return $this->activitylucky_business->extension($id,$user->companyid);
+        return $this->activitylucky_business->extension($id,$this->userInfo->companyid);
     }
 
 

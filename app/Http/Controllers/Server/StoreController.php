@@ -62,7 +62,7 @@ class StoreController extends ServerBaseController
         //分页页码
         $page = $this->request->input("page");
         //业务调用
-        $list=$this->store_business->index($this->user->isadmin,$this->user->companyid,$this->user->provinceid,$this->user->cityid,$this->user->storeid,$this->user->islook,$page,$data);
+        $list=$this->store_business->index($this->userInfo->isadmin,$this->userInfo->companyid,$this->userInfo->provinceid,$this->userInfo->cityid,$this->userInfo->storeid,$this->userInfo->islook,$page,$data);
         return   responseCData(\StatusCode::SUCCESS,"",$list);
     }
 
@@ -89,7 +89,7 @@ class StoreController extends ServerBaseController
             responseData(\StatusCode::PARAM_ERROR,"验证失败","",$validator->errors());
         }
         //执行业务处理
-        $this->store_business->store($this->user->companyid,$data);
+        $this->store_business->store($this->userInfo->companyid,$data);
         //接口返回结果
         responseData(\StatusCode::SUCCESS,"新增成功");
     }

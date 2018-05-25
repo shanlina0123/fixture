@@ -165,9 +165,13 @@ layui.use(['form', 'layer', 'jquery'], function () {
             $("#prizewapbg",parent).css("background","url("+tourl+") center center / 100% no-repeat");
             $(".priceitem",parent).find("img").attr("src",toitemurl);
             //奖项
-            $.each(data.data.prizeList,function(i,n){
-                n["picture"]? $("#extensionPrize"+i,parent).attr("src",n["picture"]):"";
-            })
+            if(data.data.prizeList!=null)
+            {
+                $.each(data.data.prizeList,function(i,n){
+                    n["picture"]? $("#extensionPrize"+i,parent).attr("src",n["picture"]):"";
+                })
+            }
+
             //标题
             $("#sharetitle",parent).html(data.data.lukData.sharetitle);
             //门店

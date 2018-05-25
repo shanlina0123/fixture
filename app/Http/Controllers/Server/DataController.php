@@ -49,7 +49,7 @@ class DataController extends ServerBaseController
     public  function  getListData()
     {
 
-        $list=$this->data_business->index($this->user->companyid);
+        $list=$this->data_business->index($this->userInfo->companyid);
         return   responseCData(\StatusCode::SUCCESS,"",$list);
     }
 
@@ -81,7 +81,7 @@ class DataController extends ServerBaseController
         if ($validator->fails()) {
            return  responseCData(\StatusCode::PARAM_ERROR,"分类参数错误","",$validator->errors());
         }
-        return $this->data_business->edit($this->user->companyid,$cateid);
+        return $this->data_business->edit($this->userInfo->companyid,$cateid);
 
     }
 
@@ -112,7 +112,7 @@ class DataController extends ServerBaseController
         }
 
         //获取业务数据
-        $rs=$this->data_business->update($id,$this->user->companyid,$data);
+        $rs=$this->data_business->update($id,$this->userInfo->companyid,$data);
         //接口返回结果
         responseData(\StatusCode::SUCCESS,"修改成功",$rs);
     }

@@ -51,7 +51,7 @@ class RolesController extends ServerBaseController
         //分页页码
         $page = $this->request->input("page");
         //业务调用
-        $list = $this->roles_business->index($this->user->isadmin,$this->user->companyid,$this->user->cityid,$this->user->storeid,$this->user->islook,$page);
+        $list = $this->roles_business->index($this->userInfo->isadmin,$this->userInfo->companyid,$this->userInfo->cityid,$this->userInfo->storeid,$this->userInfo->islook,$page);
         return   responseCData(\StatusCode::SUCCESS,"",$list);
     }
 
@@ -81,7 +81,7 @@ class RolesController extends ServerBaseController
             responseData(\StatusCode::PARAM_ERROR,"验证失败","",$validator->errors());
         }
         //执行业务处理
-        $this->roles_business->store($this->user->id,$this->user->companyid,$this->user->cityid,$this->user->storeid,$data);
+        $this->roles_business->store($this->userInfo->id,$this->userInfo->companyid,$this->userInfo->cityid,$this->userInfo->storeid,$data);
         //接口返回结果
         responseData(\StatusCode::SUCCESS,"新增成功");
     }

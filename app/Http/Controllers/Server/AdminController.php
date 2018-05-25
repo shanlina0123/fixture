@@ -64,7 +64,7 @@ class AdminController extends ServerBaseController
         //分页页码
         $page = $this->request->input("page");
         //业务调用
-        $list = $this->admin_business->index($this->user->isadmin, $this->user->companyid, $this->user->cityid, $this->user->storeid, $this->user->islook, $page, $data);
+        $list = $this->admin_business->index($this->userInfo->isadmin, $this->userInfo->companyid, $this->userInfo->cityid, $this->userInfo->storeid, $this->userInfo->islook, $page, $data);
         //返回
         return responseCData(\StatusCode::SUCCESS, "", $list);
     }
@@ -119,7 +119,7 @@ class AdminController extends ServerBaseController
         }
 
         //执行业务处理
-        $this->admin_business->store($this->user->companyid, $data);
+        $this->admin_business->store($this->userInfo->companyid, $data);
         //接口返回结果
         responseData(\StatusCode::SUCCESS, "新增成功");
     }
