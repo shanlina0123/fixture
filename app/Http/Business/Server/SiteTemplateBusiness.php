@@ -167,10 +167,17 @@ class SiteTemplateBusiness extends ServerBase
                     return $obj;
                 }else
                 {
-                    $res->delete();
                     $res->stageTemplateToTemplateTag()->delete();
-                    $obj->status = 1;
-                    $obj->msg = '删除成功';
+                    if( $res->delete() )
+                    {
+                        DB::commit();
+                        $obj->status = 1;
+                        $obj->msg = '删除成功';
+                    }else
+                    {
+                        $obj->status = 0;
+                        $obj->msg = '删除失败';
+                    }
                     return $obj;
                 }
             }else
@@ -179,7 +186,7 @@ class SiteTemplateBusiness extends ServerBase
                 $obj->msg = '模板不存在';
                 return $obj;
             }
-            DB::commit();
+
         }catch ( Exception $e )
         {
             $obj->status = 0;

@@ -13,10 +13,19 @@ class SiteFollowrecord extends Model
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     * 观光团
+     * 关联工地
      */
-    public function followToOuristparty()
+    public function followToSite()
     {
-        return $this->belongsTo('App\Http\Model\Ouristparty\Ouristparty','followuserid','id');
+        return $this->belongsTo('App\Http\Model\Site\Site','siteid','id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * 关联数据统计
+     */
+    public function followToDynamicStatistics()
+    {
+        return $this->belongsTo('App\Http\Model\Dynamic\DynamicStatistics','siteid','siteid');
     }
 }
