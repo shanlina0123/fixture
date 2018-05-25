@@ -5,6 +5,17 @@ layui.use(['form', 'layer', 'jquery', 'laydate', 'upload'], function () {
         laydate = layui.laydate,
         $ = layui.jquery;
     upload = layui.upload;
+
+
+    //列表错误信息
+    var error = $("#errorMsg").attr("content");
+    if (error) {
+        layer.msg(error, {
+            icon: 2
+        });
+    }
+
+
     //开始日期
     laydate.render({
         elem: '#startdate'

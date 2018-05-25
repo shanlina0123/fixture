@@ -12,22 +12,6 @@ layui.use(['form', 'layer', 'jquery'], function () {
         });
     }
 
-    //搜索
-    $(".searchBtn").click(function(){
-        var that=this;
-        var form=$("#searchForm");
-        var nickname=$("#nickname",form).val();
-        var storeid=$("#storeid",form).val();
-        $.postJSON($(form).attr("action"),{nickname:nickname,storeid:storeid},function(data){
-            if(data.status===1){
-                window.location.href=$("#listForm").attr("action");
-            }else{
-                layer.msg(data.messages, {icon: 2,time: 1000});
-            }
-        });
-
-    });
-
     //新增用户弹窗
     $(".addBtn").click(function() {
         layer.open({
@@ -134,31 +118,19 @@ layuiForm.on('switch(rowStatus)', function (data) {
 //表单验证
 var checkForm = function(nickname,username,roleid,status) {
     if (nickname == "") {
-        layer.tips("名称不能为空", '#name', {
-            tips: [2, '#ff0000'],
-            time: 1000
-        });
+        layer.msg("名称不能为空", {icon: 2,time:800});
         return false;
     }
     if (username == "") {
-        layer.tips("账号不能为空", '#name', {
-            tips: [2, '#ff0000'],
-            time: 1000
-        });
+        layer.msg("账号不能为空", {icon: 2,time:800});
         return false;
     }
     if (roleid == "") {
-        layer.tips("角色不能为空", '#name', {
-            tips: [2, '#ff0000'],
-            time: 1000
-        });
+        layer.msg("角色不能为空", {icon: 2,time:800});
         return false;
     }
     if (status.length==0) {
-        layer.tips("锁定不能为空", '#name', {
-            tips: [2, '#ff0000'],
-            time: 1000
-        });
+        layer.msg("锁定不能为空", {icon: 2,time:800});
         return false;
     }
     return true;

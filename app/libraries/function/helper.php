@@ -335,31 +335,6 @@ function httpRequest($url, $params, $method = 'GET', $header = array(), $multi =
     return  $data;
 }
 
-//视野查看
-function lookWhere($isadmin,$companyid,$cityid,$storeid,$islook)
-{
-    $where=array();
-    //管理员/视野条件1全部 2城市 3门店
-    if($isadmin==0) {
-        switch ($islook) {
-            case 1:
-                $where["companyid"] = $companyid;
-                break;
-            case 2:
-                $where["cityid"] = $cityid;
-                break;
-            case 3:
-                $where["storeid"] = $storeid;
-                break;
-            default:
-                $where["storeid"] = $storeid;
-                break;
-        }
-    }else{
-        $where["companyid"] = $companyid;
-    }
-    return $where;
-}
 
 
 /***

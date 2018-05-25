@@ -36,6 +36,7 @@ class ServerBaseController extends Controller
             $this->userInfo = $userInfo;
             return $next($request);
         });
+
     }
 
     /***
@@ -53,5 +54,9 @@ class ServerBaseController extends Controller
       echo    json_encode($responseData);
       die;
     }
+
+
+
+
 
 }

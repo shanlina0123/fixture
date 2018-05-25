@@ -26,11 +26,13 @@
                                             </div>
                                             <ul class="subPower">
                                                 <li>
-                                                    @if(array_key_exists("_child",$item)&&$item["_child"]) @foreach($item["_child"] as $key=>$child)
+                                                    @if(array_key_exists("_child",$item)&&$item["_child"])
                                                         <div class="subPowerName">
-                                                            <input type="checkbox" name="funcislook[{{$child["id"]}}]" tolook="@if($list["roleFunctionList"]!=null){{$list["roleFunctionList"][$item['id']]['islook']}} @else 1 @endif"  class="functionidSubmit" lay-skin="primary" lay-filter="subChoose" title="{{$child["menuname"]}}" value="{{$child["id"]}}" @if($list["roleFunctionList"]!=null&&$list["roleFunctionList"][$item['id']])checked=""@endif disabled>
+                                                            @foreach($item["_child"] as $key=>$child)
+                                                            <input type="checkbox" name="funcislook[{{$child["id"]}}]" tolook="@if($list["roleFunctionList"]!=null){{$list["roleFunctionList"][$item['id']]['islook']}} @else 1 @endif"  class="functionidSubmit" lay-skin="primary" lay-filter="subChoose" title="{{$child["name"]}}" value="{{$child["id"]}}" @if($list["roleFunctionList"]!=null&&$list["roleFunctionList"][$item['id']])checked=""@endif disabled>
+                                                            @endforeach
                                                         </div>
-                                                    @endforeach @endif
+                                                   @endif
                                                 </li>
                                             </ul>
                                         </div>

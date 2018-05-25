@@ -2,6 +2,15 @@ layui.use('form', function () {
     var form = layui.form,
         $ = layui.jquery;
 
+
+    //列表错误信息
+    var error = $("#errorMsg").attr("content");
+    if (error) {
+        layer.msg(error, {
+            icon: 2
+        });
+    }
+
     //添加一行数据
     $(".addBtn").click(function () {
         var form=$("#addAndEditAndDeleteForm");

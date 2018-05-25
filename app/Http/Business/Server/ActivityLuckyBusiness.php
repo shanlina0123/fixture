@@ -42,35 +42,37 @@ class ActivityLuckyBusiness extends ServerBase
     public function index($isadmin, $companyid, $cityid, $storeid, $islook, $page, $data, $tag = "AcitivityLucky-PageList", $tag1 = "Admin-StoreList")
     {
         //非管理员/视野条件1全部 2城市 3门店
-        $where = lookWhere($isadmin, $companyid, $cityid, $storeid, $islook);
-
-        $tagKey = base64_encode(mosaic("", $tag, $companyid, $cityid, $storeid, $islook, $page));
+        $lookWhere = $this->lookWhere($isadmin, $companyid, $cityid, $storeid, $islook);
+        //搜索字段
+        $searchTitle = $data ? searchFilter($data['title']) : "";
+        $searchIsOnline = $data ? $data["isonline"]: "";
+        $searchStoreid = $data ? $data["storeid"] : "";
+        $list["searchData"] =[
+            "title"=>$searchTitle,
+            "isonline"=>$searchIsOnline,
+            "storeid"=>$searchStoreid,
+        ];
+       //缓存key
+        $tagKey = base64_encode(mosaic("", $tag, $companyid, $cityid, $storeid, $islook,$searchTitle,$searchIsOnline,$searchStoreid, $page));
         //redis缓存返回
-        $list["luckyList"] = Cache::tags($tag)->remember($tagKey, config('configure.sCache'), function () use ($isadmin, $storeid, $where, $data, $tag1) {
+        $list["luckyList"] = Cache::tags($tag)->remember($tagKey, config('configure.sCache'), function () use ($lookWhere, $searchTitle, $searchIsOnline, $searchStoreid, $data, $tag1) {
             //查詢
             $queryModel = ActivityLucky::orderBy('id', 'desc');
             //视野条件
-            if ($isadmin == 0) {
-                $queryModel = $queryModel->where($where);
-                if ($storeid !== $data["storeid"]) {
-                    unset($data["storeid"]);
-                }
+            $queryModel->where($lookWhere);
+            //搜索
+            if ($searchTitle) {
+                $queryModel = $queryModel->where("title", "like", "%$searchTitle%");
             }
-            if ($data) {
-                $searchTitle = searchFilter($data['title']);
-                $searchIspublic = $data["ispublic"];
-                $searchStoreid = $data["storeid"];
-                if ($searchTitle) {
-                    $queryModel = $queryModel->where("title", "like", "%$searchTitle%");
-                }
-                if (strlen($searchIspublic) > 0) {
-                    $queryModel = $queryModel->where("ispublic", $searchIspublic);
-                }
-                if ($searchStoreid) {
-                    $queryModel = $queryModel->where("storeid", $searchIspublic);
-                }
+            if (in_array($searchIsOnline,[1,2])) {
+                $isonline=$searchIsOnline==1?1:0;
+                $queryModel = $queryModel->where("isonline", $isonline);
+            }
+            if ($searchStoreid) {
+                $queryModel = $queryModel->where("storeid", $searchStoreid);
             }
 
+            //查询
             $list = $queryModel
                 ->with(["luckyToStore" => function ($query) {
                     //关联门店
@@ -82,13 +84,11 @@ class ActivityLuckyBusiness extends ServerBase
         });
 
         //获取门店数据
-        $list["storeList"] = Cache::tags($tag1)->remember($tagKey, config('configure.sCache'), function () use ($isadmin, $where) {
+        $list["storeList"] = Cache::tags($tag1)->remember($tagKey, config('configure.sCache'), function () use ($isadmin, $lookWhere) {
             //查詢
             $queryModel = Store::select(DB::raw("id,name,id as storeid"));
             //视野条件
-            if ($isadmin == 0) {
-                $queryModel = $queryModel->where($where);
-            }
+            $queryModel = $queryModel->where($lookWhere);
             $list = $queryModel
                 ->orderBy('id', 'asc')
                 ->get();
@@ -105,7 +105,7 @@ class ActivityLuckyBusiness extends ServerBase
     public function create($isadmin, $companyid, $cityid, $storeid, $islook, $tag1 = "AcitivityLuck-PrizeLevel", $tag2 = "Admin-StoreList")
     {
         //非管理员/视野条件1全部 2城市 3门店
-        $where = lookWhere($isadmin, $companyid, $cityid, $storeid, $islook);
+        $lookWhere = $this->lookWhere($isadmin, $companyid, $cityid, $storeid, $islook);
 
         //获取奖品等级数据
         $list["levelList"] = Cache::get($tag1, function () use ($tag1) {
@@ -117,20 +117,18 @@ class ActivityLuckyBusiness extends ServerBase
 
         //获取门店数据
         $tagKey2 = base64_encode(mosaic("", $tag2, $companyid, $cityid, $storeid, $islook));
-        $list["storeList"] = Cache::tags($tag2)->remember($tagKey2, config('configure.sCache'), function () use ($isadmin, $where) {
+        $list["storeList"] = Cache::tags($tag2)->remember($tagKey2, config('configure.sCache'), function () use ($isadmin, $lookWhere) {
             //查詢
             $queryModel = Store::select(DB::raw("id,name,id as storeid"));
             //视野条件
-            if ($isadmin == 0) {
-                $queryModel = $queryModel->where($where);
-            }
+            $queryModel = $queryModel->where($lookWhere);
             $list = $queryModel
                 ->orderBy('id', 'asc')
                 ->get();
             return $list;
         });
 
-        return responseCData(\StatusCode::SUCCESS, "", $list);
+       return $list;
     }
 
     /***
@@ -140,7 +138,7 @@ class ActivityLuckyBusiness extends ServerBase
     public function edit($isadmin, $companyid, $cityid, $storeid, $islook, $id, $tag = "AcitivityLuck-Prize", $tag1 = "AcitivityLuck-PrizeLevel", $tag2 = "Admin-StoreList")
     {
         //非管理员/视野条件1全部 2城市 3门店
-        $where = lookWhere($isadmin, $companyid, $cityid, $storeid, $islook);
+        $lookWhere = $this->lookWhere($isadmin, $companyid, $cityid, $storeid, $islook);
         //检测是否存在
         $list["luckData"] = ActivityLucky::where("id", $id)->first()->toArray();
         if (empty($list["luckData"])) {
@@ -167,13 +165,11 @@ class ActivityLuckyBusiness extends ServerBase
 
         //获取门店数据
         $tagKey2 = base64_encode(mosaic("", $tag2, $companyid, $cityid, $storeid, $islook));
-        $list["storeList"] = Cache::tags($tag2)->remember($tagKey2, config('configure.sCache'), function () use ($isadmin, $where) {
+        $list["storeList"] = Cache::tags($tag2)->remember($tagKey2, config('configure.sCache'), function () use ($isadmin, $lookWhere) {
             //查詢
             $queryModel = Store::select(DB::raw("id,name,id as storeid"));
             //视野条件
-            if ($isadmin == 0) {
-                $queryModel = $queryModel->where($where);
-            }
+            $queryModel = $queryModel->where($lookWhere);
             $list = $queryModel
                 ->orderBy('id', 'asc')
                 ->get();
@@ -181,7 +177,8 @@ class ActivityLuckyBusiness extends ServerBase
         });
 
 
-        return responseCData(\StatusCode::SUCCESS, "", $list);
+        return $list;
+
     }
 
 
@@ -196,6 +193,7 @@ class ActivityLuckyBusiness extends ServerBase
             DB::beginTransaction();
 
             //业务处理
+            $uploadClass = new \Upload();
 
             //检查活动、标题
             if ($id) {
@@ -361,8 +359,15 @@ class ActivityLuckyBusiness extends ServerBase
             //结果处理
             if ($rs !== false && !in_array(false, $rsp, true)) {
                 DB::commit();
+
+                if ($id) {
+                    //删除活动图
+                    $data["bgurl"] ? $uploadClass->delImg($rowData->bgurl) : "";//活动背景图
+                    $data["makeurl"] ? $uploadClass->delImg($rowData->makeurl) : "";//立即抽奖
+                    $data["loseurl"] ? $uploadClass->delImg($rowData->loseurl) : "";//未中奖图
+                }
                 //删除缓存
-                Cache::tags(["AcitivityLucky-PageList", "AcitivityLuck-Prize"])->flush();
+                Cache::tags(["AcitivityLucky-PageList", "AcitivityLuck-Prize", "AcitivityLuck-Extension-Prize"])->flush();
                 return ["id" => $activityluckyid, "prizeIds" => $prizeIds, "isonline" => $lucky["isonline"], "listurl" => route("lucky-index")];
             } else {
                 DB::rollBack();
@@ -405,7 +410,7 @@ class ActivityLuckyBusiness extends ServerBase
             if ($rs !== false) {
                 DB::commit();
                 //删除缓存
-                Cache::tags(["AcitivityLucky-PageList", "AcitivityLuck-Prize"])->flush();
+                Cache::tags(["AcitivityLucky-PageList", "AcitivityLuck-Prize", "AcitivityLuck-Extension-Prize"])->flush();
                 return ["isonline" => $updateData["isonline"]];
             } else {
                 DB::rollBack();
@@ -447,8 +452,12 @@ class ActivityLuckyBusiness extends ServerBase
             //结果处理
             if ($rs !== false) {
                 DB::commit();
+
+                //删除目录下所有文件
+                (new \Upload())->delDir('lucky', $row->uuid);
+
                 //删除缓存
-                Cache::tags(["AcitivityLucky-PageList", "AcitivityLuck-Prize"])->flush();
+                Cache::tags(["AcitivityLucky-PageList", "AcitivityLuck-Prize", "AcitivityLuck-Extension-Prize"])->flush();
             } else {
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR, "删除失败");
@@ -484,8 +493,10 @@ class ActivityLuckyBusiness extends ServerBase
             //结果处理
             if ($rs !== false) {
                 DB::commit();
+                //删除奖项原始图
+                (new \Upload())->delImg($row->picture);
                 //删除缓存
-                Cache::tags(["AcitivityLucky-PageList", "AcitivityLuck-Prize"])->flush();
+                Cache::tags(["AcitivityLucky-PageList", "AcitivityLuck-Prize", "AcitivityLuck-Extension-Prize"])->flush();
             } else {
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR, "删除失败");
@@ -503,7 +514,7 @@ class ActivityLuckyBusiness extends ServerBase
      * 获取扩展详情
      * @return mixed
      */
-    public function extension($id,$companyid, $tag = "AcitivityLuck-Prize")
+    public function extension($id, $companyid, $tag = "AcitivityLuck-Extension-Prize")
     {
         $tagKey = base64_encode(mosaic("", $tag, $id));
         $uploads = config("configure.uploads");
@@ -524,10 +535,9 @@ class ActivityLuckyBusiness extends ServerBase
         $wx = new  WxAuthorize();
         $accessToken = $wx->getUserAccessToken(null, $companyid);
         $wxcode = $accessToken ? $wx->getWxappCode($accessToken, $list["lukData"]["id"]) : "";
-        $list["wxappcode"] =$wxcode;
+        $list["wxappcode"] = $wxcode;
         return responseCData(\StatusCode::SUCCESS, "", $list);
     }
-
 
 
 }

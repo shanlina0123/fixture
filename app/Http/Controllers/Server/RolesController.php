@@ -27,15 +27,15 @@ class RolesController extends ServerBaseController
     }
 
     /***
-     * 获取角色列表
+     * 获取列表
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
         //获取列表数据
-        $dataSource=$this->getListData();
-        $list=$dataSource["data"];
-        $errorMsg=$dataSource["messages"];
+        $dataSource = $this->getListData();//数据集合
+        $list = $dataSource["data"];//数据
+        $errorMsg = $dataSource["messages"];//错误消息
         //处理ajax请求
         if($this->request->ajax()){
             responseAjax($dataSource);
@@ -48,28 +48,15 @@ class RolesController extends ServerBaseController
      */
     public  function  getListData()
     {
-        $page=$this->request->input("page");
-        //用户信息
-        $user=getUserInfo();
-        //非管理员参数验证
-        if($user->isadmin==0) {
-            if (strlen($user->companyid) == 0 || $user->companyid==0 ||
-                strlen($user->cityid) == 0 || $user->cityid==0 ||
-                strlen($user->storeid) == 0 || $user->storeid==0
-            ) {
-                return  responseCData(\StatusCode::PARAM_ERROR,"用户信息不完整",null);
-            }
-        }
-
-        $list = $this->roles_business->index($user->isadmin,$user->companyid,$user->cityid,$user->storeid,$user->islook,$page);
+        //分页页码
+        $page = $this->request->input("page");
+        //业务调用
+        $list = $this->roles_business->index($this->userInfo->isadmin,$this->userInfo->companyid,$this->userInfo->cityid,$this->userInfo->storeid,$this->userInfo->islook,$page);
         return   responseCData(\StatusCode::SUCCESS,"",$list);
     }
 
-
-
-
     /***
-     * 创建角色
+     * 创建
      * @param Request $request
      */
     public function create()
@@ -78,7 +65,7 @@ class RolesController extends ServerBaseController
 
     }
     /***
-     * 执行 - 创建角色
+     * 新增 - 执行
      * @param Request $request
      */
     public function store()
@@ -94,7 +81,7 @@ class RolesController extends ServerBaseController
             responseData(\StatusCode::PARAM_ERROR,"验证失败","",$validator->errors());
         }
         //执行业务处理
-        $this->roles_business->store($data);
+        $this->roles_business->store($this->userInfo->id,$this->userInfo->companyid,$this->userInfo->cityid,$this->userInfo->storeid,$data);
         //接口返回结果
         responseData(\StatusCode::SUCCESS,"新增成功");
     }
@@ -151,7 +138,7 @@ class RolesController extends ServerBaseController
     }
 
     /***
-     * 删除角色
+     * 删除
      */
     public function  delete($uuid)
     {

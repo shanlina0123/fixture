@@ -19,6 +19,10 @@
     <link rel="icon" href="{{pix_asset('server/images/icon.ico')}}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--去除缓存 start-->
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="">
     <!--css-->
     <link rel="stylesheet" href="{{pix_asset('server/plugins/layui/css/layui.css',false)}}">
     <link rel="stylesheet" href="{{pix_asset('server/css/common.css')}}">

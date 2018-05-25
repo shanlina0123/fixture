@@ -21,6 +21,7 @@
 @endsection
 @section('content')
     <div class="main">
+        <div style="display: none" id="errorMsg" content="{{$errorMsg}}"></div>
         <!--form切换-->
         <div class="formTab fl" >
             <form class="layui-form"  id="{{$list["luckData"]["id"]}}" method="put" action="{{route('lucky-update',$list["luckData"]["id"])}}" multiple="true"  autoActioin="{{route('lucky-update','id')}}">
@@ -78,7 +79,7 @@
                                             <input type="radio" name="ispeoplelimit" value="1" title="限制" lay-filter="filterNum" @if($list['luckData']["ispeoplelimit"]==1) checked @endif >
                                         </div>
                                         <div class="layui-form-inline forLineheight  @if($list['luckData']["ispeoplelimit"]==0)  hidden @endif">
-                                            <input type="number" name="peoplelimitnum" class="layui-input" value="{{$list['luckData']["peoplelimitnum"]}}" />人参与
+                                            <input type="number" name="peoplelimitnum" class="layui-input" value="{{$list['luckData']["peoplelimitnum"]}}" min="1" maxlength="5" max="99999"/>人参与
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
@@ -136,19 +137,19 @@
                                             <input type="radio" name="ischancelimit" value="1" title="限制" lay-filter="filterNum" @if($list['luckData']["ischancelimit"]==1) checked @endif>
                                         </div>
                                         <div class="layui-form-inline forLineheight @if($list['luckData']["ischancelimit"]==0) hidden @endif">
-                                            每人最多有&nbsp;<input type="number" name="chancelimitnum" class="layui-input" value="{{$list['luckData']["chancelimitnum"]}}">次
+                                            每人最多有&nbsp;<input type="number" name="chancelimitnum" class="layui-input" value="{{$list['luckData']["chancelimitnum"]}}" min="1" maxlength="5" max="99999">次
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
                                         <label class="layui-form-label" style="width:83px"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>每人抽奖次数</label>
                                         <div class="layui-form-inline forLineheight">
-                                            每人最多中奖&nbsp;<input type="number" name="everywinnum" class="layui-input"  value="{{$list['luckData']["everywinnum"]}}">次
+                                            每人最多中奖&nbsp;<input type="number" name="everywinnum" class="layui-input"  value="{{$list['luckData']["everywinnum"]}}" min="1" maxlength="5" max="99999">次
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
                                         <label class="layui-form-label"><i class="layui-icon"  style="font-size: 12px; color: #FF5722;">*</i>总中奖率</label>
                                         <div class="layui-form-inline forLineheight">
-                                            <input type="number" name="winpoint" class="layui-input" value="{{$list['luckData']["winpoint"]}}">% &nbsp;<span>每10次抽检3次获奖</span>
+                                            <input type="number" name="winpoint" class="layui-input" value="{{$list['luckData']["winpoint"]}}" min="1" maxlength="5" max="99999">% &nbsp;<span>每10次抽检3次获奖</span>
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
@@ -188,11 +189,11 @@
                                             <div class="layui-input-inline"><input type="text" name="name" value="{{$itemPrize['name']}}" class="layui-input" maxlength="200" nullmsg="请输入奖项名称" errormsg="输入有误超过了200个字符"></div>
                                         </td>
                                         <td>
-                                            <div class="layui-input-inline"><input type="number"  name="num" value="{{$itemPrize['num']}}" class="layui-input" maxlength="200" nullmsg="请输入奖项数量" ></div>
+                                            <div class="layui-input-inline"><input type="number"  name="num" value="{{$itemPrize['num']}}" class="layui-input" min="1" maxlength="5" max="99999" nullmsg="请输入奖项数量" ></div>
                                         </td>
                                         <td>
                                             <div class="layui-input-inline">
-                                                <select name="levelid" lay-verify="required" lay-search="" id="levelid"  maxlength="200" nullmsg="请选择奖项级别" >
+                                                <select name="levelid" lay-verify="required" lay-search="" id="levelid"   nullmsg="请选择奖项级别" >
                                                     <option value="">请选择</option>
                                                     @if($list['levelList']!=null) @foreach($list['levelList'] as $k=>$item)
                                                         <option value="{{$item->id}}" @if($itemPrize['levelid']==$item->id) selected @endif>{{$item->name}}</option>
@@ -220,11 +221,11 @@
                                                 <div class="layui-input-inline"><input type="text" name="name" class="layui-input" maxlength="200" nullmsg="请输入奖项名称" errormsg="输入有误超过了200个字符"></div>
                                             </td>
                                             <td>
-                                                <div class="layui-input-inline"><input type="number"  name="num" class="layui-input" maxlength="200" nullmsg="请输入奖项数量" ></div>
+                                                <div class="layui-input-inline"><input type="number"  name="num" class="layui-input"min="1" maxlength="5" max="99999" nullmsg="请输入奖项数量" ></div>
                                             </td>
                                             <td>
                                                 <div class="layui-input-inline">
-                                                    <select name="levelid" lay-verify="required" lay-search="" id="levelid"  maxlength="200" nullmsg="请选择奖项级别" >
+                                                    <select name="levelid" lay-verify="required" lay-search="" id="levelid"  nullmsg="请选择奖项级别" >
                                                         <option value="">请选择</option>
                                                         @if($list['levelList']!=null) @foreach($list['levelList'] as $k=>$item)
                                                             <option value="{{$item->id}}">{{$item->name}}</option>

@@ -2,6 +2,16 @@ layui.use(['form', 'layer', 'jquery'], function () {
     var layuiForm = layui.form,
         layer = layui.layer,
         $ = layui.jquery;
+
+
+    //列表错误信息
+    var error = $("#errorMsg").attr("content");
+    if (error) {
+        layer.msg(error, {
+            icon: 2
+        });
+    }
+
     //进入添加页面
     $(".addBtn").click(function () {
         window.location.href = $(this).attr("url");
@@ -165,9 +175,13 @@ layui.use(['form', 'layer', 'jquery'], function () {
             $("#prizewapbg",parent).css("background","url("+tourl+") center center / 100% no-repeat");
             $(".priceitem",parent).find("img").attr("src",toitemurl);
             //奖项
-            $.each(data.data.prizeList,function(i,n){
-                n["picture"]? $("#extensionPrize"+i,parent).attr("src",n["picture"]):"";
-            })
+            if(data.data.prizeList!=null)
+            {
+                $.each(data.data.prizeList,function(i,n){
+                    n["picture"]? $("#extensionPrize"+i,parent).attr("src",n["picture"]):"";
+                })
+            }
+
             //标题
             $("#sharetitle",parent).html(data.data.lukData.sharetitle);
             //门店

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Server;
 use App\Http\Business\Server\ActivityLuckyBusiness;
 use App\Http\Controllers\Common\ServerBaseController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 /***
@@ -47,35 +48,30 @@ class ActivityLuckyController extends ServerBaseController
     public  function  getListData()
     {
         //获取请求参数
-        $data=$this->getData(["title","ispublic","storeid"],$this->request->all());
+        $data=$this->getData(["title","isonline","storeid"],$this->request->all());
         //验证规则
         $validator = Validator::make($data,[
             "title"=>'max:200|min:0',
             "storeid"=>'numeric',
-            "ispublic"=>'numeric',
+            "isonline"=>'numeric',
         ],['title.max'=>'标题长度不能大于100个字符','nickname.min'=>'标题度不能小于0个字符',
             'storeid.numeric'=>'门店id只能是数字格式',
-            'ispublic.numeric'=>'活动状态只能是数字格式']);
+            'isonline.numeric'=>'活动状态只能是数字格式']);
         //进行验证
         if ($validator->fails()) {
             return responseCData(\StatusCode::PARAM_ERROR,"验证失败","",$validator->errors());
         }
 
-        $page=$this->request->input("page");
-
-        //用户信息
-        $user=getUserInfo();
-        //非管理员参数验证
-        if($user->isadmin==0) {
-            if (strlen($user->companyid) == 0 || $user->companyid==0 ||
-                strlen($user->cityid) == 0 || $user->cityid==0 ||
-                strlen($user->storeid) == 0 || $user->storeid==0
-            ) {
-                return  responseCData(\StatusCode::PARAM_ERROR,"用户信息不完整",null);
+        if(array_key_exists("isonline",$data)&&strlen($data["isonline"])>0)
+        {
+            if(!in_array($data["isonline"],[0,1,2]))
+            {
+                return responseCData(\StatusCode::PARAM_ERROR,"是否上线值不符合预定义","");
             }
         }
+        $page=$this->request->input("page");
 
-        $list=$this->activitylucky_business->index($user->isadmin,$user->companyid,$user->cityid,$user->storeid,$user->islook,$page,$data);
+        $list=$this->activitylucky_business->index($this->userInfo->isadmin,$this->userInfo->companyid,$this->userInfo->cityid,$this->userInfo->storeid,$this->userInfo->islook,$page,$data);
         return   responseCData(\StatusCode::SUCCESS,"",$list);
     }
 
@@ -92,27 +88,15 @@ class ActivityLuckyController extends ServerBaseController
         if($this->request->ajax()){
             responseAjax($dataSource);
         }
-        return view('server.activitylucky.create',compact('list'))->with("errorMsg",json_encode($errorMsg));
+        return view('server.activitylucky.create',compact('list'))->with("errorMsg",$errorMsg);
     }
     /***
      * 获取添加列表数据集
      */
     public  function  getCreateData()
     {
-        //用户信息
-        $user=getUserInfo();
-        //非管理员参数验证
-        if($user->isadmin==0) {
-            if (strlen($user->companyid) == 0 || $user->companyid==0 ||
-                strlen($user->cityid) == 0 || $user->cityid==0 ||
-                strlen($user->storeid) == 0 || $user->storeid==0
-            ) {
-                return  responseCData(\StatusCode::PARAM_ERROR,"用户信息不完整",null);
-            }
-        }
-
-        return $this->activitylucky_business->create($user->isadmin,$user->companyid,$user->cityid,$user->storeid,$user->islook);
-
+        $list= $this->activitylucky_business->create($this->userInfo->isadmin,$this->userInfo->companyid,$this->userInfo->cityid,$this->userInfo->storeid,$this->userInfo->islook);
+        return responseCData(\StatusCode::SUCCESS, "", $list);
     }
 
     /***
@@ -131,9 +115,9 @@ class ActivityLuckyController extends ServerBaseController
         }
         if($list["luckData"]["isonline"]==1 )
         {
-            return view('server.activitylucky.see',compact('list'))->with("errorMsg",json_encode($errorMsg));
+            return view('server.activitylucky.see',compact('list'))->with("errorMsg",$errorMsg);
         }else{
-            return view('server.activitylucky.edit',compact('list'))->with("errorMsg",json_encode($errorMsg));
+            return view('server.activitylucky.edit',compact('list'))->with("errorMsg",$errorMsg);
         }
 
     }
@@ -150,20 +134,9 @@ class ActivityLuckyController extends ServerBaseController
         if ($validator->fails()) {
             return  responseCData(\StatusCode::PARAM_ERROR,"抽奖活动参数错误","",$validator->errors());
         }
-        //用户信息
-        $user=getUserInfo();
-        //非管理员参数验证
-        if($user->isadmin==0) {
-            if (strlen($user->companyid) == 0 || $user->companyid==0 ||
-                strlen($user->cityid) == 0 || $user->cityid==0 ||
-                strlen($user->storeid) == 0 || $user->storeid==0
-            ) {
-                return  responseCData(\StatusCode::PARAM_ERROR,"用户信息不完整",null);
-            }
-        }
 
-        return $this->activitylucky_business->edit($user->isadmin,$user->companyid,$user->cityid,$user->storeid,$user->islook,$id);
-
+        $list= $this->activitylucky_business->edit($this->userInfo->isadmin,$this->userInfo->companyid,$this->userInfo->cityid,$this->userInfo->storeid,$this->userInfo->islook,$id);
+        return responseCData(\StatusCode::SUCCESS, "", $list);
     }
 
     /***
@@ -270,15 +243,8 @@ class ActivityLuckyController extends ServerBaseController
             }
         }
 
-        //用户信息
-        $user=getUserInfo();
-        //非管理员参数验证
-        if (strlen($user->companyid) == 0 || $user->companyid==0) {
-            responseData(\StatusCode::PARAM_ERROR,"用户信息不完整",null);
-        }
-
         //获取业务数据
-        $rs=$this->activitylucky_business->update($id,$user->id,$user->companyid,$user->cityid,$data);
+        $rs=$this->activitylucky_business->update($id,$this->userInfo->id,$this->userInfo->companyid,$this->userInfo->cityid,$data);
         //接口返回结果
         responseData(\StatusCode::SUCCESS,"保存成功",$rs);
     }
@@ -362,7 +328,7 @@ class ActivityLuckyController extends ServerBaseController
             responseAjax($dataSource);
         }
 
-        return view('server.activitylucky.extension',compact('list'))->with("errorMsg",json_encode($errorMsg));
+        return view('server.activitylucky.extension',compact('list'))->with("errorMsg",$errorMsg);
     }
 
 
@@ -378,17 +344,8 @@ class ActivityLuckyController extends ServerBaseController
         if ($validator->fails()) {
             return  responseCData(\StatusCode::PARAM_ERROR,"抽奖活动参数错误","",$validator->errors());
         }
-        //用户信息
-        $user=getUserInfo();
-        //非管理员参数验证
-        if($user->isadmin==0) {
-            if (strlen($user->companyid) == 0 || $user->companyid==0
-            ) {
-                return  responseCData(\StatusCode::PARAM_ERROR,"用户信息不完整",null);
-            }
-        }
 
-        return $this->activitylucky_business->extension($id,$user->companyid);
+        return $this->activitylucky_business->extension($id,$this->userInfo->companyid);
     }
 
 
