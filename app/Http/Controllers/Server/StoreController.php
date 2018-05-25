@@ -40,7 +40,7 @@ class StoreController extends ServerBaseController
         if($this->request->ajax()){
             responseAjax($dataSource);
         }
-        return view('server.store.index',compact('list'))->with("errorMsg",json_encode($errorMsg));
+        return view('server.store.index',compact('list'))->with("errorMsg",$errorMsg);
     }
 
     /***

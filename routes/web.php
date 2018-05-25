@@ -33,29 +33,27 @@ Route::group(['namespace' => 'Server'], function () {
         Route::get('wx/auditid', 'WxAuthorizeController@auditid');//发布代码审核状态查询
         //公司信息
         Route::match(['get', 'post'], 'company/setting', 'CompanyController@companySetting')->name('company-setting');  //公司信息设置
-
         //用户资料
         Route::match(['get', 'post'], 'user/info', 'UserController@userInfo')->name('user-info'); //个人资料跟换电话
         Route::match(['get', 'post'], 'user/set-pass', 'UserController@setPass')->name('set-pass'); //修改密码
+       //上传图片
+        Route::any('upload-temp-img', 'PublicController@uploadImgToTemp');
+        //微信认证页面
+        Route::get('user/authorize', 'UserController@userAuthorize')->name('user-authorize');
+        //Vip
+        Route::get("vip","VipController@index")->name("vip-index");//列表
+        //通知
+        Route::get("notice","NoticeController@index")->name("notice-index");//列表
+        Route::get("notice/listen/{time}","NoticeController@listen")->name("notice-listen");//监听
+        //消息
+        Route::get("message","MessageController@index")->name("message-index");//列表
         //中间件权限认证路由
         Route::group(['middleware' => ['checkAuth']], function () {
-            //微信认证页面
-            Route::get('user/authorize', 'UserController@userAuthorize')->name('user-authorize');
-            Route::any('upload-temp-img', 'PublicController@uploadImgToTemp');   //上传图片
             //工地
             Route::resource('site', 'SiteController');//工地管理
             Route::post('site/template-tag', 'SiteController@templateTag')->name('site-template-tag');
             Route::post('site/isopen', 'SiteController@isOpen')->name('site-isopen');//工地是否公开
             Route::match(['get', 'post'],'site/renew/{uuid}', 'SiteController@siteRenew')->name('site-renew');//更新工地动态
-            //活动
-            Route::resource('activity', 'ActivityController');  //项目管理 - 活动管理 默认路由
-            Route::post('activity/setting', 'ActivityController@setting')->name('activity-setting'); //项目管理 - 活动管理-设置是否公开 默认路由
-            Route::get('filter/store-index', 'FilterController@storeIndex')->name('filter-store-index'); //系统管理-门店管理 自定义路由
-            Route::get('filter/storedel','FilterController@storeDel');
-            Route::get('filter/storeadd','FilterController@storeAdd');
-            Route::get('filter/storeedit','FilterController@storeEdit');
-            Route::get('filter/storeedits','FilterController@storeEdits');
-            Route::get('filter/role-index', 'FilterController@roleIndex')->name('filter-role-index'); //系统管理 - 角色管理 自定义路由
             //模板
             Route::resource('site-template', 'SiteTemplateController');//模板管理
             Route::post('site/add-default-template', 'SiteTemplateController@addDefaultTemplate')->name('site-add-default-template');//使用系统模板
@@ -98,13 +96,7 @@ Route::group(['namespace' => 'Server'], function () {
             Route::delete("lucky/prize/{id}","ActivityLuckyController@deleteprize")->name("lucky-prize-delete");//删除奖项-执行
             Route::put("lucky/setting/{id}","ActivityLuckyController@setting")->name("lucky-setting");//上线/下线
             Route::get("lucky/extension/{id}","ActivityLuckyController@extension")->name("lucky-extension");//推广详情
-            //Vip
-            Route::get("vip","VipController@index")->name("vip-index");//列表
-            //通知
-            Route::get("notice","NoticeController@index")->name("notice-index");//列表
-            Route::get("notice/listen/{time}","NoticeController@listen")->name("notice-listen");//监听
-            //消息
-            Route::get("message","MessageController@index")->name("message-index");//列表
+
         });
     });
 });

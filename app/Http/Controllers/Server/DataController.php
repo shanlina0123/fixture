@@ -40,7 +40,7 @@ class DataController extends ServerBaseController
         if($this->request->ajax()){
             responseAjax($dataSource);
         }
-        return view('server.data.index',compact('list'))->with("errorMsg",json_encode($errorMsg));
+        return view('server.data.index',compact('list'))->with("errorMsg",$errorMsg);
     }
 
     /***
@@ -66,7 +66,7 @@ class DataController extends ServerBaseController
         if($this->request->ajax()){
             responseAjax($dataSource);
         }
-        return view('server.data.edit',compact('list'))->with("errorMsg",json_encode($errorMsg));
+        return view('server.data.edit',compact('list'))->with("errorMsg",$errorMsg);
     }
 
     /***
