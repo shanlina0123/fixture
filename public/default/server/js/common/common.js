@@ -120,7 +120,7 @@ $("input[type=number]").keyup(function () {
     $(this).val($(this).val().replace(/[^1-9]/g, ''));
 }).bind("paste", function () {  //CTR+V事件处理
     $(this).val($(this).val().replace(/[^1-9]/g, ''));
-}).bind("change", function () {  //CTR+V事件处理
+}).bind("click", function () {  //CTR+V事件处理
     if($(this).val()*1>0)
     {
         $(this).val($(this).val().replace(/[^1-9]/g, ''));
