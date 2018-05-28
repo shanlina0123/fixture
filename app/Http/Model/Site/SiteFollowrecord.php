@@ -28,4 +28,9 @@ class SiteFollowrecord extends Model
     {
         return $this->belongsTo('App\Http\Model\Dynamic\DynamicStatistics','siteid','siteid');
     }
+
+    public function followToUser()
+    {
+        return $this->belongsTo('App\Http\Model\User\User','userid','id');
+    }
 }

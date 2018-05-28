@@ -319,20 +319,16 @@ class SiteController extends StoreBaseController
     {
         $data = trimValue( $this->request->all() );
         $data['companyid'] = $this->apiUser->companyid;
-        $data['storeid'] = $this->apiUser->storeid;
         $validator = Validator::make(
             $data,
             [
                 'id'=>'bail|required|numeric',
                 'companyid'=>'bail|required|numeric',//公司
-                'storeid'=>'bail|required|numeric',//门店
             ],[
                 'id.required'=>'ID不能为空',
                 'id.numeric'=>'ID数据类型不正确',
                 'companyid.required'=>'公司信息未获取到',
                 'companyid.numeric'=>'公司信息数据类型不正确',
-                'storeid.numeric'=>'门店信息数据类型不正确',
-                'storeid.required'=>'门店信息未获取到',
             ]
         );
         if ($validator->fails())
@@ -351,20 +347,16 @@ class SiteController extends StoreBaseController
     {
         $data = trimValue( $this->request->all() );
         $data['companyid'] = $this->apiUser->companyid;
-        $data['storeid'] = $this->apiUser->storeid;
         $validator = Validator::make(
             $data,
             [
                 'id'=>'bail|required|numeric',
                 'companyid'=>'bail|required|numeric',//公司
-                'storeid'=>'bail|required|numeric',//门店
             ],[
                 'id.required'=>'ID不能为空',
                 'id.numeric'=>'ID数据类型不正确',
                 'companyid.required'=>'公司信息未获取到',
                 'companyid.numeric'=>'公司信息数据类型不正确',
-                'storeid.numeric'=>'门店信息数据类型不正确',
-                'storeid.required'=>'门店信息未获取到',
             ]
         );
         if ($validator->fails())

@@ -46,7 +46,7 @@ class Dynamic extends Model
      */
     public function dynamicToSite()
     {
-        return $this->belongsTo('App\Http\Model\Site\Site','sitetid','id');
+        return $this->belongsTo('App\Http\Model\Site\Site','id','sitetid');
     }
 
     /**
@@ -57,4 +57,14 @@ class Dynamic extends Model
     {
         return $this->belongsTo('App\Http\Model\Activity\Activity','activityid','id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * 关联数据统计
+     */
+    public function dynamicToStatistics()
+    {
+        return $this->belongsTo('App\Http\Model\Dynamic\DynamicStatistics','id','dynamicid');
+    }
+
 }

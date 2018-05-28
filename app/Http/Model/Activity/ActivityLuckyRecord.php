@@ -11,4 +11,12 @@ class ActivityLuckyRecord extends Model
     protected $table = 'activity_lucky_record';
     public $timestamps = false;
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * 关联活动
+     */
+    public function luckyRecordToLucky()
+    {
+        return $this->belongsTo('App\Http\Model\Activity\ActivityLucky','activityluckid','id');
+    }
 }

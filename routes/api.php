@@ -74,12 +74,17 @@ Route::group(['middleware'=>'ApiCheck'], function () {
         Route::get('client/company-info', 'ClientCompanyController@companyInfo');
         //问题反馈
         Route::get('client/company-info', 'ClientCompanyController@companyInfo');
+        //中奖列表
+        Route::get('client/lucky-record', 'ClientActivityLuckyRecordController@luckyRecordList');
     });
 
     /**
      * 问题反馈
      */
-    Route::post('qa/feedback', 'Common\QaController@feedback');//登陆
+    Route::post('qa/feedback', 'Common\QaController@feedback');
+    //消息通知
+    Route::get('log/notice', 'Common\SystemMessageController@notice');
+    Route::post('log/read-notice', 'Common\SystemMessageController@readNotice');
 });
 
 
