@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Business\Client\SiteDynamicComment;
 use App\Http\Controllers\Common\ClientBaseController;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 
 class SiteDynamicCommentController extends ClientBaseController
@@ -30,9 +31,8 @@ class SiteDynamicCommentController extends ClientBaseController
         $data = trimValue( $this->request->all() );
         $validator = Validator::make(
             $data,[
-            'dynamicid'=>'required|numeric',//公司
-            'siteid'=>'required|numeric',//门店
-            'id'=>'required|numeric',//地址
+            'dynamicid'=>'required|numeric',//动态id
+            'id'=>'required|numeric',//id
             ]
         );
         if ($validator->fails())
@@ -42,6 +42,7 @@ class SiteDynamicCommentController extends ClientBaseController
         $res = $this->dynamicComment->commentDestroy($data);
         if( $res )
         {
+            Cache::tags(['DynamicList'.$this->apiUser->companyid])->flush();
             responseData(\StatusCode::SUCCESS,'删除成功');
         }
         responseData(\StatusCode::ERROR,'删除失败');
@@ -69,7 +70,8 @@ class SiteDynamicCommentController extends ClientBaseController
         $res = $this->dynamicComment->commentAdd($data);
         if( $res )
         {
-            responseData(\StatusCode::SUCCESS,'评论成功');
+            Cache::tags(['DynamicList'.$this->apiUser->companyid])->flush();
+            responseData(\StatusCode::SUCCESS,'评论成功',$res);
         }
         responseData(\StatusCode::ERROR,'评论失败');
     }

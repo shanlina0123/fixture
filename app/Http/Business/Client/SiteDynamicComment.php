@@ -11,6 +11,8 @@ namespace App\Http\Business\Client;
 
 use App\Http\Business\Common\ClientBase;
 use App\Http\Model\Dynamic\DynamicComment;
+use App\Http\Model\Dynamic\DynamicStatistics;
+use Illuminate\Support\Facades\DB;
 
 class SiteDynamicComment extends ClientBase
 {
@@ -22,7 +24,6 @@ class SiteDynamicComment extends ClientBase
     {
         $where['id'] = $data['id'];
         $where['dynamicid'] = $data['dynamicid'];
-        $where['siteid'] = $data['siteid'];
         return DynamicComment::where( $where )->delete();
     }
 
@@ -32,14 +33,42 @@ class SiteDynamicComment extends ClientBase
      */
     public function commentAdd( $data )
     {
-        $dynamic = new DynamicComment();
-        $dynamic->uuid = create_uuid();
-        $dynamic->dynamicid = $data['dynamicid'];
-        $dynamic->siteid = $data['siteid'];
-        $dynamic->pid = $data['pid'];
-        $dynamic->content = $data['content'];
-        $dynamic->createuserid = $data['createuserid'];
-        $dynamic->created_at = date("Y-m-d H:i:s");
-        return $dynamic->save();
+        try{
+            DB::beginTransaction();
+            $dynamic = new DynamicComment();
+            $dynamic->uuid = create_uuid();
+            $dynamic->dynamicid = $data['dynamicid'];
+            $dynamic->siteid = $data['siteid'];
+            $dynamic->pid = $data['pid'];
+            $dynamic->content = $data['content'];
+            $dynamic->createuserid = $data['createuserid'];
+            $dynamic->created_at = date("Y-m-d H:i:s");
+            $dynamic->save();
+
+            $where['dynamicid'] = $data['dynamicid'];
+            $statistics = DynamicStatistics::where($where)->first();
+            if( $statistics )
+            {
+                $statistics->commentnum = $statistics->commentnum+1;
+                $statistics->save();
+            }else
+            {
+                $statistics = new DynamicStatistics();
+                $statistics->dynamicid = $data['dynamicid'];
+                $statistics->siteid = $data['siteid'];
+                $statistics->linkednum = 0;
+                $statistics->commentnum = 1;
+                $statistics->thumbsupnum = 0;
+                $statistics->follownum = 0;
+                $statistics->save();
+            }
+            DB::commit();
+            return $dynamic;
+        }catch (\Exception $e)
+        {
+            DB::rollBack();
+            return false;
+        }
+
     }
 }
