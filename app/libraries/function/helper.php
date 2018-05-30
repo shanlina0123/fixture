@@ -411,3 +411,40 @@ function getCurl( $url, $herder=1 )
     //显示获得的数据
     return $data;
 }
+
+/**
+ * 获取当前控制器名
+ *
+ * @return string
+ */
+ function getCurrentControllerName()
+{
+    $all=getCurrentAction()['controller'];
+    $arr=explode("\\", $all);
+    //获取最后一个/后边的字符
+    $last=$arr[count($arr)-1];
+    return $last;
+}
+
+/**
+ * 获取当前方法名
+ *
+ * @return string
+ */
+ function getCurrentMethodName()
+{
+    return getCurrentAction()['method'];
+}
+
+/**
+ * 获取当前控制器与方法
+ *
+ * @return array
+ */
+ function getCurrentAction()
+{
+    $action = \Route::current()->getActionName();
+    list($class, $method) = explode('@', $action);
+
+    return ['controller' => $class, 'method' => $method];
+}

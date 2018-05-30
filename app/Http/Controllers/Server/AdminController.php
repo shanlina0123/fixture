@@ -105,10 +105,6 @@ class AdminController extends ServerBaseController
         //默认密码
         $data["password"] = config("configure.adminPwd");
 
-        //密码长度验证
-        if (strlen($data["password"]) < 6 || strlen($data["password"]) > 18) {
-            responseData(\StatusCode::PARAM_ERROR, "验证失败", "", ["password" => ["密码格式6到18位字符之间"]]);
-        }
 
         //非管理员
         if($data["roleid"]>1)
@@ -157,6 +153,9 @@ class AdminController extends ServerBaseController
         if (!in_array($data["status"], [0, 1])) {
             responseData(\StatusCode::PARAM_ERROR, "验证失败", "", ["status" => ["状态只能设置为有效和无效，不能进行其他设置"]]);
         }
+        //默认密码
+        $data["password"] = config("configure.adminPwd");
+
         //获取业务数据
         $this->admin_business->update($uuid, $data);
         //接口返回结果

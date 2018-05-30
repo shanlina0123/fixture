@@ -107,7 +107,7 @@ class ActivityLuckyController extends ServerBaseController
     {
         //获取列表数据
         $dataSource=$this->getEditData($id);
-        $list=$dataSource["data"];
+        $list=$dataSource["data"]["data"];
         $errorMsg=$dataSource["messages"];
         //处理ajax请求
         if($this->request->ajax()){

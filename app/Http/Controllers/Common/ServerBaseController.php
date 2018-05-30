@@ -37,6 +37,8 @@ class ServerBaseController extends Controller
             return $next($request);
         });
 
+
+
     }
 
     /***

@@ -21,20 +21,6 @@ use Illuminate\Support\Facades\Log;
 
 class ActivityLuckyBusiness extends ServerBase
 {
-    //请求
-    protected $request;
-    //session
-    protected $sessionUser;
-    //redis配置
-    protected $redisTag;
-    protected $redisKey;
-    protected $redisTimeout;
-
-    public function __construct($request)
-    {
-        $this->request = $request;
-    }
-
     /***
      * 获取列表
      * @return mixed
@@ -141,7 +127,7 @@ class ActivityLuckyBusiness extends ServerBase
         $lookWhere = $this->lookWhere($isadmin, $companyid, $cityid, $storeid, $islook);
         //检测是否存在
         $list["luckData"] = ActivityLucky::where("id", $id)->first()->toArray();
-        if (empty($list["luckData"])) {
+        if (!$list["luckData"]) {
             return responseCData(\StatusCode::NOT_EXIST_ERROR, "抽奖活动不存在");
         }
         $list["luckData"]["winpoint"] = $list["luckData"]["winpoint"] * 100;
@@ -177,8 +163,7 @@ class ActivityLuckyBusiness extends ServerBase
         });
 
 
-        return $list;
-
+        return responseCData(\StatusCode::SUCCESS, "", $list);
     }
 
 

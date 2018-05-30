@@ -24,6 +24,12 @@ Route::group(['namespace' => 'Server'], function () {
     Route::match(['get', 'post'],'recover-pass', 'RecoverPassController@recoverPass')->name('recover-pass');//忘记密码
     //发短信
     Route::put('sms/code', 'PublicController@sendSms')->name('sms-code');
+
+    //错误页面
+    Route::get("filter/undefined","ErrorController@undefined")->name("error-undefined");//400
+    Route::get("filter/syserror","ErrorController@syserror")->name("error-syserror");//500
+    Route::get("filter/lock","ErrorController@lock")->name("error-lock");//无权限
+
     //中间件登录认证路由
     Route::group(['middleware' => ['checkUser']], function () {
         Route::get('/', 'IndexController@index')->name('index'); //入口
