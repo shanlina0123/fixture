@@ -8,7 +8,7 @@
                 <div class="bottomBtns">
                     <a href="https://mpkf.weixin.qq.com/cgi-bin/kfloginpage" class="btnlink" target="_blank">登录客服系统</a>
                     <a href="https://mp.weixin.qq.com/ " class="btnlink" target="_blank">绑定客服</a>
-                    <a href="https://mp.weixin.qq.com/ " class="btnlink" target="_blank">帮助</a>
+                    <a href="https://developers.weixin.qq.com/miniprogram/introduction/custom.html " class="btnlink" target="_blank">帮助</a>
                 </div>
             </div>
         </div>
