@@ -127,7 +127,7 @@ class ActivityLuckyBusiness extends ServerBase
         $lookWhere = $this->lookWhere($isadmin, $companyid, $cityid, $storeid, $islook);
         //检测是否存在
         $list["luckData"] = ActivityLucky::where("id", $id)->first()->toArray();
-        if (empty($list["luckData"])) {
+        if (!$list["luckData"]) {
             return responseCData(\StatusCode::NOT_EXIST_ERROR, "抽奖活动不存在");
         }
         $list["luckData"]["winpoint"] = $list["luckData"]["winpoint"] * 100;

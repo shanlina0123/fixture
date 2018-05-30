@@ -10,8 +10,8 @@
             margin-bottom: 50px;
         }
         .showImg {
-            width: 100%;
-            height: 187.5px;
+            max-width: 100%;
+            max-height:500px;
         }
         .imgHomeShow{
             width: 100%;
