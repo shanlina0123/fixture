@@ -21,7 +21,7 @@ class SiteDynamic extends ClientBase
     public function DynamicList( $where, $request )
     {
         //Cache::flush();
-        $tag = 'ClientHome'.$where['companyid'];
+        $tag = 'DynamicList'.$where['companyid'];
         $tagWhere = $request->input('page').json_encode($where,JSON_FORCE_OBJECT);
         $value = Cache::tags($tag)->remember( $tag.$tagWhere,config('configure.sCache'), function() use( $where, $request ){
             $sql = Dynamic::where( $where )->orderBy('id','desc')->with('dynamicToImages');//关联图片
@@ -37,6 +37,8 @@ class SiteDynamic extends ClientBase
                     $query->with(['dynamicCommentToUser'=>function( $query ){
                         $query->select('id','nickname');
                     }]);
+                },'dynamicToStatistics'=>function($query){
+                    $query->select('dynamicid','thumbsupnum','commentnum');
                 }]);
             return $sql->paginate(config('configure.sPage'));
         });

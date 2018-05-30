@@ -21,7 +21,7 @@
                 <label class="layui-form-label">选择阶段</label>
                 <div class="layui-input-block">
                     @foreach( $data->tage as $row )
-                        <input type="radio" name="stagetagid" @if($row->id == $data->stageid ) checked="checked" @endif datatype="*" nullmsg="请选择阶段" value="{{$row->id}}" title="{{$row->name}}" >
+                        <input type="radio" name="stagetagid" lay-filter="radio"  data-name="{{$row->name}}" @if($row->id == $data->stageid ) checked="checked" @endif datatype="*" nullmsg="请选择阶段" value="{{$row->id}}" title="{{$row->name}}" >
                     @endforeach
                 </div>
             </div>
@@ -31,6 +31,7 @@
                     <textarea name="content" maxlength="255" datatype="*1-300" nullmsg="请填写内容" errormsg="内容为1-300个字符" placeholder="说点什么" class="layui-textarea"></textarea>
                 </div>
             </div>
+            <input type="hidden" name="title" value="{{$data->name}}">
             <div class="layui-form-item">
                 <label class="layui-form-label">上传图片</label>
                 <div class="layui-input-block layui-upload">
@@ -61,6 +62,11 @@
                 <button type="button" class="layui-btn"  id="btn_submit">立即提交</button>
             </div>
             <input type="hidden" id="img" name="img">
+            @foreach( $data->tage as $row )
+                @if($row->id == $data->stageid )
+                 <input type="hidden" name="sitestagename" value="{{$row->name}}" id="sitestagename">
+                @endif
+            @endforeach
         </form>
     </div>
 </div>

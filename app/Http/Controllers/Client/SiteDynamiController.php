@@ -33,7 +33,7 @@ class SiteDynamiController extends ClientBaseController
         }else
         {
             //没有工地id
-            $where['companyid'] = 4;//$this->apiUser->companyid;
+            $where['companyid'] = $this->apiUser->companyid;
         }
         $res = $this->dynamic->DynamicList( $where, $this->request );
         responseData(\StatusCode::SUCCESS,'动态信息',$res);

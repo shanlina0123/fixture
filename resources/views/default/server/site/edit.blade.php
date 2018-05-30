@@ -130,6 +130,7 @@
             <input type="hidden" name="fulladdr" value="">
             <input type="hidden" name="lng" value="{{$data->info->lng}}">
             <input type="hidden" name="lat" value="{{$data->info->lat}}">
+            <input type="hidden" name="sitestagename" value="" id="sitestagename">
             </form>
         </div>
     </div>

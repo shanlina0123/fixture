@@ -52,7 +52,7 @@ class SiteBusiness extends StoreBase
             $site->lat = $data['lat'];
             $site->lng = $data['lng'];
             $site->addr = $data['addr'];
-            $site->createuserid = 17;//发布者的id
+            $site->createuserid = $data['uid'];//发布者的id
             $site->save();
             //添加动态
             $dynamic = new Dynamic();
@@ -60,10 +60,11 @@ class SiteBusiness extends StoreBase
             $dynamic->companyid = $data['companyid'];
             $dynamic->storeid = $data['storeid'];
             $dynamic->sitetid = $site->id;
-            $dynamic->tablesign = 1;
             $dynamic->createuserid = $site->createuserid;
             $dynamic->content = '新建工地：感谢业主大大信任，'.$data['name'].'今日开工啦。大吉大利，家宅平安!';
+            $dynamic->title = $data['name'];
             $dynamic->type = 0;
+            $dynamic->sitestagename = $data['sitestagename'];
             $dynamic->status = 1;
             $dynamic->created_at = date("Y-m-d H:i:s");
             $dynamic->save();
@@ -73,7 +74,6 @@ class SiteBusiness extends StoreBase
             $progress->dynamicid = $dynamic->id;
             $progress->siteid = $site->id;
             $progress->stagetagid = $data['stageid'];
-            $progress->tablesign = 1;
             $progress->stageuserid = $site->createuserid;
             $progress->positionid = $site->createuserid;
             $progress->created_at = date("Y-m-d H:i:s");
@@ -353,9 +353,8 @@ class SiteBusiness extends StoreBase
     public function siteInfo( $data )
     {
         $sWhere['companyid'] = $data['companyid'];
-        $sWhere['storeid'] = $data['storeid'];
         $sWhere['id'] = $data['id'];
-        $res =  Site::where( $sWhere )->orderBy('id','desc')->with(
+        $res = Site::where( $sWhere )->orderBy('id','desc')->with(
             [
                 'siteToRenovationMode'=>function( $query ){ //装修方式
                     $query->select('id','name');
@@ -367,12 +366,14 @@ class SiteBusiness extends StoreBase
                     $query->select('id','name');
                 },'siteToFolloWrecord'=>function( $query )//观光团
                 {
-                    $query->select('id','siteid','followuserid')->with('followToOuristparty');
+                    $query->select('id','siteid','userid')->with(['followToUser'=>function( $query ){
+                        $query->select('faceimg','id');
+                    }]);
                 }
             ]
-        )->first();
+        )->select('explodedossurl','addr','budget','acreage','roomtypeid','roomstyleid','renovationmodeid','stagetemplateid','companyid','id')->first();
         //公司模板
-        $res->tag = CompanyStageTemplateTag::orderBy('sort','asc')->where(['stagetemplateid'=>$res->stagetemplateid,'companyid'=>$res->companyid])->get();
+        $res->tag = CompanyStageTemplateTag::orderBy('sort','asc')->where(['stagetemplateid'=>$res->stagetemplateid,'companyid'=>$res->companyid])->select('id','name')->get();
         //动态
        /* $comment = Dynamic::where(['companyid'=>$res->companyid,'storeid'=>$res->storeid,'sitetid'=>$res->id,'type'=>0])->with(
             [
@@ -397,16 +398,20 @@ class SiteBusiness extends StoreBase
     public function siteDynamic( $data )
     {
         //动态
-        $comment = Dynamic::where(['companyid'=>$data['companyid'],'storeid'=>$data['storeid'],'sitetid'=>$data['id'],'type'=>0])->with(
+        $comment = Dynamic::where(['companyid'=>$data['companyid'],'sitetid'=>$data['id'],'type'=>0])->with(
             [
-                'dynamicToFollo'=>function( $query )
+                'dynamicToFollo'=>function($query)
                 {
                     $query->orderBy('id','desc')->select('dynamicid','content');
-                },'dynamicToImages'=>function( $query )
-            {
-                $query->orderBy('id','desc')->select('dynamicid','ossurl','type');
-            }
-            ])->paginate(config('configure.sPage'));
+                },'dynamicToImages'=>function($query)
+                {
+                    $query->orderBy('id','desc')->select('dynamicid','ossurl','type');
+                },'dynamicToUser'=>function($query){
+                    $query->select('nickname','id');
+                },'dynamicToStatistics'=>function($query){
+                    $query->select('thumbsupnum','follownum','dynamicid');
+                }
+            ])->select('content','id','title','created_at','createuserid')->paginate(config('configure.sPage'));
         return $comment;
     }
 }

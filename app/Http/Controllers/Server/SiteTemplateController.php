@@ -147,9 +147,8 @@ class SiteTemplateController extends ServerBaseController
     {
         $companyId = $this->userInfo->companyid;
         $res = $this->template->templateDel( $companyId, $id );
-        if( $res->status  )
+        if( $res->status == 1 )
         {
-            Cache::forget('companystagetemplate'.$companyId);
             Cache::tags(['siteTemplate'.$companyId])->flush();
         }
         return json_encode($res);

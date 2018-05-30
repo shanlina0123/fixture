@@ -62,7 +62,29 @@ Route::group(['middleware'=>'ApiCheck'], function () {
         Route::post('client/dynamic-fabulous', 'SiteDynamicStatisticsCommentController@Fabulous');
         //预约
         Route::post('client/appointment', 'ClientAppointmentController@Appointment');
+        //我的关注项目
+        Route::get('client/follow-record', 'ClientSiteFollowRecordController@followRecord');
+        //参与的活动
+        Route::get('client/activity-inrecord', 'ClientActivityInrecordController@activityInrecord');
+        //活动详情
+        Route::get('client/activity-info/{uuid}', 'ClientActivityInrecordController@activityInfo');
+        //我的装修
+        Route::get('client/site-invitation', 'ClientSiteInvitationController@siteInvitation');
+        //公司信息
+        Route::get('client/company-info', 'ClientCompanyController@companyInfo');
+        //问题反馈
+        Route::get('client/company-info', 'ClientCompanyController@companyInfo');
+        //中奖列表
+        Route::get('client/lucky-record', 'ClientActivityLuckyRecordController@luckyRecordList');
     });
+
+    /**
+     * 问题反馈
+     */
+    Route::post('qa/feedback', 'Common\QaController@feedback');
+    //消息通知
+    Route::get('log/notice', 'Common\SystemMessageController@notice');
+    Route::post('log/read-notice', 'Common\SystemMessageController@readNotice');
 });
 
 

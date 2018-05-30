@@ -12,7 +12,6 @@ class RecoverPassController extends ServerBaseController
     protected $request;
     public function __construct(UserBusiness $user,Request $request)
     {
-        parent::__construct();
         $this->user = $user;
         $this->request = $request;
     }

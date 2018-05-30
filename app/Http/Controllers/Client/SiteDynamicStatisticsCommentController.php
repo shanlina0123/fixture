@@ -7,8 +7,10 @@
  */
 
 namespace App\Http\Controllers\Client;
+
 use App\Http\Business\Client\SiteDynamicStatistics;
 use App\Http\Controllers\Common\ClientBaseController;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 class SiteDynamicStatisticsCommentController extends ClientBaseController
 {
@@ -28,8 +30,7 @@ class SiteDynamicStatisticsCommentController extends ClientBaseController
         $data = trimValue( $this->request->all() );
         $validator = Validator::make(
             $data,[
-                'dynamicid'=>'required|numeric',//公司
-                'siteid'=>'required|numeric',//门店
+                'dynamicid'=>'required|numeric',
             ]
         );
         if ($validator->fails())
@@ -39,6 +40,7 @@ class SiteDynamicStatisticsCommentController extends ClientBaseController
         $res = $this->dynamicStatistics->Fabulous( $data );
         if( $res )
         {
+            Cache::tags(['DynamicList'.$this->apiUser->companyid])->flush();
             responseData(\StatusCode::SUCCESS,'点赞成功');
         }
         responseData(\StatusCode::ERROR,'点赞失败');
