@@ -34,7 +34,6 @@ class BusinessServerLogin extends ServerBase
                  $obj->msg = '账号已被禁用';
                  return $obj;
              }
-             $res->islook=0;
              session(['userInfo'=>$res]);
              $obj->status = 1;
              $obj->msg = '登陆成功';

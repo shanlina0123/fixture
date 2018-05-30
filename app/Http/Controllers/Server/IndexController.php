@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Server;
 use App\Http\Controllers\Common\ServerBaseController;
+
 use Illuminate\Support\Facades\Cache;
 
 class IndexController extends ServerBaseController

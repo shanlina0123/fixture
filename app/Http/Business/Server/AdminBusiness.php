@@ -125,7 +125,7 @@ class AdminBusiness extends ServerBase
             $admin["type"] = 0;
             $admin["isinvitationed"] = 0;
             $admin["status"] = $data["status"];
-            $admin["password"] = optimizedSaltPwd("admin", $data['password']);
+            $admin["password"] = optimizedSaltPwd($data['password'],config('configure.salt'));
             $admin["companyid"] = $companyid;
             $admin["cityid"] = $storeData["cityid"];
             $admin["provinceid"] = $storeData["provinceid"];
@@ -205,6 +205,7 @@ class AdminBusiness extends ServerBase
             $admin["type"] = 0;
             $admin["isinvitationed"] = 0;
             $admin["status"] = $data["status"];
+            $admin["password"] = optimizedSaltPwd($data['password'],config('configure.salt'));
             $admin["updated_at"] = date("Y-m-d H:i:s");
             //修改Admin数据
             $rs = User::where("uuid", $uuid)->update($admin);

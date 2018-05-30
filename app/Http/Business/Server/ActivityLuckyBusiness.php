@@ -21,20 +21,6 @@ use Illuminate\Support\Facades\Log;
 
 class ActivityLuckyBusiness extends ServerBase
 {
-    //请求
-    protected $request;
-    //session
-    protected $sessionUser;
-    //redis配置
-    protected $redisTag;
-    protected $redisKey;
-    protected $redisTimeout;
-
-    public function __construct($request)
-    {
-        $this->request = $request;
-    }
-
     /***
      * 获取列表
      * @return mixed
@@ -177,8 +163,7 @@ class ActivityLuckyBusiness extends ServerBase
         });
 
 
-        return $list;
-
+        return responseCData(\StatusCode::SUCCESS, "", $list);
     }
 
 

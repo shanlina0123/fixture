@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 use App\Http\Model\User\User;
+use App\Model\Roles\RoleFunction;
 use Closure;
 use Illuminate\Support\Facades\Cache;
 
@@ -36,6 +37,8 @@ class UserCheck
                  return redirect()->route('login');
              }
          }
+
+
         return $next($request);
     }
 }
