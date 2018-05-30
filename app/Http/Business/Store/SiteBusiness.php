@@ -52,7 +52,7 @@ class SiteBusiness extends StoreBase
             $site->lat = $data['lat'];
             $site->lng = $data['lng'];
             $site->addr = $data['addr'];
-            $site->createuserid = 17;//发布者的id
+            $site->createuserid = $data['uid'];//发布者的id
             $site->save();
             //添加动态
             $dynamic = new Dynamic();
@@ -60,10 +60,11 @@ class SiteBusiness extends StoreBase
             $dynamic->companyid = $data['companyid'];
             $dynamic->storeid = $data['storeid'];
             $dynamic->sitetid = $site->id;
-            $dynamic->tablesign = 1;
             $dynamic->createuserid = $site->createuserid;
             $dynamic->content = '新建工地：感谢业主大大信任，'.$data['name'].'今日开工啦。大吉大利，家宅平安!';
+            $dynamic->title = $data['name'];
             $dynamic->type = 0;
+            $dynamic->sitestagename = $data['sitestagename'];
             $dynamic->status = 1;
             $dynamic->created_at = date("Y-m-d H:i:s");
             $dynamic->save();
@@ -73,7 +74,6 @@ class SiteBusiness extends StoreBase
             $progress->dynamicid = $dynamic->id;
             $progress->siteid = $site->id;
             $progress->stagetagid = $data['stageid'];
-            $progress->tablesign = 1;
             $progress->stageuserid = $site->createuserid;
             $progress->positionid = $site->createuserid;
             $progress->created_at = date("Y-m-d H:i:s");

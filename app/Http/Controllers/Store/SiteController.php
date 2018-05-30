@@ -23,6 +23,7 @@ class SiteController extends StoreBaseController
         $data = trimValue( $this->request->all() );
         $data['companyid'] = $this->apiUser->companyid;
         $data['storeid'] = $this->apiUser->storeid;
+        $data['uid'] = $this->apiUser->id;
         $validator = Validator::make(
             $data,[
                 'companyid'=>'bail|required|numeric',//公司
@@ -60,7 +61,7 @@ class SiteController extends StoreBaseController
         $res = $this->site->siteSave( $data );
         if( $res == true )
         {
-            Cache::tags(['site'.$data['companyid'],'siteHome'.$data['storeid']])->flush();
+            Cache::tags(['site'.$data['companyid'],'siteHome'.$data['storeid'],'DynamicList'.$data['companyid']])->flush();
             responseData(\StatusCode::SUCCESS,'发布成功',$res);
         }else
         {

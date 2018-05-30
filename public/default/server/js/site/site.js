@@ -84,11 +84,20 @@ layui.use(['form', 'layer','upload'], function() {
         $.post(url,{tid:tid},function ( data ) {
             for( var i= 0;i<data.length;i++ )
             {
-                str+='<input type="radio" name="stageid" value="'+data[i].id+'" title="'+data[i].name+'" >';
+                str+='<input type="radio" name="stageid" lay-filter="radio"  data-name="'+data[i].name+'" value="'+data[i].id+'" title="'+data[i].name+'" >';
             }
             $("#templateTag").append(str);
             form.render('radio');
         },'json');
+    });
+
+    form.on('radio(radio)', function(data){
+        var name = $(data.elem).data('name');
+        $("#sitestagename").val(name);
+        /* console.log(data.elem); //得到checkbox原始DOM对象
+         console.log(data.elem.checked); //开关是否开启，true或者false
+         console.log(data.value); //开关value值，也可以通过data.elem.value得到
+         console.log(data.othis); //得到美化后的DOM对象*/
     });
 
     form.on('switch(isOpen)', function(data){

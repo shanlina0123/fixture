@@ -111,7 +111,7 @@ class SiteController extends ServerBaseController
         $res = $this->site->siteSave( $data );
         if( $res == true )
         {
-            Cache::tags(['site'.$data['companyid']])->flush();
+            Cache::tags(['site'.$data['companyid'],'DynamicList'.$data['companyid']])->flush();
             return redirect()->route('site.index')->with('msg','添加成功');
         }else
         {
@@ -198,7 +198,7 @@ class SiteController extends ServerBaseController
         $res = $this->site->siteUpdate( $data, $id );
         if( $res->status == 1 )
         {
-            Cache::tags(['site'.$data['companyid']])->flush();
+            Cache::tags(['site'.$data['companyid'],'DynamicList'.$data['companyid']])->flush();
             return redirect()->route('site.index')->with('msg',$res->msg);
         }else
         {
@@ -256,7 +256,7 @@ class SiteController extends ServerBaseController
             $res = $this->site->saveSiteRenew( $data, $uuid );
             if( $res->status == 1 )
             {
-                Cache::tags(['site'.$companyId])->flush();
+                Cache::tags(['site'.$companyId,'DynamicList'.$data['companyid']])->flush();
                 return redirect()->route('site.index')->with('msg','更新成功');
             }else
             {

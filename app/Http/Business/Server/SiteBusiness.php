@@ -290,6 +290,8 @@ class SiteBusiness extends ServerBase
             $dynamic->sitetid = $site->id;
             $dynamic->createuserid = $data['createuserid'];
             $dynamic->content = '新建工地：感谢业主大大信任，'.$data['name'].'今日开工啦。大吉大利，家宅平安!';
+            $dynamic->title = $data['name'];
+            $dynamic->sitestagename = $data['sitestagename'];
             $dynamic->type = 0;
             $dynamic->status = 1;
             $dynamic->created_at = date("Y-m-d H:i:s");
@@ -521,6 +523,8 @@ class SiteBusiness extends ServerBase
             $dynamic->sitetid = $site->id;
             $dynamic->createuserid = $data['createuserid'];
             $dynamic->content = $data['content'];
+            $dynamic->title = $data['title'];
+            $dynamic->sitestagename = $data['sitestagename'];
             $dynamic->type = 0;
             $dynamic->status = 1;
             $dynamic->created_at = date("Y-m-d H:i:s");
