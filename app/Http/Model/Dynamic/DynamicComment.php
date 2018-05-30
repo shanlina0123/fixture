@@ -20,4 +20,12 @@ class DynamicComment extends Model
         return $this->belongsTo('App\Http\Model\User\User','createuserid','id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * 关联被回复用户
+     */
+    public function dynamicCommentToReplyUser()
+    {
+        return $this->belongsTo('App\Http\Model\User\User','replyuserid','id');
+    }
 }

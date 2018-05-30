@@ -58,7 +58,7 @@ class SiteDynamicCommentController extends ClientBaseController
             $data,[
                 'dynamicid'=>'required|numeric',//动态
                 'siteid'=>'required|numeric',//工地id
-                'pid'=>'present',//pid
+                'replyuserid'=>'present',//replyuserid
                 'content'=>'required',//地址
             ]
         );

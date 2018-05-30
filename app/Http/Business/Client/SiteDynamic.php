@@ -36,6 +36,8 @@ class SiteDynamic extends ClientBase
                     //关联评论用户
                     $query->with(['dynamicCommentToUser'=>function( $query ){
                         $query->select('id','nickname');
+                    },'dynamicCommentToReplyUser'=>function($query){
+                        $query->select('id','nickname');
                     }]);
                 },'dynamicToStatistics'=>function($query){
                     $query->select('dynamicid','thumbsupnum','commentnum');
