@@ -35,6 +35,7 @@ class CompanyController extends ServerBaseController
             $res = $this->company->setCompany($data);
             if( $res->ststus == 1 )
             {
+                Cache::forget('CompanyInfo'.$this->userInfo->companyid);
                 if( $data['returnUrl'] )
                 {
                     return redirect($data['returnUrl']);

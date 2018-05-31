@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Common\ClientBaseController;
 use App\Http\Model\Company\Company;
+use Illuminate\Support\Facades\Cache;
 
 class ClientCompanyController extends ClientBaseController
 {
@@ -25,7 +26,12 @@ class ClientCompanyController extends ClientBaseController
     {
         $user = $this->apiUser;
         $where['id'] = $user->companyid;
-        $res = Company::where($where)->select('name','fullname','phone','fulladdr','resume','logo')->first();
+        if( Cache::has('CompanyInfo'.$user->companyid) ){
+            $res = Cache::get('CompanyInfo'.$user->companyid);
+        }else{
+            $res = Company::where($where)->select('name','fullname','phone','fulladdr','resume','logo')->first();
+            Cache::put('CompanyInfo'.$user->companyid,$res,config('configure.sCache'));
+        }
         if( !$res )
         {
             responseData(\StatusCode::ERROR,'查询失败');

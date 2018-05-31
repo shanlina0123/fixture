@@ -359,9 +359,6 @@ class SiteBusiness extends StoreBase
                 'siteToRenovationMode'=>function( $query ){ //装修方式
                     $query->select('id','name');
                 },
-                'siteToRoomType'=>function( $query ){
-                    $query->select('id','name');//户型
-                },
                 'siteToRoomStyle'=>function( $query ){//风格
                     $query->select('id','name');
                 },'siteToFolloWrecord'=>function( $query )//观光团
@@ -369,9 +366,11 @@ class SiteBusiness extends StoreBase
                     $query->select('id','siteid','userid')->with(['followToUser'=>function( $query ){
                         $query->select('faceimg','id');
                     }]);
+                },'siteToDynamicStatistics'=>function($query){
+                    $query->select('linkednum','siteid','follownum');
                 }
             ]
-        )->select('explodedossurl','addr','budget','acreage','roomtypeid','roomstyleid','renovationmodeid','stagetemplateid','companyid','id')->first();
+        )->select('explodedossurl','addr','budget','acreage','roomtypeid','roomstyleid','renovationmodeid','stagetemplateid','companyid','id','roomshap','stageid')->first();
         //公司模板
         $res->tag = CompanyStageTemplateTag::orderBy('sort','asc')->where(['stagetemplateid'=>$res->stagetemplateid,'companyid'=>$res->companyid])->select('id','name')->get();
         //动态

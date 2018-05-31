@@ -29,7 +29,7 @@ class ClientActivityLuckyRecord
             $sql = ActivityLuckyRecord::where( ['userid'=>$id,'iswin'=>1] )->orderBy('id','desc')->with(['luckyRecordToLucky'=>function($query){
                 $query->select('title','id');
             }]);
-            return $sql->select('prizename','activityluckid')->paginate(config('configure.sPage'));
+            return $sql->select('prizename','activityluckid','created_at')->paginate(config('configure.sPage'));
         });
         return $value;
     }
