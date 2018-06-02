@@ -36,12 +36,16 @@ class RecoverPassController extends ServerBaseController
                 ]
             );
             $phone = $this->request->input('phone');
-            $code = $this->request->input('code');
-            $code_cache = Cache::get('tel_'.$phone);
-            if( $code != $code_cache )
+            if( config('configure.is_sms') == true )
             {
-                return redirect()->route('recover-pass')->with('msg','验证码不正确');
+                $code = $this->request->input('code');
+                $code_cache = Cache::get('tel_'.$phone);
+                if( $code != $code_cache )
+                {
+                    return redirect()->route('recover-pass')->with('msg','验证码不正确');
+                }
             }
+
             $where['phone'] = $phone;
             $data['password'] = optimizedSaltPwd($this->request->input('password'),config('configure.salt'));
             $res = $this->user->setPass( $data,$where );

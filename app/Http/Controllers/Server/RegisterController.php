@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Server;
 use App\Http\Business\Server\BusinessServerRegiste;
 use App\Http\Controllers\Common\ServerBaseController;
+use App\Http\Model\Conf\Pc;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -39,11 +40,14 @@ class RegisterController extends ServerBaseController
                 'code.required'=>'请填写验证码',
                 'code.numeric'=>'验证码有误',
             ]);
-             $code = Cache::get('tel_'.$data['phone']);
-             if( $data['code'] != $code )
-             {
-                 return redirect()->route('register')->with('msg','验证码有误');
-             }
+            if( config('configure.is_sms') == true )
+            {
+                $code = Cache::get('tel_'.$data['phone']);
+                if( $data['code'] != $code )
+                {
+                    return redirect()->route('register')->with('msg','验证码有误');
+                }
+            }
             $res = $this->user->userSave($data);
             if( $res == true )
             {
@@ -54,7 +58,16 @@ class RegisterController extends ServerBaseController
             }
         }else
         {
-            return view('server.userentrance.register');
+
+            //获取注册协议
+            $tag1="Register-Agree";
+            $register_agree = Cache::get($tag1, function () use ( $tag1) {
+                $register_agree =Pc::where("name","register_agree")->value("content");
+                Cache::put($tag1, $register_agree, config('configure.sCache'));
+                //返回数据库层查询结果
+                return $register_agree;
+            });
+            return view('server.userentrance.register',compact('register_agree'));
         }
     }
 }

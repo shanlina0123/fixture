@@ -9,6 +9,7 @@
 namespace App\Http\Business\Common;
 use App\Http\Model\Wx\SmallProgram;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Mockery\Exception;
 
 class WxAuthorize
@@ -87,7 +88,6 @@ class WxAuthorize
         if( Cache::has('pre_auth_code'.$ID) )
         {
             $pre_auth_code = Cache::get('pre_auth_code'.$ID);
-
         }else
         {
             $url = 'https://api.weixin.qq.com/cgi-bin/component/api_create_preauthcode?component_access_token='.$this->component_access_token;
@@ -100,7 +100,6 @@ class WxAuthorize
                 {
                     Cache::put('pre_auth_code'.$ID ,$data['pre_auth_code'],$data['expires_in']/60);
                     $pre_auth_code = $data['pre_auth_code'];
-
                 }else
                 {
                     $pre_auth_code = '';

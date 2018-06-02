@@ -57,7 +57,7 @@
                 <div class="layui-tab-content loginContent">
                     <!--账号密码登录-->
                     <div class="layui-tab-item layui-show">
-                            <form class="form1 layui-form" method="post" action="{{route('login')}}">
+                            <form class="form1 layui-form" method="post" action="{{route('login')}}" tosubid="1">
                                 {{csrf_field()}}
                             <div class="layui-form-item">
                                 <input type="text" class="layui-input" name="username" datatype="*3-20"  nullmsg="请输入手机号码或者用户名" errormsg="手机号码或者用户名不正确" autocomplete="off">
@@ -80,7 +80,7 @@
                     </div>
                     <!--手机号码登录-->
                     <div class="layui-tab-item">
-                        <form class="layui-form form2" action="{{route('login')}}" method="post">
+                        <form class="layui-form form2" action="{{route('login')}}" method="post" tosubid="2">
                             {{csrf_field()}}
                             <input type="hidden" name="logintype" value="2"/>
                             <div class="layui-form-item">

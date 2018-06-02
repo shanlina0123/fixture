@@ -11,6 +11,7 @@ use App\Http\Controllers\Common\WxBaseController;
 use App\Http\Model\Wx\SmallProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class WxAuthorizeController extends WxBaseController
 {
@@ -41,7 +42,8 @@ class WxAuthorizeController extends WxBaseController
         {
             return redirect()->route('user-authorize')->with('msg','您已授权成功');
         }
-        $code = $this->wx->preAuthCode( $user['id'] );
+        $code = $this->wx->preAuthCode($user->id);
+
         if( $code )
         {
             $url = $this->wx->QRCodeUrl( $code );

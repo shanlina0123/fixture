@@ -25,7 +25,6 @@
             background-image: -ms-linear-gradient(45deg, #003073 0, #029797 100%);
             background-image: -o-linear-gradient(45deg, #003073, #029797);
             background-image: linear-gradient(135deg, #003073, #029797);
-            text-align: center;
             margin: 0px;
             overflow: hidden;
         }
@@ -52,7 +51,7 @@
             <form class="form layui-form" method="post" action="{{route('register')}}">
                 {{csrf_field()}}
                 <div class="layui-form-item">
-                    <input type="number" class="layui-input" placeholder="手机号"  id="phone" name="phone" datatype="m"  nullmsg="ဇ请输入手机号码" errormsg="ဇ手机号码有误" autocomplete="off">
+                    <input type="number" class="layui-input" placeholder="手机号"  id="phone" name="phone" datatype="m"  nullmsg="请输入手机号码" errormsg="ဇ手机号码有误" autocomplete="off">
                 </div>
                 <div class="layui-form-item clearfix">
                     <input type="text" name="code" lay-verify="title" autocomplete="off" placeholder="短信验证码" class="layui-input codeInput fl">
@@ -65,7 +64,7 @@
                     <input type="password" class="layui-input" name="password_confirmation" datatype="*" placeholder="确认密码" recheck="password" nullmsg="请输入密码" errormsg="您两次输入的账号密码不一致" autocomplete="off">
                 </div>
                 <div class="registDeel">
-                    <input type="checkbox" lay-skin="primary" datatype="*" errormsg="请选择"  name="agree">
+                    <input type="checkbox" lay-skin="primary" datatype="*" errormsg="请选择用户注册协议"  name="agree">
                     <a href="javascript:;">用户注册协议</a>
                 </div>
                 <div class="layui-form-item loginBtn">
@@ -74,6 +73,13 @@
             </form>
         </div>
     </div>
+</div>
+<!--用户注册协议-->
+<div class="deal">
+    {!! $register_agree !!}
+<div class="btnWrap">
+    <button type="button" class="layui-btn">阅读并同意</button>
+</div>
 </div>
 <script type="text/javascript" src="{{pix_asset('server/plugins/layui/layui.js',false)}}"></script>
 <script type="text/javascript" src="{{pix_asset('server/plugins/validform/Validform_v5.3.2_min.js',false)}}"></script>

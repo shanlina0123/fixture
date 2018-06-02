@@ -5,17 +5,18 @@
   margin: 0;
 }
 .loginWrap {
-  position: absolute;
+  position: fixed;
   width: 500px;
-  height: 380px;
-  top: 50%;
-  left: 50%;
-  margin-top: -190px;
-  margin-left: -250px;
+  max-height: 380px;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
   padding: 20px 10px;
   background-color: #fff;
   border-radius: 5px;
   background: url(../images/blackbg.png);
+  margin: auto;
 }
 .loginLogo {
   width: 150px;
@@ -40,6 +41,7 @@
 }
 .registDeel {
   margin-bottom: 10px;
+  text-align: left;
 }
 .registDeel a {
   color: #1E9FFF;

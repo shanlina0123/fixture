@@ -3,7 +3,11 @@ $.ajaxSetup({
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     }
 });
-
+$("form").keyup(function(event){
+    if(event.keyCode ==13){
+        $("#btn_submit").trigger("click");
+    }
+});
 $(".form").Validform({
     btnSubmit:'#btn_submit',
     postonce: true,
@@ -30,6 +34,24 @@ var layer;
 layui.use(['form','layer'], function() {
         form = layui.form;
         layer = layui.layer;
+    //注册协议
+    $(".registDeel > a").click(function() {
+        layer.open({
+            type: 1,
+            title: '用户注册协议',
+            shadeClose: true,
+            scrollbar: false,
+            skin: 'layui-layer-rim',
+            area: ['700px', '600px'],
+            content: $(".deal")
+        })
+    });
+    //关闭注册协议
+    $(".btnWrap button").click(function() {
+        $("input[name=agree]").prop("checked",true);
+        form.render('checkbox');
+        layer.closeAll();
+    })
 });
 /**
  * 倒计时

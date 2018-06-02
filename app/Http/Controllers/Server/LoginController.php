@@ -73,11 +73,15 @@ class LoginController extends ServerBaseController
                         'code.min'=>'验证码错误',
                         'code.max'=>'验证码错误',
                     ]);
-                    $code_cache = Cache::get('tel_'.$data['username']);
-                    if( $data['code'] != $code_cache )
+                    if( config('configure.is_sms') == true )
                     {
-                        return redirect()->back()->with('msg','验证码错误');
+                        $code_cache = Cache::get('tel_'.$data['username']);
+                        if( $data['code'] != $code_cache )
+                        {
+                            return redirect()->back()->with('msg','验证码错误');
+                        }
                     }
+
                     $where['phone'] = $data['username'];
                     $res = $this->user->checkUserPhone($where);
                     break;

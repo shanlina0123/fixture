@@ -7,6 +7,15 @@ $.ajaxSetup({
     }
 });
 
+
+$("form").keyup(function(event){
+    if(event.keyCode ==13){
+        var tosubid=$(this).attr("tosubid")
+        $("#btn_submit"+tosubid).trigger("click");
+    }
+});
+
+
 $(".form1").Validform({
     btnSubmit:'#btn_submit1',
     postonce: true,
@@ -33,23 +42,21 @@ $(".form1").Validform({
 $(".form2").Validform({
     btnSubmit:'#btn_submit2',
     postonce: true,
-    showAllError: false,
+     showAllError: false,
     tiptype: function (msg, o, cssctl)
     {
         if ( !o.obj.is("form") )
         {
-            if( o.type != 2 )
+            if(  o.type !=2 )
             {
-                var objtip = o.obj.parents('.p-input').find(".Validform_checktip");
-                objtip.removeClass('hide');
-                objtip.addClass('show');
+                var objtip = o.obj.parents(".layui-tab").find('.loginError');
                 cssctl(objtip, o.type);
-                objtip.find('span').text(msg);
+                objtip.text(msg);
             }else
             {
-                var objtip = o.obj.parents('.p-input').find(".Validform_checktip");
-                objtip.removeClass('show');
-                objtip.addClass('hide');
+                var objtip = o.obj.parents(".layui-tab").find('.loginError');
+                cssctl(objtip, o.type);
+                objtip.text('');
             }
         }
     }
