@@ -18,7 +18,7 @@ class AuthCheck
         //非管理员验证权限
         if ($admin_user->isadmin == 0) {
             //验证权限
-            $flag= $this->authRole($request,$admin_user,$admin_user["roleid"]);
+            $flag= $this->authRole($admin_user);
             if($flag==false)
             {
                 return redirect()->route('error-lock')->with('msg', '无权限');
@@ -34,32 +34,31 @@ class AuthCheck
      * 权限验证
      * @param $roleFunids  自己具备的功能
      */
-    protected function authRole($request,$admin_user,$roleid)
+    protected function authRole($admin_user)
     {
-        //当前访问模块
-        $routeController = getCurrentControllerName($request);
-        //角色的权限
-        $roleFunc= FilterRoleFunction::where("roleid",$roleid)->get();
-        $funcids=array_pluck($roleFunc,"functionid");
+
+        //当前访问的控制器和方法
+        $current=getCurrentAction();
+        //当前访问控制器
+        $routeController = $current["controller"];
+        $routeMethod = $current["method"];
+
+        //控制非管理员不能访问管理员的默认操作
+        $adminAllow=["CompanyController@companySetting","UserController@userAuthorize", 'WxAuthorizeController@upCode','WxAuthorizeController@upSourceCode','WxAuthorizeController@auditid'];
+        if(in_array($routeController."@".$routeMethod,$adminAllow))
+        {
+            return  false;
+        }
+
+        //自己已有的功能
+        $funcids=$admin_user["funcids"];
 
         //控制器访问权
         $authControler = FilterFunction::whereIn("id", $funcids)->where("status",1)->where("ismenu",1)->where("controller",$routeController)->get();
         if (empty($authControler->toArray())) {
             return  false;
         }
-        //控制器视野权限
-        $functionLook=array_column($roleFunc->toArray(),"islook","functionid");
-        $admin_user->islook=max($functionLook);
 
-        //菜单权限
-
-        //获取父类
-        $menueList=$authControler = FilterFunction::select("id","menuname","url","pid","level")->whereIn("id", $funcids)->where("status",1)->where("ismenu",1)->get();
-        $menueArray=list_to_tree($menueList->toArray(),"id","pid","_child",0);
-        $admin_user->menue=$menueArray;
-
-        //重置session
-        session(['userInfo'=>$admin_user]);
         return true;
 
     }

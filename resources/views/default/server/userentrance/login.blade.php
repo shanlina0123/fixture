@@ -60,11 +60,11 @@
                             <form class="form1 layui-form" method="post" action="{{route('login')}}" tosubid="1">
                                 {{csrf_field()}}
                             <div class="layui-form-item">
-                                <input type="text" class="layui-input" name="username" datatype="*3-20"  nullmsg="请输入手机号码或者用户名" errormsg="手机号码或者用户名不正确" autocomplete="off">
+                                <input type="text" class="layui-input" name="username" datatype="*3-20"   placeholder="手机号" nullmsg="请输入手机号码或者用户名" errormsg="手机号码或者用户名不正确" autocomplete="off">
                             </div>
                             <div class="layui-form-item">
                                 <input type="hidden" name="logintype" value="1"/>
-                                <input type="password" name="password"  class="layui-input" datatype="*6-12"  nullmsg="请输入密码" errormsg="密码范围在6~12位之间"  autocomplete="off" autocomplete="new-password">
+                                <input type="password" name="password"  class="layui-input" datatype="*6-12"   placeholder="密码" nullmsg="请输入密码" errormsg="密码范围在6~12位之间"  autocomplete="off" autocomplete="new-password">
                             </div>
                             <div class="layui-form-item">
                                 <input type="checkbox" lay-skin="primary" title="记住密码" checked="">

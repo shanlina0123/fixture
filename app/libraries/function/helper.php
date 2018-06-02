@@ -446,5 +446,9 @@ function getCurl( $url, $herder=1 )
     $action = \Route::current()->getActionName();
     list($class, $method) = explode('@', $action);
 
+    $arr=explode("\\", $class);
+    //获取最后一个/后边的字符
+    $class=$arr[count($arr)-1];
     return ['controller' => $class, 'method' => $method];
 }
+

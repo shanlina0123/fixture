@@ -278,6 +278,7 @@ class RolesBusiness extends ServerBase
             $authList= FilterRoleFunction::select("functionid","islook")->where("roleid", $roleid)->get()->toArray();
             return array_column($authList,null,"functionid");
         });
+
         return responseCData(\StatusCode::SUCCESS, "",$list);
 
     }

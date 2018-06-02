@@ -33,19 +33,12 @@ Route::group(['namespace' => 'Server'], function () {
     //中间件登录认证路由
     Route::group(['middleware' => ['checkUser']], function () {
         Route::get('/', 'IndexController@index')->name('index'); //入口
-        //微信代码管理
-        Route::get('wx/upcode/{appid}', 'WxAuthorizeController@upCode')->name('wx-upcode');//提交代码
-        Route::get('wx/upsourcecode/{appid}', 'WxAuthorizeController@upSourceCode')->name('wx-upsource-code');//发布代码
-        Route::get('wx/auditid', 'WxAuthorizeController@auditid');//发布代码审核状态查询
-        //公司信息
-        Route::match(['get', 'post'], 'company/setting', 'CompanyController@companySetting')->name('company-setting');  //公司信息设置
+
         //用户资料
         Route::match(['get', 'post'], 'user/info', 'UserController@userInfo')->name('user-info'); //个人资料跟换电话
         Route::match(['get', 'post'], 'user/set-pass', 'UserController@setPass')->name('set-pass'); //修改密码
        //上传图片
         Route::any('upload-temp-img', 'PublicController@uploadImgToTemp');
-        //微信认证页面
-        Route::get('user/authorize', 'UserController@userAuthorize')->name('user-authorize');
         //Vip
         Route::get("vip","VipController@index")->name("vip-index");//列表
         //通知
@@ -55,6 +48,18 @@ Route::group(['namespace' => 'Server'], function () {
         Route::get("message","MessageController@index")->name("message-index");//列表
         //中间件权限认证路由
         Route::group(['middleware' => ['checkAuth']], function () {
+
+            //下面的是管理员默认的权限
+            //公司信息
+            Route::match(['get', 'post'], 'company/setting', 'CompanyController@companySetting')->name('company-setting');  //公司信息设置
+            //微信认证页面
+            Route::get('user/authorize', 'UserController@userAuthorize')->name('user-authorize');
+            //微信代码管理
+            Route::get('wx/upcode/{appid}', 'WxAuthorizeController@upCode')->name('wx-upcode');//提交代码
+            Route::get('wx/upsourcecode/{appid}', 'WxAuthorizeController@upSourceCode')->name('wx-upsource-code');//发布代码
+            Route::get('wx/auditid', 'WxAuthorizeController@auditid');//发布代码审核状态查询
+
+            //下面的是其他用户自定义权限
             //工地
             Route::resource('site', 'SiteController');//工地管理
             Route::post('site/template-tag', 'SiteController@templateTag')->name('site-template-tag');
