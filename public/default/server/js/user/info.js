@@ -36,6 +36,8 @@ layui.use(['layer','form'], function() {
         if(!ret.test(phone))
         {
             layer.msg('手机号码有误');
+            $("#phone").removeAttr("readonly");
+            $me.removeAttr("disabled");
         }else
         {
             var url = $me.data('url');

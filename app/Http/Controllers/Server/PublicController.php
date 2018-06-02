@@ -67,20 +67,6 @@ class PublicController extends ServerBaseController
     }
 
 
-    /***
-     * 获取菜单
-     */
-    public  function  getMenu()
-    {
-        //获取用户信息
-        $admin_user=$this->request->get("admin_user");//对象
-
-        //获取业务数据
-        $list=$this->public_business->getMenu($admin_user->id,$admin_user->roleFunids);
-        //接口返回结果
-        responseData(\StatusCode::SUCCESS,"获取成功",$list);
-    }
-
     /**
      * @param $phone
      * @param $type
@@ -107,6 +93,21 @@ class PublicController extends ServerBaseController
         switch ( (int)$data['type'] )
         {
             case 1: //注册
+                $validator = Validator::make(
+                    $data,
+                    [
+                        'phone'=>'unique:user',
+                    ],[
+                        'phone.unique'=>'手机号码已存在',
+                    ]
+                );
+                if ($validator->fails())
+                {
+                    $messages = $validator->errors()->first();
+                    responseData(\StatusCode::CHECK_FORM,$messages);
+                }
+                \Sms::getCode($data['phone'],$data['type']);
+                break;
             case 2: //修改手机号码
                 $validator = Validator::make(
                     $data,
