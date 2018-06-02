@@ -21,6 +21,7 @@ class CompanyController extends ServerBaseController
      */
     public function __construct(CompanyBusiness $company)
     {
+
         $this->company = $company;
     }
 
@@ -35,7 +36,8 @@ class CompanyController extends ServerBaseController
             $res = $this->company->setCompany($data);
             if( $res->ststus == 1 )
             {
-                Cache::forget('CompanyInfo'.$this->userInfo->companyid);
+                $userInfo = session('userInfo');
+                Cache::forget('CompanyInfo'.$userInfo->companyid);
                 if( $data['returnUrl'] )
                 {
                     return redirect($data['returnUrl']);

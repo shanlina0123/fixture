@@ -38,7 +38,7 @@
 <div class="loginBg">
     <div class="loginWrap">
         <div class="loginInner">
-            <img src="{{pix_asset('server/images/logo.png')}}" class="loginLogo">
+            <img src="{{pix_asset('server/images/topLogo.png')}}" class="loginLogo">
             <div class="errorWrap">
                 <div class="loginError">
                     <span>{{session('msg')}}</span>
@@ -52,7 +52,7 @@
             <form class="form layui-form" method="post" action="{{route('register')}}">
                 {{csrf_field()}}
                 <div class="layui-form-item">
-                    <input type="number" class="layui-input" placeholder="手机号"  id="phone" name="phone" datatype="m"  nullmsg="请输入手机号码" errormsg="手机号码有误" autocomplete="off">
+                    <input type="number" class="layui-input" placeholder="手机号"  id="phone" name="phone" datatype="m"  nullmsg="ဇ请输入手机号码" errormsg="ဇ手机号码有误" autocomplete="off">
                 </div>
                 <div class="layui-form-item clearfix">
                     <input type="text" name="code" lay-verify="title" autocomplete="off" placeholder="短信验证码" class="layui-input codeInput fl">

@@ -38,7 +38,7 @@
 <div class="loginBg">
     <div class="loginWrap">
         <div class="loginInner">
-            <img src="{{pix_asset('server/images/logo.png')}}" class="loginLogo">
+            <img src="{{pix_asset('server/images/topLogo.png')}}" class="loginLogo">
             <div class="errorWrap">
                 <div class="loginError">
                     <span>{{session('msg')}}</span>

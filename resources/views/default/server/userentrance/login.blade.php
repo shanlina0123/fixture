@@ -38,7 +38,7 @@
 <div class="loginBg">
     <div class="loginWrap">
         <div class="loginInner">
-            <img src="{{pix_asset('server/images/logo.png')}}" class="loginLogo">
+            <img src="{{pix_asset('server/images/topLogo.png')}}" class="loginLogo">
             <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
                 <ul class="layui-tab-title">
                     <li class="layui-this">密码登录</li>
