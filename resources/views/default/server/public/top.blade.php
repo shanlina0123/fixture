@@ -11,7 +11,7 @@
     </li>
     <li class="layui-nav-item">
         <a href="javascript:;">
-            <img src="{{pix_asset('server/images/default.png')}}" class="layui-nav-img">管理员
+            <img src="{{pix_asset('server/images/default.png')}}" class="layui-nav-img">{{session("userInfo")->username}}
         </a>
         <dl class="layui-nav-child">
             <dd><a href="{{route('user-info')}}">个人资料</a></dd>
