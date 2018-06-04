@@ -69,7 +69,8 @@ class WxTicketController extends WxBaseController
                 case 'component_verify_ticket': //请求ticket
                     $array_e = $xml->getElementsByTagName('ComponentVerifyTicket');
                     $component_verify_ticket = $array_e->item(0)->nodeValue;
-                    Cache::put('ticket',$component_verify_ticket,11);
+                    file_put_contents(storage_path('ticket/ticket.txt'),$component_verify_ticket);
+                    //Cache::put('ticket',$component_verify_ticket,11);
                     break;
                 case 'unauthorized':   //取消授权
                     $array_appid = $xml->getElementsByTagName('AuthorizerAppid');

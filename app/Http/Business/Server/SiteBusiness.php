@@ -289,7 +289,7 @@ class SiteBusiness extends ServerBase
             $dynamic->storeid = $data['storeid'];
             $dynamic->sitetid = $site->id;
             $dynamic->createuserid = $data['createuserid'];
-            $dynamic->content = '新建工地：感谢业主大大信任，'.$data['name'].'今日开工啦。大吉大利，家宅平安!';
+            $dynamic->content = str_replace('【工地名称】',$data['name'],config('template.13'));
             $dynamic->title = $data['name'];
             $dynamic->sitestagename = $data['sitestagename'];
             $dynamic->type = 0;

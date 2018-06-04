@@ -59,7 +59,7 @@ class SiteDynamicCommentController extends ClientBaseController
                 'dynamicid'=>'required|numeric',//动态
                 'siteid'=>'required|numeric',//工地id
                 'replyuserid'=>'present',//replyuserid
-                'content'=>'required',//地址
+                'content'=>'required',//内容
             ]
         );
         $data['createuserid'] = $this->apiUser->id;
@@ -71,6 +71,11 @@ class SiteDynamicCommentController extends ClientBaseController
         if( $res )
         {
             Cache::tags(['DynamicList'.$this->apiUser->companyid])->flush();
+            //发给C端
+            event('log.notice',array('type'=>3,$this->apiUser,'event'=>$data));
+            //发给B端
+            event('log.notice',array('type'=>3,$this->apiUser,'event'=>$data,'notice_type'=>true));
+
             responseData(\StatusCode::SUCCESS,'评论成功',$res);
         }
         responseData(\StatusCode::ERROR,'评论失败');

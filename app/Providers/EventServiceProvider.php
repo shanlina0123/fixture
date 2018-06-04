@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Http\Model\Company\Company;
+use App\Http\Model\Log\Notice;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -27,6 +29,63 @@ class EventServiceProvider extends ServiceProvider
     {
         parent::boot();
 
-        //
+        //手动注册的事件
+
+        /**
+         * 消息日志记录
+         */
+        Event::listen('log.notice', function ($type,$user,$event,$notice_type=false) {
+
+            $obj = new Notice;
+            $obj->uuid = create_uuid();
+            $obj->companyid = $user->companyid;
+            $obj->nickname = $user->nickname;
+            $obj->isread = 1;
+            switch ( (int)$type )
+            {
+                //1关注 、2赞、3评论、4客户预约
+                case 2:
+                    $obj->userid = $notice_type?$event['createuserid']:$user->id;
+                    $obj->typeid = 2;
+                    $obj->iscreate = 1;
+                    $obj->typename = '赞';
+                    $obj->content = str_replace('【用户微信昵称】', $obj->nickname,config('template.12'));
+                    $obj->content = str_replace('【标题】',$event['name'],$obj->content);
+                    $obj->siteid = $event['siteid'];
+                    $obj->dynamicid = $event['dynamicid'];
+                    break;
+                case 3:
+                    $obj->userid = $notice_type?$event['createuserid']:$user->id;
+                    $obj->typeid = 3;
+                    $obj->iscreate = $notice_type && $event['replyuserid']?1:0;
+                    $obj->typename = '评论';
+                    $obj->content = str_replace('【用户微信昵称】', $obj->nickname,config('template.11'));
+                    $obj->content = str_replace('【评论内容前10个字】', str_limit($event['content'],10),$obj->content);
+                    $obj->content = str_replace('【标题】', $event['name'],$obj->content);
+                    $obj->siteid = $event['siteid'];
+                    $obj->dynamicid = $event['dynamicid'];
+                    break;
+                case 4:
+                    $obj->userid = $notice_type?'':$user->id;
+                    $obj->typeid = 4;
+                    $obj->iscreate = 1;
+                    $obj->typename = '客户预约';
+                    //1预约参观2免费量房3我要报名4装修报价5抽奖活动
+                    $name = Company::where( 'id', $obj->companyid)->value('fullname');
+                    switch (  (int)$event['sourceid'] )
+                    {
+                        case 2:
+                            $obj->title = '免费量房';
+                            $obj->content = $notice_type?str_replace('【客户姓名】',$event['name'],config('template.5')):str_replace('【公司简称】',$name,config('template.1'));
+                            break;
+                        case 4:
+                            $obj->title = '快速报价';
+                            $obj->content = $notice_type?str_replace('【客户姓名】',$event['name'],config('template.6')):str_replace('【公司简称】',$name,config('template.2'));
+                            break;
+                    }
+                    break;
+            }
+            $obj->save();
+        });
     }
 }

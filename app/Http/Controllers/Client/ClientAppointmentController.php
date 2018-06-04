@@ -69,6 +69,11 @@ class ClientAppointmentController extends ClientBaseController
         if( $res == true )
         {
             Cache::tags(['client'.$data['companyid']])->flush();
+            //写日志
+            //发给C端
+            event('log.notice',array('type'=>2,$this->apiUser,'event'=>$data));
+            //发给B端
+            event('log.notice',array('type'=>2,$this->apiUser,'event'=>$data,'notice_type'=>true));
             responseData(\StatusCode::SUCCESS,'预约成功',$res);
         }else
         {
