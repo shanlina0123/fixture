@@ -99,7 +99,7 @@ class ClientController extends ServerBaseController
         //表单验证
         $this->request->validate([
             'followstatusid'=>'required|numeric',
-            'followcontent'=>'required|max:255',
+            'followcontent'=>'present|max:255',
         ]);
         $data = trimValue($this->request->all());
         $res = $this->client->updateClient( $data, $this->userInfo, $id );

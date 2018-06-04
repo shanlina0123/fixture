@@ -166,12 +166,12 @@ function  del(index)
         $.post(url,{_method:'DELETE'},function ( msg ) {
             if( msg == 'success' )
             {
-                layer.msg('删除成功。。。',{icon:1},function () {
+                layer.msg('删除成功',{icon:1},function () {
                     location.href = location;
                 });
             }else
             {
-                layer.msg('删除失败。。。', {icon: 5, time: 2000, shift: 6});
+                layer.msg('删除失败', {icon: 5, time: 2000, shift: 6});
             }
         })
     });
@@ -277,3 +277,9 @@ function getItem( index )
     $("#seach").hide();
 }
 
+//正整数
+$("input[type=number]").keyup(function () {
+    $(this).val($(this).val().replace(/[^0-9]*$/, ''));
+}).bind("paste", function () {  //CTR+V事件处理
+    $(this).val($(this).val().replace(/[^0-9]*$/, ''));
+}).css("ime-mode", "disabled"); //CSS设置输入法不可用

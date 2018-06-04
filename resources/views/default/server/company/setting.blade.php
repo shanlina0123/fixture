@@ -59,11 +59,11 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">公司电话</label>
                 <div class="layui-input-block">
-                    <input type="text" name="phone" datatype="n8-30" nullmsg="请输入公司电话" errormsg="公司电话输入有误" value="{{$data?$data->phone:''}}" class="layui-input" maxlength="30" placeholder="请输入真实姓名">
+                    <input type="text" name="phone" datatype="*8-30" nullmsg="请输入公司电话" errormsg="公司电话输入有误" value="{{$data?$data->phone:''}}" class="layui-input" maxlength="30" placeholder="请输入公司电话">
                 </div>
             </div>
             <div class="layui-form-item" id="companyLogo">
-                <label class="layui-form-label">公司Login</label>
+                <label class="layui-form-label">公司Logo</label>
                 <div class="layui-upload-drag" id="test10">
                     <i class="layui-icon"></i>
                     <p>点击上传，或将文件拖拽到此处</p>

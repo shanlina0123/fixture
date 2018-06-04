@@ -68,10 +68,10 @@ function  del(index)
             if( msg == 'success' )
             {
                 that.parents('tr').remove();
-                layer.msg('删除成功。。。',{icon:1});
+                layer.msg('删除成功',{icon:1});
             }else
             {
-                layer.msg('删除失败。。。', {icon: 5, time: 2000, shift: 6});
+                layer.msg('删除失败', {icon: 5, time: 2000, shift: 6});
             }
         })
     });

@@ -23,7 +23,7 @@ class NoticeBusiness extends ServerBase
         //非管理员/视野条件1全部 2城市 3门店
         $lookWhere = $this->lookWhere($isadmin, $companyid, $cityid, $storeid, $islook);
             //查詢
-            $queryModel=Notice::orderBy('id', 'desc');
+            $queryModel=Notice::where("iscreate",1)->orderBy('id', 'desc');
             //视野条件
             $queryModel=$queryModel->where($lookWhere);
             //修改已读

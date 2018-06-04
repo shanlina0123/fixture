@@ -258,7 +258,7 @@ class ClientBusiness extends ServerBase
             $swhere['storeid'] =  $user->storeid;
         }
         return Client::where($swhere)->with(['clientToClientFollow'=>function( $query ){
-            $query->with('clientFollowToStatus');
+            $query->orderBy("created_at","desc")->with('clientFollowToStatus');
         }])->first();
     }
 
@@ -288,7 +288,7 @@ class ClientBusiness extends ServerBase
             {
                 DB::beginTransaction();
                 $res->followstatusid = $data['followstatusid'];
-                $res->followcontent = $data['followcontent'];
+                $data['followcontent']?$res->followcontent = $data['followcontent']:"";
                 //记录表
                 $arr['uuid'] = create_uuid();
                 $arr['client_id'] = $res->id;

@@ -16,7 +16,7 @@
                 <td>{{$index+1}}</td>
                 <td>{{$item->nickname}}</td>
                 <td>{{$item->typename}}</td>
-                <td>{{$item->sitename}}{{$item->activityname}}</td>
+                <td>{{$item->title}}</td>
                 <td>{{$item->created_at}}</td>
             </tr>
             @endforeach @endif

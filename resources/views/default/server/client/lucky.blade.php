@@ -1,5 +1,5 @@
 @extends('server.layout.content')
-@section('title','客户列表')
+@section('title','抽奖客户')
 @section('content')
     <div class="main">
         <div class="addBtnWrap">
@@ -74,7 +74,7 @@
     </div>
     <input type="hidden" id="msg" value="{{session('msg')}}">
 @endsection
-
+@section('other')
 <!--客户跟进弹窗-->
 <div class="clientPop">
     <form class="layui-form" id="layui-form" method="post" action="">
@@ -102,6 +102,7 @@
 
     </div>
 </div>
+@endsection
 @section('js')
     <script type="text/javascript" src="{{pix_asset('server/plugins/validform/Validform_v5.3.2_min.js',false)}}"></script>
     <script type="text/javascript" src="{{pix_asset('server/js/client/client.js')}}"></script>
