@@ -71,7 +71,7 @@ layui.use(['layer','form'], function() {
  * 倒计时
  * @type {number}
  */
-var wait = 60;
+var wait = 10;
 function time()
 {
     if (wait == 0)
@@ -80,10 +80,10 @@ function time()
         $("#phone").attr("readonly", false);
         $me.text("获取短信验证码");
         $me.css({
-            "background": "#19aa4b",
-            "border-color": "#19aa4b"
+            "background": "#009688",
+            "border-color": "#009688"
         });
-        wait = 60;
+        wait = 10;
     }else
     {
         $me.attr("disabled", true);

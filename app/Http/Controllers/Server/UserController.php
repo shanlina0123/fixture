@@ -39,11 +39,12 @@ class UserController extends ServerBaseController
             );
 
             $phone = $this->request->input('phone');
-            $code = $this->request->input('code');
-            $code_cache = Cache::get('tel_'.$phone);
-            if( $code != $code_cache )
-            {
-                return redirect()->route('user-info')->with('msg','验证码不正确');
+            if( config('configure.is_sms') == true ) {
+                $code = $this->request->input('code');
+                $code_cache = Cache::get('tel_' . $phone);
+                if ($code != $code_cache) {
+                    return redirect()->route('user-info')->with('msg', '验证码不正确');
+                }
             }
             $data['phone'] = $phone;
             $data['token'] = create_uuid();
@@ -90,11 +91,12 @@ class UserController extends ServerBaseController
                 ]
             );
             $phone = $this->request->input('phone');
-            $code = $this->request->input('code');
-            $code_cache = Cache::get('tel_'.$phone);
-            if( $code != $code_cache )
-            {
-                return redirect()->route('set-pass')->with('msg','验证码不正确');
+            if( config('configure.is_sms') == true ) {
+                $code = $this->request->input('code');
+                $code_cache = Cache::get('tel_' . $phone);
+                if ($code != $code_cache) {
+                    return redirect()->route('set-pass')->with('msg', '验证码不正确');
+                }
             }
             $where['uuid'] = $userInfo->uuid;
             $where['companyid'] = $userInfo->companyid;
