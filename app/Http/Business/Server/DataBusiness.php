@@ -153,6 +153,9 @@ class DataBusiness extends ServerBase
                 DB::commit();
                 //删除缓存
                 Cache::tags(["Data-CateList"])->flush();
+                Cache::forget("roomType".$companyid);
+                Cache::forget("roomStyle".$companyid);
+                Cache::forget("renovationMode".$companyid);
                 return ["dataid"=>$dataid];
             } else {
                 DB::rollBack();
@@ -170,7 +173,7 @@ class DataBusiness extends ServerBase
     /***
      * 删除 - 执行
      */
-    public  function delete($id,$data)
+    public  function delete($id,$companyid,$data)
     {
         try{
             //检测是否存在
@@ -203,6 +206,9 @@ class DataBusiness extends ServerBase
                 DB::commit();
                 //删除缓存
                 Cache::tags(["Data-CateList"])->flush();
+                Cache::forget("roomType".$companyid);
+                Cache::forget("roomStyle".$companyid);
+                Cache::forget("renovationMode".$companyid);
             }else{
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR,"删除失败");

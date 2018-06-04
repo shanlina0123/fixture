@@ -140,7 +140,7 @@ class DataController extends ServerBaseController
             responseData(\StatusCode::PARAM_ERROR,"验证失败","",$validator->errors());
         }
         //获取业务数据
-        $this->data_business->delete($id,$data);
+        $this->data_business->delete($id,$this->userInfo->companyid,$data);
         //接口返回结果
         responseData(\StatusCode::SUCCESS,"删除成功");
     }

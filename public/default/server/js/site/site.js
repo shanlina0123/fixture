@@ -166,12 +166,12 @@ function  del(index)
         $.post(url,{_method:'DELETE'},function ( msg ) {
             if( msg == 'success' )
             {
-                layer.msg('删除成功。。。',{icon:1},function () {
+                layer.msg('删除成功',{icon:1},function () {
                     location.href = location;
                 });
             }else
             {
-                layer.msg('删除失败。。。', {icon: 5, time: 2000, shift: 6});
+                layer.msg('删除失败', {icon: 5, time: 2000, shift: 6});
             }
         })
     });
