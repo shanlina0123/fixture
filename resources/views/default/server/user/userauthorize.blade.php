@@ -23,7 +23,7 @@
                         @endif
                     @endif
                 @endif
-                <a href="https://mp.weixin.qq.com/wxopen/waregister?action=step1" class="btnlink" target="_blank">注册小程序</a>
+                <a href="https://mp.weixin.qq.com/" class="btnlink" target="_blank">注册小程序</a>
                 <a href="" class="btnlink">升级</a>
             </div>
         </div>
