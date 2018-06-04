@@ -71,7 +71,8 @@ layui.use(['layer','form'], function() {
  * 倒计时
  * @type {number}
  */
-var wait = 10;
+var wait = 60;
+
 function time()
 {
     if (wait == 0)
@@ -83,7 +84,7 @@ function time()
             "background": "#009688",
             "border-color": "#009688"
         });
-        wait = 10;
+        wait = 60;
     }else
     {
         $me.attr("disabled", true);
