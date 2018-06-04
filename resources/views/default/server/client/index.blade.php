@@ -1,5 +1,5 @@
 @extends('server.layout.content')
-@section('title','客户列表')
+@section('title','预约客户')
 @section('content')
     <div class="main">
         <div class="addBtnWrap">
