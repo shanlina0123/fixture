@@ -113,9 +113,8 @@ $(".del-btn").click(function () {
         $.post(url,{_method:'DELETE'},function ( data ) {
             if( data.status == 1 )
             {
-                layer.msg(data.msg,{icon:1},function () {
-                    $(index).parents('tr').remove();
-                });
+                $(index).parents('tr').remove();
+                layer.msg(data.msg,{icon:1});
             }else
             {
                 layer.msg(data.msg, {icon: 5, time: 2000, shift: 6});
