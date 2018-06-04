@@ -277,3 +277,9 @@ function getItem( index )
     $("#seach").hide();
 }
 
+//正整数
+$("input[type=number]").keyup(function () {
+    $(this).val($(this).val().replace(/[^0-9]*$/, ''));
+}).bind("paste", function () {  //CTR+V事件处理
+    $(this).val($(this).val().replace(/[^0-9]*$/, ''));
+}).css("ime-mode", "disabled"); //CSS设置输入法不可用
