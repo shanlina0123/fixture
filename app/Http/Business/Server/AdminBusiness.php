@@ -73,20 +73,25 @@ class AdminBusiness extends ServerBase
             //返回数据库层查询结果
             return $roleList;
         });
+
         //获取门店数据
-        $list["storeList"] = Cache::get($tag2, function () use ($lookWhere, $tag2) {
+        $list["storeList"] = Cache::tags($tag2)->remember($tagKey, config('configure.sCache'), function () use ($lookWhere) {
+            //查詢
+            $queryModel = Store::select(DB::raw("id,name"));
             //视野条件
             if(array_key_exists("storeid",$lookWhere)&&$lookWhere["storeid"])
             {
                 $lookWhere["id"]=$lookWhere["storeid"];
                 unset($lookWhere["storeid"]);
             }
-
-            $storeList = Store::select(DB::raw('id,id as storeid,name'))->where($lookWhere)->get();
-            Cache::put($tag2, $storeList, config('configure.sCache'));
-            //返回数据库层查询结果
-            return $storeList;
+            $queryModel = $queryModel->where($lookWhere);
+            $list = $queryModel
+                ->orderBy('id', 'asc')
+                ->get();
+            return $list;
         });
+
+
         return $list;
     }
 
