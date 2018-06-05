@@ -76,7 +76,7 @@ class AdminBusiness extends ServerBase
         //获取门店数据
         $list["storeList"] = Cache::get($tag2, function () use ($lookWhere, $tag2) {
             //视野条件
-            if($lookWhere["storeid"])
+            if(array_key_exists("storeid",$lookWhere)&&$lookWhere["storeid"])
             {
                 $lookWhere["id"]=$lookWhere["storeid"];
                 unset($lookWhere["storeid"]);

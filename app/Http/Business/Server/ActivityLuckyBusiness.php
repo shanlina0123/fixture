@@ -74,7 +74,7 @@ class ActivityLuckyBusiness extends ServerBase
             //查詢
             $queryModel = Store::select(DB::raw("id,name,id"));
             //视野条件
-            if($lookWhere["storeid"])
+            if(array_key_exists("storeid",$lookWhere)&&$lookWhere["storeid"])
             {
                 $lookWhere["id"]=$lookWhere["storeid"];
                 unset($lookWhere["storeid"]);
@@ -112,7 +112,7 @@ class ActivityLuckyBusiness extends ServerBase
             //查詢
             $queryModel = Store::select(DB::raw("id,name,id"));
             //视野条件
-            if($lookWhere["storeid"])
+            if(array_key_exists("storeid",$lookWhere)&&$lookWhere["storeid"])
             {
                 $lookWhere["id"]=$lookWhere["storeid"];
                 unset($lookWhere["storeid"]);
@@ -165,7 +165,7 @@ class ActivityLuckyBusiness extends ServerBase
             //查詢
             $queryModel = Store::select(DB::raw("id,name,id"));
             //视野条件
-            if($lookWhere["storeid"])
+            if(array_key_exists("storeid",$lookWhere)&&$lookWhere["storeid"])
             {
                 $lookWhere["id"]=$lookWhere["storeid"];
                 unset($lookWhere["storeid"]);

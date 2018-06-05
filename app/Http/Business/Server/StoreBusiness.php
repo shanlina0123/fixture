@@ -37,7 +37,7 @@ class StoreBusiness extends ServerBase
         $list["storeList"]= Cache::tags($tag)->remember($tagKey, config('configure.sCache'), function ()  use ($lookWhere,$data,$searchName) {
             $queryModel=Store::orderBy('id', 'asc');
             //视野条件
-            if($lookWhere["storeid"])
+            if(array_key_exists("storeid",$lookWhere)&&$lookWhere["storeid"])
             {
                 $lookWhere["id"]=$lookWhere["storeid"];
                 unset($lookWhere["storeid"]);
