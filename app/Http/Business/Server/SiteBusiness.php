@@ -136,18 +136,18 @@ class SiteBusiness extends ServerBase
                             break;
                         case 3://门店
                             $sWhere['companyid'] =  $user->companyid;
-                            $sWhere['storeid'] =  $user->storeid;
+                            $sWhere['id'] =  $user->storeid;
                             break;
                         default://默认
                             $sWhere['companyid'] =  $user->companyid;
-                            $sWhere['storeid'] =  $user->storeid;
+                            $sWhere['id'] =  $user->storeid;
                             break;
                     }
                 }else
                 {
                     //不存在
                     $sWhere['companyid'] =  $user->companyid;
-                    $sWhere['storeid'] =  $user->storeid;
+                    $sWhere['id'] =  $user->storeid;
                 }
                 $store = Store::where($sWhere)->get();
                 Cache::put('store'.$user->storeid,$store,config('configure.sCache'));

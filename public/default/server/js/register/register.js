@@ -66,8 +66,8 @@ function time()
         $("#phone").attr("readonly", false);
         $me.text("获取短信验证码");
         $me.css({
-            "background": "#19aa4b",
-            "border-color": "#19aa4b"
+            "background": "#009688",
+            "border-color": "#009688"
         });
         wait = 60;
     }else

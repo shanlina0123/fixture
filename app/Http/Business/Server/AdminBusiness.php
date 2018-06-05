@@ -108,7 +108,8 @@ class AdminBusiness extends ServerBase
             }
 
             //检测是账号或姓名是否存在
-            $existName = User::where("username", $data["username"])->orWhere("nickname", $data["nickname"])->exists();
+            $existName = User::whereRaw("companyid=".$companyid." AND (username='" . $data["username"] . "' OR nickname='" . $data["nickname"] . "')")
+                ->exists();
             if ($existName > 0) {
                 responseData(\StatusCode::EXIST_ERROR, "账号或姓名已存在");
             }
@@ -187,7 +188,7 @@ class AdminBusiness extends ServerBase
             }
 
             //检测是账号或姓名是否存在
-            $existName = User::whereRaw("id!=" . $row["id"] . " AND (username='" . $data["username"] . "' OR nickname='" . $data["nickname"] . "')")
+            $existName = User::whereRaw("id!=" . $row["id"] . " AND companyid=".$row["companyid"]." AND (username='" . $data["username"] . "' OR nickname='" . $data["nickname"] . "')")
                 ->exists();
             if ($existName > 0) {
                 responseData(\StatusCode::EXIST_ERROR, "账号或姓名已存在");

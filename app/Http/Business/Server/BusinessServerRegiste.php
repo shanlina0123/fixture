@@ -27,6 +27,8 @@ class BusinessServerRegiste extends ServerBase
          $res->isadminafter = 1;
          $res->type = 0;
          $res->status = 1;
+         $res->roleid = 1;
+         $res->nickname = "管理员";
          if( $res->save() )
          {
              return true;

@@ -11,6 +11,7 @@ use App\Http\Business\Common\ServerBase;
 use App\Http\Model\Company\Company;
 use App\Http\Model\Company\CompanyStageTemplate;
 use App\Http\Model\Company\CompanyStageTemplateTag;
+use App\Http\Model\Data\Position;
 use App\Http\Model\Data\RenovationMode;
 use App\Http\Model\Data\RoomStyle;
 use App\Http\Model\Data\RoomType;
@@ -116,7 +117,7 @@ class CompanyBusiness extends ServerBase
                 {
                     $upload = new \Upload();
                     $isImg =  $upload->uploadProductImage( $obj->uuid, $data['logo'], 'user' );
-                    if( $isImg === true )
+                    if($isImg!==false)
                     {
                         $obj->logo = 'user/'.$obj->uuid.'/'.$data['logo'];
                     }
@@ -135,6 +136,7 @@ class CompanyBusiness extends ServerBase
                 $store = new Store();
                 $store->uuid = create_uuid();
                 $store->companyid = $obj->id;
+                $store->provinceid = $obj->provinceid;
                 $store->cityid = $obj->cityid;
                 $store->name = $obj->fullname;
                 $store->addr = $obj->addr;
@@ -176,6 +178,7 @@ class CompanyBusiness extends ServerBase
                 $roomRenov = array(); //装修方式
                 $roomStyle = array(); //装修风格
                 $roomType = array(); //户型
+               // $position = array(); //职位
                 foreach ( $selectData as $k=>$rowData )
                 {
                     if( $rowData->pid != 0 )
@@ -203,6 +206,13 @@ class CompanyBusiness extends ServerBase
                                 $roomType[$k]['created_at'] = date("Y-m-d H:i:s");
                                 $roomType[$k]['updated_at'] = date("Y-m-d H:i:s");
                                 break;
+//                            case 4:
+//                                $position[$k]['name'] = $rowData->name;
+//                                $position[$k]['status'] = 1;
+//                                $position[$k]['companyid'] = $obj->id;
+//                                $position[$k]['created_at'] = date("Y-m-d H:i:s");
+//                                $position[$k]['updated_at'] = date("Y-m-d H:i:s");
+//                                break;
                         }
                     }
                 }
@@ -218,6 +228,10 @@ class CompanyBusiness extends ServerBase
                 {
                     RoomType::insert($roomType);
                 }
+//                if(count($position))
+//                {
+//                    Position::insert($position);
+//                }
                 //清除缓存
                 Cache::tags(["Data-CateList",'siteTemplate'.$obj->id,'roomType'.$obj->id,'roomStyle'.$obj->id,'renovationMode'.$obj->id])->flush();
                 DB::commit();

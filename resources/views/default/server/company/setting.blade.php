@@ -64,7 +64,7 @@
             </div>
             <div class="layui-form-item" id="companyLogo">
                 <label class="layui-form-label">公司Logo</label>
-                <div class="layui-upload-drag" id="test10">
+                <div class="layui-upload-drag" id="test10" style="float: left">
                     <i class="layui-icon"></i>
                     <p>点击上传，或将文件拖拽到此处</p>
                 </div>
