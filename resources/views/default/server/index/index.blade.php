@@ -66,7 +66,7 @@
                     </td>
                     <td>
                         <div class="bulewrap">
-                            <a href="" class="circle">数据分析</a>
+                            <a href="{{route('error-coming')}}" class="circle">数据分析</a>
                         </div>
                     </td>
                 </tr>

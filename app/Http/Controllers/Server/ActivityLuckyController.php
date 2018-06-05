@@ -244,7 +244,7 @@ class ActivityLuckyController extends ServerBaseController
         }
 
         //获取业务数据
-        $rs=$this->activitylucky_business->update($id,$this->userInfo->id,$this->userInfo->companyid,$this->userInfo->cityid,$data);
+        $rs=$this->activitylucky_business->update($id,$this->userInfo->id,$this->userInfo->companyid,$data);
         //接口返回结果
         responseData(\StatusCode::SUCCESS,"保存成功",$rs);
     }

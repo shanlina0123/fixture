@@ -51,7 +51,7 @@ class RolesBusiness extends ServerBase
             DB::beginTransaction();
 
             //检测name是否存在
-            $exist=FilterRole::where("name",$data["name"])->exists();
+            $exist=FilterRole::where("name",$data["name"])->where("companyid",$companyid)->exists();
             if($exist>0)
             {
                 responseData(\StatusCode::EXIST_ERROR,"名称".$data["name"]."已存在");
@@ -108,7 +108,7 @@ class RolesBusiness extends ServerBase
             //检测name是否存在
             if($roleData["name"]!==$data["name"])
             {
-                $exist=FilterRole::where("name",$data["name"])->exists();
+                $exist=FilterRole::where("name",$data["name"])->where("companyid",$roleData["companyid"])->exists();
                 if($exist>0)
                 {
                     responseData(\StatusCode::EXIST_ERROR,"名称".$data["name"]."已存在");

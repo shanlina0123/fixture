@@ -96,7 +96,7 @@
     <!--推广弹窗-->
     <div class="downPop" style="display: none" id="extensionContent">
         <div class="popwarp h5Content" id="bgurl">
-            <p class="activename" id="sharetitle"></p>
+            <p class="activename" id="title"></p>
             <div class="prizemsg" id="storename"></div>
             <p class="erweimanotice">扫描下方二维码参与抽奖</p>
             <div class="prizepart" id="prizewapbg">

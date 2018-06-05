@@ -106,10 +106,10 @@ class ClientController extends ServerBaseController
         if( $res == true )
         {
             Cache::tags(['client'.$this->userInfo->companyid])->flush();
-            return redirect()->back()->with('msg','更近成功');
+            return redirect()->back()->with('msg','跟进成功');
         }else
         {
-            return redirect()->back()->with('msg','更近失败');
+            return redirect()->back()->with('msg','跟进失败');
         }
     }
 

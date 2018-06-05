@@ -37,6 +37,11 @@ class StoreBusiness extends ServerBase
         $list["storeList"]= Cache::tags($tag)->remember($tagKey, config('configure.sCache'), function ()  use ($lookWhere,$data,$searchName) {
             $queryModel=Store::orderBy('id', 'asc');
             //视野条件
+            if(array_key_exists("storeid",$lookWhere)&&$lookWhere["storeid"])
+            {
+                $lookWhere["id"]=$lookWhere["storeid"];
+                unset($lookWhere["storeid"]);
+            }
             $queryModel = $queryModel->where($lookWhere);
             //搜索条件
             $searchName?$queryModel =$queryModel->where("name","like","%$searchName%"):"";
@@ -118,6 +123,7 @@ class StoreBusiness extends ServerBase
                 DB::commit();
                 //删除缓存
                 Cache::tags(["Store-PageList","Admin-StoreList"])->flush();
+                Cache::forget("storeCompany".$companyid);
             } else {
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR, "新增失败");
@@ -145,8 +151,8 @@ class StoreBusiness extends ServerBase
             //业务处理
 
             //检查是否存在
-            $storeExist = Store::where("name", $data["name"])->where("uuid","!=",$uuid)->exists();
-            if ($storeExist>0) {
+            $storeData = Store::where("name", $data["name"])->where("uuid","!=",$uuid)->first();
+            if ($storeData) {
                 responseData(\StatusCode::EXIST_ERROR, "名称已存在");
             }
 
@@ -164,6 +170,7 @@ class StoreBusiness extends ServerBase
                 DB::commit();
                 //删除缓存
                 Cache::tags(["Store-PageList","Admin-StoreList"])->flush();
+                Cache::forget("storeCompany".$storeData["companyid"]);
             } else {
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR, "修改失败");
@@ -210,6 +217,7 @@ class StoreBusiness extends ServerBase
                 DB::commit();
                 //删除缓存
                 Cache::tags(["Store-PageList","Admin-StoreList"])->flush();
+                Cache::forget("storeCompany".$row["companyid"]);
             }else{
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR,"删除失败");

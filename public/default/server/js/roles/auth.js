@@ -37,10 +37,12 @@ layui.use(['form', 'layer', 'jquery'], function () {
 
     //提交勾选权限
     $(".ajaxSubmit").click(function () {
+        var that=this;
         var postData=getPostData();
         $.ajaxSubmit($("form"),{"funcislook":postData},function(data){
             if(data.status===1){
                 layer.msg(data.messages,{icon: 1,time: 1000});
+                window.location.href=$(that).attr("listurl");
             }else{
                 layer.msg(data.messages, {icon: 2,time: 1000});
             }

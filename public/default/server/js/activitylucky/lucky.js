@@ -183,7 +183,7 @@ layui.use(['form', 'layer', 'jquery'], function () {
             }
 
             //标题
-            $("#sharetitle",parent).html(data.data.lukData.sharetitle);
+            $("#title",parent).html(data.data.lukData.title);
             //门店
             $("#storename",parent).html(data.data.lukData.storename);
             //活动背景bgurl

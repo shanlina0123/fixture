@@ -130,16 +130,18 @@ var getAttrUrl = function (obj, key) {
     return url;
 }
 
+
 //获取当前Form属性的实际url
-var setAttrFormUrl = function (obj, form, key, action) {
+var setAttrFormUrl = function (obj, form, key, action,muilteaction) {
     var that = $(obj);
     var key = key ? key : "uuid";
-    var action = action ? action : "action"
+    var action = action ? action : "action";
+    var muilteaction=muilteaction?muilteaction:action;
     //tr的数据
     var tr = $(that).parents("tr");
     var keyValue = $(tr).attr(key);
     //编辑url
-    var url = form.attr(action).replace(key, keyValue);
+    var url = form.attr(muilteaction).replace(key, keyValue);
     form.attr(action, url);
 }
 

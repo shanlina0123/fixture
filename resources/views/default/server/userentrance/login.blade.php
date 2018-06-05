@@ -60,7 +60,7 @@
                             <form class="form1 layui-form" method="post" action="{{route('login')}}" tosubid="1">
                                 {{csrf_field()}}
                             <div class="layui-form-item">
-                                <input type="text" class="layui-input" name="username" datatype="*3-20"   placeholder="手机号" nullmsg="请输入手机号码或者用户名" errormsg="手机号码或者用户名不正确" autocomplete="off">
+                                <input type="text" class="layui-input" name="username" datatype="*3-20"   placeholder="账号/手机号" nullmsg="请输入手机号码或者用户名" errormsg="手机号码或者用户名不正确" autocomplete="off">
                             </div>
                             <div class="layui-form-item">
                                 <input type="hidden" name="logintype" value="1"/>

@@ -73,13 +73,25 @@ class AdminBusiness extends ServerBase
             //返回数据库层查询结果
             return $roleList;
         });
+
         //获取门店数据
-        $list["storeList"] = Cache::get($tag2, function () use ($lookWhere, $tag2) {
-            $storeList = Store::select(DB::raw('id,id as storeid,name'))->where($lookWhere)->get();
-            Cache::put($tag2, $storeList, config('configure.sCache'));
-            //返回数据库层查询结果
-            return $storeList;
+        $list["storeList"] = Cache::tags($tag2)->remember($tagKey, config('configure.sCache'), function () use ($lookWhere) {
+            //查詢
+            $queryModel = Store::select(DB::raw("id,name"));
+            //视野条件
+            if(array_key_exists("storeid",$lookWhere)&&$lookWhere["storeid"])
+            {
+                $lookWhere["id"]=$lookWhere["storeid"];
+                unset($lookWhere["storeid"]);
+            }
+            $queryModel = $queryModel->where($lookWhere);
+            $list = $queryModel
+                ->orderBy('id', 'asc')
+                ->get();
+            return $list;
         });
+
+
         return $list;
     }
 
@@ -108,7 +120,8 @@ class AdminBusiness extends ServerBase
             }
 
             //检测是账号或姓名是否存在
-            $existName = User::where("username", $data["username"])->orWhere("nickname", $data["nickname"])->exists();
+            $existName = User::whereRaw("companyid=".$companyid." AND (username='" . $data["username"] . "' OR nickname='" . $data["nickname"] . "')")
+                ->exists();
             if ($existName > 0) {
                 responseData(\StatusCode::EXIST_ERROR, "账号或姓名已存在");
             }
@@ -187,7 +200,7 @@ class AdminBusiness extends ServerBase
             }
 
             //检测是账号或姓名是否存在
-            $existName = User::whereRaw("id!=" . $row["id"] . " AND (username='" . $data["username"] . "' OR nickname='" . $data["nickname"] . "')")
+            $existName = User::whereRaw("id!=" . $row["id"] . " AND companyid=".$row["companyid"]." AND (username='" . $data["username"] . "' OR nickname='" . $data["nickname"] . "')")
                 ->exists();
             if ($existName > 0) {
                 responseData(\StatusCode::EXIST_ERROR, "账号或姓名已存在");

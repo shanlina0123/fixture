@@ -72,8 +72,13 @@ class ActivityLuckyBusiness extends ServerBase
         //获取门店数据
         $list["storeList"] = Cache::tags($tag1)->remember($tagKey, config('configure.sCache'), function () use ($isadmin, $lookWhere) {
             //查詢
-            $queryModel = Store::select(DB::raw("id,name,id as storeid"));
+            $queryModel = Store::select(DB::raw("id,name,id"));
             //视野条件
+            if(array_key_exists("storeid",$lookWhere)&&$lookWhere["storeid"])
+            {
+                $lookWhere["id"]=$lookWhere["storeid"];
+                unset($lookWhere["storeid"]);
+            }
             $queryModel = $queryModel->where($lookWhere);
             $list = $queryModel
                 ->orderBy('id', 'asc')
@@ -105,8 +110,13 @@ class ActivityLuckyBusiness extends ServerBase
         $tagKey2 = base64_encode(mosaic("", $tag2, $companyid, $cityid, $storeid, $islook));
         $list["storeList"] = Cache::tags($tag2)->remember($tagKey2, config('configure.sCache'), function () use ($isadmin, $lookWhere) {
             //查詢
-            $queryModel = Store::select(DB::raw("id,name,id as storeid"));
+            $queryModel = Store::select(DB::raw("id,name,id"));
             //视野条件
+            if(array_key_exists("storeid",$lookWhere)&&$lookWhere["storeid"])
+            {
+                $lookWhere["id"]=$lookWhere["storeid"];
+                unset($lookWhere["storeid"]);
+            }
             $queryModel = $queryModel->where($lookWhere);
             $list = $queryModel
                 ->orderBy('id', 'asc')
@@ -153,8 +163,13 @@ class ActivityLuckyBusiness extends ServerBase
         $tagKey2 = base64_encode(mosaic("", $tag2, $companyid, $cityid, $storeid, $islook));
         $list["storeList"] = Cache::tags($tag2)->remember($tagKey2, config('configure.sCache'), function () use ($isadmin, $lookWhere) {
             //查詢
-            $queryModel = Store::select(DB::raw("id,name,id as storeid"));
+            $queryModel = Store::select(DB::raw("id,name,id"));
             //视野条件
+            if(array_key_exists("storeid",$lookWhere)&&$lookWhere["storeid"])
+            {
+                $lookWhere["id"]=$lookWhere["storeid"];
+                unset($lookWhere["storeid"]);
+            }
             $queryModel = $queryModel->where($lookWhere);
             $list = $queryModel
                 ->orderBy('id', 'asc')
@@ -171,7 +186,7 @@ class ActivityLuckyBusiness extends ServerBase
      * 修改、添加 - 执行
      * @param $uuid
      */
-    public function update($id, $userid, $companyid, $cityid, $data)
+    public function update($id, $userid, $companyid, $data)
     {
         try {
             //开启事务
@@ -233,7 +248,7 @@ class ActivityLuckyBusiness extends ServerBase
             //整理修改数据
             $lucky["uuid"] = $createUuid;
             $lucky["companyid"] = $companyid;//公司id
-            $lucky["cityid"] = $cityid;//市id
+            $lucky["cityid"] = $storeData["cityid"];//市id
             $lucky["userid"] = $userid;
             //基础设置
             $lucky["storeid"] = $data["storeid"];//门店id
@@ -305,7 +320,7 @@ class ActivityLuckyBusiness extends ServerBase
                         $prizeData["uuid"] = create_uuid();
                         $prizeData["companyid"] = $companyid;
                         $prizeData["storeid"] = $data["storeid"];
-                        $prizeData["cityid"] = $cityid;
+                        $prizeData["cityid"] = $storeData["cityid"];//市id
                         $prizeData["activityluckyid"] = $activityluckyid;
                         $prizeData["name"] = $v["name"];
                         $prizeData["num"] = $v["num"];
@@ -322,7 +337,7 @@ class ActivityLuckyBusiness extends ServerBase
                         $prizeData["uuid"] = create_uuid();
                         $prizeData["companyid"] = $companyid;
                         $prizeData["storeid"] = $data["storeid"];
-                        $prizeData["cityid"] = $cityid;
+                        $prizeData["cityid"] = $storeData["cityid"];//市id
                         $prizeData["activityluckyid"] = $activityluckyid;
                         $prizeData["name"] = $v["name"];
                         $prizeData["num"] = $v["num"];
@@ -507,7 +522,6 @@ class ActivityLuckyBusiness extends ServerBase
         $list["lukData"] = ActivityLucky::where("id", $id)->select("id", "sharetitle", "title", "bgurl", "storeid")->first();
         $list["lukData"]["bgurl"] = $list["lukData"]["bgurl"] ? $uploads . "/" . $list["lukData"]["bgurl"] : "";
         $list["lukData"]["storename"] = Store::where("id", $list["lukData"]["storeid"])->value("name");
-        $list["lukData"]["sharetitle"] = $list["lukData"]["sharetitle"] ? $list["lukData"]["sharetitle"] : $list["lukData"]["title"];
         //奖项数据
         $list["prizeList"] = Cache::tags($tag)->remember($tagKey, config('configure.sCache'), function () use ($id, $companyid, $uploads) {
             //查詢

@@ -1,7 +1,7 @@
 @extends('server.layout.content')
 @section("title")角色管理@endsection
 @section('content')
-    <div class="main">
+    <div class="main" style="margin-bottom: 100px;">
         <div style="display: none" id="errorMsg" content="{{$errorMsg}}"></div>
         <h1 class="pageTitle">权限编辑</h1>
         <div class="editRoleWrap roleAuthListDiv">
@@ -51,7 +51,7 @@
                     </div>
                 </div>
                 <div class="submitButWrap">
-                    <button type="button" class="layui-btn ajaxSubmit">立即提交</button>
+                    <button type="button" class="layui-btn ajaxSubmit" listurl="{{route('roles-index')}}">立即提交</button>
                 </div>
             </form>
         </div>
