@@ -15,8 +15,7 @@ class IndexController extends ServerBaseController
      */
     public function index()
     {
-        event('log.notice',array('type'=>22,'data'=>1));
-        //Cache::flush();
+        Cache::flush();
         return view('server.index.index');
     }
 
@@ -25,7 +24,7 @@ class IndexController extends ServerBaseController
      */
     public function indexContent()
     {
-       // Cache::flush();
+        Cache::flush();
         return view('server.index.index');
     }
 
