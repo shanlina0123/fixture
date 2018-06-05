@@ -307,4 +307,39 @@ class SiteController extends ServerBaseController
             responseData(\StatusCode::ERROR,'修改失败',$res);
         }
     }
+
+    /***
+     * 推广详情
+     * @param Request $request
+     */
+    public function extension(Request $request,$id)
+    {
+        //获取列表数据
+        $dataSource=$this->extensionData($id);
+        $list=$dataSource["data"];
+        $errorMsg=$dataSource["messages"];
+        //处理ajax请求
+        if($request->ajax()){
+            responseAjax($dataSource);
+        }
+
+        return view('server.site.index',compact('list'))->with("errorMsg",$errorMsg);
+    }
+
+
+    /***
+     * 推广详情数据
+     */
+    public function extensionData($uuid)
+    {
+        $validator = Validator::make(["uuid"=>$uuid],[
+            'uuid' => 'required|max:32|min:32'
+        ],['uuid.required'=>'参数错误','uuid.max'=>'参数错误','uuid.min'=>'参数错误']);
+        //进行验证
+        if ($validator->fails()) {
+            return  responseCData(\StatusCode::PARAM_ERROR,"工地参数错误","",$validator->errors());
+        }
+
+        return $this->site->extension($uuid,$this->userInfo->companyid);
+    }
 }

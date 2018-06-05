@@ -34,7 +34,7 @@ $(".update-btn").click(function() {
                 {
                     status = follow[i].client_follow_to_status.name;
                 }
-                str+='<li><div>客户状态：<span>'+status+'</span></div><p class="backMsg">'+follow[i].remarks+'</p><div class="clearfix"><span class="fl">跟进人：'+follow[i].follow_username+'</span><span class="fr">跟进时间：'+follow[i].created_at+'</span></div></li>'
+                str+='<li><div>客户状态：<span>'+status+'</span></div><p class="backMsg">'+follow[i].remarks+'</p><div class="clearfix"><span class="fl">跟进人：'+(follow[i].follow_username?follow[i].follow_username:"")+'</span><span class="fr">跟进时间：'+follow[i].created_at+'</span></div></li>'
             }
             str+='</ul>';
             $("#list").append(str);

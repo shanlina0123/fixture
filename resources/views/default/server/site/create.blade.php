@@ -4,7 +4,7 @@
 
 @endsection
 @section('content')
-    <div class="main">
+    <div class="main" style="margin-bottom: 100px;">
         <fieldset class="layui-elem-field layui-field-title">
             <legend>新建项目</legend>
         </fieldset>
@@ -52,7 +52,7 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>选择阶段模板</label>
+                        <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>阶段模板</label>
                         <div class="layui-input-inline">
                             <select name="stagetemplateid"  id="stagetemplateid" lay-filter="stagetemplate" datatype="*" nullmsg="请选择阶段模板">
                                 <option value="">请选择阶段模板</option>
@@ -139,11 +139,11 @@
 
                     <div class="layui-form-item">
                         <label class="layui-form-label">项目封面</label>
-                        <div class="layui-upload-drag" id="test10">
+                        <div class="layui-upload-drag" id="test10" style="float: left">
                             <i class="layui-icon"></i>
                             <p>点击上传，或将文件拖拽到此处（工地封面：建议上传效果图）</p>
                         </div>
-                        <div class="uploadImg layui-inline fl"><img width="258" height="135" id="src"></div>
+                        <div class="uploadImg layui-inline fl" style="display: none;margin-left: 20px;"><img   id="src" style="max-width: 100%;max-height:135px;"></div>
                         <input type="hidden" name="photo" id="photo">
                     </div>
                     <div class="layui-form-item">

@@ -23,7 +23,8 @@ return [
     'version'=>'1.0',//小程序模板版本
     'desc'=>'云易装v1.0',//小程序模板版本描述
     "wxCode"=>[
-            "prizepage"=>"pages/index/prize",
+            "luckypage"=>"pages/index/prize",
+            "sitepage"=>"pages/projectdetail/projectdetail",
             "width"=>"50"
         ]
 ];

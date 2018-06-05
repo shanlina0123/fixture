@@ -570,13 +570,13 @@ class WxAuthorize
     }
 
    //动态生成微信二维码
-    public function getWxappCode($accress_token,$lukyid)
+    public function getWxappCode($accress_token,$scene,$page="luckypage",$width)
     {
         $apiUrl="https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=".$accress_token;
         $postData=[
-            "scene"=>$lukyid,
-            "page"=>config('configure.wxCode.prizepage'),
-            "width"=>config('configure.wxCode.width'),
+            "scene"=>$scene,
+            "page"=>config('configure.wxCode.'.$page),
+            "width"=>$width?$width:config('configure.wxCode.width'),
         ];
         return wxPostCurl($apiUrl,$postData);
     }

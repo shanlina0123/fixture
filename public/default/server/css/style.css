@@ -462,3 +462,43 @@
   background-color: #38a0df;
   margin: 15px auto;
 }
+
+
+/*推广*/
+.publicpop {
+  display: none;
+}
+.publicpop .publicImgWrap {
+  position: relative;
+  width: 285px;
+  height: 397px;
+  background: url(../images/projectbg.png) center top / 100% no-repeat;
+}
+.publicpop .companyname {
+  position: absolute;
+  font-size: 22px;
+  color: #a20016;
+  font-weight: bold;
+  top: 78px;
+  left: 90px;
+  -moz-transform: rotate(-15deg);
+  -webkit-transform: rotate(-15deg);
+  -ms-transform: rotate(-15deg);
+  -o-transform: rotate(-15deg);
+}
+.publicpop .erweimaImg {
+  position: absolute;
+  top: 195px;
+  left: 103px;
+}
+.publicpop .downWrap {
+  width: 285px;
+  text-align: center;
+}
+.publicpop .downWrap img {
+  display: inline-block;
+  margin: 20px 10px;
+  cursor: pointer;
+}
+
+
