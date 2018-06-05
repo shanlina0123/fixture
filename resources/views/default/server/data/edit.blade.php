@@ -1,7 +1,7 @@
 @extends('server.layout.content')
 @section("title")属性管理@endsection
 @section('content')
-    <div class="main">
+    <div class="main" style="margin-bottom: 100px;">
         <div style="display: none" id="errorMsg" content="{{$errorMsg}}"></div>
         <h1 class="pageTitle" >{{$list["cateData"]["name"]}}</h1>
         <div class="settingPop">
