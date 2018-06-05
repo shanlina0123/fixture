@@ -72,7 +72,9 @@ class ActivityLuckyBusiness extends ServerBase
         //获取门店数据
         $list["storeList"] = Cache::tags($tag1)->remember($tagKey, config('configure.sCache'), function () use ($isadmin, $lookWhere) {
             //查詢
-            $queryModel = Store::select(DB::raw("id,name,id as storeid"));
+            $queryModel = Store::select(DB::raw("id,name,id"));
+            $lookWhere["id"]=$lookWhere["storeid"];
+            unset($lookWhere["storeid"]);
             //视野条件
             $queryModel = $queryModel->where($lookWhere);
             $list = $queryModel
@@ -105,7 +107,9 @@ class ActivityLuckyBusiness extends ServerBase
         $tagKey2 = base64_encode(mosaic("", $tag2, $companyid, $cityid, $storeid, $islook));
         $list["storeList"] = Cache::tags($tag2)->remember($tagKey2, config('configure.sCache'), function () use ($isadmin, $lookWhere) {
             //查詢
-            $queryModel = Store::select(DB::raw("id,name,id as storeid"));
+            $queryModel = Store::select(DB::raw("id,name,id"));
+            $lookWhere["id"]=$lookWhere["storeid"];
+            unset($lookWhere["storeid"]);
             //视野条件
             $queryModel = $queryModel->where($lookWhere);
             $list = $queryModel
@@ -153,7 +157,9 @@ class ActivityLuckyBusiness extends ServerBase
         $tagKey2 = base64_encode(mosaic("", $tag2, $companyid, $cityid, $storeid, $islook));
         $list["storeList"] = Cache::tags($tag2)->remember($tagKey2, config('configure.sCache'), function () use ($isadmin, $lookWhere) {
             //查詢
-            $queryModel = Store::select(DB::raw("id,name,id as storeid"));
+            $queryModel = Store::select(DB::raw("id,name,id"));
+            $lookWhere["id"]=$lookWhere["storeid"];
+            unset($lookWhere["storeid"]);
             //视野条件
             $queryModel = $queryModel->where($lookWhere);
             $list = $queryModel
