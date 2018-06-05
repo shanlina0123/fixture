@@ -178,7 +178,7 @@ class CompanyBusiness extends ServerBase
                 $roomRenov = array(); //装修方式
                 $roomStyle = array(); //装修风格
                 $roomType = array(); //户型
-               // $position = array(); //职位
+                $position = array(); //职位
                 foreach ( $selectData as $k=>$rowData )
                 {
                     if( $rowData->pid != 0 )
@@ -206,13 +206,13 @@ class CompanyBusiness extends ServerBase
                                 $roomType[$k]['created_at'] = date("Y-m-d H:i:s");
                                 $roomType[$k]['updated_at'] = date("Y-m-d H:i:s");
                                 break;
-//                            case 4:
-//                                $position[$k]['name'] = $rowData->name;
-//                                $position[$k]['status'] = 1;
-//                                $position[$k]['companyid'] = $obj->id;
-//                                $position[$k]['created_at'] = date("Y-m-d H:i:s");
-//                                $position[$k]['updated_at'] = date("Y-m-d H:i:s");
-//                                break;
+                            case 4:
+                                $position[$k]['name'] = $rowData->name;
+                                $position[$k]['status'] = 1;
+                                $position[$k]['companyid'] = $obj->id;
+                                $position[$k]['created_at'] = date("Y-m-d H:i:s");
+                                $position[$k]['updated_at'] = date("Y-m-d H:i:s");
+                                break;
                         }
                     }
                 }
@@ -228,10 +228,10 @@ class CompanyBusiness extends ServerBase
                 {
                     RoomType::insert($roomType);
                 }
-//                if(count($position))
-//                {
-//                    Position::insert($position);
-//                }
+                if(count($position))
+                {
+                    Position::insert($position);
+                }
                 //清除缓存
                 Cache::tags(["Data-CateList",'siteTemplate'.$obj->id,'roomType'.$obj->id,'roomStyle'.$obj->id,'renovationMode'.$obj->id])->flush();
                 DB::commit();

@@ -76,8 +76,12 @@ class AdminBusiness extends ServerBase
         //获取门店数据
         $list["storeList"] = Cache::get($tag2, function () use ($lookWhere, $tag2) {
             //视野条件
-            $lookWhere["id"]=$lookWhere["storeid"];
-            unset($lookWhere["storeid"]);
+            if($lookWhere["storeid"])
+            {
+                $lookWhere["id"]=$lookWhere["storeid"];
+                unset($lookWhere["storeid"]);
+            }
+
             $storeList = Store::select(DB::raw('id,id as storeid,name'))->where($lookWhere)->get();
             Cache::put($tag2, $storeList, config('configure.sCache'));
             //返回数据库层查询结果

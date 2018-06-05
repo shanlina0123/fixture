@@ -73,9 +73,12 @@ class ActivityLuckyBusiness extends ServerBase
         $list["storeList"] = Cache::tags($tag1)->remember($tagKey, config('configure.sCache'), function () use ($isadmin, $lookWhere) {
             //查詢
             $queryModel = Store::select(DB::raw("id,name,id"));
-            $lookWhere["id"]=$lookWhere["storeid"];
-            unset($lookWhere["storeid"]);
             //视野条件
+            if($lookWhere["storeid"])
+            {
+                $lookWhere["id"]=$lookWhere["storeid"];
+                unset($lookWhere["storeid"]);
+            }
             $queryModel = $queryModel->where($lookWhere);
             $list = $queryModel
                 ->orderBy('id', 'asc')
@@ -108,9 +111,12 @@ class ActivityLuckyBusiness extends ServerBase
         $list["storeList"] = Cache::tags($tag2)->remember($tagKey2, config('configure.sCache'), function () use ($isadmin, $lookWhere) {
             //查詢
             $queryModel = Store::select(DB::raw("id,name,id"));
-            $lookWhere["id"]=$lookWhere["storeid"];
-            unset($lookWhere["storeid"]);
             //视野条件
+            if($lookWhere["storeid"])
+            {
+                $lookWhere["id"]=$lookWhere["storeid"];
+                unset($lookWhere["storeid"]);
+            }
             $queryModel = $queryModel->where($lookWhere);
             $list = $queryModel
                 ->orderBy('id', 'asc')
@@ -158,9 +164,12 @@ class ActivityLuckyBusiness extends ServerBase
         $list["storeList"] = Cache::tags($tag2)->remember($tagKey2, config('configure.sCache'), function () use ($isadmin, $lookWhere) {
             //查詢
             $queryModel = Store::select(DB::raw("id,name,id"));
-            $lookWhere["id"]=$lookWhere["storeid"];
-            unset($lookWhere["storeid"]);
             //视野条件
+            if($lookWhere["storeid"])
+            {
+                $lookWhere["id"]=$lookWhere["storeid"];
+                unset($lookWhere["storeid"]);
+            }
             $queryModel = $queryModel->where($lookWhere);
             $list = $queryModel
                 ->orderBy('id', 'asc')
