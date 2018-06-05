@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Common;
 use App\Http\Business\Common\SystemMessage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 class SystemMessageController extends Controller
 {
@@ -79,6 +80,7 @@ class SystemMessageController extends Controller
         $res = $this->systemMessage->readNotice( $data );
         if ($res)
         {
+            Cache::tags(['NoticeList'.$data['userid']])->flush();
             responseData(\StatusCode::SUCCESS,'读取成功');
         }
         responseData(\StatusCode::ERROR,'读取失败');

@@ -370,7 +370,7 @@ class SiteBusiness extends StoreBase
                     $query->select('linkednum','siteid','follownum');
                 }
             ]
-        )->select('explodedossurl','addr','budget','acreage','roomtypeid','roomstyleid','renovationmodeid','stagetemplateid','companyid','id','roomshap','stageid')->first();
+        )->select('explodedossurl','addr','budget','acreage','roomtypeid','roomstyleid','renovationmodeid','stagetemplateid','companyid','id','roomshap','stageid','name')->first();
         //公司模板
         $res->tag = CompanyStageTemplateTag::orderBy('sort','asc')->where(['stagetemplateid'=>$res->stagetemplateid,'companyid'=>$res->companyid])->select('id','name')->get();
         //动态
@@ -397,20 +397,25 @@ class SiteBusiness extends StoreBase
     public function siteDynamic( $data )
     {
         //动态
-        $comment = Dynamic::where(['companyid'=>$data['companyid'],'sitetid'=>$data['id'],'type'=>0])->with(
-            [
-                'dynamicToFollo'=>function($query)
-                {
-                    $query->orderBy('id','desc')->select('dynamicid','content');
-                },'dynamicToImages'=>function($query)
-                {
-                    $query->orderBy('id','desc')->select('dynamicid','ossurl','type');
-                },'dynamicToUser'=>function($query){
-                    $query->select('nickname','id');
-                },'dynamicToStatistics'=>function($query){
-                    $query->select('thumbsupnum','follownum','dynamicid');
-                }
-            ])->select('content','id','title','created_at','createuserid')->paginate(config('configure.sPage'));
+        $where = $data;
+        $comment = Dynamic::where(['companyid'=>$data['companyid'],'sitetid'=>$data['id'],'type'=>0])->orderBy('id','desc')->with('dynamicToImages');//关联图片
+        //关联用户
+        $comment = $comment->with(['dynamicToUser'=>function( $query ) use($where){
+            //关联用户表的职位
+            $query->with(['userToPosition'=>function( $query ) use($where){
+                $query->where(['companyid'=>$where['companyid']]);
+            }])->select('companyid','id','positionid','nickname','faceimg');
+            //关联评论
+        },'dynamicToFollo'=>function( $query ){
+            //关联评论用户
+            $query->with(['dynamicCommentToUser'=>function( $query ){
+                $query->select('id','nickname');
+            },'dynamicCommentToReplyUser'=>function($query){
+                $query->select('id','nickname');
+            }]);
+        },'dynamicToStatistics'=>function($query){
+            $query->select('dynamicid','thumbsupnum','commentnum');
+        }])->get();
         return $comment;
     }
 }

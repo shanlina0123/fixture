@@ -12,6 +12,9 @@
 */
 //PC端服务路由
 Route::group(['namespace' => 'Server'], function () {
+
+    //客服
+    Route::any('wx/messageAuthorize', 'WxMessageController@messageAuthorize');//客服
     //微信第三方授权
     Route::any('wx/verify_ticket', 'WxTicketController@verifyTicket');//微信第三方推荐verify_ticket地址
     Route::any('wx/{appid}/callback/message', 'WxTicketController@message'); //通过该URL接收公众号或小程序消息和事件推送

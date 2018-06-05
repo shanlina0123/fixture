@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Http\Model\Company\Company;
 use App\Http\Model\Log\Notice;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -36,11 +37,19 @@ class EventServiceProvider extends ServiceProvider
          */
         Event::listen('log.notice', function ($type,$user,$event,$notice_type=false) {
 
+            if( $notice_type )
+            {
+                if( $event['createuserid'] = $user->id )
+                {
+                    return true;
+                }
+            }
             $obj = new Notice;
             $obj->uuid = create_uuid();
             $obj->companyid = $user->companyid;
             $obj->nickname = $user->nickname;
-            $obj->isread = 1;
+            $obj->faceimg = $user->faceimg;
+            $obj->isread = 0;
             switch ( (int)$type )
             {
                 //1关注 、2赞、3评论、4客户预约
@@ -74,18 +83,31 @@ class EventServiceProvider extends ServiceProvider
                     $name = Company::where( 'id', $obj->companyid)->value('fullname');
                     switch (  (int)$event['sourceid'] )
                     {
+                        case 1:
+                            $obj->title = '预约参观';
+                            $obj->content = $notice_type?str_replace('【客户姓名】',$event['name'],config('template.7')):str_replace('【公司简称】',$name,config('template.3'));
+                            $obj->content = str_replace('【工地】',$event['sname'],$obj->content);
+                            $obj->siteid = 0;
+                            break;
                         case 2:
                             $obj->title = '免费量房';
                             $obj->content = $notice_type?str_replace('【客户姓名】',$event['name'],config('template.5')):str_replace('【公司简称】',$name,config('template.1'));
+                            $obj->siteid = 0;
                             break;
                         case 4:
                             $obj->title = '快速报价';
                             $obj->content = $notice_type?str_replace('【客户姓名】',$event['name'],config('template.6')):str_replace('【公司简称】',$name,config('template.2'));
+                            $obj->siteid = 0;
                             break;
                     }
                     break;
             }
             $obj->save();
+            if($notice_type){
+                Cache::tags(['NoticeList'.$event['createuserid']])->flush();
+            }else{
+                Cache::tags(['NoticeList'.$user->id])->flush();
+            }
         });
     }
 }
