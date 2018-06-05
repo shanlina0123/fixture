@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Server;
 use App\Http\Controllers\Common\ServerBaseController;
 
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Event;
 
 class IndexController extends ServerBaseController
 {
@@ -14,7 +15,8 @@ class IndexController extends ServerBaseController
      */
     public function index()
     {
-        Cache::flush();
+        event('log.notice',array('type'=>22,'data'=>1));
+        //Cache::flush();
         return view('server.index.index');
     }
 
@@ -23,7 +25,7 @@ class IndexController extends ServerBaseController
      */
     public function indexContent()
     {
-        Cache::flush();
+       // Cache::flush();
         return view('server.index.index');
     }
 

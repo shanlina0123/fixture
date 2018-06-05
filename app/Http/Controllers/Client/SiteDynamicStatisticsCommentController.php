@@ -40,6 +40,8 @@ class SiteDynamicStatisticsCommentController extends ClientBaseController
         $res = $this->dynamicStatistics->Fabulous( $data );
         if( $res )
         {
+            //写日志
+            event('log.notice',array('type'=>2,$this->apiUser,'event'=>$data,'notice_type'=>true));
             Cache::tags(['DynamicList'.$this->apiUser->companyid])->flush();
             responseData(\StatusCode::SUCCESS,'点赞成功');
         }

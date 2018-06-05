@@ -48,7 +48,7 @@ class WxAuthorize
             $url = 'https://api.weixin.qq.com/cgi-bin/component/api_component_token';
             $post['component_appid'] = $this->appid;
             $post['component_appsecret'] = $this->secret;
-            $post['component_verify_ticket'] = Cache::get('ticket');
+            $post['component_verify_ticket'] = file_get_contents(storage_path('ticket/ticket.txt'));//Cache::get('ticket');
             $data = wxPostCurl( $url, $post );
             if( $data )
             {
