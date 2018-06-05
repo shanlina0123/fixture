@@ -186,7 +186,7 @@ class ActivityLuckyBusiness extends ServerBase
      * 修改、添加 - 执行
      * @param $uuid
      */
-    public function update($id, $userid, $companyid, $cityid, $data)
+    public function update($id, $userid, $companyid, $data)
     {
         try {
             //开启事务
@@ -248,7 +248,7 @@ class ActivityLuckyBusiness extends ServerBase
             //整理修改数据
             $lucky["uuid"] = $createUuid;
             $lucky["companyid"] = $companyid;//公司id
-            $lucky["cityid"] = $cityid;//市id
+            $lucky["cityid"] = $storeData["cityid"];//市id
             $lucky["userid"] = $userid;
             //基础设置
             $lucky["storeid"] = $data["storeid"];//门店id
@@ -320,7 +320,7 @@ class ActivityLuckyBusiness extends ServerBase
                         $prizeData["uuid"] = create_uuid();
                         $prizeData["companyid"] = $companyid;
                         $prizeData["storeid"] = $data["storeid"];
-                        $prizeData["cityid"] = $cityid;
+                        $prizeData["cityid"] = $storeData["cityid"];//市id
                         $prizeData["activityluckyid"] = $activityluckyid;
                         $prizeData["name"] = $v["name"];
                         $prizeData["num"] = $v["num"];
@@ -337,7 +337,7 @@ class ActivityLuckyBusiness extends ServerBase
                         $prizeData["uuid"] = create_uuid();
                         $prizeData["companyid"] = $companyid;
                         $prizeData["storeid"] = $data["storeid"];
-                        $prizeData["cityid"] = $cityid;
+                        $prizeData["cityid"] = $storeData["cityid"];//市id
                         $prizeData["activityluckyid"] = $activityluckyid;
                         $prizeData["name"] = $v["name"];
                         $prizeData["num"] = $v["num"];
