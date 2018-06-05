@@ -82,7 +82,7 @@ class SiteController extends ServerBaseController
                 'office'=>'bail|required|numeric',//房型
                 'kitchen'=>'bail|required|numeric',//房型
                 'wei'=>'bail|required|numeric',//房型
-                'acreage'=>'required',//面积
+                'acreage'=>'present',//面积
                 'roomstyleid'=>'bail|required|numeric',//风格
                 'renovationmodeid'=>'bail|required|numeric',//方式
                 'budget'=>'bail|present',//预算

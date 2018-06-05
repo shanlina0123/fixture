@@ -14,7 +14,7 @@
                 <div class="contentinner">
                     <div class="paddinginner tabindex"  id="bgurl"
                          @if(array_key_exists("luckData",$list)&&$list["luckData"]['bgurl'])style="background: url({{"/".config('configure.uploads')."/".$list["luckData"]['bgurl']}}) center top no-repeat;" @endif>
-                        <p class="activename">开心转转转</p>
+                        <p class="activename">@if(array_key_exists("luckData",$list)){{$list["luckData"]["title"]}}@endif</p>
                         <div class="prizetime">距离抽奖结束还剩<br><span>20小时5分钟12秒</span></div>
                         <a href="javascript:;" class="prizetip"><img src="{{pix_asset('server/images/prizetip.png')}}"
                                                                      class="prizetipimg"></a>

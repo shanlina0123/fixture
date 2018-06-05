@@ -4,7 +4,7 @@
 
 @endsection
 @section('content')
-    <div class="main" style="margin-bottom: 100px;">
+    <div class="main">
         <fieldset class="layui-elem-field layui-field-title">
             <legend>新建项目</legend>
         </fieldset>
@@ -73,19 +73,19 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">房型</label>
                             <div class="layui-input-inline" style="width: 100px;">
-                                <input type="number" name="room"  value="{{old('room')}}" placeholder="室" min="1" max="9" maxlength="2" datatype="n1-2" nullmsg="请输入室" errormsg="请输入正确的房型" autocomplete="off" class="layui-input">
+                                <input type="number" name="room"  value="{{old('room')}}" placeholder="室" min="1" max="9" maxlength="2" datatype="*1-2" nullmsg="请输入室" errormsg="请输入正确的房型" autocomplete="off" class="layui-input">
                             </div>
                             <div class="layui-form-mid">室</div>
                             <div class="layui-input-inline" style="width: 100px;">
-                                <input type="number" name="office"  value="{{old('office')}}"  placeholder="厅" min="1" max="9" maxlength="11"   datatype="n1-2" nullmsg="请输入厅" errormsg="请输入正确的房型" autocomplete="off" class="layui-input">
+                                <input type="number" name="office"  value="{{old('office')}}"  placeholder="厅" min="1" max="9" maxlength="11"   datatype="*1-2" nullmsg="请输入厅" errormsg="请输入正确的房型" autocomplete="off" class="layui-input">
                             </div>
                             <div class="layui-form-mid">厅</div>
                             <div class="layui-input-inline" style="width: 100px;">
-                                <input type="number" name="kitchen"  value="{{old('kitchen')}}" placeholder="厨" min="1" max="9" maxlength="11"   datatype="n1-2" nullmsg="请输入厨" errormsg="请输入正确的房型"  autocomplete="off" class="layui-input">
+                                <input type="number" name="kitchen"  value="{{old('kitchen')}}" placeholder="厨" min="1" max="9" maxlength="11"   datatype="*1-2" nullmsg="请输入厨" errormsg="请输入正确的房型"  autocomplete="off" class="layui-input">
                             </div>
                             <div class="layui-form-mid">厨</div>
                             <div class="layui-input-inline" style="width: 100px;">
-                                <input type="number" name="wei"  value="{{old('wei')}}"  placeholder="卫" min="1" max="9" maxlength="11"  datatype="n1-2" nullmsg="请输入卫" errormsg="请输入正确的房型"  autocomplete="off" class="layui-input">
+                                <input type="number" name="wei"  value="{{old('wei')}}"  placeholder="卫" min="1" max="9" maxlength="11"  datatype="*1-2" nullmsg="请输入卫" errormsg="请输入正确的房型"  autocomplete="off" class="layui-input">
                             </div>
                             <div class="layui-form-mid">卫</div>
                         </div>

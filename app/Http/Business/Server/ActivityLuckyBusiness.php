@@ -507,7 +507,6 @@ class ActivityLuckyBusiness extends ServerBase
         $list["lukData"] = ActivityLucky::where("id", $id)->select("id", "sharetitle", "title", "bgurl", "storeid")->first();
         $list["lukData"]["bgurl"] = $list["lukData"]["bgurl"] ? $uploads . "/" . $list["lukData"]["bgurl"] : "";
         $list["lukData"]["storename"] = Store::where("id", $list["lukData"]["storeid"])->value("name");
-        $list["lukData"]["sharetitle"] = $list["lukData"]["sharetitle"] ? $list["lukData"]["sharetitle"] : $list["lukData"]["title"];
         //奖项数据
         $list["prizeList"] = Cache::tags($tag)->remember($tagKey, config('configure.sCache'), function () use ($id, $companyid, $uploads) {
             //查詢
