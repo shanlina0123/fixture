@@ -262,6 +262,13 @@ class SiteBusiness extends ServerBase
                     $site->explodedossurl = 'site/'.$uuid.'/info/'.$data['photo'];
                 }
             }
+
+            //检测门店
+            if($data['storeid'])
+            {
+                $data['cityid']=Store::where("id",$data['storeid'])->value("cityid");
+            }
+
             $site->uuid = $uuid;
             $site->companyid = $data['companyid'];
             $site->storeid = $data['storeid'];
@@ -519,8 +526,8 @@ class SiteBusiness extends ServerBase
             //添加动态
             $dynamic = new Dynamic();
             $dynamic->uuid = create_uuid();
-            $dynamic->companyid = $data['companyid'];
-            $dynamic->storeid = $data['storeid'];
+//            $dynamic->companyid = $data['companyid'];
+//            $dynamic->storeid = $data['storeid'];
             $dynamic->sitetid = $site->id;
             $dynamic->createuserid = $data['createuserid'];
             $dynamic->content = $data['content'];
