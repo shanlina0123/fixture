@@ -37,7 +37,7 @@ layui.use('form', function () {
     var save = function (index) {
         var form = $(index).parents("form");
         var tr = $(index).parents("tr");
-        setAttrFormUrl(index,form,"id");
+        setAttrFormUrl(index,form,"id","action","muilteUpdateAction");
         //参数
         var id = tr.attr("id");
         var name = $("#name", tr).val();
@@ -54,11 +54,11 @@ layui.use('form', function () {
         var form = $(index).parents("form");
         var tr = $(index).parents("tr");
         var cateid = form.attr("cateid");
-        setAttrFormUrl(index,form,"id","deleteAction");
+        setAttrFormUrl(index,form,"id","action","muilteDeleteAction");
         layer.confirm('确定要删除吗？', {
             btn: ['确定', '取消']
         }, function () {
-            $.deleteJSON(form.attr("deleteAction"),{cateid:cateid},function(data){
+            $.deleteJSON(form.attr("action"),{cateid:cateid},function(data){
                 dodelete(data,index);
             });
 

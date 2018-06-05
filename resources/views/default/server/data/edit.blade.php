@@ -6,7 +6,7 @@
         <h1 class="pageTitle" >{{$list["cateData"]["name"]}}</h1>
         <div class="settingPop">
             <div class="setttingPopInner">
-                <form class="layui-form" cateid="{{$list["cateData"]["id"]}}" action="{{route('data-update','id')}}" method="put" id="addAndEditAndDeleteForm"   deleteAction="{{route('data-delete','id')}}" deleteMethod="delete">
+                <form class="layui-form" cateid="{{$list["cateData"]["id"]}}"  id="addAndEditAndDeleteForm"  action="{{route('data-update','id')}}" muilteUpdateAction="{{route('data-update','id')}}" method="put"  deleteAction="{{route('data-delete','id')}}"  muilteDeleteAction="{{route('data-delete','id')}}" deleteMethod="delete">
                 <table class="layui-table popSettingTable">
                     <thead>
                     <tr>
