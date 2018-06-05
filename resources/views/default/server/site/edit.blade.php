@@ -3,7 +3,7 @@
 @section('css')
 @endsection
 @section('content')
-<div class="main">
+<div class="main" style="margin-bottom: 100px;">
     <fieldset class="layui-elem-field layui-field-title">
         <legend>编辑项目</legend>
     </fieldset>
@@ -110,11 +110,11 @@
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">项目封面</label>
-                <div class="layui-upload-drag" id="test10">
+                <div class="layui-upload-drag" id="test10" style="float: left">
                     <i class="layui-icon"></i>
                     <p>点击上传，或将文件拖拽到此处（工地封面：建议上传效果图）</p>
                 </div>
-                <div class="uploadImg layui-inline fl"><img width="258" height="135" id="src" src="{{getImgUrl($data->info->explodedossurl)}}"></div>
+                <div class="uploadImg layui-inline fl" style="margin-left: 20px;"><img id="src" src="{{getImgUrl($data->info->explodedossurl)}}" style="max-width: 100%;max-height:135px;"></div>
                 <input type="hidden" name="photo" id="photo" value="">
             </div>
             <div class="layui-form-item">

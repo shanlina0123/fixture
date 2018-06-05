@@ -65,6 +65,7 @@ Route::group(['namespace' => 'Server'], function () {
             Route::post('site/template-tag', 'SiteController@templateTag')->name('site-template-tag');
             Route::post('site/isopen', 'SiteController@isOpen')->name('site-isopen');//工地是否公开
             Route::match(['get', 'post'],'site/renew/{uuid}', 'SiteController@siteRenew')->name('site-renew');//更新工地动态
+            Route::get("site/extension/{uuid}","SiteController@extension")->name("site-extension");//推广详情
             //模板
             Route::resource('site-template', 'SiteTemplateController');//模板管理
             Route::post('site/add-default-template', 'SiteTemplateController@addDefaultTemplate')->name('site-add-default-template');//使用系统模板

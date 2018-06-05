@@ -8,6 +8,7 @@
 
 namespace App\Http\Business\Server;
 use App\Http\Business\Common\ServerBase;
+use App\Http\Business\Common\WxAuthorize;
 use App\Http\Model\Company\CompanyStageTemplate;
 use App\Http\Model\Company\CompanyStageTemplateTag;
 use App\Http\Model\Data\RenovationMode;
@@ -595,5 +596,18 @@ class SiteBusiness extends ServerBase
             responseData(\StatusCode::ERROR,'工地信息不存在',$res);
         }
     }
-
+    /***
+     * 获取扩展详情
+     * @return mixed
+     */
+    public function extension($uuid, $companyid)
+    {
+        //获取小程序二维码
+        $wx = new  WxAuthorize();
+        $accessToken = $wx->getUserAccessToken(null, $companyid);
+        $wxcode = $accessToken ? $wx->getWxappCode($accessToken, $uuid,"sitepage") : "";
+        $list["wxappcode"] = $wxcode;
+        $list["uuid"] = $uuid;
+        return responseCData(\StatusCode::SUCCESS, "", $list);
+    }
 }
