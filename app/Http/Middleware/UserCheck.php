@@ -72,9 +72,9 @@ class UserCheck
             $admin_user["islook"]=max($functionLook);
         }
 
+
         //重置session
         session(['userInfo'=>$admin_user]);
 
-        return true;
     }
 }

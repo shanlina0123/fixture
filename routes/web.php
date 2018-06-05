@@ -29,6 +29,7 @@ Route::group(['namespace' => 'Server'], function () {
     Route::get("filter/undefined","ErrorController@undefined")->name("error-undefined");//400
     Route::get("filter/syserror","ErrorController@syserror")->name("error-syserror");//500
     Route::get("filter/lock","ErrorController@lock")->name("error-lock");//无权限
+    Route::get("filter/coming","ErrorController@coming")->name("error-coming");//敬请期待
 
     //中间件登录认证路由
     Route::group(['middleware' => ['checkUser']], function () {

@@ -34,4 +34,8 @@ class ErrorController extends Controller
         return view('server.error.lock');
     }
 
+    public function coming()
+    {
+        return view('server.error.coming');
+    }
 }
