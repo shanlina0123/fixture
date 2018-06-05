@@ -118,6 +118,7 @@ class StoreBusiness extends ServerBase
                 DB::commit();
                 //删除缓存
                 Cache::tags(["Store-PageList","Admin-StoreList"])->flush();
+                Cache::forget("storeCompany".$companyid);
             } else {
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR, "新增失败");
@@ -145,8 +146,8 @@ class StoreBusiness extends ServerBase
             //业务处理
 
             //检查是否存在
-            $storeExist = Store::where("name", $data["name"])->where("uuid","!=",$uuid)->exists();
-            if ($storeExist>0) {
+            $storeData = Store::where("name", $data["name"])->where("uuid","!=",$uuid)->first();
+            if ($storeData) {
                 responseData(\StatusCode::EXIST_ERROR, "名称已存在");
             }
 
@@ -164,6 +165,7 @@ class StoreBusiness extends ServerBase
                 DB::commit();
                 //删除缓存
                 Cache::tags(["Store-PageList","Admin-StoreList"])->flush();
+                Cache::forget("storeCompany".$storeData["companyid"]);
             } else {
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR, "修改失败");
@@ -210,6 +212,7 @@ class StoreBusiness extends ServerBase
                 DB::commit();
                 //删除缓存
                 Cache::tags(["Store-PageList","Admin-StoreList"])->flush();
+                Cache::forget("storeCompany".$row["companyid"]);
             }else{
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR,"删除失败");
