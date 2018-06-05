@@ -67,10 +67,14 @@ class UserCheck
         $admin_user["menue"]=$menueArray;
 
         //控制器视野权限
-        $functionLook=array_column($roleFunc->toArray(),"islook","functionid");
-        $admin_user["islook"]=max($functionLook);
+        if(count($roleFunc->toArray())>0){
+            $functionLook=count($roleFunc->toArray())>0?array_column($roleFunc->toArray(),"islook","functionid"):0;
+            $admin_user["islook"]=max($functionLook);
+        }
 
         //重置session
         session(['userInfo'=>$admin_user]);
+
+        return true;
     }
 }
