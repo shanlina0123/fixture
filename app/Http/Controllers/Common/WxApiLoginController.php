@@ -14,9 +14,15 @@ class WxApiLoginController extends Controller
 {
 
     protected $user;
+    public $apiUser;
     public function __construct(WxApiLogin $user)
     {
         $this->user = $user;
+        $this->middleware(function ($request, $next) {
+            $apiUser = $request->get('apiUser');
+            $this->apiUser = $apiUser?$apiUser->tokenToUser:'';
+            return $next( $request );
+        });
     }
 
     /**
@@ -52,6 +58,24 @@ class WxApiLoginController extends Controller
         }else
         {
             responseData(\StatusCode::ERROR,"请求OPENID失败", $res );
+        }
+    }
+
+
+    /**
+     * 设置用户信息
+     */
+    public function setUserInfo( Request $request )
+    {
+        $data = $request->all();
+        $data['id'] = $this->apiUser->id;
+        $res = $this->user->setUserInfo($data);
+        if( $res )
+        {
+            responseData(\StatusCode::SUCCESS,"授权成功" );
+        }else
+        {
+            responseData(\StatusCode::ERROR,"授权失败" );
         }
     }
 }

@@ -88,4 +88,22 @@ class WxApiLogin
         $wx = new WxAuthorize();
         return $wx->getOpenid( $appID, $code );
     }
+
+
+    /**
+     * @param $data
+     * 修改用户昵称
+     */
+    public function setUserInfo( $data )
+    {
+        $res = User::where('id',$data['id'])->first();
+        if ($res)
+        {
+            $res->nickname = $data['nickname'];
+            $res->faceimg = $data['faceimg'];
+            return $res->save();
+        }
+
+        return false;
+    }
 }
