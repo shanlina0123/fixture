@@ -66,12 +66,10 @@ class AdminBusiness extends ServerBase
         });
 
         //获取角色数据
-        $list["roleList"] = Cache::get($tag1, function () use ($lookWhere, $tag1) {
+        $list["roleList"] = Cache::tags($tag1)->remember($tagKey, config('configure.sCache'), function () use ($lookWhere) {
             //视野条件
-            $roleList = FilterRole::where("status", 1)->where($lookWhere)->orWhere("id", 1)->select("id", "name")->get();
-            Cache::put($tag1, $roleList, config('configure.sCache'));
-            //返回数据库层查询结果
-            return $roleList;
+            $list = FilterRole::where("status", 1)->where($lookWhere)->orWhere("id", 1)->select("id", "name")->get();
+            return $list;
         });
 
         //获取门店数据
