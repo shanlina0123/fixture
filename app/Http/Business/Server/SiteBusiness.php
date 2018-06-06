@@ -275,17 +275,21 @@ class SiteBusiness extends ServerBase
             $site->cityid = $data['cityid'];
             $site->stageid = $data['stageid'];
             $site->stagetemplateid = $data['stagetemplateid'];
-            $site->roomtypeid = $data['roomtypeid'];
-            $site->roomstyleid = $data['roomstyleid'];
-            $site->renovationmodeid = $data['renovationmodeid'];
-            $site->budget = $data['budget'];
+            $site->roomtypeid = $data['roomtypeid']?$data['roomtypeid']:0;
+            $site->roomstyleid = $data['roomstyleid']?$data['roomstyleid']:0;
+            $site->renovationmodeid = $data['renovationmodeid']?$data['renovationmodeid']:0;
+            $site->budget = $data['budget']?$data['budget']:0;
             $site->name = $data['name'];
             $site->addr = $data['addr'];
             $site->lng = $data['lng'];
             $site->lat = $data['lat'];
             $site->doornumber = $data['doornumber'];
-            $site->acreage = $data['acreage'];
-            $site->roomshap = $data['room'].'室'.$data['office'].'厅'.$data['kitchen'].'厨'.$data['wei'].'卫';
+            $site->acreage = $data['acreage']?$data['acreage']:0;
+            $room = $data['room']?$data['room'].'室':'';
+            $office = $data['office']?$data['office'].'厅':'';
+            $kitchen = $data['kitchen']?$data['kitchen'].'厨':'';
+            $wei = $data['wei']?$data['wei'].'卫':'';
+            $site->roomshap = $room.$office.$kitchen.$wei;
             $site->isopen =  array_has($data,'isopen')?1:0;
             $site->isfinish = 0;
             $site->createuserid = $data['createuserid'];
@@ -397,17 +401,21 @@ class SiteBusiness extends ServerBase
             }
         }
         $site->stageid = $data['stageid'];
-        $site->roomtypeid = $data['roomtypeid'];
-        $site->roomstyleid = $data['roomstyleid'];
-        $site->renovationmodeid = $data['renovationmodeid'];
-        $site->budget = $data['budget'];
+        $site->roomtypeid = $data['roomtypeid']?$data['roomtypeid']:0;
+        $site->roomstyleid = $data['roomstyleid']?$data['roomstyleid']:0;
+        $site->renovationmodeid = $data['renovationmodeid']?$data['renovationmodeid']:0;
+        $site->budget = $data['budget']?$data['budget']:0;
         $site->name = $data['name'];
         $site->addr = $data['addr'];
         $site->lng = $data['lng'];
         $site->lat = $data['lat'];
         $site->doornumber = $data['doornumber'];
-        $site->acreage = $data['acreage'];
-        $site->roomshap = $data['room'].'室'.$data['office'].'厅'.$data['kitchen'].'厨'.$data['wei'].'卫';
+        $site->acreage = $data['acreage']?$data['acreage']:0;
+        $room = $data['room']?$data['room'].'室':'';
+        $office = $data['office']?$data['office'].'厅':'';
+        $kitchen = $data['kitchen']?$data['kitchen'].'厨':'';
+        $wei = $data['wei']?$data['wei'].'卫':'';
+        $site->roomshap = $room.$office.$kitchen.$wei;
         $site->isopen =  array_has($data,'isopen')?1:0;
         $site->isfinish = 0;
         if( $site->save() )

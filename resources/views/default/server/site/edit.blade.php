@@ -32,13 +32,13 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>门牌</label>
+                <label class="layui-form-label">门牌</label>
                 <div class="layui-input-block">
-                    <input type="text" name="doornumber" value="{{$data->info->doornumber}}" class="layui-input" placeholder="请输入门牌，例如5号楼808室" datatype="*1-20" nullmsg="请输入门牌号" errormsg="请输入正确的门牌号" >
+                    <input type="text" name="doornumber"  ignore="ignore" value="{{$data->info->doornumber}}" class="layui-input" placeholder="请输入门牌，例如5号楼808室" datatype="*1-20" nullmsg="请输入门牌号" errormsg="请输入正确的门牌号" >
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>阶段</label>
+                <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>阶段</label>
                 <div class="layui-input-block" id="templateTag">
                     @foreach( $data->info->tage as $row )
                         <input type="radio" @if($row->id == $data->info->stageid ) checked="checked" @endif name="stageid" value="{{$row->id}}" title="{{$row->name}}" >
@@ -46,9 +46,10 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>户型</label>
+                <label class="layui-form-label">户型</label>
                 <div class="layui-input-block">
-                    <select name="roomtypeid"  datatype="*" nullmsg="请选择户型">
+                    <select name="roomtypeid"  ignore="ignore" datatype="*"  nullmsg="请选择户型">
+                        <option value="">请选择户型</option>
                         @foreach( $data->roomType as $row )
                             <option value="{{$row->id}}" @if($data->info->roomtypeid == $row->id) selected="selected" @endif >{{$row->name}}</option>
                         @endforeach
@@ -57,35 +58,36 @@
             </div>
             <div class="layui-form-item">
                 <div class="layui-inline">
-                    <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>房型</label>
+                    <label class="layui-form-label">房型</label>
                     <div class="layui-input-inline" style="width: 100px;">
-                        <input type="number" name="room" value="{{extractionInt($data->info->roomshap,0)}}" placeholder="室" min="1" max="9" maxlength="2" datatype="n1-2" nullmsg="请输入室" errormsg="请输入正确的房型" autocomplete="off" class="layui-input">
+                        <input type="number"  ignore="ignore" name="room" value="{{extractionInt($data->info->roomshap,0)}}" placeholder="室" min="1" max="9" maxlength="2" datatype="n1-2" nullmsg="请输入室" errormsg="请输入正确的房型" autocomplete="off" class="layui-input">
                     </div>
                     <div class="layui-form-mid">室</div>
                     <div class="layui-input-inline" style="width: 100px;">
-                        <input type="number" name="office"  value="{{extractionInt($data->info->roomshap,1)}}" placeholder="厅" min="1" max="9" maxlength="11"   datatype="n1-2" nullmsg="请输入厅" errormsg="请输入正确的房型" autocomplete="off" class="layui-input">
+                        <input type="number"  ignore="ignore" name="office"  value="{{extractionInt($data->info->roomshap,1)}}" placeholder="厅" min="1" max="9" maxlength="11"   datatype="n1-2" nullmsg="请输入厅" errormsg="请输入正确的房型" autocomplete="off" class="layui-input">
                     </div>
                     <div class="layui-form-mid">厅</div>
                     <div class="layui-input-inline" style="width: 100px;">
-                        <input type="number" name="kitchen"  value="{{extractionInt($data->info->roomshap,2)}}" placeholder="厨" min="1" max="9" maxlength="11"   datatype="n1-2" nullmsg="请输入厨" errormsg="请输入正确的房型"  autocomplete="off" class="layui-input">
+                        <input type="number"  ignore="ignore" name="kitchen"  value="{{extractionInt($data->info->roomshap,2)}}" placeholder="厨" min="1" max="9" maxlength="11"   datatype="n1-2" nullmsg="请输入厨" errormsg="请输入正确的房型"  autocomplete="off" class="layui-input">
                     </div>
                     <div class="layui-form-mid">厨</div>
                     <div class="layui-input-inline" style="width: 100px;">
-                        <input type="number" name="wei"  value="{{extractionInt($data->info->roomshap,3)}}" placeholder="卫" min="1" max="9" maxlength="11"  datatype="n1-2" nullmsg="请输入卫" errormsg="请输入正确的房型"  autocomplete="off" class="layui-input">
+                        <input type="number"  ignore="ignore" name="wei"  value="{{extractionInt($data->info->roomshap,3)}}" placeholder="卫" min="1" max="9" maxlength="11"  datatype="n1-2" nullmsg="请输入卫" errormsg="请输入正确的房型"  autocomplete="off" class="layui-input">
                     </div>
                     <div class="layui-form-mid">卫</div>
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>面积</label>
+                <label class="layui-form-label">面积</label>
                 <div class="layui-input-block">
-                    <input type="number" name="acreage" value="{{$data->info->acreage}}" class="layui-input" placeholder="面积（㎡）" max="3"  datatype="mj" nullmsg="请输入面积" errormsg="请输入正确的面积">
+                    <input type="number" name="acreage" ignore="ignore" value="{{(int)$data->info->acreage?$data->info->acreage:''}}" class="layui-input" placeholder="面积（㎡）" max="3"  datatype="mj" nullmsg="请输入面积" errormsg="请输入正确的面积">
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>装修风格</label>
+                <label class="layui-form-label">装修风格</label>
                 <div class="layui-input-block">
-                    <select name="roomstyleid" datatype="*" nullmsg="请选择装修风格">
+                    <select name="roomstyleid" datatype="*"  ignore="ignore" nullmsg="请选择装修风格">
+                        <option value="">请选择装修风格</option>
                         @foreach( $data->roomStyle as $row )
                             <option value="{{$row->id}}" @if($data->info->roomstyleid == $row->id) selected="selected" @endif>{{$row->name}}</option>
                         @endforeach
@@ -93,9 +95,10 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>装修方式</label>
+                <label class="layui-form-label">装修方式</label>
                 <div class="layui-input-block">
-                    <select name="renovationmodeid"   datatype="*" nullmsg="请选择装修方式">
+                    <select name="renovationmodeid"   ignore="ignore" datatype="*" nullmsg="请选择装修方式">
+                        <option value="">请选择装修方式</option>
                         @foreach( $data->renovationMode as $row )
                             <option value="{{$row->id}}"  @if($data->info->renovationMode == $row->id) selected="selected" @endif>{{$row->name}}</option>
                         @endforeach
@@ -103,9 +106,9 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>预算</label>
+                <label class="layui-form-label">预算</label>
                 <div class="layui-input-block">
-                    <input type="number" name="budget" value="{{$data->info->budget}}" class="layui-input" placeholder="预算（万元）"   maxlength="11"  datatype="n1-11" nullmsg="请输入预算" errormsg="请输入正确的数字">
+                    <input type="number" name="budget" ignore="ignore" value="{{(int)$data->info->budget?$data->info->budget:''}}" class="layui-input" placeholder="预算（万元）"   maxlength="11"  datatype="n1-11" nullmsg="请输入预算" errormsg="请输入正确的数字">
                 </div>
             </div>
             <div class="layui-form-item">

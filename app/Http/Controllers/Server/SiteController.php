@@ -76,17 +76,17 @@ class SiteController extends ServerBaseController
                 'addr'=>'bail|required|max:255',//地址
                 'lng'=>'bail|present',//经度
                 'lat'=>'bail|present',//维度
-                'doornumber'=>'bail|present|max:100',//门牌
-                'roomtypeid'=>'required|numeric',//户型
-                'room'=>'bail|required|numeric',//房型
-                'office'=>'bail|required|numeric',//房型
-                'kitchen'=>'bail|required|numeric',//房型
-                'wei'=>'bail|required|numeric',//房型
+                'doornumber'=>'present|max:100',//门牌
+                'roomtypeid'=>'present',//户型
+                'room'=>'present',//房型
+                'office'=>'present',//房型
+                'kitchen'=>'present',//房型
+                'wei'=>'present',//房型
                 'acreage'=>'present',//面积
-                'roomstyleid'=>'bail|required|numeric',//风格
-                'renovationmodeid'=>'bail|required|numeric',//方式
-                'budget'=>'bail|present',//预算
-                'photo'=>'bail|present',//图片
+                'roomstyleid'=>'present',//风格
+                'renovationmodeid'=>'present',//方式
+                'budget'=>'present',//预算
+                'photo'=>'present',//图片
 
             ],[
                 'storeid.numeric'=>'门店信息数据类型不正确',
@@ -168,15 +168,15 @@ class SiteController extends ServerBaseController
             'addr'=>'bail|required|max:255',//地址
             'lng'=>'bail|present',//经度
             'lat'=>'bail|present',//维度
-            'doornumber'=>'bail|present|max:100',//门牌
-            'roomtypeid'=>'required|numeric',//户型
-            'room'=>'bail|required|numeric',//房型
-            'office'=>'bail|required|numeric',//房型
-            'kitchen'=>'bail|required|numeric',//房型
-            'wei'=>'bail|required|numeric',//房型
-            'acreage'=>'required',//面积
-            'roomstyleid'=>'bail|required|numeric',//风格
-            'renovationmodeid'=>'bail|required|numeric',//方式
+            'doornumber'=>'present',//门牌
+            'roomtypeid'=>'present',//户型
+            'room'=>'present',//房型
+            'office'=>'present',//房型
+            'kitchen'=>'present',//房型
+            'wei'=>'present',//房型
+            'acreage'=>'present',//面积
+            'roomstyleid'=>'present',//风格
+            'renovationmodeid'=>'present',//方式
             'budget'=>'bail|present',//预算
             'photo'=>'bail|present',//图片
 
