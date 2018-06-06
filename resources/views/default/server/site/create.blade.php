@@ -1,5 +1,5 @@
 @extends('server.layout.content')
-@section('title','新建')
+@section('title','新建项目')
 @section('css')
 
 @endsection
