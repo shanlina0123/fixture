@@ -261,6 +261,8 @@ class SiteBusiness extends ServerBase
                 {
                     $site->explodedossurl = 'site/'.$uuid.'/info/'.$data['photo'];
                 }
+            }else{
+                $site->explodedossurl=config("configure.site.logo");
             }
 
             //检测门店
