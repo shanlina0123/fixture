@@ -370,21 +370,13 @@ class SiteBusiness extends StoreBase
                     $query->select('linkednum','siteid','follownum');
                 }
             ]
-        )->select('explodedossurl','addr','budget','acreage','roomtypeid','roomstyleid','renovationmodeid','stagetemplateid','companyid','id','roomshap','stageid','name')->first();
+        )->select('explodedossurl','addr','budget','acreage','roomtypeid','roomstyleid','renovationmodeid','stagetemplateid','companyid','id','roomshap','stageid','name','storeid','cityid')->first();
         //公司模板
         $res->tag = CompanyStageTemplateTag::orderBy('sort','asc')->where(['stagetemplateid'=>$res->stagetemplateid,'companyid'=>$res->companyid])->select('id','name')->get();
-        //动态
-       /* $comment = Dynamic::where(['companyid'=>$res->companyid,'storeid'=>$res->storeid,'sitetid'=>$res->id,'type'=>0])->with(
-            [
-                'dynamicToFollo'=>function( $query )
-                {
-                     $query->orderBy('id','desc')->select('dynamicid','content');
-                },'dynamicToImages'=>function( $query )
-                {
-                     $query->orderBy('id','desc')->select('dynamicid','ossurl','type');
-                }
-        ])->paginate(config('configure.sPage'));;*/
-        //$res->comment = $comment;
+        $res->siteInvitation = SiteInvitation::where(['companyid'=>$data['companyid'],'siteid'=>$data['id']])->with(['invitationToUser'=>function($query){
+            $query->select('id','positionid','nickname','faceimg')->with('userToPosition');
+        }])->get();
+        $res->siteToFolloWrecord = $res->siteToFolloWrecord->count();
         return $res;
     }
 

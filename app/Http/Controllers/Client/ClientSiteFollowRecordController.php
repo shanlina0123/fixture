@@ -30,4 +30,19 @@ class ClientSiteFollowRecordController extends ClientBaseController
         $res = $this->siteFollow->followRecord( $where, $this->request );
         responseData(\StatusCode::SUCCESS,'我的关注项目',$res);
     }
+
+    /**
+     * 取消或者关注
+     */
+    public function recordSite(){
+        $user = $this->apiUser;
+        $where['companyid'] = $user->companyid;
+        $where['userid'] = $user->id;
+        $res = $this->siteFollow->recordSite( $where, $this->request );
+        if( $res ){
+
+            responseData(\StatusCode::SUCCESS,'操作成功');
+        }
+        responseData(\StatusCode::ERROR,'操作失败',$res);
+    }
 }

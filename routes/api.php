@@ -64,6 +64,8 @@ Route::group(['middleware'=>'ApiCheck'], function () {
         Route::post('client/appointment', 'ClientAppointmentController@Appointment');
         //我的关注项目
         Route::get('client/follow-record', 'ClientSiteFollowRecordController@followRecord');
+        //关注
+        Route::post('client/record-site', 'ClientSiteFollowRecordController@recordSite');
         //参与的活动
         Route::get('client/activity-inrecord', 'ClientActivityInrecordController@activityInrecord');
         //活动详情

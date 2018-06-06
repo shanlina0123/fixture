@@ -9,8 +9,10 @@
 namespace App\Http\Business\Client;
 
 
+use App\Http\Model\Dynamic\DynamicStatistics;
 use App\Http\Model\Site\SiteFollowrecord;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class ClientSiteFollowRecord
 {
@@ -38,5 +40,61 @@ class ClientSiteFollowRecord
             return $sql->paginate(config('configure.sPage'));
         });
         return $value;
+    }
+
+    /**
+     * @param $where
+     * @param $request
+     * 关注和取消
+     */
+    public function recordSite($where, $request)
+    {
+        try{
+            DB::beginTransaction();
+            $res = SiteFollowrecord::where($where)->first();
+            if( $res )
+            {
+                $res->delete();
+                $statistics = DynamicStatistics::where('siteid',$request->input('siteid'))->first();
+                if( $statistics )
+                {
+                    $statistics->follownum = $statistics->follownum-1?$statistics->follownum-1:0;
+                    $statistics->save();
+                }
+            }else
+            {
+                $wrecord = new SiteFollowrecord();
+                $wrecord->uuid = create_uuid();
+                $wrecord->companyid = $where['companyid'];
+                $wrecord->storeid = $request->input('storeid');
+                $wrecord->siteid = $request->input('siteid');
+                $wrecord->cityid = $request->input('cityid');
+                $wrecord->userid = $where['userid'];
+                $wrecord->created_at = date("Y-m-d H:i:s");
+                $wrecord->save();
+                $statistics = DynamicStatistics::where('siteid',$request->input('siteid'))->first();
+                if( $statistics )
+                {
+                    $statistics->follownum = $statistics->follownum+1;
+                    $statistics->save();
+                }else
+                {
+                    $obj = new DynamicStatistics();
+                    $obj->uuid = create_uuid();
+                    $obj->dynamicid = 0;
+                    $obj->siteid = $request->input('siteid');
+                    $obj->linkednum = 0;
+                    $obj->commentnum = 0;
+                    $obj->thumbsupnum = 0;
+                    $obj->follownum = 1;
+                    $obj->save();
+                }
+            }
+            DB::commit();
+            return true;
+        }catch (\Exception $e){
+            DB::rollBack();
+            return false;
+        }
     }
 }
