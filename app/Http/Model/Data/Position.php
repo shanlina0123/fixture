@@ -9,5 +9,5 @@ class Position extends Model
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
     protected $table = 'data_position';
-    public $timestamps = false;
+    public $timestamps = true;
 }
