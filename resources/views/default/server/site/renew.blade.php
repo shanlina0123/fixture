@@ -1,5 +1,5 @@
 @extends('server.layout.content')
-@section('title','更新')
+@section('title','跟进项目')
 @section('css')
     <style>
         .layui-upload-img {

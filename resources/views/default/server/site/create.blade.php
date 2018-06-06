@@ -1,5 +1,5 @@
 @extends('server.layout.content')
-@section('title','新建')
+@section('title','新建项目')
 @section('css')
 
 @endsection
@@ -13,7 +13,7 @@
                 <form class="layui-form"  id="layui-form" method="post" action="{{route('site.store')}}">
                     {{csrf_field()}}
                     <div class="layui-form-item">
-                        <label class="layui-form-label">门店</label>
+                        <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>门店</label>
                         <div class="layui-input-inline">
                             <select name="storeid" datatype="*" nullmsg="请选择门店">
                                 @if( count($data->store) )
@@ -42,11 +42,11 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>项目名称</label>
                         <div class="layui-input-block">
-                            <input type="text"  name="name"  value="{{old('name')}}" class="layui-input newsName" placeholder="请输入项目名称" datatype="*" maxlength="255" nullmsg="请输入工地名称" errormsg="输入有误">
+                            <input type="text"  name="name"  value="{{old('name')}}" class="layui-input newsName" placeholder="请输入项目名称" datatype="*" maxlength="255" nullmsg="请输入项目名称" errormsg="输入有误">
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label">门牌</label>
+                        <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>门牌</label>
                         <div class="layui-input-block">
                             <input type="text" name="doornumber"  value="{{old('doornumber')}}" class="layui-input" placeholder="请输入门牌，例如5号楼808室" datatype="*1-20" nullmsg="请输入门牌号" errormsg="请输入正确的门牌号" >
                         </div>
@@ -71,7 +71,7 @@
                     </div>
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">房型</label>
+                            <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>房型</label>
                             <div class="layui-input-inline" style="width: 100px;">
                                 <input type="number" name="room"  value="{{old('room')}}" placeholder="室" min="1" max="9" maxlength="2" datatype="*1-2" nullmsg="请输入室" errormsg="请输入正确的房型" autocomplete="off" class="layui-input">
                             </div>
@@ -91,7 +91,7 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label">户型</label>
+                        <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>户型</label>
                         <div class="layui-input-inline">
                             <select name="roomtypeid"  datatype="*" nullmsg="请选择户型">
                                 <option value="">请选择户型</option>
@@ -102,13 +102,13 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label">面积</label>
+                        <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>面积</label>
                         <div class="layui-input-block">
                             <input type="number" name="acreage"  value="{{old('acreage')}}" class="layui-input" placeholder="面积（㎡）" max="99999"  datatype="mj" nullmsg="请输入面积" errormsg="请输入正确的面积">
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label">装修风格</label>
+                        <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>装修风格</label>
                         <div class="layui-input-inline">
                             <select name="roomstyleid" datatype="*" nullmsg="请选择装修风格">
                                 <option value="">请选择装修风格</option>
@@ -119,7 +119,7 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label">装修方式</label>
+                        <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>装修方式</label>
                         <div class="layui-input-inline">
                             <select name="renovationmodeid"   datatype="*" nullmsg="请选择装修方式">
                                 <option value="">请选择装修方式</option>
@@ -130,7 +130,7 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label">预算</label>
+                        <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>预算</label>
                         <div class="layui-input-block">
                             <input type="number" name="budget" value="{{old('budget')}}" class="layui-input" placeholder="预算（万元）"   maxlength="11"  datatype="n1-11" nullmsg="请输入预算" errormsg="请输入正确的数字">
                         </div>
@@ -141,13 +141,13 @@
                         <label class="layui-form-label">项目封面</label>
                         <div class="layui-upload-drag" id="test10" style="float: left">
                             <i class="layui-icon"></i>
-                            <p>点击上传，或将文件拖拽到此处（工地封面：建议上传效果图）</p>
+                            <p>点击上传，或将文件拖拽到此处（项目封面：建议上传效果图）</p>
                         </div>
                         <div class="uploadImg layui-inline fl" style="display: none;margin-left: 20px;"><img   id="src" style="max-width: 100%;max-height:135px;"></div>
                         <input type="hidden" name="photo" id="photo">
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label">是否公开</label>
+                        <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>是否公开</label>
                         <div class="layui-input-block">
                             <input type="checkbox" checked="" name="isopen" lay-skin="switch" lay-filter="switchTest" lay-text="ON|OFF">
                         </div>

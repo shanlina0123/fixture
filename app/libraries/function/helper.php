@@ -110,7 +110,12 @@ function dataType( $data )
  */
 function getImgUrl( $path )
 {
-    return '/uploads/'.$path;
+    if($path)
+    {
+        $realPath='/uploads/'.$path;
+      return  file_exists(".".$realPath)?$realPath:"";
+    }
+    return "";
 }
 
 /**

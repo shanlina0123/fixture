@@ -50,6 +50,9 @@ Route::group(['namespace' => 'Server'], function () {
         Route::get("notice/listen/{time}","NoticeController@listen")->name("notice-listen");//监听
         //消息
         Route::get("message","MessageController@index")->name("message-index");//列表
+
+        //腾讯地图
+        Route::post('map-address', 'PublicController@getMapAddress')->name('map-address');//获取腾讯地图搜索的地址
         //中间件权限认证路由
         Route::group(['middleware' => ['checkAuth']], function () {
 
@@ -78,7 +81,7 @@ Route::group(['namespace' => 'Server'], function () {
             Route::resource('client', 'ClientController');//客户管理
             Route::get('lucky/client','ClientController@getLuckyClient')->name('lucky-client');//活动客户
             Route::get('lucky/client/log/{id}','ClientController@getLuckyClientLog')->name('lucky-client-log');//活动客户
-            Route::post('map-address', 'PublicController@getMapAddress')->name('map-address');//获取腾讯地图搜索的地址
+
             //角色
             Route::get("roles","RolesController@index")->name("roles-index");//列表
             Route::post("roles","RolesController@store")->name("roles-store");//新增-执行
