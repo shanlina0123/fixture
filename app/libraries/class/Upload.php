@@ -113,12 +113,16 @@ class Upload
         $path = $this->filepath.'/'.$path;
         if( Storage::disk(self::$disk)->exists($path) )
         {
-            $images = Storage::disk(self::$disk)->delete( $path );
-            if ( $images )
-            {
+            if (is_writable($path)) {
+                $images = Storage::disk(self::$disk)->delete( $path );
+                if ( $images )
+                {
+                    return true;
+                }
+                return false;
+            } else {
                 return true;
             }
-            return false;
         }else
             return false;
     }
