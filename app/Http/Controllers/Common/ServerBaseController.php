@@ -29,6 +29,10 @@ class ServerBaseController extends Controller
         //判断公司信息是否完善
         $this->middleware(function ($request, $next) {
             $userInfo = $request->session()->get('userInfo');
+//            if( !$userInfo->phone && $userInfo->isadmin = 0 )
+//            {
+//                return redirect()->route('user-bind')->with('msg','请绑定手机');
+//            }
             if( !$userInfo->companyid && $userInfo->isadmin = 1 )
             {
                 return redirect()->route('company-setting')->with('msg','请完善资料');
@@ -36,8 +40,6 @@ class ServerBaseController extends Controller
             $this->userInfo = $userInfo;
             return $next($request);
         });
-
-
 
     }
 

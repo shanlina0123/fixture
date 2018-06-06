@@ -53,7 +53,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">公司介绍</label>
                 <div class="layui-input-block">
-                    <textarea name="resume" maxlength="255" placeholder="请输入站点描述" class="layui-textarea linksDesc">{{$data?$data->resume:''}}</textarea>
+                    <textarea name="resume" maxlength="300" placeholder="请输入站点描述" class="layui-textarea linksDesc">{{$data?$data->resume:''}}</textarea>
                 </div>
             </div>
             <div class="layui-form-item">
