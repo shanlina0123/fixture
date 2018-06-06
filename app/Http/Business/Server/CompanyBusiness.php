@@ -142,11 +142,18 @@ class CompanyBusiness extends ServerBase
                 $store->addr = $obj->addr;
                 $store->fulladdr = $obj->fulladdr;
                 $store->save();
+                //添加职位
+                $position = new Position();
+                $position->name = '管理员';
+                $position->status = 1;
+                $position->companyid = $obj->id;
+                $position->save();
                 //修改用户表
                 $user->provinceid = $obj->provinceid;
                 $user->companyid = $obj->id;
                 $user->storeid = $store->id;
                 $user->cityid = $obj->cityid;
+                $user->positionid = $position->id;
                 $user->token = create_uuid();
                 $user->save();
                 //添加默认模板
