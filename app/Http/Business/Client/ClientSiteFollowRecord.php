@@ -80,7 +80,6 @@ class ClientSiteFollowRecord
                 }else
                 {
                     $obj = new DynamicStatistics();
-                    $obj->uuid = create_uuid();
                     $obj->dynamicid = 0;
                     $obj->siteid = $request->input('siteid');
                     $obj->linkednum = 0;

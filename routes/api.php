@@ -74,8 +74,6 @@ Route::group(['middleware'=>'ApiCheck'], function () {
         Route::get('client/site-invitation', 'ClientSiteInvitationController@siteInvitation');
         //公司信息
         Route::get('client/company-info', 'ClientCompanyController@companyInfo');
-        //问题反馈
-        Route::get('client/company-info', 'ClientCompanyController@companyInfo');
         //中奖列表
         Route::get('client/lucky-record', 'ClientActivityLuckyRecordController@luckyRecordList');
     });

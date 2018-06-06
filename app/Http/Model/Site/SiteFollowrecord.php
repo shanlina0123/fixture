@@ -9,6 +9,7 @@ class SiteFollowrecord extends Model
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
     protected $table = 'site_followrecord';
+    public $timestamps = false;
 
 
     /**
