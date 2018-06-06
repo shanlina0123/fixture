@@ -29,4 +29,13 @@ class SiteInvitation extends Model
     {
         return $this->belongsTo('App\Http\Model\Dynamic\DynamicStatistics','siteid','siteid');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * 关联用户
+     */
+    public function invitationToUser()
+    {
+        return $this->belongsTo('App\Http\Model\User\User','userid','id');
+    }
 }

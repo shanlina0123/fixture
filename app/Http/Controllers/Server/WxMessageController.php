@@ -25,9 +25,12 @@ class WxMessageController extends Controller
                 echo $echoStr;
                 exit;
             }
-
+        }else
+        {
+            $this->responseMsg();
         }
     }
+
     public function checkSignature($request)
     {
         $signature = $request->input('signature');
@@ -48,50 +51,39 @@ class WxMessageController extends Controller
     }
 
 
-    /**
-     *  请求
-     */
     public function responseMsg()
     {
         $postStr = file_get_contents("php://input");
-        if (!empty($postStr))
-        {
-            libxml_disable_entity_loader(true);
-            $postObj = simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
-            $MsgType = trim($postObj->MsgType);
-            switch ( $MsgType )
-            {
-                case 'event':
-                    echo '欢迎关注：无聊的时候你可以直接发送消息给我，24小时陪伴你。。。';
-                    break;
-                case 'text':
-                    $keyword = trim($postObj->Content);
-                    switch ( $keyword )
-                    {
-                        case 'php':
-                            echo $this->getNews(12,$postObj);
-                            break;
-                        case 'linux':
-                            echo $this->getNews(13,$postObj);
-                            break;
-                        case 'jquery':
-                            echo $this->getNews(14,$postObj);
-                            break;
-                        case 'html':
-                            echo $this->getNews(15,$postObj);
-                            break;
-                        case 'wxapplet':
-                            echo $this->getNews(18,$postObj);
-                            break;
-                        default:
-                            echo $this->returnText( $postObj,$keyword );
-                            break;
-                    }
-                    break;
-            }
+        if (!empty($postStr) && is_string($postStr)){
+            $postArr = json_decode($postStr,true);
+            if(!empty($postArr['MsgType']) && $postArr['MsgType'] == 'text'){   //文本消息
+                $fromUsername = $postArr['FromUserName'];   //发送者openid
+                $toUserName = $postArr['ToUserName'];       //小程序id
+                $textTpl = array(
+                    "ToUserName"=>$fromUsername,
+                    "FromUserName"=>$toUserName,
+                    "CreateTime"=>time(),
+                    "MsgType"=>"transfer_customer_service",
+                );
+                exit(json_encode($textTpl));
+            }elseif(!empty($postArr['MsgType']) && $postArr['MsgType'] == 'image'){ //图文消息
+                $fromUsername = $postArr['FromUserName'];   //发送者openid
+                $toUserName = $postArr['ToUserName'];       //小程序id
+                $textTpl = array(
+                    "ToUserName"=>$fromUsername,
+                    "FromUserName"=>$toUserName,
+                    "CreateTime"=>time(),
+                    "MsgType"=>"transfer_customer_service",
+                );
+                exit(json_encode($textTpl));
+            }else{
 
-        }else
-        {
-            return '请求失败。。';
+                echo "";
+                exit;
+            }
+        }else{
+            echo "";
+            exit;
         }
+    }
 }
