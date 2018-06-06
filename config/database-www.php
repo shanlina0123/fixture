@@ -39,14 +39,13 @@ return [
             'prefix' => '',
         ],
 
-        //test环境
         'mysql' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', '192.168.15.222'),
+            'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'fixture'),
-            'username' => env('DB_USERNAME', 'dev_fixture'),
-            'password' => env('DB_PASSWORD', 'b.123'),
+            'database' => env('DB_DATABASE', 'xxs_fixture'),
+            'username' => env('DB_USERNAME', 'base_fixture'),
+            'password' => env('DB_PASSWORD', 'YmFzZV9maXh0dXJlMjAxODAzMTg='),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
@@ -110,10 +109,10 @@ return [
         'client' => 'predis',
 
         'default' => [
-            'host' => env('REDIS_HOST', '192.168.15.222'),
-            'password' => env('REDIS_PASSWORD', 'ODkwMWM5OTI2ZjRmYTliNjhhZjkwMDk3NjI5ZDEyMTc='),
+            'host' => env('REDIS_HOST', '127.0.0.1'),
+            'password' => env('REDIS_PASSWORD', 'xxs2018'),
             'port' => env('REDIS_PORT', 6379),
-            'database' => env('REDIS_DATABASE', 0),
+            'database' => env('REDIS_DATABASE', 1),
         ],
 
     ],
