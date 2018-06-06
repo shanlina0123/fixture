@@ -90,6 +90,7 @@ class ServerBase
                     $where["companyid"] = $companyid;
                     break;
                 case 2:
+                    $where["companyid"] = $companyid;
                     $where["cityid"] = $cityid;
                     break;
                 case 3:
