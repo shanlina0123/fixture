@@ -205,13 +205,13 @@ class ActivityLuckyBusiness extends ServerBase
                 }
 
                 //检查标题
-                $rowExist = ActivityLucky::where("id", "!=", $id)->where("title", $data["title"])->exists();
+                $rowExist = ActivityLucky::where("id", "!=", $id)->where("companyid",$companyid)->where("title", $data["title"])->exists();
                 if ($rowExist > 0) {
                     responseData(\StatusCode::EXIST_ERROR, "标题已存在");
                 }
             } else {
                 //检查标题
-                $rowExist = ActivityLucky::where("title", $data["title"])->exists();
+                $rowExist = ActivityLucky::where("companyid",$companyid)->where("title", $data["title"])->exists();
                 if ($rowExist > 0) {
                     responseData(\StatusCode::EXIST_ERROR, "标题已存在");
                 }

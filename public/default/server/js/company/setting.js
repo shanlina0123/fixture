@@ -76,6 +76,15 @@ $.get('/default/server/json/city.json',function ( data )
             {
                 layer.msg($("#msg").val(), {icon: 1, time: 2000, shift: 6});
             }
+
+            /**
+             * 错误页面提示
+             */
+            var errormsg = $("#errormsg").val();
+            if( errormsg )
+            {
+                layer.msg($("#errormsg").val(), {icon:2, time: 2000, shift: 6});
+            }
         });
 
         /**

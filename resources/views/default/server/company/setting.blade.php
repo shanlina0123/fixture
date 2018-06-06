@@ -77,6 +77,7 @@
             <input type="hidden" name="returnUrl" value="{{session('returnUrl')}}">
         </form>
             <input type="hidden" id="msg" value="{{session('msg')}}">
+            <input type="hidden" id="errormsg" value="{{session('errormsg')}}">
         </div>
     </div>
 </div>

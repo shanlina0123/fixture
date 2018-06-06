@@ -68,7 +68,10 @@ return [
             8=>"default/lucky/prize7.png",
             9=>"default/lucky/prize8.png",
         ]
-
+    ],
+    //工地默认图
+    "site"=>[
+        'logo'=>"default/site/defaultsite.jpg"
     ],
     //技术支持
     "technology_support"=>"页面技术由西安灰熊家族网络科技提供（<a href='http://www.yygsoft.com'  class='colorbule' target=''>点击了解</a>）提供，技术支持方仅能提供页面技术，不承担由活动引起的相关法律责任"
