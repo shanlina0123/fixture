@@ -15,7 +15,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>项目名称</label>
                 <div class="layui-input-block">
-                    <input type="text"  name="name" value="{{$data->info->name}}" class="layui-input" placeholder="请输入工地名称" datatype="*" maxlength="255" nullmsg="请输入工地名称" errormsg="输入有误">
+                    <input type="text"  name="name" value="{{$data->info->name}}" class="layui-input" placeholder="请输入项目名称" datatype="*" maxlength="255" nullmsg="请输入项目名称" errormsg="输入有误">
                 </div>
             </div>
             <div class="layui-form-item">
@@ -32,13 +32,13 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">门牌</label>
+                <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>门牌</label>
                 <div class="layui-input-block">
                     <input type="text" name="doornumber" value="{{$data->info->doornumber}}" class="layui-input" placeholder="请输入门牌，例如5号楼808室" datatype="*1-20" nullmsg="请输入门牌号" errormsg="请输入正确的门牌号" >
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>阶段</label>
+                <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>阶段</label>
                 <div class="layui-input-block" id="templateTag">
                     @foreach( $data->info->tage as $row )
                         <input type="radio" @if($row->id == $data->info->stageid ) checked="checked" @endif name="stageid" value="{{$row->id}}" title="{{$row->name}}" >
@@ -46,7 +46,7 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">户型</label>
+                <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>户型</label>
                 <div class="layui-input-block">
                     <select name="roomtypeid"  datatype="*" nullmsg="请选择户型">
                         @foreach( $data->roomType as $row )
@@ -57,7 +57,7 @@
             </div>
             <div class="layui-form-item">
                 <div class="layui-inline">
-                    <label class="layui-form-label">房型</label>
+                    <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>房型</label>
                     <div class="layui-input-inline" style="width: 100px;">
                         <input type="number" name="room" value="{{extractionInt($data->info->roomshap,0)}}" placeholder="室" min="1" max="9" maxlength="2" datatype="n1-2" nullmsg="请输入室" errormsg="请输入正确的房型" autocomplete="off" class="layui-input">
                     </div>
@@ -77,13 +77,13 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">面积</label>
+                <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>面积</label>
                 <div class="layui-input-block">
                     <input type="number" name="acreage" value="{{$data->info->acreage}}" class="layui-input" placeholder="面积（㎡）" max="3"  datatype="mj" nullmsg="请输入面积" errormsg="请输入正确的面积">
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">装修风格</label>
+                <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>装修风格</label>
                 <div class="layui-input-block">
                     <select name="roomstyleid" datatype="*" nullmsg="请选择装修风格">
                         @foreach( $data->roomStyle as $row )
@@ -93,7 +93,7 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">装修方式</label>
+                <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>装修方式</label>
                 <div class="layui-input-block">
                     <select name="renovationmodeid"   datatype="*" nullmsg="请选择装修方式">
                         @foreach( $data->renovationMode as $row )
@@ -103,7 +103,7 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">预算</label>
+                <label class="layui-form-label"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>预算</label>
                 <div class="layui-input-block">
                     <input type="number" name="budget" value="{{$data->info->budget}}" class="layui-input" placeholder="预算（万元）"   maxlength="11"  datatype="n1-11" nullmsg="请输入预算" errormsg="请输入正确的数字">
                 </div>
@@ -112,7 +112,7 @@
                 <label class="layui-form-label">项目封面</label>
                 <div class="layui-upload-drag" id="test10" style="float: left">
                     <i class="layui-icon"></i>
-                    <p>点击上传，或将文件拖拽到此处（工地封面：建议上传效果图）</p>
+                    <p>点击上传，或将文件拖拽到此处（项目封面：建议上传效果图）</p>
                 </div>
                 <div class="uploadImg layui-inline fl" style="margin-left: 20px;"><img id="src" src="{{getImgUrl($data->info->explodedossurl)}}" style="max-width: 100%;max-height:135px;"></div>
                 <input type="hidden" name="photo" id="photo" value="">
