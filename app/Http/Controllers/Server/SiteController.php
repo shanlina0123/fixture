@@ -219,7 +219,7 @@ class SiteController extends ServerBaseController
         $res = $this->site->siteDel( $companyId, $id );
         if( $res == true )
         {
-            Cache::tags(['site'.$companyId])->flush();
+            Cache::tags(['site'.$companyId,'DynamicList'.$companyId])->flush();
             return 'success';
         }else
         {

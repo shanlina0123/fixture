@@ -9,7 +9,6 @@ return [
     'token'=>'30b06afa212356',
     'encodingAesKey'=>'JEYUsglBS4w5FkH3uuXEbqRPiitKv18pASMZVH02aWy',
     'appId'=>'wxdb0f6f52362d0017',
-    'extAppid'=>'wx676c383c431ecc6e',//关联的小程序appid
     'secret'=>'e734776fd0c05c77daaab587bd0b0268',
     'url'=>'https://fixture.yygsoft.com/wx/authorize/back',//授权回调地址
     'requestdomain'=>['https://fixture.yygsoft.com'], //request合法域名
@@ -19,11 +18,11 @@ return [
     'address'=>'pages/index/index',//审核代码地址
     'tag'=>'装修',//审核代码标签
     'title'=>'装修',//小程序页面的标题
-    'template_id'=>'0',//小程序模板id
+    'template_id'=>'1',//小程序模板id
     'version'=>'1.0',//小程序模板版本
     'desc'=>'云易装v1.0',//小程序模板版本描述
     "wxCode"=>[
-            "luckypage"=>"pages/index/prize",
+            "luckypage"=>"pages/prize/prize",
             "sitepage"=>"pages/projectdetail/projectdetail",
             "width"=>"50"
         ]

@@ -16,7 +16,6 @@ class WxAuthorize
 {
 
     public $appid;
-    public $extAppid;
     public $secret;
     public $url;
     public $component_access_token;
@@ -24,7 +23,6 @@ class WxAuthorize
     public function __construct()
     {
         $this->appid = config('wxconfig.appId');
-        $this->extAppid = config('wxconfig.extAppid');
         $this->secret = config('wxconfig.secret');
         $this->url = config('wxconfig.url');
         $this->component_access_token = $this->getAccessToken();
@@ -298,7 +296,7 @@ class WxAuthorize
             $anual = true;
         }
         $url = 'https://api.weixin.qq.com/wxa/commit?access_token='.$token;
-        $ext_json['extAppid'] = $this->extAppid;
+        $ext_json['extAppid'] = $appid;
         $ext_json['ext'] = ['appid'=> $appid ];
         $post['template_id'] = config('wxconfig.template_id'); //模板id
         $post['ext_json'] = json_encode($ext_json,JSON_FORCE_OBJECT);

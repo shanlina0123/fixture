@@ -376,7 +376,7 @@ class SiteBusiness extends StoreBase
         $res->siteInvitation = SiteInvitation::where(['companyid'=>$data['companyid'],'siteid'=>$data['id']])->with(['invitationToUser'=>function($query){
             $query->select('id','positionid','nickname','faceimg')->with('userToPosition');
         }])->get();
-        $res->siteToFolloWrecord = $res->siteToFolloWrecord->count();
+        $res->siteToFolloWrecord = $res->siteToFolloWrecord()->count();
         return $res;
     }
 

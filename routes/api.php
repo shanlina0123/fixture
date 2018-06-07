@@ -87,6 +87,9 @@ Route::group(['middleware'=>'ApiCheck'], function () {
     Route::post('log/read-notice', 'Common\SystemMessageController@readNotice');
     //修改用户信息
     Route::post('user/set-user', 'Common\WxApiLoginController@setUserInfo');
+
+    //抽奖
+    Route::get('lucky/info', 'Common\LuckyController@luckyInfo');
 });
 
 
