@@ -41,7 +41,6 @@ Route::group(['namespace' => 'Server'], function () {
         //用户资料
         Route::match(['get', 'post'], 'user/info', 'UserController@userInfo')->name('user-info'); //个人资料跟换电话+绑定电话
         Route::match(['get', 'post'], 'user/set-pass', 'UserController@setPass')->name('set-pass'); //修改密码
-        Route::match(['get', 'post'], 'user/bind', 'UserController@bind')->name('user-bind');//绑定手机
         Route::post('user/bindwx', 'UserController@bindWx')->name('user-bindwx');//绑定微信
        //上传图片
         Route::any('upload-temp-img', 'PublicController@uploadImgToTemp');

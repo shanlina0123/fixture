@@ -36,11 +36,12 @@ class ServerBaseController extends Controller
 
             //当前访问的控制器和方法
             $current=getCurrentAction();
-            if(!in_array($current["controller"]."@".$current["method"],["UserController@bind","UserController@bindwx"]))
+            if(!in_array($current["controller"]."@".$current["method"],["UserController@userInfo"]))
             {
-                if( (!$userInfo->phone || !$userInfo->wechatopenid)&&$userInfo->companyid && $userInfo->isadmin == 0){
 
-                    return redirect()->route('user-bind')->with('msg','请绑定手机');
+                if($userInfo->companyid &&(!$userInfo->phone)){
+
+                    return redirect()->route('user-info')->with('msg','请绑定手机');
                 }
             }
 
