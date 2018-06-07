@@ -33,7 +33,7 @@ class ClientBusiness extends ServerBase
         //Cache::tags([$tag])->flush();
         $where = $tag . $request->input('page') . $request->input('k') . $request->input('status');
         $value = Cache::tags($tag)->remember($tag . $where, config('configure.sCache'), function () use ($user, $request) {
-            $sql = Client::where("companyid", $user->companyid)->orderBy('id', 'desc')->with('clientToStatus', 'clientToSource');
+            $sql = Client::where("companyid", $user->companyid)->where("sourcecateid",1)->orderBy('id', 'desc')->with('clientToStatus', 'clientToSource');
             //判断查询
             $k = trim($request->input('k'));
             if ($k) {
@@ -69,7 +69,8 @@ class ClientBusiness extends ServerBase
         $value = Cache::tags($tag)->remember($tag . $where, config('configure.sCache'), function () use ($user, $request) {
             $sql = Client::where("companyid", $user->companyid)->orderBy('id', 'desc')->with('clientToStatus')->whereHas('clientToLuckyNum', function ($query) use ($request) {
                 if ($request->input('iswin') != '') {
-                    $query->where('iswin', $request->input('iswin'));
+                    $win=$request->input('iswin')==1?1:0;
+                    $query->where('iswin', $win);
                 }
             });
             //判断查询

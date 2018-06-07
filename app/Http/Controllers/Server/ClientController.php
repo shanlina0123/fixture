@@ -105,7 +105,7 @@ class ClientController extends ServerBaseController
         $res = $this->client->updateClient( $data, $this->userInfo, $id );
         if( $res == true )
         {
-            Cache::tags(['client'.$this->userInfo->companyid])->flush();
+            Cache::tags(['client'.$this->userInfo->companyid,'luckyClient'.$this->userInfo->companyid])->flush();
             return redirect()->back()->with('msg','跟进成功');
         }else
         {
