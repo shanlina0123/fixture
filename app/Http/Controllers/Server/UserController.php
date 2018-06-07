@@ -129,4 +129,78 @@ class UserController extends ServerBaseController
         $data = $this->user->getAuthorizeStatus( $userInfo );
         return view('server.user.userauthorize',compact('data'));
     }
+
+    /****
+     * 绑定手机号
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
+    public function bind()
+    {
+        $userInfo = session('userInfo');
+        if( $this->request->method() == "GET" )
+        {
+            $user = $userInfo;
+            return view('server.user.bind',compact('user'));
+
+        }else
+        {
+            $this->request->validate(
+                [
+                    'phone'=>'bail|regex:/^1[34578][0-9]{9}$/',
+                    'code'=>'bail|numeric',//类型
+                ],[
+                    'phone.regex'=>'手机号码不正确',
+                    'code.numeric'=>'验证码不正确',
+                ]
+            );
+
+            $phone = $this->request->input('phone');
+            if( config('configure.is_sms') == true ) {
+                $code = $this->request->input('code');
+                $code_cache = Cache::get('tel_' . $phone);
+                if ($code != $code_cache) {
+                    return redirect()->route('user-bind')->with('msg', '验证码不正确');
+                }
+            }
+            $data['phone'] = $phone;
+            $data['token'] = create_uuid();
+            $where['uuid'] = $userInfo->uuid;
+            $where['companyid'] = $userInfo->companyid;
+            $where['id'] = $userInfo['id'];
+            $res = $this->user->setPhone( $data,$where );
+            if( $res )
+            {
+                Cache::forget('tel_'.$phone);
+                $userInfo->phone = $phone;
+                $userInfo->token = $data['token'];
+                session(['userInfo'=>$userInfo]);
+                Cache::put('userToken'.$userInfo['id'],['token'=>$data['token'],'type'=>2],config('session.lifetime'));
+                if($userInfo["wechatopenid"]){
+                    return redirect()->route('index');
+                }else{
+                    return redirect()->route('user-bindwx')->with('msg','绑定成功');
+                }
+
+            }else
+            {
+                return redirect()->route('user-bind')->with('msg','绑定失败');
+            }
+        }
+
+    }
+
+    /****
+     *绑定微信
+     */
+    public function  bindWx()
+    {
+        $userInfo = session('userInfo');
+        if ($this->request->method() == "POST") {
+            if ($userInfo["wechatopenid"]) {
+                return redirect()->route('index');
+            } else {
+                return redirect()->route('user-bindwx')->with('msg', '绑定成功');
+            }
+        }
+    }
 }
