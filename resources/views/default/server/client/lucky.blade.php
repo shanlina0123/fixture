@@ -17,7 +17,7 @@
                             <select name="iswin" lay-verify="required" lay-search="">
                                 <option value=""   @if( '' == $where['iswin'])  selected @endif>全部</option>
                                 <option value="1"  @if( 1 == $where['iswin'])  selected @endif>是</option>
-                                <option value="0"  @if( 0 == $where['iswin'])  selected @endif>否</option>
+                                <option value="2"  @if( 2 == $where['iswin'])  selected @endif>否</option>
                             </select>
                         </div>
                     </div>
