@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Server;
 use App\Http\Business\Server\UserBusiness;
 use App\Http\Controllers\Common\ServerBaseController;
+use App\Http\Model\Wx\SmallProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -25,6 +26,9 @@ class UserController extends ServerBaseController
         if( $this->request->method() == "GET" )
         {
             $user = $userInfo;
+            //小程序审核通过放可微信绑定
+            $sourcecode=SmallProgram::where("companyid",$user->companyid)->value("sourcecode");
+            $user->sourcecode=$sourcecode;
             return view('server.user.info',compact('user'));
         }else
         {
@@ -39,6 +43,11 @@ class UserController extends ServerBaseController
             );
 
             $phone = $this->request->input('phone');
+            $oldPhone=$userInfo->phone;
+            if($phone==$oldPhone)
+            {
+                return redirect()->route('user-info')->with('msg', '手机号无变化');
+            }
             if( config('configure.is_sms') == true ) {
                 $code = $this->request->input('code');
                 $code_cache = Cache::get('tel_' . $phone);
@@ -46,6 +55,7 @@ class UserController extends ServerBaseController
                     return redirect()->route('user-info')->with('msg', '验证码不正确');
                 }
             }
+
             $data['phone'] = $phone;
             $data['token'] = create_uuid();
             $where['uuid'] = $userInfo->uuid;
@@ -59,10 +69,10 @@ class UserController extends ServerBaseController
                 $userInfo->token = $data['token'];
                 session(['userInfo'=>$userInfo]);
                 Cache::put('userToken'.$userInfo['id'],['token'=>$data['token'],'type'=>2],config('session.lifetime'));
-                return redirect()->route('user-info')->with('msg','修改成功');
+                return redirect()->route('user-info')->with('msg',$oldPhone?'修改成功':"绑定成功");
             }else
             {
-                return redirect()->route('user-info')->with('msg','修改失败');
+                return redirect()->route('user-info')->with('msg',$oldPhone?'修改成功':"绑定成功");
             }
         }
     }
@@ -128,5 +138,13 @@ class UserController extends ServerBaseController
         $userInfo = session('userInfo');
         $data = $this->user->getAuthorizeStatus( $userInfo );
         return view('server.user.userauthorize',compact('data'));
+    }
+
+    /****
+     *扫二维码绑定微信
+     */
+    public function  bindWx()
+    {
+         return redirect()->route('index');
     }
 }

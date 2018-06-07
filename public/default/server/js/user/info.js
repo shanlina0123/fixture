@@ -15,11 +15,27 @@ layui.use(['layer','form'], function() {
     {
         layer.msg($("#error").val());
     }
+
+
+    //初始化
+    if(!$("form").attr("phone"))
+    {
+        layer.open({
+            type: 1,
+            title:"绑定手机",
+            shadeClose: true,
+            scrollbar: false,
+            skin: 'layui-layer-rim',
+            area: ['600px', '400px'],
+            content: $(".popWrap")
+        })
+   }
+
     //更换手机弹窗
     $(".changePhone").click(function() {
         layer.open({
             type: 1,
-            title: '更换手机号码',
+            title: $(this).attr("title"),
             shadeClose: true,
             scrollbar: false,
             skin: 'layui-layer-rim',
@@ -27,6 +43,20 @@ layui.use(['layer','form'], function() {
             content: $(".popWrap")
         })
     });
+
+
+    //二维码弹窗
+    $(".binwx").click(function(){
+        layer.open({
+            type: 1,
+            title: '绑定微信',
+            closeBtn: 1,
+            shadeClose: false,
+            area: ['360px'],
+            content: $(".erweimapop")
+        })
+    })
+
    //60秒倒计时
     $(".msgUncode").click(function() {
         $me = $(this);

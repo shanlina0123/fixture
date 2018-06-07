@@ -20,23 +20,31 @@ class ServerBaseController extends Controller
 
 
 
-     /**
-      *  引入权限认证
-      */
+    /**
+     *  引入权限认证
+     */
     public $userInfo;
     public function __construct()
     {
         //判断公司信息是否完善
         $this->middleware(function ($request, $next) {
             $userInfo = $request->session()->get('userInfo');
-//            if( !$userInfo->phone && $userInfo->isadmin = 0 )
-//            {
-//                return redirect()->route('user-bind')->with('msg','请绑定手机');
-//            }
-            if( !$userInfo->companyid && $userInfo->isadmin = 1 )
+            if( !$userInfo->companyid && $userInfo->isadmin == 1 )
             {
                 return redirect()->route('company-setting')->with('msg','请完善资料');
             }
+
+            //当前访问的控制器和方法
+            $current=getCurrentAction();
+            if(!in_array($current["controller"]."@".$current["method"],["UserController@userInfo"]))
+            {
+
+                if($userInfo->companyid &&(!$userInfo->phone)){
+
+                    return redirect()->route('user-info')->with('msg','请绑定手机');
+                }
+            }
+
             $this->userInfo = $userInfo;
             return $next($request);
         });
@@ -55,8 +63,8 @@ class ServerBaseController extends Controller
             "msg"=>$data["msg"]?$data["msg"]:"",
             "data"=>$data["data"]?$data["data"]:"",
         ];
-      echo    json_encode($responseData);
-      die;
+        echo    json_encode($responseData);
+        die;
     }
 
 

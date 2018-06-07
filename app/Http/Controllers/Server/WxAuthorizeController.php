@@ -22,7 +22,7 @@ class WxAuthorizeController extends WxBaseController
         //判断公司信息是否完善
         $this->middleware(function ($request, $next) {
             $userInfo = $request->session()->get('userInfo');
-            if( !$userInfo->companyid && $userInfo->isadmin = 1 )
+            if( !$userInfo->companyid && $userInfo->isadmin == 1 )
             {
                 return redirect()->route('company-setting');
             }

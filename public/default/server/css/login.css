@@ -131,3 +131,28 @@
   top: 3px;
   cursor: pointer;
 }
+.erweimapop {
+  width: 260px;
+  height: 300px;
+  margin: 20px auto;
+}
+.erweima {
+  width: 260px;
+  height: 260px;
+  border: 1px solid #ddd;
+}
+.poptext {
+  font-size: 16px;
+  text-align: center;
+  line-height: 30px;
+  padding-top: 15px;
+}
+
+
+.erweimatext {
+  font-size: 16px;
+  text-align: center;
+  line-height: 30px;
+  color: red;
+  margin-top:35%;
+}
