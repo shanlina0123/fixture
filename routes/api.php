@@ -90,6 +90,9 @@ Route::group(['middleware'=>'ApiCheck'], function () {
 
     //抽奖
     Route::get('lucky/info', 'Common\LuckyController@luckyInfo');
+    Route::get('lucky/my-luck', 'Common\LuckyController@myLucky');
+    Route::get('lucky/draw', 'Common\LuckyController@lucyDraw');
+
 });
 
 
