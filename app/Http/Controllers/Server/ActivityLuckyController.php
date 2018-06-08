@@ -157,7 +157,7 @@ class ActivityLuckyController extends ServerBaseController
         {
             if(!in_array($data["isonline"],[0,1]))
             {
-                responseData(\StatusCode::PARAM_ERROR,"验证失败","",["ispubic"=>"上线和下线值不符合预定义"]);
+                responseData(\StatusCode::PARAM_ERROR,"上线和下线值不符合预定义","",["ispubic"=>"上线和下线值不符合预定义"]);
             }
             //发布验证
             if($data["isonline"]==1)
@@ -203,6 +203,7 @@ class ActivityLuckyController extends ServerBaseController
                     'sharetitle.string'=>'微信分享标题只能是字符串',
                     'isonline.required'=>'是否上线不能为空','isonline.max'=>'是否上线不能大于1','isonline.min'=>'是否上线能小于0',
                 ]);
+                $prizeCount=count($data["prizelist"]);
 
             }else{
                 //验证规则
@@ -214,17 +215,18 @@ class ActivityLuckyController extends ServerBaseController
                     'storeid.required'=>'门店id不能为空','storeid.numeric'=>'门店id只能是数字格式',
                     'title.required'=>'名称不能为空','title.max'=>'名称长度不能大于100个字符','title.min'=>'名称长度不能小于1个字符',
                 ]);
+                $prizeCount=8;
             }
 
         }else{
-            responseData(\StatusCode::PARAM_ERROR,"验证失败","",["ispubic"=>"暂存或发布的参数缺少"]);
+            responseData(\StatusCode::PARAM_ERROR,"暂存或发布的参数缺少","",["ispubic"=>"暂存或发布的参数缺少"]);
         }
 
 
 
         //进行验证
         if ($validator->fails()) {
-            responseData(\StatusCode::PARAM_ERROR,"验证失败","",$validator->errors());
+            responseData(\StatusCode::PARAM_ERROR,$validator->errors()->first(),"",$validator->errors());
         }
 
         if($data["ispeoplelimit"]==1)
@@ -243,6 +245,10 @@ class ActivityLuckyController extends ServerBaseController
             }
         }
 
+        if($prizeCount<8)
+        {
+            responseData(\StatusCode::PARAM_ERROR,"上线前必须有8个奖项","",["prizelist"=>"上线前必须有8个奖项"]);
+        }
         //获取业务数据
         $rs=$this->activitylucky_business->update($id,$this->userInfo->id,$this->userInfo->companyid,$data);
         //接口返回结果
