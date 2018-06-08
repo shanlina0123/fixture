@@ -31,8 +31,34 @@ class Lucky
         return ActivityLuckyRecord::where(['activityluckid'=>$data['id'],'iswin'=>1,'userid'=>$data['userid']])->get();
     }
 
-    public function lucyDraw()
+    public function lucyDraw( $data )
     {
+        //1.判断活动是不是在线
+        //2.判断活动开始时间
+        //3.判断活动结束时间
+        //4.判断个人活动参与次数
+        //5.判断中将次数
+        //6.抽奖
+        $res = ActivityLucky::where(['companyid'=>$data['companyid'],'id'=>$data['id']])->first();
+        if( !$res )
+        {
+            responseData(\StatusCode::ERROR,'未查询到信息');
+        }
+        if( $res->isonline != 1 )
+        {
+            responseData(\StatusCode::ERROR,'活动已下线');
+        }
+        if( strtotime($res->startdate) < time() )
+        {
+            responseData(\StatusCode::ERROR,'活动还未开始');
+        }
+        if( strtotime($res->enddate) < time() )
+        {
+            responseData(\StatusCode::ERROR,'活动已结束');
+        }
+        if()
+        {
 
+        }
     }
 }

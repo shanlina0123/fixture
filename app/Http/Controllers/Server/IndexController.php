@@ -15,6 +15,8 @@ class IndexController extends ServerBaseController
      */
     public function index()
     {
+
+        //dd(strtotime('2018-06-08 09:23:00'),time());
        /* $arr8 = array(
             array("id"=>1,"name"=>"安慰奖","percent"=>10),
             array("id"=>2,"name"=>"玩具车","percent"=>1),
