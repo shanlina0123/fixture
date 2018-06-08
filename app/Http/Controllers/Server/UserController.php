@@ -150,7 +150,7 @@ class UserController extends ServerBaseController
     {
         $userInfo = session('userInfo');
         //获取小程序二维码
-        $list["wxappcode"] =(new  WxAuthorize())->getWxappCode($userInfo->companyid,"allow");
+        $list["wxappcode"] =(new  WxAuthorize())->getWxappCode($userInfo->companyid,"allow".null,600);
     }
 
     /****

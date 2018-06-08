@@ -544,7 +544,7 @@ class ActivityLuckyBusiness extends ServerBase
         $list["logo"] = Company::where("id", $companyid)->value("logo");
         $list["logo"] = $list["logo"] ? $uploads . "/" . $list["logo"] : "";
         //获取小程序二维码
-        $list["wxappcode"] = (new  WxAuthorize())->getWxappCode($companyid,"lucky", $list["lukData"]["id"]);
+        $list["wxappcode"] = (new  WxAuthorize())->getWxappCode($companyid,"lucky", $list["lukData"]["id"],60);
         return responseCData(\StatusCode::SUCCESS, "", $list);
     }
 
