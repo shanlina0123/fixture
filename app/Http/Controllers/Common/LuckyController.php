@@ -99,7 +99,11 @@ class LuckyController extends Controller
             responseData(\StatusCode::CHECK_FORM,'验证失败','',$messages);
         }
         $res = $this->lucky->lucyDraw($data);
-        responseData(\StatusCode::SUCCESS,'中将数据',$res);
+        if( $res )
+        {
+            responseData(\StatusCode::SUCCESS,'您的抽奖次信息',$res);
+        }
+        responseData(\StatusCode::ERROR,'参与失败');
     }
 
 }
