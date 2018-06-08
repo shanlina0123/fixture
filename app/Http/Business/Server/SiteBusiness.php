@@ -620,7 +620,7 @@ class SiteBusiness extends ServerBase
     public function extension($uuid, $companyid)
     {
         //获取小程序二维码
-        $list["wxappcode"] =(new  WxAuthorize())->getWxappCode($companyid,"site", $uuid);
+        $list["wxappcode"] =(new  WxAuthorize())->getWxappCode($companyid,"site", $uuid,80);
         $list["uuid"] = $uuid;
         return responseCData(\StatusCode::SUCCESS, "", $list);
     }
