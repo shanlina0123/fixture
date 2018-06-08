@@ -90,7 +90,7 @@ class Lucky
         //超出概率
         if( $luckChance > $res->winpoint )
         {
-           foreach ( $prize as $row )
+           foreach ( $prize as $k=>$row )
            {
                if( $row['levelid'] == 1 )
                {
@@ -98,6 +98,7 @@ class Lucky
                    $saveData['iswin'] = 0;
                    $saveData['name'] = $row['name'];
                    $saveData['id'] = $row['id'];
+                   $saveData['index'] = $k;
                }
            }
            $luckRes = $this->saveLuck($res,$saveData);
@@ -132,7 +133,7 @@ class Lucky
         if( !count($indexArr) )
         {
             //返回不中将的结果
-            foreach ( $prize as $row )
+            foreach ( $prize as $k=>$row )
             {
                 if( $row['levelid'] == 1 )
                 {
@@ -140,6 +141,7 @@ class Lucky
                     $saveData['iswin'] = 0;
                     $saveData['name'] = $row['name'];
                     $saveData['id'] = $row['id'];
+                    $saveData['index'] = $k;
                 }
             }
             $luckRes = $this->saveLuck($res,$saveData);
