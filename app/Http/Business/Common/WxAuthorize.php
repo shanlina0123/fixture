@@ -568,7 +568,7 @@ class WxAuthorize
     }
 
    //动态生成微信二维码
-    public function getWxappCode($companyid,$type,$scene)
+    public function getWxappCode($companyid,$type,$scene,$width)
     {
         $accessToken = $this->getUserAccessToken(null, $companyid);
         if($accessToken)
@@ -578,7 +578,7 @@ class WxAuthorize
             $postData = array();
             $postData['scene'] = $scene?$scene:"";//自定义信息，可以填写诸如识别用户身份的字段，注意用中文时的情况
             $postData['page'] = config('configure.wxCode.'.$type);//扫描后对应的path
-            $postData['width'] = 800;//自定义的尺寸
+            $postData['width'] = $width?$width:800;//自定义的尺寸
             $postData['auto_color'] = false;//是否自定义颜色
             $color = array(
                 "r"=>"221",
@@ -588,7 +588,7 @@ class WxAuthorize
             $postData['line_color'] = $color;//自定义的颜色值
             $postData = json_encode($postData);
             $da = get_http_array($url,$postData);
-            return json_encode($da);//直接在浏览器显示或者存储到服务器等其他操作
+            return json_encode($da);//echo直接在浏览器显示或者存储到服务器等其他操作
         }
         return "";
 
