@@ -63,7 +63,7 @@ class ClientBusiness extends ServerBase
      */
     public function getLuckyClient($user, $request)
     {
-        $tag = 'luckyClient' . $user->companyid;
+        $tag = 'luckyClient'.$user->companyid;
         //Cache::tags([$tag])->flush();
         $where = $tag . $request->input('page') . $request->input('k') . $request->input('status') . $request->input('iswin');
         $value = Cache::tags($tag)->remember($tag . $where, config('configure.sCache'), function () use ($user, $request) {

@@ -14,7 +14,7 @@ use App\Http\Model\Activity\ActivityLuckyNum;
 use App\Http\Model\Activity\ActivityLuckyPrize;
 use App\Http\Model\Activity\ActivityLuckyRecord;
 use App\Http\Model\Client\Client;
-use Illuminate\Filesystem\Cache;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class Lucky
