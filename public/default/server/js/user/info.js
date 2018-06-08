@@ -23,6 +23,7 @@ layui.use(['layer','form'], function() {
         layer.open({
             type: 1,
             title:"绑定手机",
+            closeBtn: 1,
             shadeClose: true,
             scrollbar: false,
             skin: 'layui-layer-rim',
@@ -47,6 +48,15 @@ layui.use(['layer','form'], function() {
 
     //二维码弹窗
     $(".binwx").click(function(){
+        var url=
+        $.getJSON(url,null,function(data){
+            if(data.status==1){
+                $(".erweima").html("<img src='"+data.data.erweima+"' style='width:100%'>");
+            }else{
+                $(".erweima").html("<div class='erweimatext'>"+data.messages+"</div>");
+            }
+
+        })
         layer.open({
             type: 1,
             title: '绑定微信',

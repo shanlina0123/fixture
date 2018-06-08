@@ -324,6 +324,7 @@ class ActivityLuckyBusiness extends ServerBase
                         $prizeData["activityluckyid"] = $activityluckyid;
                         $prizeData["name"] = $v["name"];
                         $prizeData["num"] = $v["num"];
+                        $prizeData["lastnum"] = $v["num"];
                         $prizeData["levelid"] = $v["levelid"];
                         $prizeData["levelname"] = $levelListData[$v["levelid"]]["name"];
                         $v["picture"] ? $prizeData["picture"] = $pictures[$v["levelid"]] : "";
@@ -341,6 +342,7 @@ class ActivityLuckyBusiness extends ServerBase
                         $prizeData["activityluckyid"] = $activityluckyid;
                         $prizeData["name"] = $v["name"];
                         $prizeData["num"] = $v["num"];
+                        $prizeData["lastnum"] = $v["num"];
                         $prizeData["levelid"] = $v["levelid"];
                         $prizeData["levelname"] = $levelListData[$v["levelid"]]["name"];
                         $prizeData["picture"] = $v["picture"] ? $pictures[$v["levelid"]] : $defaultPrizeImg[$v["levelid"]];
@@ -531,10 +533,7 @@ class ActivityLuckyBusiness extends ServerBase
         $list["logo"] = Company::where("id", $companyid)->value("logo");
         $list["logo"] = $list["logo"] ? $uploads . "/" . $list["logo"] : "";
         //获取小程序二维码
-        $wx = new  WxAuthorize();
-        $accessToken = $wx->getUserAccessToken(null, $companyid);
-        $wxcode = $accessToken ? $wx->getWxappCode($accessToken, $list["lukData"]["id"]) : "";
-        $list["wxappcode"] = $wxcode;
+        $list["wxappcode"] = (new  WxAuthorize())->getWxappCode($companyid,"lucky", $list["lukData"]["id"]);
         return responseCData(\StatusCode::SUCCESS, "", $list);
     }
 
