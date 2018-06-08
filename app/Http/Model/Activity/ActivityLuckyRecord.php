@@ -19,4 +19,13 @@ class ActivityLuckyRecord extends Model
     {
         return $this->belongsTo('App\Http\Model\Activity\ActivityLucky','activityluckid','id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * 关联用户
+     */
+    public function luckyRecordToClient()
+    {
+        return $this->belongsTo('App\Http\Model\Client\Client','clientid','id');
+    }
 }
