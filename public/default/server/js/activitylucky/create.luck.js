@@ -152,6 +152,11 @@ layui.use(['form', 'layer', 'jquery', 'laydate', 'upload'], function () {
     //新增、修改
     $(".ajaxSubmit").click(function () {
         var form = $(this).parents("form");
+        //上线
+        if($("input[name=isonline]",form).val()==1&&$(".defaulttr").length<8)
+        {
+            layer.msg("上线前必须有8个奖项",{icon: 2,time: 1000});
+        }
         var title = $("#title", form).val();
         var id=$(form).attr("id");
         if(id)setAutoToFormUrl(form,"id");

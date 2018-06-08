@@ -1,7 +1,9 @@
 <?php
 namespace App\Http\Controllers\Server;
+use App\Http\Business\Common\WxAuthorize;
 use App\Http\Business\Server\UserBusiness;
 use App\Http\Controllers\Common\ServerBaseController;
+use App\Http\Model\User\User;
 use App\Http\Model\Wx\SmallProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -140,11 +142,32 @@ class UserController extends ServerBaseController
         return view('server.user.userauthorize',compact('data'));
     }
 
+
+    /***
+     * 获取微信登录授权二维码
+     */
+    public function wxcode()
+    {
+        $userInfo = session('userInfo');
+        //获取小程序二维码
+        $list["wxappcode"] =(new  WxAuthorize())->getWxappCode($userInfo->companyid,"allow");
+    }
+
     /****
-     *扫二维码绑定微信
+     *扫二维码后检测是否绑定微信
      */
     public function  bindWx()
     {
-         return redirect()->route('index');
+        $userInfo = session('userInfo');
+        $userInfo["wechatopenid"]=User::where("id",$userInfo->id)->value("wechatopenid");
+        session(['userInfo'=>$userInfo]);
+        $user= session('userInfo');
+        if($user["wechatopenid"])
+        {
+            return redirect()->route('index');
+        }else{
+            return view('server.user.info',compact('user'));
+        }
+
     }
 }

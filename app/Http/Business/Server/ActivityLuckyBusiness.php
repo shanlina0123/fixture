@@ -100,7 +100,7 @@ class ActivityLuckyBusiness extends ServerBase
 
         //获取奖品等级数据
         $list["levelList"] = Cache::get($tag1, function () use ($tag1) {
-            $storeList = PrizeLevel::select("id", "name")->get();
+            $storeList = PrizeLevel::where("status",1)->select("id", "name")->get();
             Cache::put($tag1, $storeList, config('configure.sCache'));
             //返回数据库层查询结果
             return $storeList;
@@ -153,7 +153,7 @@ class ActivityLuckyBusiness extends ServerBase
 
         //获取奖品等级数据
         $list["levelList"] = Cache::get($tag1, function () use ($tag1) {
-            $storeList = PrizeLevel::select("id", "name")->get();
+            $storeList = PrizeLevel::where("status",1)->select("id", "name")->get();
             Cache::put($tag1, $storeList, config('configure.sCache'));
             //返回数据库层查询结果
             return $storeList;
@@ -324,6 +324,7 @@ class ActivityLuckyBusiness extends ServerBase
                         $prizeData["activityluckyid"] = $activityluckyid;
                         $prizeData["name"] = $v["name"];
                         $prizeData["num"] = $v["num"];
+                        $prizeData["lastnum"] = $v["num"];
                         $prizeData["levelid"] = $v["levelid"];
                         $prizeData["levelname"] = $levelListData[$v["levelid"]]["name"];
                         $v["picture"] ? $prizeData["picture"] = $pictures[$v["levelid"]] : "";
@@ -341,6 +342,7 @@ class ActivityLuckyBusiness extends ServerBase
                         $prizeData["activityluckyid"] = $activityluckyid;
                         $prizeData["name"] = $v["name"];
                         $prizeData["num"] = $v["num"];
+                        $prizeData["lastnum"] = $v["num"];
                         $prizeData["levelid"] = $v["levelid"];
                         $prizeData["levelname"] = $levelListData[$v["levelid"]]["name"];
                         $prizeData["picture"] = $v["picture"] ? $pictures[$v["levelid"]] : $defaultPrizeImg[$v["levelid"]];
@@ -400,9 +402,20 @@ class ActivityLuckyBusiness extends ServerBase
             }
 
             //整理修改数据
-
             $updateData["isonline"] = abs($rowData["isonline"] - 1);
             $updateData["updated_at"] = date("Y-m-d H:i:s");
+
+            //上线检测
+            if($updateData["isonline"]==1)
+            {
+                $prizeCount=ActivityLuckyPrize::where("activityluckyid",$rowData["id"])->count();
+                if($prizeCount<8)
+                {
+                    responseData(\StatusCode::PARAM_ERROR,"上线前必须有8个奖项","",["prizelist"=>"上线前必须有8个奖项"]);
+                }
+            }
+
+
             //修改数据
             $rs = ActivityLucky::where("id", $id)->update($updateData);
 
@@ -531,10 +544,7 @@ class ActivityLuckyBusiness extends ServerBase
         $list["logo"] = Company::where("id", $companyid)->value("logo");
         $list["logo"] = $list["logo"] ? $uploads . "/" . $list["logo"] : "";
         //获取小程序二维码
-        $wx = new  WxAuthorize();
-        $accessToken = $wx->getUserAccessToken(null, $companyid);
-        $wxcode = $accessToken ? $wx->getWxappCode($accessToken, $list["lukData"]["id"]) : "";
-        $list["wxappcode"] = $wxcode;
+        $list["wxappcode"] = (new  WxAuthorize())->getWxappCode($companyid,"lucky", $list["lukData"]["id"]);
         return responseCData(\StatusCode::SUCCESS, "", $list);
     }
 
