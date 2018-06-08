@@ -568,7 +568,7 @@ class WxAuthorize
     }
 
    //动态生成微信二维码
-    public function getWxappCode($companyid,$type,$scene,$width)
+    public function getWxappCode($companyid,$type,$scene,$width=null)
     {
         $accessToken = $this->getUserAccessToken(null, $companyid);
         if($accessToken)
