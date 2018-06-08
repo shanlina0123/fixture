@@ -1,7 +1,7 @@
 <div class="layui-logo"><a href="{{route('index')}}"><img src="{{pix_asset('server/images/topLogo.png')}}"></a></div>
 <ul class="layui-nav layui-layout-right">
     <li class="layui-nav-item" >
-        <a href="http://showdoc.yygsoft.com/web/#/page/1" title="帮助中心" style="padding: 0 15px;"><img src="{{pix_asset('server/images/help.png')}}" width="32"></a>
+        <a href="http://showdoc.yygsoft.com/web/#/page/1" target="_blank" title="帮助中心" style="padding: 0 15px;"><img src="{{pix_asset('server/images/help.png')}}" width="32"></a>
     </li>
     <li class="layui-nav-item" >
         <a href="{{route('vip-index')}}" title="会员中心" style="padding: 0 15px;"><img src="{{pix_asset('server/images/user.png')}}" width="32"></a>
