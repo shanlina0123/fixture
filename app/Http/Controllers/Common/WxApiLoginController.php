@@ -35,7 +35,9 @@ class WxApiLoginController extends Controller
         {
             $openid = $request->input('openid');
             $companyid = $request->input('companyid');
-            $res = $this->user->userLogin( $openid, $companyid );
+            $nickname = $request->input('nickname');
+            $faceimg = $request->input('faceimg');
+            $res = $this->user->userLogin( $openid, $companyid,$nickname,$faceimg );
             responseData(\StatusCode::SUCCESS,"用户信息", $res );
         }else
         {

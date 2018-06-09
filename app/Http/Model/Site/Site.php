@@ -45,7 +45,7 @@ class Site extends Model
      */
     public function siteToDynamicStatistics()
     {
-        return $this->belongsTo('App\Http\Model\Dynamic\DynamicStatistics','siteid','id');
+        return $this->belongsTo('App\Http\Model\Dynamic\DynamicStatistics','id','siteid');
     }
 
     /**

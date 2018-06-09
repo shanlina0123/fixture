@@ -15,7 +15,7 @@ class WxApiLogin
      * @param $openid
      * openid登陆
      */
-    public function userLogin( $openid, $companyid )
+    public function userLogin( $openid, $companyid,$nickname,$faceimg )
     {
         if( !$openid || !$companyid )
         {
@@ -46,7 +46,6 @@ class WxApiLogin
                 $uToken->userid = $res->id;
                 $uToken->save();
             }
-
             $res->Authorization = $uToken->token;
             $res->expiration = $uToken->expiration;
             return $res;
@@ -61,6 +60,8 @@ class WxApiLogin
             $user->isadminafter = 0;
             $user->type = 1;
             $user->status = 1;
+            $user->nickname = $nickname;
+            $user->faceimg = $faceimg;
             if( $user->save() )
             {
                 $uToken = new UserToken();

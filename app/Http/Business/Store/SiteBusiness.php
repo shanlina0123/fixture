@@ -354,6 +354,7 @@ class SiteBusiness extends StoreBase
     {
         $sWhere['companyid'] = $data['companyid'];
         $sWhere['id'] = $data['id'];
+        $sWhere['isopen'] = 1;
         $res = Site::where( $sWhere )->orderBy('id','desc')->with(
             [
                 'siteToRenovationMode'=>function( $query ){ //装修方式
@@ -364,19 +365,43 @@ class SiteBusiness extends StoreBase
                 },'siteToFolloWrecord'=>function( $query )//观光团
                 {
                     $query->select('id','siteid','userid')->with(['followToUser'=>function( $query ){
-                        $query->select('faceimg','id');
+                        $query->select('faceimg','id')->orderBy('id','desc')->take(8);
                     }]);
                 },'siteToDynamicStatistics'=>function($query){
                     $query->select('linkednum','siteid','follownum');
                 }
             ]
         )->select('explodedossurl','addr','budget','acreage','roomtypeid','roomstyleid','renovationmodeid','stagetemplateid','companyid','id','roomshap','stageid','name','storeid','cityid')->first();
+        if( !$res )
+        {
+            responseData(\StatusCode::ERROR,'工地未公开');
+        }
         //公司模板
         $res->tag = CompanyStageTemplateTag::orderBy('sort','asc')->where(['stagetemplateid'=>$res->stagetemplateid,'companyid'=>$res->companyid])->select('id','name')->get();
         $res->siteInvitation = SiteInvitation::where(['companyid'=>$data['companyid'],'siteid'=>$data['id']])->with(['invitationToUser'=>function($query){
             $query->select('id','positionid','nickname','faceimg')->with('userToPosition');
         }])->get();
         $res->siteToFolloWrecord = $res->siteToFolloWrecord()->count();
+        //如果工地存在就加浏览量
+        if( $res )
+        {
+            $statistics = DynamicStatistics::where('siteid',$data['id'])->first();
+            if( $statistics )
+            {
+                $statistics->linkednum = $statistics->linkednum+1;
+                $statistics->save();
+            }else
+            {
+                $obj = new DynamicStatistics();
+                $obj->dynamicid = 0;
+                $obj->siteid = $data['id'];
+                $obj->linkednum = 1;
+                $obj->commentnum = 0;
+                $obj->thumbsupnum = 0;
+                $obj->follownum = 0;
+                $obj->save();
+            }
+        }
         return $res;
     }
 

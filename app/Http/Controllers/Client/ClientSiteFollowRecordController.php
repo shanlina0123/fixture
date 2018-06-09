@@ -38,6 +38,7 @@ class ClientSiteFollowRecordController extends ClientBaseController
         $user = $this->apiUser;
         $where['companyid'] = $user->companyid;
         $where['userid'] = $user->id;
+        $where['siteid'] = (int)$this->request->input('siteid');
         $res = $this->siteFollow->recordSite( $where, $this->request );
         if( $res ){
 

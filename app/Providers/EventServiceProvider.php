@@ -99,6 +99,9 @@ class EventServiceProvider extends ServiceProvider
                             $obj->content = $notice_type?str_replace('【客户姓名】',$event['name'],config('template.6')):str_replace('【公司简称】',$name,config('template.2'));
                             $obj->siteid = 0;
                             break;
+                        case 5:
+
+                            break;
                     }
                     break;
             }

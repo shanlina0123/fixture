@@ -54,13 +54,15 @@ class ClientSiteFollowRecord
             $res = SiteFollowrecord::where($where)->first();
             if( $res )
             {
-                $res->delete();
+                //不取消关注
+               /* $res->delete();
                 $statistics = DynamicStatistics::where('siteid',$request->input('siteid'))->first();
                 if( $statistics )
                 {
                     $statistics->follownum = $statistics->follownum-1?$statistics->follownum-1:0;
                     $statistics->save();
-                }
+                }*/
+               return true;
             }else
             {
                 $wrecord = new SiteFollowrecord();
