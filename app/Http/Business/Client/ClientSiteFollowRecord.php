@@ -25,11 +25,11 @@ class ClientSiteFollowRecord
      */
     public function followRecord( $where, $request )
     {
-        $tag = 'followRecord'.$where['userid'];
+      /*  $tag = 'followRecord'.$where['userid'];
         $tagWhere = $request->input('page');
        // Cache::flush();
         $value = Cache::tags($tag)->remember( $tag.$tagWhere,config('configure.sCache'), function() use( $where, $request ){
-            $sql = SiteFollowrecord::where( $where )->orderBy('id','desc');
+        */    $sql = SiteFollowrecord::where( $where )->orderBy('id','desc');
             //关联工地
             $sql->with(['followToSite'=>function( $query ) use($where){
                 //关联阶段和数据统计
@@ -38,8 +38,8 @@ class ClientSiteFollowRecord
                 }])->select('stageid','id','name','addr','explodedossurl');
             },'followToDynamicStatistics']);
             return $sql->paginate(config('configure.sPage'));
-        });
-        return $value;
+       /* });
+        return $value;*/
     }
 
     /**
@@ -74,7 +74,7 @@ class ClientSiteFollowRecord
                 $wrecord->userid = $where['userid'];
                 $wrecord->created_at = date("Y-m-d H:i:s");
                 $wrecord->save();
-                $statistics = DynamicStatistics::where('siteid',$request->input('siteid'))->first();
+                $statistics = DynamicStatistics::where('siteid',$where['siteid'])->first();
                 if( $statistics )
                 {
                     $statistics->follownum = $statistics->follownum+1;

@@ -34,6 +34,9 @@
                             <button  type="button" class="layui-btn layui-btn-primary up" onclick="upRow(this)">上移</button>
                             <button  type="button" class="layui-btn layui-btn-primary dow" onclick="dowRow(this)">下移</button>
                             <button  type="button" class="layui-btn layui-btn-primary rem" onclick="removeRow(this)">删除</button>
+                            @if($k==0)
+                                <button class="layui-btn addBtn" type="button" id="addRow"><i class="layui-icon"></i></button>
+                            @endif
                         </div>
                     </div>
                 @endforeach

@@ -452,19 +452,19 @@ class SiteBusiness extends ServerBase
                 return false;
             }
 
+            //查询动态id
+            $dynamicID = Dynamic::where(['companyid'=>$site->companyid,'sitetid'=>$site->id])->pluck('id');
             //删除工地动态
-            $dynamic = Dynamic::where(['companyid'=>$site->companyid,'sitetid'=>$site->id])->first();
-            if( $dynamic )
-            {
-                //删除统计
-                DynamicStatistics::where(['siteid'=>$site->id,'dynamicid'=>$dynamic->id])->delete();
-                //删除评论
-                DynamicComment::where(['siteid'=>$site->id,'dynamicid'=>$dynamic->id])->delete();
-                //删除动态图片
-                DynamicImages::where(['dynamicid'=>$dynamic->id])->delete();
-                (new \Upload())->delDir('site', $site->uuid);
-                $dynamic->delete();
-            }
+            Dynamic::where(['companyid'=>$site->companyid,'sitetid'=>$site->id])->delete();
+            //删除统计
+            DynamicStatistics::where(['siteid'=>$site->id])->delete();
+            //删除评论
+            DynamicComment::where(['siteid'=>$site->id])->delete();
+            //删除动态图片
+            DynamicImages::whereIn('dynamicid',$dynamicID)->delete();
+            (new \Upload())->delDir('site', $site->uuid);
+
+
             //删除工地参与者
             SiteInvitation::where('siteid',$site->id)->delete();
             //删除工地阶段记录

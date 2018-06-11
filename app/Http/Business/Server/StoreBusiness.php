@@ -120,10 +120,10 @@ class StoreBusiness extends ServerBase
 
             //结果处理
             if ($storeid !== false) {
-                DB::commit();
                 //删除缓存
                 Cache::tags(["Store-PageList","Admin-StoreList"])->flush();
                 Cache::forget("storeCompany".$companyid);
+                DB::commit();
             } else {
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR, "新增失败");
@@ -157,20 +157,20 @@ class StoreBusiness extends ServerBase
             }
 
             //整理修改数据
-            $store["provinceid"] = $data["provinceid"];
-            $store["cityid"] = $data["cityid"];
-            $store["name"] = $data["name"];
-            $store["addr"] = $data["addr"];
-            $store["fulladdr"] = $data["addr"];
-            $store["updated_at"] = date("Y-m-d H:i:s");
-            //修改数据
-            $rs = Store::where("uuid", $uuid)->update($store);
+            $rs = Store::where("uuid", $uuid)->first();
+            $rs->provinceid = $data["provinceid"];
+            $rs->cityid = $data["cityid"];
+            $rs->name = $data["name"];
+            $rs->addr = $data["addr"];
+            $rs->fulladdr =  $data["addr"];
             //结果处理
-            if ($rs !== false) {
-                DB::commit();
+            if ( $rs->save() ) {
+
                 //删除缓存
                 Cache::tags(["Store-PageList","Admin-StoreList"])->flush();
-                Cache::forget("storeCompany".$storeData["companyid"]);
+                Cache::forget("storeCompany".$rs->companyid);
+                Cache::forget("store".$rs->id);
+                DB::commit();
             } else {
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR, "修改失败");
@@ -214,10 +214,11 @@ class StoreBusiness extends ServerBase
             //结果处理
             if($rs!==false)
             {
-                DB::commit();
                 //删除缓存
                 Cache::tags(["Store-PageList","Admin-StoreList"])->flush();
                 Cache::forget("storeCompany".$row["companyid"]);
+                Cache::forget("store".$row->id);
+                DB::commit();
             }else{
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR,"删除失败");

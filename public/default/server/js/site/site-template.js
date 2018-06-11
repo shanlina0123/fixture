@@ -8,6 +8,11 @@ layui.use(['form', 'layer'], function() {
         }
 });
 $("#addRow").click(function () {
+    if( $("#tagList").find('.btn').length >=12 )
+    {
+        layer.msg('最多12组阶段');
+        return false;
+    }
     var tem =  '<div class="layui-form-item">\n' +
                     '<label class="layui-form-label">阶段标签</label>\n' +
                     '<div class="layui-input-inline" style="width:25%;">\n' +

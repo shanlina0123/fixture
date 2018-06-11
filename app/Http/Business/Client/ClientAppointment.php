@@ -16,6 +16,7 @@ class ClientAppointment
     public function Appointment( $data )
     {
         $client = new Client();
+        $client->uuid = create_uuid();
         $client->companyid = $data['companyid'];
         $client->storeid = array_has($data,'storeid')?$data['storeid']:0;
         $client->sourcecateid = $data['sourcecateid'];

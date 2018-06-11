@@ -87,7 +87,7 @@ class EventServiceProvider extends ServiceProvider
                             $obj->title = '预约参观';
                             $obj->content = $notice_type?str_replace('【客户姓名】',$event['name'],config('template.7')):str_replace('【公司简称】',$name,config('template.3'));
                             $obj->content = str_replace('【工地】',$event['sname'],$obj->content);
-                            $obj->siteid = 0;
+                            $obj->siteid = $event['siteid'];
                             break;
                         case 2:
                             $obj->title = '免费量房';
