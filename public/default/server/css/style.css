@@ -474,17 +474,13 @@
   height: 397px;
   background: url(../images/projectbg.png) center top / 100% no-repeat;
 }
-.publicpop .companyname {
+.publicpop .companyname{
   position: absolute;
   font-size: 22px;
   color: #a20016;
   font-weight: bold;
-  top: 75px;
+  top: 65px;
   left: 90px;
-  -moz-transform: rotate(-15deg);
-  -webkit-transform: rotate(-15deg);
-  -ms-transform: rotate(-15deg);
-  -o-transform: rotate(-15deg);
 }
 .publicpop .erweimaImg {
   position: absolute;

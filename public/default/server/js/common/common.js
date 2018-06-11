@@ -28,6 +28,7 @@ $.getJSON = function (url, data, callback) {
         timeout: 10000,
         data: data,
         success: function (data) {
+            console.log(data);
             callback(data);
         }
     });

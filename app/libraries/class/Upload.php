@@ -27,6 +27,10 @@ class Upload
                     $dbPath='site/'.$uuid.'/info';
                     $filePath  = $this->filepath.'/'.$dbPath;
                     break;
+                case 'site_code'://工地推广图片
+                    $dbPath='site/'.$uuid.'/code';
+                    $filePath  = $this->filepath.'/'.$dbPath;
+                    break;
                 case "site_dynamic": //工地动态图片 $uuid 动态的id
                     $dbPath='site/'.$uuid.'/dynamic';
                     $filePath = $this->filepath.'/'.$dbPath;

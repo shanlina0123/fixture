@@ -302,30 +302,20 @@ $("input[type=number]").keyup(function () {
 $(".publicBtn").click(function () {
     var that=this;
     var tr=$(that).parents("tr");
-    var siteuuid=tr.attr("siteuuid");
+    var id=tr.attr("id");
     var storename=tr.attr("storename");
     var sitename=tr.attr("sitename");
     //门店
     $("#storename").html(storename);
     $("#storename").attr("sitename",sitename);
 
-
-    if(siteuuid!=$(".canvasContent").attr("toid"))
+    if( tr.attr('codeimg') )
     {
-        //清空已显示的canvas
-        $(".canvasContent").hide();
-        $(".canvasContent").html("");
-        $(".canvasContent").attr("toid",siteuuid);
-        //显示截屏，隐藏下载按钮
-        $("#createExtension").show();
-        $("#downloadExtension").hide();
-        //显示现在的H5
-        $(".h5Content").show();
-        //获取H5的动态数据
-        var url=$(that).attr("url");
-        //显示二维码
-        $.getJSON(url,null,doExtension);
-    }else{
+        var parent=$("#extensionContent");
+        $("#wxappcode",parent).attr("src",'/uploads/'+tr.attr('codeimg'));
+        $("#wxappcode",parent).show();
+        $(".canvasContent").attr("toid",id);
+        //其他
         layer.open({
             type: 1,
             title: false,
@@ -333,7 +323,53 @@ $(".publicBtn").click(function () {
             shadeClose: true,
             content: $("#extensionContent")
         })
+    }else
+    {
+        if( id !=$(".canvasContent").attr("toid") )
+        {
+            //清空已显示的canvas
+            $(".canvasContent").hide();
+            $(".canvasContent").html("");
+            $(".canvasContent").attr("toid",id);
+            //显示截屏，隐藏下载按钮
+            $("#createExtension").show();
+            $("#downloadExtension").hide();
+            //显示现在的H5
+            $(".h5Content").show();
+            //获取H5的动态数据
+            var url=$(that).attr("url");
+            //显示二维码
+            $.get(url,function (data) {
+                if( data.status == 1 )
+                {
+                    var parent=$("#extensionContent");
+                    $("#wxappcode",parent).attr("src",'/uploads/'+data.data);
+                    $("#wxappcode",parent).show();
+                    //其他
+                    layer.open({
+                        type: 1,
+                        title: false,
+                        closeBtn: 0,
+                        shadeClose: true,
+                        content: $("#extensionContent")
+                    })
+                }else
+                {
+                    layer.msg(data.messages);
+                }
+
+            },'json');
+        }else{
+            layer.open({
+                type: 1,
+                title: false,
+                closeBtn: 0,
+                shadeClose: true,
+                content: $("#extensionContent")
+            })
+        }
     }
+
 })
 //第二步：截屏H5
 $("#createExtension").click(function(){
@@ -365,31 +401,3 @@ $("#createExtension").click(function(){
         //     height: 300
     });
 })
-
-//弹出推广h5
-var doExtension=function (data) {
-    var parent=$("#extensionContent");
-    if(data.status===1){
-        //二维码
-        if(data.data.wxappcode)
-        {
-            $("#wxappcode",parent).attr("src",data.data.wxappcode);
-            $("#wxappcode",parent).show();
-        }else{
-            $("#wxappcode",parent).hide();
-        }
-
-        //其他
-        $(".canvasContent",parent).attr("toid",data.data.uuid);
-
-        layer.open({
-            type: 1,
-            title: false,
-            closeBtn: 0,
-            shadeClose: true,
-            content: $("#extensionContent")
-        })
-    }else{
-        layer.msg(data.messages, {icon: 2,time: 2000});
-    }
-}

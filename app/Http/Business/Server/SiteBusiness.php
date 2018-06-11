@@ -80,7 +80,7 @@ class SiteBusiness extends ServerBase
             {
                 $sWhere['isopen'] = $where['isopen'];
             }
-            $sql = Site::where( $sWhere )->orderBy('id','desc')->with('siteToStore','siteToDataTag','siteToCommpanyTag','siteToCompany');
+            $sql = Site::where( $sWhere )->orderBy('id','desc')->with('siteToStore','siteToDataTag','siteToCommpanyTag');
             //名称搜索
             if( $where['name'] )
             {
@@ -452,8 +452,7 @@ class SiteBusiness extends ServerBase
                 return false;
             }
 
-            //查询动态id
-            $dynamicID = Dynamic::where(['companyid'=>$site->companyid,'sitetid'=>$site->id])->pluck('id');
+            //查询动他
             //删除工地动态
             Dynamic::where(['companyid'=>$site->companyid,'sitetid'=>$site->id])->delete();
             //删除统计
@@ -461,7 +460,7 @@ class SiteBusiness extends ServerBase
             //删除评论
             DynamicComment::where(['siteid'=>$site->id])->delete();
             //删除动态图片
-            DynamicImages::whereIn('dynamicid',$dynamicID)->delete();
+            DynamicImages::whereIn(['dynamicid'=>$dynamicID])->delete();
             (new \Upload())->delDir('site', $site->uuid);
 
 
@@ -617,11 +616,21 @@ class SiteBusiness extends ServerBase
      * 获取扩展详情
      * @return mixed
      */
-    public function extension($uuid, $companyid)
+    public function extension($id, $companyid)
     {
-        //获取小程序二维码
-        $list["wxappcode"] =(new  WxAuthorize())->getWxappCode($companyid,"site", $uuid,80);
-        $list["uuid"] = $uuid;
-        return responseCData(\StatusCode::SUCCESS, "", $list);
+        $res = Site::where(['companyid'=>$companyid,'id'=>$id])->first();
+        if( $res )
+        {
+            $name = (new WxAuthorize())->getWxappCode($companyid,"site",$id, 80);
+            $upload = new \Upload();
+            $img = $upload->uploadProductImage( $res->uuid, $name, 'site_code');
+            $res->codeimg = 'site/'.$res->uuid.'/code/'.$name;
+            if($res->save() && $img)
+            {
+                responseData(\StatusCode::SUCCESS,'二维码',$res->codeimg);
+            }
+            responseData(\StatusCode::ERROR,'生成二维码失败');
+        }
+        responseData(\StatusCode::ERROR,'工地信息不存在',$res);
     }
 }

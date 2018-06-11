@@ -66,8 +66,8 @@
                 </tr>
                 </thead>
                 @foreach( $data as $k=>$row )
-                    <tr siteuuid="{{$row->uuid}}" storename="{{$row->siteToCompany?$row->siteToCompany->fullname:''}}"
-                        sitename="{{$row->name}}">
+                    <tr id="{{$row->id}}" storename="{{$row->siteToCompany?$row->siteToCompany->fullname:''}}"
+                        sitename="{{$row->name}}" codeimg="{{$row->codeimg}}">
                         <td>{{$k+1}}</td>
                         <td><img src="{{getImgUrl($row->explodedossurl)}}"></td>
                         <td>{{$row->name}}</td>
@@ -82,7 +82,7 @@
                             <div class="layui-btn-group">
                                 <button type="button" class="layui-btn publicBtn"
                                         @if($row->isopen==0)style="display: none;"
-                                        @endif   url="{{route('site-extension',$row->uuid)}}">推广
+                                        @endif   url="{{route('site-extension',$row->id)}}">推广
                                 </button>
                                 <a class="layui-btn" href="{{route('site-renew',$row->uuid)}}"
                                    @if($row->isfinish==1)style="display: none;"@endif>更新</a>
