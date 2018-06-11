@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Server;
 use App\Http\Business\Server\MessageBusiness;
 use App\Http\Controllers\Common\ServerBaseController;
+use App\Http\Model\Wx\SmallProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -31,7 +32,13 @@ class MessageController extends ServerBaseController
      */
     public function index()
     {
-        return view('server.message.index');
+        $data = SmallProgram::where(['companyid'=>$this->userInfo->companyid])->first();
+        if( $data && $data->token  )
+        {
+            return view('server.message.index',compact('data'));
+        }
+        $data = $this->message_business->setSmallProgram(['companyid'=>$this->userInfo->companyid]);
+        return view('server.message.index',compact('data'));
     }
 
 

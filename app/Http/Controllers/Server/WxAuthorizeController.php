@@ -37,7 +37,7 @@ class WxAuthorizeController extends WxBaseController
     public function WxAuthorize()
     {
         $user = session('userInfo');
-        $data = SmallProgram::where('companyid',$user->companyid)->first();
+        $data = SmallProgram::where(['companyid'=>$user->companyid])->first();
         if( $data &&  $data->status != 1 )
         {
             return redirect()->route('user-authorize')->with('msg','您已授权成功');

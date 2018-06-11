@@ -20,6 +20,31 @@
                 <p>3、如果您已经绑定客服账号，请点击【登录客服系统】按钮</p>
                 <p>4、详细操作请点击本页【帮助】查看相关文档按钮</p>
             </div>
+            <div class="tablewrap">
+                <p class="tablenotice">字段设置说明</p>
+                <table class="exampletable">
+                    <tr>
+                        <td>URL(服务器地址)</td>
+                        <td><input type="text" class="inputs" value="{{url('wx/messageAuthorize')}}?token={{$data->token}}" readonly></td>
+                    </tr>
+                    <tr>
+                        <td>Token(令牌)</td>
+                        <td><input type="text" class="inputs " value="{{$data->token}}" readonly></td>
+                    </tr>
+                    <tr>
+                        <td>EncodingAESKey<br>(消息加密密钥)</td>
+                        <td><input type="text" class="inputs " value="{{$data->EncodingAESKey}}" readonly></td>
+                    </tr>
+                    <tr>
+                        <td>消息加密方式</td>
+                        <td>选择&nbsp;&nbsp;"明文模式"</td>
+                    </tr>
+                    <tr>
+                        <td>数据格式</td>
+                        <td>选择&nbsp;&nbsp;"JSON"</td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 @endsection

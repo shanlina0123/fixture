@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Server;
 
 
 use App\Http\Controllers\Controller;
+use App\Http\Model\Wx\SmallProgram;
 use Illuminate\Http\Request;
 
 class WxMessageController extends Controller
@@ -36,7 +37,7 @@ class WxMessageController extends Controller
         $signature = $request->input('signature');
         $timestamp = $request->input('timestamp');
         $nonce = $request->input('nonce');
-        $token = config('wxconfig.token');
+        $token = SmallProgram::where('token',$request->input('token'))->value('token');
         $tmpArr = array($token, $timestamp, $nonce );
         sort($tmpArr, SORT_STRING);
         $tmpStr = implode( $tmpArr );

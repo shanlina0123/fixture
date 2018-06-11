@@ -40,31 +40,6 @@
                 <span style="color: red"> 【设置-开发设置-消息推送-开启】</span>
             </p>
         </div>
-        <div class="tablewrap">
-            <p class="tablenotice">字段设置说明</p>
-            <table class="exampletable">
-                <tr>
-                    <td>URL(服务器地址)</td>
-                    <td><input type="text" class="inputs " value="" readonly></td>
-                </tr>
-                <tr>
-                    <td>Token(令牌)</td>
-                    <td><input type="text" class="inputs " value="" readonly></td>
-                </tr>
-                <tr>
-                    <td>EncodingAESKey<br>(消息加密密钥)</td>
-                    <td><input type="text" class="inputs " value="" readonly></td>
-                </tr>
-                <tr>
-                    <td>消息加密方式</td>
-                    <td>选择&nbsp;&nbsp;"明文模式"</td>
-                </tr>
-                <tr>
-                    <td>数据格式</td>
-                    <td>选择&nbsp;&nbsp;"JSON"</td>
-                </tr>
-            </table>
-        </div>
         @if( $data && $data->sourcecode != 1 && $data->status == 0 )
             <h2 class="noticetext">审核信息</h2>
             <div class="noticeitem" style="color: red">
