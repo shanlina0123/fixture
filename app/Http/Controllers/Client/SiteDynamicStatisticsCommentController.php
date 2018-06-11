@@ -30,7 +30,7 @@ class SiteDynamicStatisticsCommentController extends ClientBaseController
         $data = trimValue( $this->request->all() );
         $validator = Validator::make(
             $data,[
-                'dynamicid'=>'required|numeric',
+                'dynamicid'=>'required',
             ]
         );
         if ($validator->fails())

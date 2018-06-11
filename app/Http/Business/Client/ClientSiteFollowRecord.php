@@ -47,7 +47,7 @@ class ClientSiteFollowRecord
      * @param $request
      * 关注和取消
      */
-    public function recordSite($where, $request)
+    public function recordSite($where, $user, $request)
     {
         try{
             DB::beginTransaction();
@@ -62,6 +62,7 @@ class ClientSiteFollowRecord
                     $statistics->follownum = $statistics->follownum-1?$statistics->follownum-1:0;
                     $statistics->save();
                 }*/
+                DB::commit();
                return true;
             }else
             {
@@ -71,7 +72,7 @@ class ClientSiteFollowRecord
                 $wrecord->storeid = $request->input('storeid');
                 $wrecord->siteid = $request->input('siteid');
                 $wrecord->cityid = $request->input('cityid');
-                $wrecord->userid = $where['userid'];
+                $wrecord->userid = $user->id;
                 $wrecord->created_at = date("Y-m-d H:i:s");
                 $wrecord->save();
                 $statistics = DynamicStatistics::where('siteid',$where['siteid'])->first();
@@ -83,7 +84,7 @@ class ClientSiteFollowRecord
                 {
                     $obj = new DynamicStatistics();
                     $obj->dynamicid = 0;
-                    $obj->siteid = $request->input('siteid');
+                    $obj->siteid = $where['siteid'];
                     $obj->linkednum = 0;
                     $obj->commentnum = 0;
                     $obj->thumbsupnum = 0;

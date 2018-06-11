@@ -53,7 +53,22 @@ class SiteDynamicComment extends ClientBase
                 $statistics->save();
             }else
             {
-                $statistics = new DynamicStatistics();
+                if( $data['siteid'] )
+                {
+                    $statistics = DynamicStatistics::where('siteid',$data['siteid'])->first();
+                    if($statistics)
+                    {
+                        $statistics->dynamicid = $data['dynamicid'];
+                        $statistics->commentnum = $statistics->commentnum+1;
+                        return $statistics->save();
+                    }else
+                    {
+                        $statistics = new DynamicStatistics();
+                    }
+                }else
+                {
+                    $statistics = new DynamicStatistics();
+                }
                 $statistics->dynamicid = $data['dynamicid'];
                 $statistics->siteid = $data['siteid'];
                 $statistics->linkednum = 0;
