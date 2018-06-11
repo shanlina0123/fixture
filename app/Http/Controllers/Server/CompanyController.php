@@ -53,6 +53,7 @@ class CompanyController extends ServerBaseController
             {
                 $userInfo = session('userInfo');
                 Cache::forget('CompanyInfo'.$userInfo->companyid);
+                Cache::tags(['site'.$userInfo->companyid])->flush();
                 if( $data['returnUrl'] )
                 {
                     return redirect($data['returnUrl']);

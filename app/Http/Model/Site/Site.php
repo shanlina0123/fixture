@@ -84,4 +84,14 @@ class Site extends Model
     {
         return $this->belongsTo('App\Http\Model\Data\RoomStyle','roomstyleid','id');
     }
+
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * 关联公司
+     */
+    public function siteToCompany()
+    {
+        return $this->belongsTo('App\Http\Model\Company\Company','companyid','id');
+    }
 }

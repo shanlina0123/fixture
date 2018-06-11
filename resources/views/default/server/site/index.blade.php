@@ -66,7 +66,7 @@
                 </tr>
                 </thead>
                 @foreach( $data as $k=>$row )
-                    <tr siteuuid="{{$row->uuid}}" storename="{{$row->siteToStore?$row->siteToStore->name:''}}"
+                    <tr siteuuid="{{$row->uuid}}" storename="{{$row->siteToCompany?$row->siteToCompany->fullname:''}}"
                         sitename="{{$row->name}}">
                         <td>{{$k+1}}</td>
                         <td><img src="{{getImgUrl($row->explodedossurl)}}"></td>
