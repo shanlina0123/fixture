@@ -149,12 +149,12 @@ class UserController extends ServerBaseController
     public function wxcode()
     {
         //获取小程序二维码
-        $list["wxappcode"] =url("wx-code/allow/null/600");
+        $list["wxappcode"]=url("wx-code/allow/null/600");
         responseData(\StatusCode::SUCCESS, "", $list);
     }
 
     /****
-     *扫二维码后检测是否绑定微信
+     *扫二维码后检测是否绑定微信---暂未调用
      */
     public function  bindWx()
     {
