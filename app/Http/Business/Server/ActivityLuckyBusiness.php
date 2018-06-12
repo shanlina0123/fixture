@@ -529,22 +529,22 @@ class ActivityLuckyBusiness extends ServerBase
      */
     public function extension($id, $companyid, $tag = "AcitivityLuck-Extension-Prize")
     {
-        $tagKey = base64_encode(mosaic("", $tag, $id));
-        $uploads = config("configure.uploads");
-        $list["uploads"] = $uploads;
-        $list["lukData"] = ActivityLucky::where("id", $id)->select("id", "sharetitle", "title", "bgurl", "storeid")->first();
-        $list["lukData"]["bgurl"] = $list["lukData"]["bgurl"] ? $uploads . "/" . $list["lukData"]["bgurl"] : "";
-        $list["lukData"]["storename"] = Store::where("id", $list["lukData"]["storeid"])->value("name");
-        //奖项数据
-        $list["prizeList"] = Cache::tags($tag)->remember($tagKey, config('configure.sCache'), function () use ($id, $companyid, $uploads) {
-            //查詢
-            return ActivityLuckyPrize::where("activityluckyid", $id)->select(DB::raw("levelid,CONCAT('$uploads','/',picture) as picture"))->orderBy('id', 'asc')->get();
-        });
-        //获取公司信息
-        $list["logo"] = Company::where("id", $companyid)->value("logo");
-        $list["logo"] = $list["logo"] ? $uploads . "/" . $list["logo"] : "";
+//        $tagKey = base64_encode(mosaic("", $tag, $id));
+//        $uploads = config("configure.uploads");
+//        $list["uploads"] = $uploads;
+//        $list["lukData"] = ActivityLucky::where("id", $id)->select("id", "sharetitle", "title", "bgurl", "storeid")->first();
+//        $list["lukData"]["bgurl"] = $list["lukData"]["bgurl"] ? $uploads . "/" . $list["lukData"]["bgurl"] : "";
+//        $list["lukData"]["storename"] = Store::where("id", $list["lukData"]["storeid"])->value("name");
+//        //奖项数据
+//        $list["prizeList"] = Cache::tags($tag)->remember($tagKey, config('configure.sCache'), function () use ($id, $companyid, $uploads) {
+//            //查詢
+//            return ActivityLuckyPrize::where("activityluckyid", $id)->select(DB::raw("levelid,CONCAT('$uploads','/',picture) as picture"))->orderBy('id', 'asc')->get();
+//        });
+//        //获取公司信息
+//        $list["logo"] = Company::where("id", $companyid)->value("logo");
+//        $list["logo"] = $list["logo"] ? $uploads . "/" . $list["logo"] : "";
         //获取小程序二维码
-        $list["wxappcode"] =url("wx-code/lucky/".$list["lukData"]["id"]."/60");
+        $list["wxappcode"] =url("wx-code/lucky/".$id."/60");
         return responseCData(\StatusCode::SUCCESS, "", $list);
     }
 

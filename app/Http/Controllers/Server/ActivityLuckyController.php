@@ -351,6 +351,7 @@ class ActivityLuckyController extends ServerBaseController
             return  responseCData(\StatusCode::PARAM_ERROR,"抽奖活动参数错误","",$validator->errors());
         }
 
+
         return $this->activitylucky_business->extension($id,$this->userInfo->companyid);
     }
 

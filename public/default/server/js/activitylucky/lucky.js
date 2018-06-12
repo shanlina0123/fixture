@@ -113,12 +113,12 @@ layui.use(['form', 'layer', 'jquery'], function () {
         if(id!=$(".canvasContent").attr("toid"))
         {
             //清空已显示的canvas
-            $(".canvasContent").hide();
-            $(".canvasContent").html("");
-            $(".canvasContent").attr("toid",id);
+        //    $(".canvasContent").hide();
+        //    $(".canvasContent").html("");
+         //   $(".canvasContent").attr("toid",id);
             //显示截屏，隐藏下载按钮
-            $("#createExtension").show();
-            $("#downloadExtension").hide();
+          //  $("#createExtension").show();
+           // $("#downloadExtension").hide();
             //显示现在的H5
             $(".h5Content").show();
             //获取H5的动态数据
@@ -138,8 +138,15 @@ layui.use(['form', 'layer', 'jquery'], function () {
     $("#createExtension").click(function(){
         var parent=$("#extensionContent");
         var h5=$(".h5Content");
+
+        //下载路径
+        $("#downloadExtension",parent).attr('href',canvas.toDataURL());
+        //下载名称
+        var title=$("#title",parent).html()?$("#title",parent).html():"活动";
+        $("#downloadExtension",parent).attr('download',title) ;
+
             //绘图
-        html2canvas(h5, {
+     /*   html2canvas(h5, {
             onrendered: function(canvas) {
                 //下载路径
                 $("#downloadExtension",parent).attr('href',canvas.toDataURL());
@@ -162,13 +169,30 @@ layui.use(['form', 'layer', 'jquery'], function () {
             //     ,
             //     width: 300,
             //     height: 300
-        });
+        });*/
     })
 
     //推广h5
     var doExtension=function (data) {
         var parent=$("#extensionContent");
-        if(data.status===1){
+        if(data.status===1)
+        {
+
+            $("#wxappcode",parent).attr("src",data.data.wxappcode);
+            $("#wxappcode",parent).show();
+            layer.open({
+                type: 1,
+                title: false,
+                closeBtn: 0,
+                shadeClose: true,
+                content: $("#extensionContent")
+            })
+        }else
+        {
+            layer.msg(data.messages, {icon: 2,time: 2000});
+        }
+
+     /*   if(data.status===1){
             //其他页面元素
             var tourl=data.data.uploads+"/"+"default/lucky/prizewarpbg.png";
             var toitemurl=data.data.uploads+"/"+"default/lucky/prizebg.png";
@@ -214,7 +238,7 @@ layui.use(['form', 'layer', 'jquery'], function () {
             })
         }else{
             layer.msg(data.messages, {icon: 2,time: 2000});
-        }
+        }*/
     }
 
 
