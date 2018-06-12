@@ -7,6 +7,7 @@ use App\Http\Model\Data\City;
 use App\Http\Model\Data\Country;
 use App\Http\Model\Data\Province;
 use App\Http\Model\User\User;
+use App\Http\Model\Wx\SmallProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 ini_set('max_execution_time', '0');
@@ -203,10 +204,17 @@ class PublicController extends ServerBaseController
     public function  getWxCodeImg( Request $request )
     {
         $companyid= session('userInfo')->companyid;
-        $type  = $request->type?$request->type:null;
-        $scene = $request->scene?$request->scene:null;
-        $width = $request->width?$request->width:null;
 
-        (new  WxAuthorize())->createWxappCode($companyid,$type, $scene,$width);
+        $sourcecode=SmallProgram::where("companyid",$companyid)->value("sourcecode");
+        if($sourcecode!=1)
+        {
+            echo "";
+
+        }else{
+            $type  = $request->type?$request->type:null;
+            $scene = $request->scene?$request->scene:null;
+            $width = $request->width?$request->width:null;
+            (new  WxAuthorize())->createWxappCode($companyid,$type, $scene,$width);
+        }
     }
 }
