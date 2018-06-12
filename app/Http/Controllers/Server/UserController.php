@@ -148,17 +148,8 @@ class UserController extends ServerBaseController
      */
     public function wxcode()
     {
-        $userInfo = session('userInfo');
-        $sourcecode=SmallProgram::where("companyid",$userInfo->companyid)->value("sourcecode");
-        if($sourcecode==1)
-        {
-            //获取小程序二维码
-            $list["wxappcode"]=url("wx-code/allow/null/600");
-
-        }else{
-            $list["wxappcode"] ="";
-            $list["status"] ="";
-        }
+        //获取小程序二维码
+        $list["wxappcode"]=url("wx-code/allow/null/600");
         responseData(\StatusCode::SUCCESS, "", $list);
     }
 
