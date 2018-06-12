@@ -1,13 +1,8 @@
 <?php
 
 namespace App\Http\Controllers\Server;
+
 use App\Http\Controllers\Common\ServerBaseController;
-
-use App\Http\Model\Activity\ActivityLuckyPrize;
-use App\Http\Model\Activity\ActivityLuckyRecord;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Event;
-
 class IndexController extends ServerBaseController
 {
 

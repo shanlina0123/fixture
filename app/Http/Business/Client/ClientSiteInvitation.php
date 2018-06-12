@@ -23,7 +23,6 @@ class ClientSiteInvitation
     {
         $tag = 'siteInvitation'.$where['userid'];
         $tagWhere = $request->input('page');
-         Cache::flush();
         $value = Cache::tags($tag)->remember( $tag.$tagWhere,config('configure.sCache'), function() use( $where, $request ){
             $sql = SiteInvitation::where( $where )->orderBy('id','desc');
             //关联工地
@@ -32,7 +31,7 @@ class ClientSiteInvitation
                 $query->with(['siteToCommpanyTag'=>function( $query ) use($where){
                     $query->where(['companyid'=>$where['companyid']])->select('name','id');
                 }])->select('stageid','id','name','addr','explodedossurl');
-            },'invitationToDynamicStatistics']);
+            }]);
             return $sql->paginate(config('configure.sPage'));
         });
         return $value;

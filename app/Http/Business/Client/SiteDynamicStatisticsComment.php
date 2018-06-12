@@ -27,28 +27,11 @@ class SiteDynamicStatistics extends ClientBase
             return $statistics->save();
         }else
         {
-            if( $data['siteid'] )
-            {
-                $statistics = DynamicStatistics::where('siteid',$data['siteid'])->first();
-                if($statistics)
-                {
-                    $statistics->dynamicid = $data['dynamicid'];
-                    $statistics->thumbsupnum = $statistics->thumbsupnum+1;
-                    return $statistics->save();
-                }else
-                {
-                    $statistics = new DynamicStatistics();
-                }
-            }else
-            {
-                $statistics = new DynamicStatistics();
-            }
+            $statistics = new DynamicStatistics();
             $statistics->dynamicid = $data['dynamicid'];
             $statistics->siteid = $data['siteid'];
-            $statistics->linkednum = 0;
             $statistics->commentnum = 0;
             $statistics->thumbsupnum = 1;
-            $statistics->follownum = 0;
             return $statistics->save();
         }
     }

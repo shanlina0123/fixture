@@ -367,14 +367,16 @@ class SiteBusiness extends StoreBase
                     $query->select('id','siteid','userid')->with(['followToUser'=>function( $query ){
                         $query->select('faceimg','id')->orderBy('id','desc')->take(8);
                     }]);
-                },'siteToDynamicStatistics'=>function($query){
-                    $query->select('linkednum','siteid','follownum');
                 }
             ]
-        )->select('explodedossurl','addr','budget','acreage','roomtypeid','roomstyleid','renovationmodeid','stagetemplateid','companyid','id','roomshap','stageid','name','storeid','cityid')->first();
+        )->select('explodedossurl','addr','budget','acreage','roomtypeid','roomstyleid','renovationmodeid','stagetemplateid','companyid','id','roomshap','stageid','name','storeid','cityid','linkednum','follownum')->first();
         if( !$res )
         {
             responseData(\StatusCode::ERROR,'工地未公开');
+        }else
+        {
+            //如果工地存在就加浏览量
+            event('site.statistics',array( $res,'event'=>'linkednum'));
         }
         //公司模板
         $res->tag = CompanyStageTemplateTag::orderBy('sort','asc')->where(['stagetemplateid'=>$res->stagetemplateid,'companyid'=>$res->companyid])->select('id','name')->get();
@@ -382,26 +384,6 @@ class SiteBusiness extends StoreBase
             $query->select('id','positionid','nickname','faceimg')->with('userToPosition');
         }])->get();
         $res->siteToFolloWrecord = $res->siteToFolloWrecord()->where('userid',$data['userid'])->count();
-        //如果工地存在就加浏览量
-        if( $res )
-        {
-            $statistics = DynamicStatistics::where('siteid',$data['id'])->first();
-            if( $statistics )
-            {
-                $statistics->linkednum = $statistics->linkednum+1;
-                $statistics->save();
-            }else
-            {
-                $obj = new DynamicStatistics();
-                $obj->dynamicid = 0;
-                $obj->siteid = $data['id'];
-                $obj->linkednum = 1;
-                $obj->commentnum = 0;
-                $obj->thumbsupnum = 0;
-                $obj->follownum = 0;
-                $obj->save();
-            }
-        }
         return $res;
     }
 

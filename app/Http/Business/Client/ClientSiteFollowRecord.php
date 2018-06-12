@@ -10,6 +10,7 @@ namespace App\Http\Business\Client;
 
 
 use App\Http\Model\Dynamic\DynamicStatistics;
+use App\Http\Model\Site\Site;
 use App\Http\Model\Site\SiteFollowrecord;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -35,8 +36,8 @@ class ClientSiteFollowRecord
                 //关联阶段和数据统计
                 $query->with(['siteToCommpanyTag'=>function( $query ) use($where){
                     $query->where(['companyid'=>$where['companyid']])->select('name','id');
-                }])->select('stageid','id','name','addr','explodedossurl');
-            },'followToDynamicStatistics']);
+                }])->select('stageid','id','name','addr','explodedossurl','linkednum','follownum');
+            }]);
             return $sql->paginate(config('configure.sPage'));
        /* });
         return $value;*/
@@ -54,14 +55,8 @@ class ClientSiteFollowRecord
             $res = SiteFollowrecord::where($where)->first();
             if( $res )
             {
-                //不取消关注
-               /* $res->delete();
-                $statistics = DynamicStatistics::where('siteid',$request->input('siteid'))->first();
-                if( $statistics )
-                {
-                    $statistics->follownum = $statistics->follownum-1?$statistics->follownum-1:0;
-                    $statistics->save();
-                }*/
+                //取消关注未开发
+
                 DB::commit();
                return true;
             }else
@@ -75,22 +70,10 @@ class ClientSiteFollowRecord
                 $wrecord->userid = $user->id;
                 $wrecord->created_at = date("Y-m-d H:i:s");
                 $wrecord->save();
-                $statistics = DynamicStatistics::where('siteid',$where['siteid'])->first();
-                if( $statistics )
-                {
-                    $statistics->follownum = $statistics->follownum+1;
-                    $statistics->save();
-                }else
-                {
-                    $obj = new DynamicStatistics();
-                    $obj->dynamicid = 0;
-                    $obj->siteid = $where['siteid'];
-                    $obj->linkednum = 0;
-                    $obj->commentnum = 0;
-                    $obj->thumbsupnum = 0;
-                    $obj->follownum = 1;
-                    $obj->save();
-                }
+
+                $res = Site::where(['companyid'=>$user->companyid,'id'=>$where['siteid']])->first();
+                $res->follownum = (int)$res->follownum+1;
+                $res->save();
             }
             DB::commit();
             return true;

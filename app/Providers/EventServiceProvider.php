@@ -112,5 +112,13 @@ class EventServiceProvider extends ServiceProvider
                 Cache::tags(['NoticeList'.$user->id])->flush();
             }
         });
+
+        /**
+         * 关注和浏览统计
+         */
+        Event::listen('site.statistics', function ($res,$event) {
+            $res->$event = $res->$event+1;
+            $res->save();
+        });
     }
 }

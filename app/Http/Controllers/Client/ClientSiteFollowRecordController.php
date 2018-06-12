@@ -42,8 +42,8 @@ class ClientSiteFollowRecordController extends ClientBaseController
         $res = $this->siteFollow->recordSite( $where,$user, $this->request );
         if( $res ){
 
-            responseData(\StatusCode::SUCCESS,'操作成功');
+            responseData(\StatusCode::SUCCESS,'关注成功');
         }
-        responseData(\StatusCode::ERROR,'操作失败',$res);
+        responseData(\StatusCode::ERROR,'关注失败',$res);
     }
 }
