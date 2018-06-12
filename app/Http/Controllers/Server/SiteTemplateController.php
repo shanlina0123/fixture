@@ -25,7 +25,6 @@ class SiteTemplateController extends ServerBaseController
      */
     public function index()
     {
-        //Cache::flush();
         $data = $this->template->getTemplateList( $this->userInfo, $this->request );
         return view('server.sitetemplate.index',compact('data'));
     }

@@ -453,6 +453,7 @@ class SiteBusiness extends ServerBase
             }
 
             //查询动他
+            $dynamicID = Dynamic::where(['companyid'=>$site->companyid,'sitetid'=>$site->id])->pluck('id');
             //删除工地动态
             Dynamic::where(['companyid'=>$site->companyid,'sitetid'=>$site->id])->delete();
             //删除统计
@@ -460,7 +461,10 @@ class SiteBusiness extends ServerBase
             //删除评论
             DynamicComment::where(['siteid'=>$site->id])->delete();
             //删除动态图片
-            DynamicImages::whereIn(['dynamicid'=>$dynamicID])->delete();
+            if( count($dynamicID) )
+            {
+                DynamicImages::whereIn('dynamicid',$dynamicID)->delete();
+            }
             (new \Upload())->delDir('site', $site->uuid);
 
 
