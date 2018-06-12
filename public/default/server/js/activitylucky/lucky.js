@@ -144,8 +144,8 @@ layui.use(['form', 'layer', 'jquery'], function () {
                 //下载路径
                 $("#downloadExtension",parent).attr('href',canvas.toDataURL());
                 //下载名称
-                var sharetitle=$("#sharetitle",parent).html();
-                $("#downloadExtension",parent).attr('download',sharetitle) ;
+                var title=$("#title",parent).html()?$("#title",parent).html():"活动";
+                $("#downloadExtension",parent).attr('download',title) ;
 
                //隐藏h5
                 $(".h5Content").hide();
