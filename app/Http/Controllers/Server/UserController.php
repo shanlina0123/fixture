@@ -148,9 +148,8 @@ class UserController extends ServerBaseController
      */
     public function wxcode()
     {
-        $userInfo = session('userInfo');
         //获取小程序二维码
-        $list["wxappcode"] =(new  WxAuthorize())->getWxappCode($userInfo->companyid,"allow".null,600);
+        $list["wxappcode"] =url("wx-code/allow/".null."/600");
     }
 
     /****
