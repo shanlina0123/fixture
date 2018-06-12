@@ -86,8 +86,15 @@ class WxApiLogin
      */
     public function Openid( $appID, $code )
     {
-        $wx = new WxAuthorize();
-        return $wx->getOpenid( $appID, $code );
+        if( config('wxtype.type') == 1 )
+        {
+            $wx = new WxAlone();
+            return $wx->getOpenid( $appID, $code );
+        }else
+        {
+            $wx = new WxAuthorize();
+            return $wx->getOpenid( $appID, $code );
+        }
     }
 
 
