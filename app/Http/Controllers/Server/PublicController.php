@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers\Server;
+use App\Http\Business\Common\WxAuthorize;
 use App\Http\Business\Server\PublicBusiness;
 use App\Http\Controllers\Common\ServerBaseController;
 use App\Http\Model\Data\City;
@@ -193,4 +194,19 @@ class PublicController extends ServerBaseController
         }
         dd( $json  );
     }*/
+
+
+    /****
+     * 获取微信二维码图片
+     * //?type=ddd&scene=&width=
+     */
+    public function  getWxCodeImg( Request $request )
+    {
+        $companyid= session('userInfo')->companyid;
+        $type  = $request->type?$request->type:null;
+        $scene = $request->scene?$request->scene:null;
+        $width = $request->width?$request->width:null;
+
+        (new  WxAuthorize())->createWxappCode($companyid,$type, $scene,$width);
+    }
 }
