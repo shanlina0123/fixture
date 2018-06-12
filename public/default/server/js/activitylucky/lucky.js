@@ -135,18 +135,12 @@ layui.use(['form', 'layer', 'jquery'], function () {
         }
     })
     //生成
-    $("#createExtension").click(function(){
+    /*  $("#createExtension").click(function(){
         var parent=$("#extensionContent");
         var h5=$(".h5Content");
 
-        //下载路径
-        $("#downloadExtension",parent).attr('href',canvas.toDataURL());
-        //下载名称
-        var title=$("#title",parent).html()?$("#title",parent).html():"活动";
-        $("#downloadExtension",parent).attr('download',title) ;
-
             //绘图
-     /*   html2canvas(h5, {
+      html2canvas(h5, {
             onrendered: function(canvas) {
                 //下载路径
                 $("#downloadExtension",parent).attr('href',canvas.toDataURL());
@@ -169,8 +163,8 @@ layui.use(['form', 'layer', 'jquery'], function () {
             //     ,
             //     width: 300,
             //     height: 300
-        });*/
-    })
+        });
+    })*/
 
     //推广h5
     var doExtension=function (data) {
@@ -180,6 +174,11 @@ layui.use(['form', 'layer', 'jquery'], function () {
 
             $("#wxappcode",parent).attr("src",data.data.wxappcode);
             $("#wxappcode",parent).show();
+            //下载路径
+            $("#downloadExtension",parent).attr('href',data.data.wxappcode);
+            //下载名称
+            $("#downloadExtension",parent).attr('download','活动二维码') ;
+
             layer.open({
                 type: 1,
                 title: false,

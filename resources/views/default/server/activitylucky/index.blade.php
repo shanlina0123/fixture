@@ -115,10 +115,9 @@
             </div>--}}
           {{--  <img id="companyLogo" src="" class="poplog" style="display: none;">--}}
         </div>
-      {{--  <div class="popwarp canvasContent" style="display: none" toid="">--}}
-        </div>
-        <img  src="{{pix_asset('server/images/cutscreen.png')}}" class="downImg" title="截屏生成图片" id="createExtension">
-        <a  href="javascript:;" rel="external nofollow"  id="downloadExtension" style="display: none">
+      {{--  <div class="popwarp canvasContent" style="display: none" toid=""> </div>--}}
+      {{--  <img  src="{{pix_asset('server/images/cutscreen.png')}}" class="downImg" title="截屏生成图片" id="createExtension">--}}
+        <a  href="javascript:;" rel="external nofollow"  id="downloadExtension">
             <img  src="{{pix_asset('server/images/download.png')}}" class="downImg" title="点击下载图片">
         </a>
     </div>

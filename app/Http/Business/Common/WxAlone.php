@@ -54,11 +54,11 @@ class WxAlone
     {
         if( Cache::has('access_token').$companyid )
         {
+
             $access_token = Cache::get('access_token'.$companyid);
 
         }else
         {
-
             $res = SmallProgram::where(['companyid'=>$companyid])->first();
             $url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.$res->authorizer_appid_secret.'&secret='.$res->authorizer_appid_secret;
             $data = getCurl($url,0);
@@ -67,7 +67,10 @@ class WxAlone
                 $data = json_decode($data,true);
                 if( array_has( $data,'access_token') )
                 {
-                    Cache::put('access_token'.$companyid,$data['access_token'],$data['expires_in']/60);
+                    if( $data['access_token'] )
+                    {
+                        Cache::put('access_token'.$companyid,$data['access_token'],$data['expires_in']/60);
+                    }
                     $access_token = $data['access_token'];
                 }else
                 {
@@ -106,7 +109,6 @@ class WxAlone
             echo json_encode($da);//echo直接在浏览器显示或者存储到服务器等其他操作
         }
         echo "";
-
     }
 
 }
