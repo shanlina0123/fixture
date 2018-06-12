@@ -86,6 +86,7 @@ class WxApiLogin
      */
     public function Openid( $appID, $code )
     {
+        //1单独部署
         if( config('wxtype.type') == 1 )
         {
             $wx = new WxAlone();

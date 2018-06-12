@@ -36,9 +36,6 @@
             <p>2、微信官方规定：小程序个人开放的服务类目是有严格规定的，内容不在服务类目中的，是审核不通过的。<a href="http://kf.qq.com/faq/170926eiqeiy170926QJVRje.html"  target="_blank" style="color: #1E9FFF">查看详情</a></p>
             <p>3、微信官网规定：小程序代码审核需要2-7天，结果将通过微信通知。审核通过后，将立即更新到线上。</p>
             <p>4、小程序审核期间，不影响您在pc端的操作，您可以正常新建项目、活动等。</p>
-            <p>5、在线客服消息需要您在微信小程序开启<span style="color: red">消息推送配置</span>，请将以下字段内容一一对应填写到微信的消息配置。 小程序消息推送的设置步骤：
-                <span style="color: red"> 【设置-开发设置-消息推送-开启】</span>
-            </p>
         </div>
         @if( $data && $data->sourcecode != 1 && $data->status == 0 )
             <h2 class="noticetext">审核信息</h2>

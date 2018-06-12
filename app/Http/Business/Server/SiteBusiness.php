@@ -8,6 +8,7 @@
 
 namespace App\Http\Business\Server;
 use App\Http\Business\Common\ServerBase;
+use App\Http\Business\Common\WxAlone;
 use App\Http\Business\Common\WxAuthorize;
 use App\Http\Model\Company\CompanyStageTemplate;
 use App\Http\Model\Company\CompanyStageTemplateTag;
@@ -453,6 +454,7 @@ class SiteBusiness extends ServerBase
             }
 
             //查询动他
+            $dynamicID = Dynamic::where(['companyid'=>$site->companyid,'sitetid'=>$site->id])->pluck('id');
             //删除工地动态
             Dynamic::where(['companyid'=>$site->companyid,'sitetid'=>$site->id])->delete();
             //删除统计
@@ -460,7 +462,10 @@ class SiteBusiness extends ServerBase
             //删除评论
             DynamicComment::where(['siteid'=>$site->id])->delete();
             //删除动态图片
-            DynamicImages::whereIn(['dynamicid'=>$dynamicID])->delete();
+            if( count($dynamicID) )
+            {
+                DynamicImages::whereIn('dynamicid',$dynamicID)->delete();
+            }
             (new \Upload())->delDir('site', $site->uuid);
 
 
@@ -621,16 +626,17 @@ class SiteBusiness extends ServerBase
         $res = Site::where(['companyid'=>$companyid,'id'=>$id])->first();
         if( $res )
         {
-            $name = (new WxAuthorize())->getWxappCode($companyid,"site",$id, 80);
-            $upload = new \Upload();
-            $img = $upload->uploadProductImage( $res->uuid, $name, 'site_code');
-            $res->codeimg = 'site/'.$res->uuid.'/code/'.$name;
-            if($res->save() && $img)
+            //1单独部署
+            if( config('wxtype.type') == 1 )
             {
-                responseData(\StatusCode::SUCCESS,'二维码',$res->codeimg);
+                $wx = new WxAlone();
+                return $wx->createWxappCode( $companyid, 'site', $id);
+            }else
+            {
+                $wx = new WxAuthorize();
+                return $wx->createWxappCode($companyid,'site',$id);
             }
-            responseData(\StatusCode::ERROR,'生成二维码失败');
         }
-        responseData(\StatusCode::ERROR,'工地信息不存在',$res);
+        return '';
     }
 }
