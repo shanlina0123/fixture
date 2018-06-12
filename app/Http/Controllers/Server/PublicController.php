@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers\Server;
+use App\Http\Business\Common\WxAlone;
 use App\Http\Business\Common\WxAuthorize;
 use App\Http\Business\Server\PublicBusiness;
 use App\Http\Controllers\Common\ServerBaseController;
@@ -204,17 +205,23 @@ class PublicController extends ServerBaseController
     public function  getWxCodeImg( Request $request )
     {
         $companyid= session('userInfo')->companyid;
-
         $sourcecode=SmallProgram::where("companyid",$companyid)->value("sourcecode");
         if($sourcecode!=1)
         {
             echo "";
-
         }else{
             $type  = $request->type?$request->type:null;
             $scene = $request->scene?$request->scene:null;
             $width = $request->width?$request->width:null;
-            (new  WxAuthorize())->createWxappCode($companyid,$type, $scene,$width);
+            //1单独部署
+            if( config('wxtype.type') == 1 )
+            {
+                $wx = new WxAlone();
+            }else
+            {
+                $wx = new WxAuthorize();
+            }
+            $wx->createWxappCode($companyid,$type, $scene,$width);
         }
     }
 }

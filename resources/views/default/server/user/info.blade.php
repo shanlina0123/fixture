@@ -14,7 +14,7 @@
                     <label class="layui-form-label">姓名</label>
                     <div class="layui-input-block">
                         <input type="text" value="{{$user->nickname}}" class="layui-input" readonly  style="width: 25%;float:left;">
-                        <a href="javascript:;" style="line-height:38px;color: #01AAED" class="binwx" url="{{route('user-wxcode')}}">绑定微信</a>
+                        {{--<a href="javascript:;" style="line-height:38px;color: #01AAED" class="binwx" url="{{route('user-wxcode')}}">绑定微信</a>--}}
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -63,7 +63,7 @@
     </div>
 
     <!--二维码弹窗-->
-    <div class="erweimapop" style="display: none;">
+    <div class="erweimapop" style="display: none;" >
         <div class="erweima">
             @if($user["sourcecode"]!=1)
                 <div class="erweimatext">抱歉您所在公司未进行小程序授权，暂不能进行微信绑定</div>

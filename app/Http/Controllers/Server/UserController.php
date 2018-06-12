@@ -148,13 +148,22 @@ class UserController extends ServerBaseController
      */
     public function wxcode()
     {
-        //获取小程序二维码
-        $list["wxappcode"] =url("wx-code/allow/null/600");
+        $userInfo = session('userInfo');
+        $sourcecode=SmallProgram::where("companyid",$userInfo->companyid)->value("sourcecode");
+        if($sourcecode==1)
+        {
+            //获取小程序二维码
+            $list["wxappcode"]=url("wx-code/allow/null/600");
+
+        }else{
+            $list["wxappcode"] ="";
+            $list["status"] ="";
+        }
         responseData(\StatusCode::SUCCESS, "", $list);
     }
 
     /****
-     *扫二维码后检测是否绑定微信
+     *扫二维码后检测是否绑定微信---暂未调用
      */
     public function  bindWx()
     {
