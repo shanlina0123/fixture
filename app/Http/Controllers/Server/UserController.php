@@ -30,7 +30,7 @@ class UserController extends ServerBaseController
             $user = $userInfo;
             //小程序审核通过放可微信绑定
             $sourcecode=SmallProgram::where("companyid",$user->companyid)->value("sourcecode");
-            $user->sourcecode=$sourcecode;
+            $user["sourcecode"]=$sourcecode;
             return view('server.user.info',compact('user'));
         }else
         {
@@ -149,7 +149,8 @@ class UserController extends ServerBaseController
     public function wxcode()
     {
         //获取小程序二维码
-        $list["wxappcode"] =url("wx-code/allow/".null."/600");
+        $list["wxappcode"] =url("wx-code/allow/null/600");
+        responseData(\StatusCode::SUCCESS, "", $list);
     }
 
     /****

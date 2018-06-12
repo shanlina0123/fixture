@@ -65,7 +65,7 @@
     <!--二维码弹窗-->
     <div class="erweimapop" style="display: none;">
         <div class="erweima">
-            @if($user->sourcecode!==1)
+            @if($user["sourcecode"]!=1)
                 <div class="erweimatext">抱歉您所在公司未进行小程序授权，暂不能进行微信绑定</div>
             @endif
         </div>
