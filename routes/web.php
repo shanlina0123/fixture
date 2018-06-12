@@ -56,6 +56,10 @@ Route::group(['namespace' => 'Server'], function () {
 
         //腾讯地图
         Route::post('map-address', 'PublicController@getMapAddress')->name('map-address');//获取腾讯地图搜索的地址
+
+        //二维码
+        Route::get('wx-code/{type}/{scene}/{width}', 'PublicController@getWxCodeImg')->name('wx-code');
+
         //中间件权限认证路由
         Route::group(['middleware' => ['checkAuth']], function () {
 
