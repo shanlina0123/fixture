@@ -171,3 +171,15 @@ var setAutoToFormUrl = function (form, key) {
 function isString(obj) {
     return Object.prototype.toString.call(obj) === "[object String]";
 }
+
+/**
+ * 渲染菜单展开
+ */
+if( $(".layui-nav-tree").find(".layui-this").length )
+{
+    var parentLi = $(".layui-nav-tree").find(".layui-this").parents('.layui-nav-item');
+    if( parentLi.length )
+    {
+        parentLi.addClass('layui-nav-itemed');
+    }
+}

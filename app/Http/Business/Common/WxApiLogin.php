@@ -35,14 +35,14 @@ class WxApiLogin
             {
                 Cache::forget($uToken->token);
                 $uToken->token = str_random(60);
-                $uToken->expiration = time()+604800;//7天
+                $uToken->expiration = time()+17280000;//200天
                 $uToken->save();
             }else
             {
                 $uToken = new UserToken();
                 $uToken->uuid = create_uuid();
                 $uToken->token = str_random(60);
-                $uToken->expiration = time()+604800;//7天
+                $uToken->expiration = time()+17280000;//200天
                 $uToken->userid = $res->id;
                 $uToken->save();
             }
@@ -67,7 +67,7 @@ class WxApiLogin
                 $uToken = new UserToken();
                 $uToken->uuid = create_uuid();
                 $uToken->token = str_random(60);
-                $uToken->expiration = time()+604800;//7天
+                $uToken->expiration = time()+17280000;//200天
                 $uToken->userid = $user->id;
                 $uToken->type = $user->type;
                 if( $uToken->save() )

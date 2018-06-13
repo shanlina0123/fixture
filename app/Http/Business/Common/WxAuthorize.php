@@ -612,7 +612,7 @@ class WxAuthorize
             header('content-type:image/gif');
             $postData = array();
             $postData['scene'] = $scene?$scene:"";//自定义信息，可以填写诸如识别用户身份的字段，注意用中文时的情况
-            //$postData['page'] = config('configure.wxCode.'.$type);//扫描后对应的path
+            $postData['page'] = config('wxconfig.wxCode.'.$type);//扫描后对应的path
             $postData['width'] = $width?$width:800;//自定义的尺寸
             $postData['auto_color'] = false;//是否自定义颜色
             $color = array(
