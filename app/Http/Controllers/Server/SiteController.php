@@ -298,8 +298,8 @@ class SiteController extends ServerBaseController
      * 推广详情
      * @param Request $request
      */
-    public function extension(Request $request, $id)
+    public function extension($id)
     {
-        return $this->site->extension($id, $this->userInfo->companyid);
+        return $this->site->extension($id);
     }
 }

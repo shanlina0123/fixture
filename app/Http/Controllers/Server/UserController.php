@@ -89,27 +89,28 @@ class UserController extends ServerBaseController
         {
             $user = $userInfo;
             return view('server.user.setpass',compact('user'));
+
         }else
         {
             $this->request->validate(
                 [
                     'password' => 'required|min:6|max:12|confirmed',
-                    'code'=>'bail|numeric',//类型
+                    /*'code'=>'bail|numeric',//类型*/
                 ],[
                     'password.min'=>'密码最小为6为字符',
                     'password.max'=>'密码最大为12为字符',
                     'password.confirmed'=>'两次输入密码不一致',
-                    'code.numeric'=>'验证码不正确',
+                    /*'code.numeric'=>'验证码不正确',*/
                 ]
             );
             $phone = $this->request->input('phone');
-            if( config('configure.is_sms') == true ) {
+            /*if( config('configure.is_sms') == true ) {
                 $code = $this->request->input('code');
                 $code_cache = Cache::get('tel_' . $phone);
                 if ($code != $code_cache) {
                     return redirect()->route('set-pass')->with('msg', '验证码不正确');
                 }
-            }
+            }*/
             $where['uuid'] = $userInfo->uuid;
             $where['companyid'] = $userInfo->companyid;
             $where['id'] = $userInfo['id'];
@@ -137,9 +138,62 @@ class UserController extends ServerBaseController
      */
     public function userAuthorize()
     {
-        $userInfo = session('userInfo');
-        $data = $this->user->getAuthorizeStatus( $userInfo );
-        return view('server.user.userauthorize',compact('data'));
+        $userInfo = $this->userInfo;
+        //1单独部署
+        if( config('wxtype.type') == 1 )
+        {
+            if( $this->request->method() == "GET" )
+            {
+                $res = SmallProgram::where(['companyid'=>$userInfo->companyid])->first();
+                return view('server.user.authorize',compact('res'));
+
+            }else
+            {
+                $url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.$this->request->input('authorizer_appid').'&secret='.$this->request->input('authorizer_appid_secret');
+                $data = getCurl($url,0);
+                if( $data )
+                {
+                    $data = json_decode($data,true);
+                    if( array_has( $data,'access_token') )
+                    {
+                        $res = SmallProgram::where(['companyid'=>$userInfo->companyid])->first();
+                        if( $res )
+                        {
+                            $res->authorizer_appid = $this->request->input('authorizer_appid');
+                            $res->authorizer_appid_secret = $this->request->input('authorizer_appid_secret');
+                            if( $res->save() )
+                            {
+                                Cache::put('access_token'.$userInfo->companyid,$data['access_token'],$data['expires_in']/60);
+                                return redirect()->route('user-authorize')->with('msg','授权成功');
+                            }
+                        }else
+                        {
+                            $obj = new SmallProgram();
+                            $obj->companyid = $userInfo->companyid;
+                            $obj->authorizer_appid =  $this->request->input('authorizer_appid');
+                            $obj->authorizer_appid_secret = $this->request->input('authorizer_appid_secret');
+                            if( $obj->save() )
+                            {
+                                Cache::put('access_token'.$userInfo->companyid,$data['access_token'],$data['expires_in']/60);
+                                return redirect()->route('user-authorize')->with('msg','授权成功');
+                            }
+                        }
+                        return redirect()->route('user-authorize')->with('msg','授权失败');
+
+                    }else
+                    {
+                        return redirect()->route('user-authorize')->with('msg','授权失败请检查AppID和密钥是否正确');
+                    }
+                }else
+                {
+                    return redirect()->route('user-authorize')->with('msg','授权失败请检查AppID和密钥是否正确');
+                }
+            }
+        }else
+        {
+            $data = $this->user->getAuthorizeStatus( $userInfo );
+            return view('server.user.userauthorize',compact('data'));
+        }
     }
 
 

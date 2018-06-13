@@ -299,23 +299,23 @@ $("input[type=number]").keyup(function () {
 
 
 //第一步：点击推广按钮
-$(".publicBtn").click(function () {
+$(".publicBtn").click(function ()
+{
     var that=this;
-    var tr=$(that).parents("tr");
-    var id=tr.attr("id");
-    var storename=tr.attr("storename");
-    var sitename=tr.attr("sitename");
-    //门店
-    $("#storename").html(storename);
-    $("#storename").attr("sitename",sitename);
-
-    if( tr.attr('codeimg') )
+    var url=$(that).attr("url");
+    $.getJSON(url,null,doExtension);
+});
+var doExtension=function (data) {
+    var parent=$("#extensionContent");
+    if(data.status===1)
     {
-        var parent=$("#extensionContent");
-        $("#wxappcode",parent).attr("src",'/uploads/'+tr.attr('codeimg'));
+        $("#wxappcode",parent).attr("src",data.data.wxappcode);
         $("#wxappcode",parent).show();
-        $(".canvasContent").attr("toid",id);
-        //其他
+        //下载路径
+        $("#downloadExtension",parent).attr('href',data.data.wxappcode);
+        //下载名称
+        $("#downloadExtension",parent).attr('download','活动二维码');
+
         layer.open({
             type: 1,
             title: false,
@@ -325,79 +325,6 @@ $(".publicBtn").click(function () {
         })
     }else
     {
-        if( id !=$(".canvasContent").attr("toid") )
-        {
-            //清空已显示的canvas
-            $(".canvasContent").hide();
-            $(".canvasContent").html("");
-            $(".canvasContent").attr("toid",id);
-            //显示截屏，隐藏下载按钮
-            $("#createExtension").show();
-            $("#downloadExtension").hide();
-            //显示现在的H5
-            $(".h5Content").show();
-            //获取H5的动态数据
-            var url=$(that).attr("url");
-            //显示二维码
-            $.get(url,function (data) {
-                if( data.status == 1 )
-                {
-                    var parent=$("#extensionContent");
-                    $("#wxappcode",parent).attr("src",'/uploads/'+data.data);
-                    $("#wxappcode",parent).show();
-                    //其他
-                    layer.open({
-                        type: 1,
-                        title: false,
-                        closeBtn: 0,
-                        shadeClose: true,
-                        content: $("#extensionContent")
-                    })
-                }else
-                {
-                    layer.msg(data.messages);
-                }
-
-            },'json');
-        }else{
-            layer.open({
-                type: 1,
-                title: false,
-                closeBtn: 0,
-                shadeClose: true,
-                content: $("#extensionContent")
-            })
-        }
+        layer.msg(data.messages, {icon: 2,time: 2000});
     }
-
-})
-//第二步：截屏H5
-$("#createExtension").click(function(){
-    var parent=$("#extensionContent");
-    var h5=$(".h5Content");
-    //绘图
-    html2canvas(h5, {
-        onrendered: function(canvas) {
-            //下载路径
-            $("#downloadExtension",parent).attr('href',canvas.toDataURL());
-            //下载名称
-            var sitename=$("#storename",parent).attr("sitename");
-            $("#downloadExtension",parent).attr('download',sitename) ;
-
-            //隐藏h5
-            $(".h5Content").hide();
-            //显示canvas
-            $(".canvasContent").html(canvas);
-            $(".canvasContent").show();
-
-            //显示下载按钮，隐藏截屏按钮
-            $("#createExtension").hide();
-            $("#downloadExtension").show();
-
-        }
-        //可以带上宽高截取你所需要的部分内容
-        //     ,
-        //     width: 300,
-        //     height: 300
-    });
-})
+}

@@ -24,15 +24,15 @@ class WxAlone
      */
     public function getOpenid( $appid, $code )
     {
-        $res = SmallProgram::where(['authorizer_appid'=>$appid])->first();
-        $url = 'https://api.weixin.qq.com/sns/jscode2session?appid='.$res->authorizer_appid.'&secret='.$res->authorizer_appid_secret.'&js_code='.$code.'&grant_type=authorization_code';
+        $wx = SmallProgram::where(['authorizer_appid'=>$appid])->first();
+        $url = 'https://api.weixin.qq.com/sns/jscode2session?appid='.$wx->authorizer_appid.'&secret='.$wx->authorizer_appid_secret.'&js_code='.$code.'&grant_type=authorization_code';
         $data = getCurl($url,0);
         if( $data )
         {
             $data = json_decode($data,true);
             if( array_has( $data,'openid') )
             {
-                $res['companyid'] = $res->companyid;
+                $res['companyid'] = $wx->companyid;
                 $res['openid'] = $data['openid'];
                 return $res;
             }else
@@ -60,7 +60,7 @@ class WxAlone
         }else
         {
             $res = SmallProgram::where(['companyid'=>$companyid])->first();
-            $url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.$res->authorizer_appid_secret.'&secret='.$res->authorizer_appid_secret;
+            $url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.$res->authorizer_appid.'&secret='.$res->authorizer_appid_secret;
             $data = getCurl($url,0);
             if( $data )
             {

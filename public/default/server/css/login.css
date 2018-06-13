@@ -37,7 +37,7 @@
   opacity: .8;
 }
 .layui-input.codeInput {
-  width: 70%;
+  width: 370px;
 }
 .registDeel {
   margin-bottom: 10px;
@@ -155,4 +155,7 @@
   line-height: 30px;
   color: red;
   margin-top:35%;
+}
+.forgetwrap {
+  height: 360px;
 }

@@ -18,7 +18,7 @@ layui.use(['layer','form'], function() {
 
 
     //初始化
-    if(!$("form").attr("phone"))
+    /*if(!$("form").attr("phone"))
     {
         layer.open({
             type: 1,
@@ -30,7 +30,7 @@ layui.use(['layer','form'], function() {
             area: ['600px', '400px'],
             content: $(".popWrap")
         })
-   }
+   }*/
 
     //更换手机弹窗
     $(".changePhone").click(function() {

@@ -110,30 +110,9 @@ layui.use(['form', 'layer', 'jquery'], function () {
     $(".spreadBtn").click(function () {
         var that=this;
         var id=$(that).parents("tr").attr("id");
-        if(id!=$(".canvasContent").attr("toid"))
-        {
-            //清空已显示的canvas
-        //    $(".canvasContent").hide();
-        //    $(".canvasContent").html("");
-         //   $(".canvasContent").attr("toid",id);
-            //显示截屏，隐藏下载按钮
-          //  $("#createExtension").show();
-           // $("#downloadExtension").hide();
-            //显示现在的H5
-            $(".h5Content").show();
-            //获取H5的动态数据
-            var url=$(that).attr("url");
-            $.getJSON(url,null,doExtension);
-        }else{
-            layer.open({
-                type: 1,
-                title: false,
-                closeBtn: 0,
-                shadeClose: true,
-                content: $("#extensionContent")
-            })
-        }
-    })
+        var url=$(that).attr("url");
+        $.getJSON(url,null,doExtension);
+    });
     //生成
     /*  $("#createExtension").click(function(){
         var parent=$("#extensionContent");
@@ -174,6 +153,10 @@ layui.use(['form', 'layer', 'jquery'], function () {
 
             $("#wxappcode",parent).attr("src",data.data.wxappcode);
             $("#wxappcode",parent).show();
+            if( !data.data.wxappcode )
+            {
+                $(".downImg").hide();
+            }
             //下载路径
             $("#downloadExtension",parent).attr('href',data.data.wxappcode);
             //下载名称

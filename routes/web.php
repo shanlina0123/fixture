@@ -67,7 +67,7 @@ Route::group(['namespace' => 'Server'], function () {
             //公司信息
             Route::match(['get', 'post'], 'company/setting', 'CompanyController@companySetting')->name('company-setting');  //公司信息设置
             //微信认证页面
-            Route::get('user/authorize', 'UserController@userAuthorize')->name('user-authorize');
+            Route::any('user/authorize', 'UserController@userAuthorize')->name('user-authorize');
             //微信代码管理
             Route::get('wx/upcode/{appid}', 'WxAuthorizeController@upCode')->name('wx-upcode');//提交代码
             Route::get('wx/upsourcecode/{appid}', 'WxAuthorizeController@upSourceCode')->name('wx-upsource-code');//发布代码

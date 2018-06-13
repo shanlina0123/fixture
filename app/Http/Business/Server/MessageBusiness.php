@@ -33,7 +33,8 @@ class MessageBusiness extends ServerBase
             $res->token = str_random(32);
             $res->EncodingAESKey = str_random(43);
             $res->type = 1;
-            return $res->save();
+            $res->save();
+            return SmallProgram::where(['companyid'=>$data['companyid']])->first();
         }else
         {
             $res->companyid = $data['companyid'];

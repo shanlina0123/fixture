@@ -31,8 +31,8 @@ return [
      * ----------------------------
      */
     "pix_asset"=>"default/",//css js 目录
-    "cssVersion"=>strtotime(date("Y-m-d H:i:s")),//css版本
-    "jsVersion"=>strtotime(date("Y-m-d H:i:s")),//js版本
+    "cssVersion"=>20180613,//strtotime(date("Y-m-d H:i:s")),//css版本
+    "jsVersion"=>20180613,//strtotime(date("Y-m-d H:i:s")),//js版本
 
 
     /**

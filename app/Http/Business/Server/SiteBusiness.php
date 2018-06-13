@@ -621,22 +621,9 @@ class SiteBusiness extends ServerBase
      * 获取扩展详情
      * @return mixed
      */
-    public function extension($id, $companyid)
+    public function extension($id)
     {
-        $res = Site::where(['companyid'=>$companyid,'id'=>$id])->first();
-        if( $res )
-        {
-            //1单独部署
-            if( config('wxtype.type') == 1 )
-            {
-                $wx = new WxAlone();
-                return $wx->createWxappCode( $companyid, 'site', $id);
-            }else
-            {
-                $wx = new WxAuthorize();
-                return $wx->createWxappCode($companyid,'site',$id);
-            }
-        }
-        return '';
+        $list["wxappcode"] = url("wx-code/site/".$id."/60");
+        return responseCData(\StatusCode::SUCCESS, "", $list);
     }
 }

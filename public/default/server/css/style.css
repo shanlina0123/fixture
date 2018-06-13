@@ -320,51 +320,28 @@
   width: 230px;
   height: 215px;
 }
-/*抽奖推广页面*/
-.popwarp {
-  width: 300px;
-  height: 420px;
-  background: url(../images/activebg.jpg) center top no-repeat;
+/*推广*/
+.publicpop {
+  display: none;
 }
-.downPop {
-  width: 300px;
-  height: 480px;
+.publicpop .erweimaImg {
+  width: 280px;
+  height: 280px;
   margin: 0 auto;
-}
-.downPop .activename {
-  padding: 10px 0 5px 0;
-}
-.downPop .prizepart {
-  width: 250px;
-  height: 250px;
-  margin: 15px auto;
-}
-.downPop .priceitem {
-  width: 60px;
-  height: 60px;
-}
-.downPop .priceitem .itemimg {
-  width: 60px;
-  height: 60px;
-}
-.downPop .prizemsg,
-.downPop .erweimanotice {
-  color: #fff;
   text-align: center;
-  margin-top: 0;
-  line-height: 30px;
+  margin:10px auto;
 }
-.downPop .poplog {
-  display: block;
-  width: 87px;
-  height: 32px;
-  margin: 0 auto;
+.publicpop .downWrap {
+  width: 280px;
+  text-align: center;
 }
-.downPop .downImg {
-  display: block;
-  margin: 10px auto;
+.publicpop .downWrap img {
+  display: inline-block;
+  margin: 20px 10px;
   cursor: pointer;
 }
+
+
 .indexright {
   margin-left: 30px;
 }
@@ -461,40 +438,6 @@
   font-size: 16px;
   background-color: #38a0df;
   margin: 15px auto;
-}
-
-
-/*推广*/
-.publicpop {
-  display: none;
-}
-.publicpop .publicImgWrap {
-  position: relative;
-  width: 285px;
-  height: 397px;
-  background: url(../images/projectbg.png) center top / 100% no-repeat;
-}
-.publicpop .companyname{
-  position: absolute;
-  font-size: 22px;
-  color: #a20016;
-  font-weight: bold;
-  top: 65px;
-  left: 90px;
-}
-.publicpop .erweimaImg {
-  position: absolute;
-  top: 195px;
-  left: 103px;
-}
-.publicpop .downWrap {
-  width: 285px;
-  text-align: center;
-}
-.publicpop .downWrap img {
-  display: inline-block;
-  margin: 20px 10px;
-  cursor: pointer;
 }
 
 /*咨询消息新页面*/

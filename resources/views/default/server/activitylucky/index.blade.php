@@ -94,32 +94,15 @@
 @endsection
 @section('other')
     <!--推广弹窗-->
-    <div class="downPop" style="display: none" id="extensionContent">
-        <div class="popwarp h5Content" id="bgurl">
-            <img id="wxappcode" src="" class="itemimg" >
-            {{--<p class="activename" id="title"></p>
-            <div class="prizemsg" id="storename"></div>
-            <p class="erweimanotice">扫描下方二维码参与抽奖</p>
-            <div class="prizepart" id="prizewapbg">
-                <div class="prizeinner clearfix">
-                    <div class="priceitem fl"  ><img id="extensionPrize0" src="" class="itemimg" ></div>
-                    <div class="priceitem fl"  ><img id="extensionPrize1" src="" class="itemimg" ></div>
-                    <div class="priceitem fl"  ><img id="extensionPrize2" src="" class="itemimg" ></div>
-                    <div class="priceitem fl"  ><img id="extensionPrize3" src="" class="itemimg" ></div>
-                    <div class="priceitem fl"  ><img id="wxappcode" src="" class="itemimg" ></div>
-                    <div class="priceitem fl"  ><img id="extensionPrize4" src="" class="itemimg"></div>
-                    <div class="priceitem fl"  ><img id="extensionPrize5" src="" class="itemimg" ></div>
-                    <div class="priceitem fl"  ><img id="extensionPrize6" src="" class="itemimg" ></div>
-                    <div class="priceitem fl"  ><img id="extensionPrize7" src="" class="itemimg" ></div>
-                </div>
-            </div>--}}
-          {{--  <img id="companyLogo" src="" class="poplog" style="display: none;">--}}
+    <div class="publicpop" style="display: none" id="extensionContent">
+        <div class="publicImgWrap">
+            <div class="erweimaImg"><img id="wxappcode" src=""onerror="src='/default/server/images/falie.png'" width="250" height="250"></div>
         </div>
-      {{--  <div class="popwarp canvasContent" style="display: none" toid=""> </div>--}}
-      {{--  <img  src="{{pix_asset('server/images/cutscreen.png')}}" class="downImg" title="截屏生成图片" id="createExtension">--}}
-        <a  href="javascript:;" rel="external nofollow"  id="downloadExtension">
-            <img  src="{{pix_asset('server/images/download.png')}}" class="downImg" title="点击下载图片">
-        </a>
+        <div class="downWrap">
+            <a href="javascript:;" rel="external nofollow" id="downloadExtension">
+                <img src="{{pix_asset('server/images/download.png')}}" class="downImg" title="点击下载图片">
+            </a>
+        </div>
     </div>
 @endsection
 @section("js")

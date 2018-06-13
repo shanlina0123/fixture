@@ -67,7 +67,7 @@
                 </thead>
                 @foreach( $data as $k=>$row )
                     <tr id="{{$row->id}}" storename="{{$row->siteToCompany?$row->siteToCompany->fullname:''}}"
-                        sitename="{{$row->name}}" codeimg="{{$row->codeimg}}">
+                        sitename="{{$row->name}}" {{--codeimg="{{$row->codeimg}}"--}}>
                         <td>{{$k+1}}</td>
                         <td><img src="{{getImgUrl($row->explodedossurl)}}"></td>
                         <td>{{$row->name}}</td>
@@ -103,14 +103,14 @@
 @section('other')
     <!--推广弹窗-->
     <div class="publicpop" style="display: none" id="extensionContent">
-        <div class="publicImgWrap h5Content">
-            <div class="companyname" id="storename" sitename=""></div>
-            <div class="erweimaImg"><img id="wxappcode" src="" width="80" height="80"></div>
+        <div class="publicImgWrap">
+         {{--   <div class="companyname" id="storename" sitename=""></div>--}}
+            <div class="erweimaImg"><img id="wxappcode" src="" width="250" height="250" onerror="src='/default/server/images/falie.png'"></div>
         </div>
-        <div class="publicImgWrap canvasContent" style="display: none" toid=""></div>
+       {{-- <div class="publicImgWrap canvasContent" style="display: none" toid=""></div>--}}
         <div class="downWrap">
-            <img src="{{pix_asset('server/images/cutscreen.png')}}" class="downImg" title="截屏生成图片" id="createExtension">
-            <a href="javascript:;" rel="external nofollow" id="downloadExtension" style="display: none">
+          {{--  <img src="{{pix_asset('server/images/cutscreen.png')}}" class="downImg" title="截屏生成图片" id="createExtension">--}}
+            <a href="javascript:;" rel="external nofollow" id="downloadExtension">
                 <img src="{{pix_asset('server/images/download.png')}}" class="downImg" title="点击下载图片">
             </a>
         </div>

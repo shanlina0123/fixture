@@ -36,7 +36,7 @@
 <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 <![endif]-->
 <div class="loginBg">
-    <div class="loginWrap">
+    <div class="loginWrap forgetwrap">
         <div class="loginInner">
             <img src="{{pix_asset('server/images/topLogo.png')}}" class="loginLogo">
             <div class="errorWrap">
@@ -52,7 +52,7 @@
             <form class="form layui-form" method="post" action="{{route('recover-pass')}}">
                 {{csrf_field()}}
                 <div class="layui-form-item">
-                    <input type="number" class="layui-input" placeholder="手机号" id="phone" name="phone" datatype="m"  nullmsg="请输入手机号码" errormsg="手机号码有误" autocomplete="off">
+                    <input type="text" class="layui-input" placeholder="手机号" id="phone" name="phone" datatype="m"  nullmsg="请输入手机号码" errormsg="手机号码有误" autocomplete="off">
                 </div>
                 <div class="layui-form-item clearfix">
                     <input type="text" name="code" lay-verify="title" autocomplete="off" placeholder="短信验证码" class="layui-input codeInput fl">

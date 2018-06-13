@@ -33,9 +33,12 @@ class MessageController extends ServerBaseController
     public function index()
     {
         $data = SmallProgram::where(['companyid'=>$this->userInfo->companyid])->first();
-        if( $data && $data->token  )
+        if( $data )
         {
-            return view('server.message.index',compact('data'));
+            if($data->token)
+            {
+                return view('server.message.index',compact('data'));
+            }
         }
         $data = $this->message_business->setSmallProgram(['companyid'=>$this->userInfo->companyid]);
         return view('server.message.index',compact('data'));
