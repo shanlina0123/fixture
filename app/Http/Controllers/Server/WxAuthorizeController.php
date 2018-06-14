@@ -43,7 +43,6 @@ class WxAuthorizeController extends WxBaseController
             return redirect()->route('user-authorize')->with('msg','您已授权成功');
         }
         $code = $this->wx->preAuthCode($user->id);
-
         if( $code )
         {
             $url = $this->wx->QRCodeUrl( $code );

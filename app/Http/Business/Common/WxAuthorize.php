@@ -39,7 +39,6 @@ class WxAuthorize
         if( Cache::has('component_access_token') )
         {
             $access_token = Cache::get('component_access_token');
-
         }else
         {
 
