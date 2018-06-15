@@ -145,7 +145,8 @@ class CompanyBusiness extends ServerBase
                 //添加职位
                 $position = new Position();
                 $position->name = '管理员';
-                $position->status = 1;
+                $position->status = 0;
+                $position->roleid = 1;
                 $position->companyid = $obj->id;
                 $position->save();
                 //修改用户表

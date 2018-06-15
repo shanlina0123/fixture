@@ -21,6 +21,10 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
+/****
+ * Class DataBusiness
+ * @package App\Http\Business\Server
+ */
 class DataBusiness extends ServerBase
 {
     /***
@@ -55,19 +59,19 @@ class DataBusiness extends ServerBase
             switch($cateid*1){
                 //装修方式
                 case 1:
-                    $list= RenovationMode::where("companyid",$companyid)->get();
+                    $list= RenovationMode::where("companyid",$companyid)->where("status",1)->get();
                     break;
                 //装修风格
                 case 2:
-                    $list= RoomStyle::where("companyid",$companyid)->get();
+                    $list= RoomStyle::where("companyid",$companyid)->where("status",1)->get();
                     break;
                 //户型
                 case 3:
-                    $list= RoomType::where("companyid",$companyid)->get();
+                    $list= RoomType::where("companyid",$companyid)->where("status",1)->get();
                     break;
                 //职位
                 case 4:
-                    $list= Position::where("companyid",$companyid)->get();
+                    $list= Position::where("companyid",$companyid)->where("status",1)->get();
                     break;
             }
             return $list?$list->toArray():[];
@@ -196,6 +200,12 @@ class DataBusiness extends ServerBase
                     break;
                 //职位
                 case 4:
+                    //检查是否关联用户
+                    $positionExists=User::where("positionid",$id)->exists();
+                    if($positionExists>0)
+                    {
+                        responseData(\StatusCode::EXIST_NOT_DELETE, "职位下关联用户，请先修改用户对应的角色");
+                    }
                     $rs=Position::where("id",$id)->delete();
                     break;
             }

@@ -9,6 +9,7 @@
 namespace App\Http\Business\Server;
 
 use App\Http\Business\Common\ServerBase;
+use App\Http\Model\Data\Position;
 use App\Http\Model\Filter\FilterRole;
 use App\Http\Model\Site\Site;
 use App\Http\Model\Store\Store;
@@ -125,6 +126,23 @@ class AdminBusiness extends ServerBase
             }
 
             //业务处理
+
+            //获取职位id
+            $rsPData=Position::where("roleid",$roleData["id"])->first();
+            if(!$rsPData)
+            {
+                $position["name"]=$roleData["name"];
+                $position["companyid"]=$companyid;
+                $position["roleid"]=$roleData["id"];
+                $position["status"]=$roleData["id"]==1?0:1;
+                $position["created_at"]=date("Y-m-d H:i:s");
+                $rsP=Position::create($position);
+                $positionid=$rsP->id;
+            }else{
+                $positionid=$rsPData["id"];
+            }
+
+
             //整理新增数据
             $admin["uuid"] = create_uuid();
             $admin["username"] = $data["username"];
@@ -140,7 +158,9 @@ class AdminBusiness extends ServerBase
             $admin["companyid"] = $companyid;
             $admin["cityid"] = $storeData["cityid"];
             $admin["provinceid"] = $storeData["provinceid"];
+            $positionid?$admin["positionid"]=$positionid:"";
             $admin["created_at"] = date("Y-m-d H:i:s");
+
 
             //录入数据
             $rsAdmin = User::create($admin);
@@ -150,7 +170,7 @@ class AdminBusiness extends ServerBase
             if ($adminid !== false) {
                 DB::commit();
                 //删除缓存
-                Cache::tags(["Admin-PageList"])->flush();
+                Cache::tags(["Admin-PageList","Data-CateList"])->flush();
             } else {
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR, "新增失败");
@@ -183,8 +203,8 @@ class AdminBusiness extends ServerBase
             }
 
             //检查roleid是否存在
-            $roleExist = FilterRole::where("id", $data["roleid"])->exists();
-            if ($roleExist == 0) {
+            $roleData = FilterRole::where("id", $data["roleid"])->first();
+            if (!$roleData) {
                 responseData(\StatusCode::NOT_EXIST_ERROR, "角色值不存在");
             }
 
@@ -205,6 +225,21 @@ class AdminBusiness extends ServerBase
             }
 
             //整理修改数据
+            //获取职位id
+            $rsPData=Position::where("roleid",$roleData["id"])->first();
+            if(!$rsPData)
+            {
+                $position["name"]=$roleData["name"];
+                $position["companyid"]=$row["companyid"];
+                $position["roleid"]=$roleData["id"];
+                $position["status"]=$roleData["id"]==1?0:1;
+                $position["created_at"]=date("Y-m-d H:i:s");
+                $rsP=Position::create($position);
+                $positionid=$rsP->id;
+            }else{
+                $positionid=$rsPData["id"];
+            }
+
             $admin["username"] = $data["username"];
             $admin["nickname"] = $data["nickname"];
             $admin["roleid"] = $data["roleid"];
@@ -217,6 +252,7 @@ class AdminBusiness extends ServerBase
             $admin["isinvitationed"] = 0;
             $admin["status"] = $data["status"];
             $admin["password"] = optimizedSaltPwd($data['password'],config('configure.salt'));
+            $positionid?$admin["positionid"]=$positionid:"";
             $admin["updated_at"] = date("Y-m-d H:i:s");
             //修改Admin数据
             $rs = User::where("uuid", $uuid)->update($admin);
@@ -224,7 +260,7 @@ class AdminBusiness extends ServerBase
             if ($rs !== false) {
                 DB::commit();
                 //删除缓存
-                Cache::tags(["Admin-PageList"])->flush();
+                Cache::tags(["Admin-PageList","Data-CateList"])->flush();
 
                 //修改token
                 Cache::put('userToken' . $row['id'], ['token' => $row['token'], 'type' => 1], config('session.lifetime'));
