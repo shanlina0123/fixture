@@ -16,12 +16,14 @@ use Illuminate\Support\Facades\Log;
 class WxAuthorizeController extends WxBaseController
 {
     public $wx;
+    public $userInfo;
     public function __construct( WxAuthorize $wx )
     {
         $this->wx = $wx;
         //判断公司信息是否完善
         $this->middleware(function ($request, $next) {
             $userInfo = $request->session()->get('userInfo');
+            $this->userInfo = $userInfo;
             if( !$userInfo->companyid && $userInfo->isadmin == 1 )
             {
                 return redirect()->route('company-setting');
@@ -36,7 +38,7 @@ class WxAuthorizeController extends WxBaseController
      */
     public function WxAuthorize()
     {
-        $user = session('userInfo');
+        $user = $this->userInfo;
         $data = SmallProgram::where(['companyid'=>$user->companyid])->first();
         if( $data &&  $data->status != 1 )
         {
