@@ -126,14 +126,17 @@ class WxApiLogin
     {
         //当前访问的控制器和方法
         $current=getCurrentAction();
-        //当前访问控制器
-        $routeController = $current["controller"];
-        $routeMethod = $current["method"];
-
+        $routeController = $current["controller"];//当前访问的控制器
+        $routeMethod = $current["method"];//当前访问的方法
         //权限控制的控制器
         $confController=array_keys(config("apiallow"));
+        //权限控制的方法
+        $confUserAllow=config("apiallow.".$routeController.".user");
+        $confInvitationAllow=config("apiallow.".$routeController.".invitation");
+        //权限控制的视野栏目
+        $confFuncid=config("apiallow.".$routeController.".funcid");//菜单id,对应表filter_function中pid=0的菜单中主键id
 
-        //检查那些控制器需要进行权限验证
+        //检测是否需要进行权限控制
         if(in_array($routeController,$confController))
         {
             //检测PC用户是否有权限isadminafter=1 | 检查邀请的成员是否有权限isadminafter=0
@@ -143,28 +146,18 @@ class WxApiLogin
                 if($user->isadmin==0)
                 {
                     //访问权限
-                    if(!in_array($routeMethod,config("apiallow.SiteController.user")))
-                    {
-                        return  false;
-                    }
+                    if(!in_array($routeMethod,$confUserAllow)){return  false; }
                     //视野权限
-                    $islook=RoleFunction::where("roleid",$user["roleid"])->where("functionid",2)->value("islook");//权限视野
-                    if(!$islook)
-                    {
-                        return false;
-                    }
+                    $islook=RoleFunction::where("roleid",$user["roleid"])->where("functionid",$confFuncid)->value("islook");//权限视野
+                    if(!$islook) {return false;}
                     $user->islook=$islook;
                 }else{
                     //视野权限
                     $user->islook=1;//所有
                 }
-
             }else{
                 //邀请者，B端成员访问权限
-                if(!in_array($routeMethod,config("apiallow.SiteController.invitation")))
-                {
-                    return false;
-                }
+                if(!in_array($routeMethod,$confInvitationAllow)){return false;}
                 //视野权限
                 $user->islook=5;//自己 参与者的视野，看自己参与的
             }
