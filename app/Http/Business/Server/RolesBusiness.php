@@ -8,6 +8,7 @@
 
 namespace App\Http\Business\Server;
 use App\Http\Business\Common\ServerBase;
+use App\Http\Model\Data\Position;
 use App\Http\Model\Filter\FilterFunction;
 use App\Http\Model\Filter\FilterRole;
 use App\Http\Model\Filter\FilterRoleFunction;
@@ -67,12 +68,20 @@ class RolesBusiness extends ServerBase
             $role["created_at"]=date("Y-m-d H:i:s");
             //录入数据
             $rs=FilterRole::create($role);
+
+            //加入职位
+            $position["name"]=$data["name"];
+            $position["companyid"]=$companyid;
+            $position["roleid"]=$rs->id;
+            $position["created_at"]=date("Y-m-d H:i:s");
+            $rsP=Position::updateOrCreate(array('companyid' => $companyid,"roleid"=>$rs->id),$position);
+
             //结果处理
-            if($rs->id!==false)
+            if($rs->id!==false&&$rsP!==false)
             {
                 DB::commit();
                 //删除缓存
-                Cache::tags(["Filter-RolePageList","Filter-RoleFunctionList","Admin-RoleList"])->flush();
+                Cache::tags(["Filter-RolePageList","Filter-RoleFunctionList","Admin-RoleList","Data-CateList"])->flush();
             }else{
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR,"新增失败");
@@ -122,12 +131,20 @@ class RolesBusiness extends ServerBase
             $role["updated_at"]=date("Y-m-d H:i:s");
             //修改数据
             $rs=FilterRole::where("uuid",$uuid)->update($role);
+
+            //修改职位
+            $position["name"]=$data["name"];
+            $position["companyid"]=$roleData["companyid"];
+            $position["roleid"]=$roleData["id"];
+            $position["created_at"]=date("Y-m-d H:i:s");
+            $rsP=Position::updateOrCreate(array('companyid' =>$roleData["companyid"],"roleid"=>$roleData["id"]),$position);
+
             //结果处理
-            if($rs!==false)
+            if($rs!==false&&$rsP!==false)
             {
                 DB::commit();
                 //删除缓存
-                Cache::tags(["Filter-RolePageList","Filter-RoleFunctionList","Admin-RoleList"])->flush();
+                Cache::tags(["Filter-RolePageList","Filter-RoleFunctionList","Admin-RoleList","Data-CateList"])->flush();
             }else{
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR,"修改失败");
@@ -175,13 +192,18 @@ class RolesBusiness extends ServerBase
             //删除数据
             $rs=FilterRole::where("uuid",$uuid)->delete();
 
+            //删除角色功能
             $rsF=FilterRoleFunction::where("roleid",$roleid)->delete();
+
+            //删除角色职位
+            $rsP=Position::where("roleid",$roleid)->delete();
+
             //结果处理
-            if($rs!==false&&$rsF!==false)
+            if($rs!==false&&$rsF!==false&&$rsP!==false)
             {
                 DB::commit();
                 //删除缓存
-                Cache::tags(["Filter-RolePageList","Filter-RoleFunctionList","Admin-RoleList"])->flush();
+                Cache::tags(["Filter-RolePageList","Filter-RoleFunctionList","Admin-RoleList","Data-CateList"])->flush();
             }else{
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR,"删除失败");
