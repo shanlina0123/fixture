@@ -2,7 +2,8 @@
 SQLyog 企业版 - MySQL GUI v8.14 
 MySQL - 5.5.5-10.1.30-MariaDB : Database - xxs_fixture
 *********************************************************************
-*/
+*/
+
 
 /*!40101 SET NAMES utf8 */;
 
@@ -12,9 +13,9 @@ MySQL - 5.5.5-10.1.30-MariaDB : Database - xxs_fixture
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`xxs_fixture` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`fixture` /*!40100 DEFAULT CHARACTER SET utf8 */;
 
-USE `xxs_fixture`;
+USE `fixture`;
 
 /*Table structure for table `fixture_activity` */
 
@@ -421,6 +422,7 @@ CREATE TABLE `fixture_data_position` (
   `name` varchar(255) DEFAULT NULL COMMENT '名称',
   `status` tinyint(1) DEFAULT '1' COMMENT '状态 默认1 ，1启用 0禁用',
   `companyid` int(11) DEFAULT NULL COMMENT '公司id',
+  `roleid` int(11) DEFAULT NULL COMMENT '角色id',
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   `updated_at` date DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)

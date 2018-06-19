@@ -60,5 +60,6 @@ class Kernel extends HttpKernel
         'checkUser' => \App\Http\Middleware\UserCheck::class,
         'checkAuth' => \App\Http\Middleware\AuthCheck::class,
         'ApiCheck' => \App\Http\Middleware\ApiCheck::class,
+        'ApiAuthCheck' => \App\Http\Middleware\ApiAuthCheck::class,
     ];
 }

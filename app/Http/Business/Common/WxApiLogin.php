@@ -6,10 +6,10 @@
  * Time: 10:10
  */
 namespace App\Http\Business\Common;
-use App\Http\Model\Filter\FilterFunction;
+
+use App\Http\Model\Filter\FilterRoleFunction;
 use App\Http\Model\User\User;
 use App\Http\Model\User\UserToken;
-use App\Model\Roles\RoleFunction;
 use Illuminate\Support\Facades\Cache;
 class WxApiLogin
 {
@@ -43,11 +43,17 @@ class WxApiLogin
             {
                 $uToken = new UserToken();
                 $uToken->uuid = create_uuid();
+                $uToken->type = $res->type;
                 $uToken->token = str_random(60);
                 $uToken->expiration = time()+17280000;//200天
                 $uToken->userid = $res->id;
                 $uToken->save();
             }
+
+            $res->nickname = $nickname;
+            $res->faceimg = $faceimg;
+            $res->save();
+
             $res->Authorization = $uToken->token;
             $res->expiration = $uToken->expiration;
             return $res;
@@ -68,6 +74,7 @@ class WxApiLogin
             {
                 $uToken = new UserToken();
                 $uToken->uuid = create_uuid();
+                $uToken->type = $res->type;
                 $uToken->token = str_random(60);
                 $uToken->expiration = time()+17280000;//200天
                 $uToken->userid = $user->id;
@@ -148,7 +155,7 @@ class WxApiLogin
                     //访问权限
                     if(!in_array($routeMethod,$confUserAllow)){return  false; }
                     //视野权限
-                    $islook=RoleFunction::where("roleid",$user["roleid"])->where("functionid",$confFuncid)->value("islook");//权限视野
+                    $islook=FilterRoleFunction::where("roleid",$user->roleid)->where("functionid",$confFuncid)->value("islook");//权限视野
                     if(!$islook) {return false;}
                     $user->islook=$islook;
                 }else{
@@ -161,9 +168,10 @@ class WxApiLogin
                 //视野权限
                 $user->islook=5;//自己 参与者的视野，看自己参与的
             }
-        }else{
-            //视野权限
-            $user->islook=0;//无视野，其他模块正常显示，不进行权限操作
+        }else
+        {
+            //视野权限 无视野，其他模块正常显示，不进行权限操作
+            $user->islook=0;//
         }
         return $user;
 

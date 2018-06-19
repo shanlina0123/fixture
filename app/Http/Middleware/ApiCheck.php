@@ -20,6 +20,7 @@ class ApiCheck
             $res = UserToken::where('token',$Authorization)->with('tokenToUser')->first();
             if( $res )
             {
+                $res->userType = $res->tokenToUser->type;
                 $request->attributes->add(['apiUser'=>$res]);//添加api用户信息
                 if( $res->expiration <= time() )
                 {

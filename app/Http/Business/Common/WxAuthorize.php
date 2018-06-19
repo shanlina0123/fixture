@@ -437,11 +437,32 @@ class WxAuthorize
             $res->errmsg = $msg;
             if( $res->save() )
             {
+                $this->wxaRelease( $appid );
                 return true;
             }
             return false;
         }
         return false;
+    }
+
+    /**
+     * @param $appid
+     * 发布审核的代码
+     */
+    public function wxaRelease( $appid )
+    {
+        $token = $this->getUserAccessToken($appid);
+        $url = 'https://api.weixin.qq.com/wxa/release?access_token='.$token;
+        $post = [];
+        $data = wxPostCurl( $url, $post );
+        $data = json_decode($data,true);
+        if( $data['errcode'] == 0 )
+        {
+            //更新数据库
+            $res = SmallProgram::where('authorizer_appid',$appid)->first();
+            $res->sourcecode = 3;//发布上线
+            $res->save();
+        }
     }
 
     /**

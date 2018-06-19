@@ -133,9 +133,8 @@ class WxTicketController extends WxBaseController
             $nonce = $inputs['nonce'];
             $token = config('wxconfig.token');
             $encodingAesKey = config('wxconfig.encodingAesKey');
-            //$appid = config('wxconfig.appId');
-
-            $pc = new \WXBizMsgCrypt($token, $encodingAesKey, $appid);
+            $wxappid = config('wxconfig.appId');
+            $pc = new \WXBizMsgCrypt($token, $encodingAesKey, $wxappid);
             $errCode = $pc->decryptMsg($msg_sign, $timeStamp, $nonce, $from_xml, $msg);
             Log::error($errCode);
             if ($errCode == 0) {
@@ -147,7 +146,7 @@ class WxTicketController extends WxBaseController
                 {
 
                     $toUsername = trim($msgObj->ToUserName);
-                    if ($toUsername == 'gh_3c884a361561') {
+                    if ($toUsername == 'gh_8dad206e9538') {
                         $content = 'TESTCOMPONENT_MSG_TYPE_TEXT_callback';
                         Log::error('110');
                         echo $this->responseText($msgObj, $content);
@@ -158,7 +157,7 @@ class WxTicketController extends WxBaseController
                 if (strpos($content, 'QUERY_AUTH_CODE') !== false)
                 {
                     $toUsername = trim($msgObj->ToUserName);
-                    if ($toUsername == 'gh_3c884a361561') {
+                    if ($toUsername == 'gh_8dad206e9538') {
                         $query_auth_code = str_replace('QUERY_AUTH_CODE:', '', $content);
                         $authorizer_access_token = (new WxAuthorize())->getAccessToken();
                         $content = "{$query_auth_code}_from_api";

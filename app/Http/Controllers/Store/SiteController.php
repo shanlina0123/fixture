@@ -75,18 +75,56 @@ class SiteController extends StoreBaseController
     public function siteList()
     {
         $data = trimValue( $this->request->all() );
+        $user = $this->apiUser;
+        //判断用户信息如果是B端只显示当前店铺的动态
+        if( $user->type == 0 )
+        {
+            if( $user->isinvitationed != 1 )
+            {
+                //B端用户
+                switch ( (int)$user->islook )
+                {
+                    case 1:
+                        //全部
+                        break;
+                    case 2:
+                        //城市
+                        $where['cityid'] = $user->cityid;
+                        break;
+                    case 3:
+                        //门店
+                        $where['storeid'] = $user->storeid;
+                        break;
+                }
+            }
+        }else
+        {
+            responseData(\StatusCode::ERROR,'工地列表',[]);
+        }
+        $where['companyid'] = $this->apiUser->companyid;
+        $where['isfinish'] = $data['isfinish'];
+        $res = $this->site->siteList( $where, $data );
+        responseData(\StatusCode::SUCCESS,'工地列表',$res);
+    }
+
+    /**
+     * 工地检索
+     */
+    public function searchSiteList()
+    {
+        $data = trimValue( $this->request->all() );
         $data['companyid'] = $this->apiUser->companyid;
         $data['storeid'] = $this->apiUser->storeid;
         $validator = Validator::make(
             $data,
             [
-            'companyid'=>'bail|required|numeric',//公司
-            'storeid'=>'bail|required|numeric',//门店
+                'companyid'=>'bail|required',//公司
+                'storeid'=>'bail|required',//门店
+                'isfinish'=>'bail|required'
             ],[
                 'companyid.required'=>'公司信息未获取到',
-                'companyid.numeric'=>'公司信息数据类型不正确',
-                'storeid.numeric'=>'门店信息数据类型不正确',
                 'storeid.required'=>'门店信息未获取到',
+                'isfinish'=>'项目未获取到'
             ]
         );
         if ($validator->fails())
@@ -95,7 +133,7 @@ class SiteController extends StoreBaseController
             responseData(\StatusCode::CHECK_FORM,'验证失败','',$messages);
         }
         $res = $this->site->siteList( $data );
-        responseData(\StatusCode::SUCCESS,'工地列表',$res);
+        responseData(\StatusCode::SUCCESS,'工地检索列表',$res);
     }
 
 

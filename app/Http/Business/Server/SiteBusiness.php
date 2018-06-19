@@ -302,6 +302,7 @@ class SiteBusiness extends ServerBase
             $dynamic->uuid = create_uuid();
             $dynamic->companyid = $data['companyid'];
             $dynamic->storeid = $data['storeid'];
+            $dynamic->cityid = $data['cityid'];
             $dynamic->sitetid = $site->id;
             $dynamic->createuserid = $data['createuserid'];
             $dynamic->content = str_replace('【工地名称】',$data['name'],config('template.13'));

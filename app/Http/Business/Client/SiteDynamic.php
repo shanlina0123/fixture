@@ -11,20 +11,29 @@ namespace App\Http\Business\Client;
 
 use App\Http\Business\Common\ClientBase;
 use App\Http\Model\Dynamic\Dynamic;
+use App\Http\Model\Dynamic\DynamicComment;
+use App\Http\Model\Dynamic\DynamicImages;
+use App\Http\Model\Dynamic\DynamicStatistics;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class SiteDynamic extends ClientBase
 {
     /**
      * 动态列表
      */
-    public function DynamicList( $where, $request )
+    public function DynamicList( $where, $request, $user )
     {
         //Cache::flush();
         $tag = 'DynamicList'.$where['companyid'];
-        $tagWhere = $request->input('page').json_encode($where,JSON_FORCE_OBJECT);
+        if( $user->isinvitationed == 1 )
+        {
+            //参与者的动态
+        }
+        $tagWhere = $request->input('page').implode('',$where);
         $value = Cache::tags($tag)->remember( $tag.$tagWhere,config('configure.sCache'), function() use( $where, $request ){
             $sql = Dynamic::where( $where )->orderBy('id','desc')->with('dynamicToImages');//关联图片
+
                  //关联用户
                 $sql->with(['dynamicToUser'=>function( $query ) use($where){
                     //关联用户表的职位
@@ -45,5 +54,43 @@ class SiteDynamic extends ClientBase
             return $sql->paginate(config('configure.sPage'));
         });
         return $value;
+    }
+
+    /**
+     * 删除动态
+     */
+    public function destroyDynamic( $where )
+    {
+        try{
+            DB::beginTransaction();
+            //查询
+            $dynamic = Dynamic::where($where)->first();
+            if( $dynamic == false )
+            {
+                DB::commit();
+                return false;
+            }
+            //删除统计
+            DynamicStatistics::where(['dynamicid'=>$dynamic->id])->delete();
+            //删除评论
+            DynamicComment::where(['dynamicid'=>$dynamic->id])->delete();
+            //删除动态图片
+            $img = DynamicImages::where('dynamicid',$dynamic->id)->pluck('ossurl');
+            if( count($img) )
+            {
+                foreach( $img as $row )
+                {
+                    (new \Upload())->delImg($row);
+                }
+            }
+            DynamicImages::where('dynamicid',$dynamic->id)->delete();
+            $dynamic->delete();
+            DB::commit();
+            return true;
+        }catch ( \Exception $e )
+        {
+            DB::rollBack();
+            return false;
+        }
     }
 }

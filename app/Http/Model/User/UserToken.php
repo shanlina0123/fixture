@@ -9,7 +9,7 @@ class UserToken extends Model
     protected $table = 'user_token';
     public $timestamps = true;
     protected $hidden = [
-        'created_at','updated_at','password'
+        'created_at','updated_at','password','type'
     ];
 
     /**

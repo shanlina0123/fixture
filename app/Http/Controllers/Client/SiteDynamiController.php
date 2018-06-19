@@ -9,6 +9,8 @@
 namespace App\Http\Controllers\Client;
 use App\Http\Business\Client\SiteDynamic;
 use App\Http\Controllers\Common\ClientBaseController;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Validator;
 class SiteDynamiController extends ClientBaseController
 {
     public $dynamic;
@@ -29,21 +31,35 @@ class SiteDynamiController extends ClientBaseController
         //判断用户信息如果是B端只显示当前店铺的动态
         if( $user->type == 0 )
         {
-            //B端用户
-            //根据权限显示
-            $where['storeid'] = $this->apiUser->storeid;
-
+            if( $user->isinvitationed != 1 )
+            {
+                //B端用户
+                switch ( (int)$user->islook )
+                {
+                    case 1:
+                        //全部
+                        break;
+                    case 2:
+                        //城市
+                        $where['cityid'] = $user->cityid;
+                        break;
+                    case 3:
+                        //门店
+                        $where['storeid'] = $user->storeid;
+                        break;
+                }
+            }
         }else
         {
-            //C端用户
+            //C端用户全部展示
             if(  $sitetid )
             {
                 //有工地ID
-                $where['companyid'] = $this->apiUser->companyid;
+                $where['sitetid'] = $sitetid;
             }
         }
         $where['companyid'] = $this->apiUser->companyid;
-        $res = $this->dynamic->DynamicList( $where, $this->request );
+        $res = $this->dynamic->DynamicList( $where, $this->request,$user );
         responseData(\StatusCode::SUCCESS,'动态信息',$res);
     }
 
@@ -52,6 +68,33 @@ class SiteDynamiController extends ClientBaseController
      */
     public function destroyDynamic()
     {
-
+        $data = $this->request->all();
+        $user = $this->apiUser;
+        $validator = Validator::make(
+            $data,
+            [
+                'id' => 'bail|required',
+            ], [
+                'id.required' => 'ID不能为空',
+            ]
+        );
+        if ($validator->fails()) {
+            $messages = $validator->errors()->first();
+            responseData(\StatusCode::CHECK_FORM, '验证失败', '', $messages);
+        }
+        $where['id'] = $data['id'];
+        $where['companyid'] = $user->companyid;
+        if( $user->isadmin != 1 )
+        {
+            $where['createuserid'] = $user->id;
+            $where['storeid'] = $user->storeid;
+        }
+        $res = $this->dynamic->destroyDynamic( $where );
+        if( $res )
+        {
+            Cache::tags(['DynamicList'.$user->companyid])->flush();
+            responseData(\StatusCode::SUCCESS,'删除成功');
+        }
+        responseData(\StatusCode::ERROR,'删除失败',$res);
     }
 }
