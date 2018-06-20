@@ -87,212 +87,125 @@ class WxTicketController extends WxBaseController
             exit("success");
         } else
         {
-            $this->logResult('/error.log','解密后失败：'.$errCode);
-            echo "false";
+            exit("fail");
         }
     }
-
-    public function logResult( $path, $data )
-    {
-        file_put_contents($path, '['.date('Y-m-d :h:i:s',time()).']'.$data."\r\n",FILE_APPEND);
-    }
-
-
     /**
      * 消息与事件接收URL
      */
-    public function message( $appid )
+    public function message( Request $request,$appid )
     {
         // 每个授权小程序传来的加密消息
+
+        /**
+         * xml参数
+         */
         $postStr = file_get_contents("php://input");
         if (!empty($postStr))
         {
-            $postObj = simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
-            $toUserName = trim($postObj->ToUserName);
-            $encrypt = trim($postObj->Encrypt);
-            $format = "<xml><ToUserName><![CDATA[{$toUserName}]]></ToUserName><Encrypt><![CDATA[%s]]></Encrypt></xml>";
-            $from_xml = sprintf($format, $encrypt);
-            $inputs = array(
-                'encrypt_type' => '',
-                'timestamp' => '',
-                'nonce' => '',
-                'msg_signature' => '',
-                'signature' => ''
-            );
-            foreach ($inputs as $key => $value) {
-                $tmp = $_REQUEST[$key];
-                if (!empty($tmp)){
-                    $inputs[$key] = $tmp;
-                }
-            }
-
-            // 第三方收到公众号平台发送的消息
-            $msg = '';
-            $timeStamp = $inputs['timestamp'];
-            $msg_sign = $inputs['msg_signature'];
-            $nonce = $inputs['nonce'];
-            $token = config('wxconfig.token');
             $encodingAesKey = config('wxconfig.encodingAesKey');
-            $wxappid = config('wxconfig.appId');
-            $pc = new \WXBizMsgCrypt($token, $encodingAesKey, $wxappid);
-            $errCode = $pc->decryptMsg($msg_sign, $timeStamp, $nonce, $from_xml, $msg);
-            Log::error($errCode);
-            if ($errCode == 0) {
-                $msgObj = simplexml_load_string($msg, 'SimpleXMLElement', LIBXML_NOCDATA);
-                $content = trim($msgObj->Content);
-                Log::error(trim($msgObj->ToUserName));
-                //第三方平台全网发布检测普通文本消息测试
-                if (strtolower($msgObj->MsgType) == 'text' && $content == 'TESTCOMPONENT_MSG_TYPE_TEXT')
-                {
+            $token = config('wxconfig.token');
+            $appId = config('wxconfig.appId');
 
-                    $toUsername = trim($msgObj->ToUserName);
-                    if ($toUsername == 'gh_8dad206e9538') {
-                        $content = 'TESTCOMPONENT_MSG_TYPE_TEXT_callback';
-                        Log::error('110');
-                        echo $this->responseText($msgObj, $content);
+            //接收的参数
+            $data = $request->all();
+            $timeStamp    = $data['timestamp'];
+            $nonce        = $data['nonce'];
+            $msg_sign     = $data['msg_signature'];
+            $encrypt_type = $data['encrypt_type'];
 
-                    }
-                }
-                //第三方平台全网发布检测返回api文本消息测试
-                if (strpos($content, 'QUERY_AUTH_CODE') !== false)
+            //解密
+            $pc = new \WXBizMsgCrypt( $token, $encodingAesKey, $appId );
+            $msg = '';
+            $errCode = $pc->decryptMsg($msg_sign, $timeStamp, $nonce, $postStr, $msg);
+            Log::error('======errCode======'.$errCode);
+            if ($errCode == 0)
+            {
+                $data = $this->xmlToArr( $msg );
+                $fromUsername = $data['FromUserName'];
+                $toUsername = $data['ToUserName'];
+                $msgType = trim($data['MsgType']);
+                //用户信息
+                Log::error('======fromUsername======'.$fromUsername);
+                Log::error('======msgType======'.$msgType);
+                //默认xml数据包
+                $sendtime = time();
+                $sendtextTpl = "<xml>
+                                <ToUserName><![CDATA[%s]]></ToUserName>
+                                <FromUserName><![CDATA[%s]]></FromUserName>
+                                <CreateTime>%s</CreateTime>
+                                <MsgType><![CDATA[%s]]></MsgType>
+                                <Content><![CDATA[%s]]></Content>
+                                <FuncFlag>0</FuncFlag>
+                                </xml>";
+                switch($msgType)
                 {
-                    $toUsername = trim($msgObj->ToUserName);
-                    if ($toUsername == 'gh_8dad206e9538') {
-                        $query_auth_code = str_replace('QUERY_AUTH_CODE:', '', $content);
-                        $authorizer_access_token = (new WxAuthorize())->getAccessToken();
-                        $content = "{$query_auth_code}_from_api";
-                        Log::error('222');
-                        echo $this->sendServiceText($msgObj, $content, $authorizer_access_token);
-
-                    }
-                }
-                //代码审核
-                if (strtolower($msgObj->MsgType) == 'weapp_audit_success' )
-                {
-                    $sourcecode = 1;
-                    $msg = '审核通过';
-                    $res = $this->wxAuthorize->wxExamine($appid,$sourcecode,$msg);
-                    if( $res )  echo 'success';
-                }
-
-                if (strtolower($msgObj->MsgType) == 'weapp_audit_fail' )
-                {
-                    $sourcecode = 0;
-                    $msg = $msgObj->Reason;
-                    $res = $this->wxAuthorize->wxExamine($appid,$sourcecode,$msg);
-                    if( $res )  echo 'success';
+                    case 'event'://事件=
+                        $event = trim($data['Event']);
+                        //全网发布
+                        if($toUsername == "gh_8dad206e9538")
+                        {
+                            $sendMsgType = "text";
+                            $sendContentStr = $event."from_callback";
+                            $sendResultStr = sprintf($sendtextTpl, $fromUsername, $toUsername, $sendtime, $sendMsgType, $sendContentStr);
+                            $encryptMsg = $pc->encryptMsg($sendResultStr, $timeStamp, $nonce, $encryptMsg);
+                            return $encryptMsg;
+                        }
+                        break;
+                    case 'text':
+                        $keyword = trim($data['Content']);
+                        //文本信息
+                        Log::error('======keyword ======'.$keyword);
+                        //全网发布 微信模推送给第三方平台方
+                        if( $toUsername == "gh_8dad206e9538" && $keyword == "TESTCOMPONENT_MSG_TYPE_TEXT" )
+                        {
+                            $sendMsgType = "text";
+                            $sendContentStr = "TESTCOMPONENT_MSG_TYPE_TEXT_callback";
+                            $sendResultStr = sprintf($sendtextTpl, $fromUsername, $toUsername, $sendtime, $sendMsgType, $sendContentStr);
+                            $encryptMsg = $pc->encryptMsg($sendResultStr, $timeStamp, $nonce, $encryptMsg);
+                            return $encryptMsg;
+                        }
+                        //全网发布
+                        if($toUsername == "gh_8dad206e9538" && strpos($keyword, "QUERY_AUTH_CODE") > -1)
+                        {
+                            $code = str_replace("QUERY_AUTH_CODE:", "", $keyword);
+                            $sendcus['content'] = $code."_from_api";
+                            $accToken  = $this->getAccessToken($code);
+                            if( $accToken )
+                            {
+                                $url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=".$accToken;
+                                $curlPost['touser'] = $fromUsername;
+                                $curlPost['msgtype'] = "text";
+                                $curlPost['text']['content'] = $code."_from_api";
+                                return wxPostCurl($url, $curlPost);
+                            }
+                        }
+                        break;
+                    case 'weapp_audit_success':
+                        $sourcecode = 1;
+                        $msg = '审核通过';
+                        $res = $this->wxAuthorize->wxExamine($appid,$sourcecode,$msg);
+                        if( $res )
+                        {
+                            exit("success");
+                        }
+                        break;
+                    case 'weapp_audit_fail':
+                        $sourcecode = 0;
+                        $msg = $data['Reason'];
+                        $res = $this->wxAuthorize->wxExamine($appid,$sourcecode,$msg);
+                        if( $res )
+                        {
+                            exit("success");
+                        }
+                        break;
                 }
             }
+
         }
-        echo "success";
+        Log::error('======postr没有数据包======');
+        exit("fail");
     }
-
-    /**
-     * 自动回复文本
-     */
-    public function responseText($object = '', $content = '')
-    {
-        if (!isset($content) || empty($content)){
-            return "";
-        }
-        $xmlTpl = "<xml>
-                    <ToUserName><![CDATA[%s]]></ToUserName>
-                    <FromUserName><![CDATA[%s]]></FromUserName>
-                    <CreateTime>%s</CreateTime>
-                    <MsgType><![CDATA[text]]></MsgType>
-                    <Content><![CDATA[%s]]></Content>
-                    </xml>";
-        $result = sprintf($xmlTpl, $object->FromUserName, $object->ToUserName, time(), $content);
-
-        return $result;
-    }
-
-    /**
-     * 发送文本消息
-     */
-    public function sendServiceText($object = '', $content = '', $access_token = '')
-    {
-        /* 获得openId值 */
-        $openid = (string)$object->FromUserName;
-        $post_data = array(
-            'touser'    => $openid,
-            'msgtype'   => 'text',
-            'text'      => array(
-                'content'   => $content
-            )
-        );
-        $this->sendMessages($post_data, $access_token);
-    }
-
-    /**
-     * 发送消息-客服消息
-     */
-    public function sendMessages($post_data = array(), $access_token = '')
-    {
-        $url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token={$access_token}";
-        $this->httpRequest($url, 'POST', json_encode($post_data, JSON_UNESCAPED_UNICODE));
-    }
-
-    /**
-     * CURL请求
-     * @param $url 请求url地址
-     * @param $method 请求方法 get post
-     * @param null $postfields post数据数组
-     * @param array $headers 请求header信息
-     * @param bool|false $debug  调试开启 默认false
-     * @return mixed
-     */
-    public function httpRequest($url, $method="GET", $postfields = null, $headers = array(), $debug = false) {
-        $method = strtoupper($method);
-        $ci = curl_init();
-        /* Curl settings */
-        curl_setopt($ci, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
-        curl_setopt($ci, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:34.0) Gecko/20100101 Firefox/34.0");
-        curl_setopt($ci, CURLOPT_CONNECTTIMEOUT, 60); /* 在发起连接前等待的时间，如果设置为0，则无限等待 */
-        curl_setopt($ci, CURLOPT_TIMEOUT, 7); /* 设置cURL允许执行的最长秒数 */
-        curl_setopt($ci, CURLOPT_RETURNTRANSFER, true);
-        switch ($method) {
-            case "POST":
-                curl_setopt($ci, CURLOPT_POST, true);
-                if (!empty($postfields)) {
-                    $tmpdatastr = is_array($postfields) ? http_build_query($postfields) : $postfields;
-                    curl_setopt($ci, CURLOPT_POSTFIELDS, $tmpdatastr);
-                }
-                break;
-            default:
-                curl_setopt($ci, CURLOPT_CUSTOMREQUEST, $method); /* //设置请求方式 */
-                break;
-        }
-        $ssl = preg_match('/^https:\/\//i',$url) ? TRUE : FALSE;
-        curl_setopt($ci, CURLOPT_URL, $url);
-        if($ssl){
-            curl_setopt($ci, CURLOPT_SSL_VERIFYPEER, FALSE); // https请求 不验证证书和hosts
-            curl_setopt($ci, CURLOPT_SSL_VERIFYHOST, FALSE); // 不从证书中检查SSL加密算法是否存在
-        }
-        //curl_setopt($ci, CURLOPT_HEADER, true); /*启用时会将头文件的信息作为数据流输出*/
-        curl_setopt($ci, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($ci, CURLOPT_MAXREDIRS, 2);/*指定最多的HTTP重定向的数量，这个选项是和CURLOPT_FOLLOWLOCATION一起使用的*/
-        curl_setopt($ci, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ci, CURLINFO_HEADER_OUT, true);
-        /*curl_setopt($ci, CURLOPT_COOKIE, $Cookiestr); * *COOKIE带过去** */
-        $response = curl_exec($ci);
-        $requestinfo = curl_getinfo($ci);
-        $http_code = curl_getinfo($ci, CURLINFO_HTTP_CODE);
-        if ($debug) {
-            echo "=====post data======\r\n";
-            var_dump($postfields);
-            echo "=====info===== \r\n";
-            print_r($requestinfo);
-            echo "=====response=====\r\n";
-            print_r($response);
-        }
-        curl_close($ci);
-        return $response;
-        //return array($http_code, $response,$requestinfo);
-    }
-
-
-
 
     /**
      * @param $appid
@@ -305,5 +218,43 @@ class WxTicketController extends WxBaseController
     }
 
 
+    /**
+     * @param $xml
+     * @return mixed|\SimpleXMLElement
+     * 将xml解析成数组
+     */
+    public function xmlToArr($xml) {
+        $res = @simplexml_load_string ( $xml, NULL, LIBXML_NOCDATA );
+        $res = json_decode ( json_encode ( $res ), true );
+        return $res;
+    }
+
+
+    /**
+     * 换取token
+     */
+    public function getAccessToken( $code )
+    {
+        $component_access_token = $this->wxAuthorize->getAccessToken();
+        $url = 'https://api.weixin.qq.com/cgi-bin/component/api_query_auth?component_access_token='.$component_access_token;
+        $post['component_appid'] = config('wxconfig.appId');
+        $post['authorization_code'] = $code;
+        $data = wxPostCurl( $url, $post );
+        if( $data )
+        {
+            $data = json_decode($data,true);
+            if( array_has( $data,'authorization_info') )
+            {
+                $access_token = $data['authorization_info']['authorizer_access_token'];
+            }else
+            {
+                $access_token = '';
+            }
+        }else
+        {
+            $access_token = '';
+        }
+        return $access_token;
+    }
 
 }
