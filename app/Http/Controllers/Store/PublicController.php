@@ -27,4 +27,13 @@ class PublicController extends StoreBaseController
             responseData(\StatusCode::ERROR,'上传失败');
         }
     }
+
+    /**
+     * @param $name
+     * 删除临时图片
+     */
+    public function delImg( $name )
+    {
+        @unlink(public_path().'/temp/'.$name);
+    }
 }

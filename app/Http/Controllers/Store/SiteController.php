@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Http\Controllers\Store;
+
 use App\Http\Business\Store\SiteBusiness;
+use App\Http\Business\Server\SiteBusiness as ServerSite;
 use App\Http\Controllers\Common\StoreBaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -406,5 +408,61 @@ class SiteController extends StoreBaseController
         }
         $res = $this->site->siteDynamic( $data );
         responseData(\StatusCode::SUCCESS,'工地详情动态',$res);
+    }
+
+    /**
+     * 更新工地动态
+     */
+    public function siteRenew()
+    {
+        $data = trimValue( $this->request->all() );
+        $validator = Validator::make(
+            $data,
+            [
+                'uuid'=>'bail|required',
+                'sitestagename'=>'bail|required',
+                'stagetagid'=>'bail|required',
+                'content'=>'bail|required',
+            ],[
+                'uuid.required'=>'uuid不能为空',
+                'sitestagename.required'=>'请设置阶段',
+                'stagetagid.required'=>'请设置阶段',
+                'content.required'=>'请填写内容',
+            ]
+        );
+        if ($validator->fails())
+        {
+            $messages = $validator->errors()->first();
+            responseData(\StatusCode::CHECK_FORM,'验证失败','',$messages);
+        }
+
+        $data['companyid'] = $this->apiUser->companyid;
+        $data['createuserid'] = $this->apiUser->id;
+        $siteMode = new ServerSite();
+        $res = $siteMode->saveSiteRenew($data, $data['uuid']);
+        if ($res->status == 1)
+        {
+            Cache::tags(['site'.$data['companyid'], 'DynamicList'.$data['companyid']])->flush();
+            responseData(\StatusCode::SUCCESS,'更新成功');
+        }else
+        {
+            responseData(\StatusCode::ERROR,'更新失败');
+        }
+    }
+
+    /**
+     *  更新工地动态数据
+     */
+    public function siteRenewInfo()
+    {
+        $companyid = $this->apiUser->companyid;
+        $uuid = trim($this->request->input('uuid'));
+        $siteMode = new ServerSite();
+        $res = $siteMode->getSiteRenew($companyid, $uuid);
+        if( $res->status == 1 )
+        {
+            responseData(\StatusCode::SUCCESS,$res->msg,$res->tage);
+        }
+        responseData(\StatusCode::ERROR,$res->msg);
     }
 }

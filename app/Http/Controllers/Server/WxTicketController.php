@@ -142,6 +142,7 @@ class WxTicketController extends WxBaseController
                 {
                     case 'event'://事件=
                         $event = trim($data['Event']);
+                        Log::error('======event======'.$event);
                         //全网发布
                         if($toUsername == "gh_8dad206e9538")
                         {
@@ -150,6 +151,29 @@ class WxTicketController extends WxBaseController
                             $sendResultStr = sprintf($sendtextTpl, $fromUsername, $toUsername, $sendtime, $sendMsgType, $sendContentStr);
                             $encryptMsg = $pc->encryptMsg($sendResultStr, $timeStamp, $nonce, $encryptMsg);
                             return $encryptMsg;
+                        }
+
+                        //代码审核结果
+                        if( $event == 'weapp_audit_success' )
+                        {
+                            $sourcecode = 1;
+                            $msg = '审核通过';
+                            $res = $this->wxAuthorize->wxExamine($appid,$sourcecode,$msg);
+                            if( $res )
+                            {
+                                exit("success");
+                            }
+                        }
+
+                        if( $event == 'weapp_audit_fail' )
+                        {
+                            $sourcecode = 0;
+                            $msg = $data['Reason'];
+                            $res = $this->wxAuthorize->wxExamine($appid,$sourcecode,$msg);
+                            if( $res )
+                            {
+                                exit("success");
+                            }
                         }
                         break;
                     case 'text':
@@ -179,24 +203,6 @@ class WxTicketController extends WxBaseController
                                 $curlPost['text']['content'] = $code."_from_api";
                                 return wxPostCurl($url, $curlPost);
                             }
-                        }
-                        break;
-                    case 'weapp_audit_success':
-                        $sourcecode = 1;
-                        $msg = '审核通过';
-                        $res = $this->wxAuthorize->wxExamine($appid,$sourcecode,$msg);
-                        if( $res )
-                        {
-                            exit("success");
-                        }
-                        break;
-                    case 'weapp_audit_fail':
-                        $sourcecode = 0;
-                        $msg = $data['Reason'];
-                        $res = $this->wxAuthorize->wxExamine($appid,$sourcecode,$msg);
-                        if( $res )
-                        {
-                            exit("success");
                         }
                         break;
                 }

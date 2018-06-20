@@ -28,24 +28,28 @@ Route::group(['middleware'=>'ApiCheck'], function () {
          * --------------------------
          */
         Route::group(['namespace' => 'Store'], function () {
-        //工地
-        Route::post('site/store', 'SiteController@store');//发布工地
-        Route::get('site/site-list', 'SiteController@siteList');//工地列表
-        Route::delete('site/site-destroy', 'SiteController@siteDestroy');//工地删除
-        Route::put('site/is-open', 'SiteController@isOpen');//工地是否公开
-        Route::put('site/is-finish', 'SiteController@isFinish');//工地是否完工
-        Route::post('site/edit', 'SiteController@siteEdit');//工地修改数据
-        Route::put('site/update', 'SiteController@siteUpdate');//工地修改数据
-        Route::get('site/info', 'SiteController@siteInfo');//工地详情
-        Route::get('site/dynamic', 'SiteController@siteDynamic');//工地详情动态
-
-        //门店
-        Route::post('store/store-list', 'StoreController@storeList');//门店列表
-        //模板
-        Route::post('template/default-template', 'TemplateController@defaultTemplate');//添加工地默认模板
-        Route::post('template/template-list', 'TemplateController@templateList');//添加工模板列表
-        Route::post('template/template-set', 'TemplateController@templateSet');//模板设置默认
-        Route::post('template/template-destroy', 'TemplateController@templateDestroy');//模板删除
+            //工地
+            Route::post('site/store', 'SiteController@store');//发布工地
+            Route::get('site/site-list', 'SiteController@siteList');//工地列表
+            Route::delete('site/site-destroy', 'SiteController@siteDestroy');//工地删除
+            Route::put('site/is-open', 'SiteController@isOpen');//工地是否公开
+            Route::put('site/is-finish', 'SiteController@isFinish');//工地是否完工
+            Route::post('site/edit', 'SiteController@siteEdit');//工地修改数据
+            Route::put('site/update', 'SiteController@siteUpdate');//工地修改数据
+            Route::get('site/info', 'SiteController@siteInfo');//工地详情
+            Route::get('site/dynamic', 'SiteController@siteDynamic');//工地详情动态
+            Route::put('site/renew', 'SiteController@siteRenew');//工地更新动态
+            Route::get('site/renew-info', 'SiteController@siteRenewInfo');//工地更新动态模板数据
+            //门店
+            Route::post('store/store-list', 'StoreController@storeList');//门店列表
+            //模板
+            Route::post('template/default-template', 'TemplateController@defaultTemplate');//添加工地默认模板
+            Route::post('template/template-list', 'TemplateController@templateList');//添加工模板列表
+            Route::post('template/template-set', 'TemplateController@templateSet');//模板设置默认
+            Route::post('template/template-destroy', 'TemplateController@templateDestroy');//模板删除
+            //图片上传
+            Route::any('img/upload', 'PublicController@uploadImgToTemp');//模板删除
+            Route::get('img/del/{name}', 'PublicController@delImg');//模板删除
         });
 
         /**

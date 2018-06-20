@@ -541,12 +541,13 @@ class SiteBusiness extends ServerBase
             //添加动态
             $dynamic = new Dynamic();
             $dynamic->uuid = create_uuid();
-            $dynamic->companyid = $data['companyid'];
+            $dynamic->companyid = $site->companyid;
             $dynamic->storeid = $site->storeid;
+            $dynamic->cityid = $site->cityid;
             $dynamic->sitetid = $site->id;
             $dynamic->createuserid = $data['createuserid'];
             $dynamic->content = $data['content'];
-            $dynamic->title = $data['title'];
+            $dynamic->title = $site->name;
             $dynamic->sitestagename = $data['sitestagename'];
             $dynamic->type = 0;
             $dynamic->status = 1;
