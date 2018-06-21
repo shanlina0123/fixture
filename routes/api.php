@@ -50,6 +50,9 @@ Route::group(['middleware'=>'ApiCheck'], function () {
             //图片上传
             Route::any('img/upload', 'PublicController@uploadImgToTemp');//模板删除
             Route::get('img/del/{name}', 'PublicController@delImg');//模板删除
+            //周边地图
+            Route::post('map/address', 'PublicController@getMapAddress');//模板删除
+
         });
 
         /**

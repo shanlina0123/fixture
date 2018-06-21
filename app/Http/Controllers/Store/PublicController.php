@@ -36,4 +36,29 @@ class PublicController extends StoreBaseController
     {
         @unlink(public_path().'/temp/'.$name);
     }
+
+    /**
+     * 当前位置周边小区
+     */
+    public function getMapAddress( Request $request )
+    {
+        $keyword = urlencode('小区');
+        $latitude  = $request->input('latitude');
+        $longitude  = $request->input('longitude');
+        if( $keyword )
+        {
+            $url = 'http://apis.map.qq.com/ws/place/v1/search?boundary=nearby('.$latitude.','.$longitude.',1000)&page_size=20&page_index=1&keyword='.$keyword.'&orderby=_distance&key=N6LBZ-XRSWP-NM5DY-LW7S6-GCKO7-WBFF7';
+            $data = file_get_contents($url);
+            $data = json_decode($data);
+            if( $data->status == 0 )
+            {
+                responseData(\StatusCode::SUCCESS,'小区信息',$data->data);
+            }
+            responseData(\StatusCode::ERROR,'');
+
+        }else
+        {
+            responseData(\StatusCode::ERROR,'');
+        }
+    }
 }

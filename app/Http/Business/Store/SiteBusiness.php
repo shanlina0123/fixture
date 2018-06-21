@@ -31,68 +31,6 @@ class SiteBusiness extends StoreBase
 {
     /**
      * @param $data
-     * @return bool
-     * 发不工地
-     */
-    public function siteSave( $data )
-    {
-        try{
-
-            DB::beginTransaction();
-            //添加工地
-            $site = new Site();
-            $site->uuid = create_uuid();
-            $site->companyid = $data['companyid'];
-            $site->storeid = $data['storeid'];
-            $site->stageid = $data['stageid'];
-            $site->stagetemplateid = $data['stagetemplateid'];
-            $site->isopen = $data['isopen'];
-            $site->doornumber = $data['doornumber'];
-            $site->name = $data['name'];
-            $site->lat = $data['lat'];
-            $site->lng = $data['lng'];
-            $site->addr = $data['addr'];
-            $site->createuserid = $data['uid'];//发布者的id
-            $site->save();
-            //添加动态
-            $dynamic = new Dynamic();
-            $dynamic->uuid = create_uuid();
-            $dynamic->companyid = $data['companyid'];
-            $dynamic->storeid = $data['storeid'];
-            $dynamic->sitetid = $site->id;
-            $dynamic->createuserid = $site->createuserid;
-            $dynamic->content = '新建工地：感谢业主大大信任，'.$data['name'].'今日开工啦。大吉大利，家宅平安!';
-            $dynamic->title = $data['name'];
-            $dynamic->type = 0;
-            $dynamic->sitestagename = $data['sitestagename'];
-            $dynamic->status = 1;
-            $dynamic->created_at = date("Y-m-d H:i:s");
-            $dynamic->save();
-            //添加进度
-            $progress = new SiteStageschedule();
-            $progress->uuid = create_uuid();
-            $progress->dynamicid = $dynamic->id;
-            $progress->siteid = $site->id;
-            $progress->stagetagid = $data['stageid'];
-            $progress->stageuserid = $site->createuserid;
-            $progress->positionid = $site->createuserid;
-            $progress->created_at = date("Y-m-d H:i:s");
-            $progress->save();
-
-            DB::commit();
-            return true;
-
-        }catch ( Exception $e )
-        {
-            DB::rollBack();
-            return false;
-        }
-
-    }
-
-
-    /**
-     * @param $data
      * @return mixed
      * 工地列表
      */

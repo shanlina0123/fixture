@@ -44,12 +44,7 @@ class TemplateBusiness extends StoreBase
         //Cache::flush();
         $tag = 'templateListHome'.$data['companyid'];
         $value = Cache::tags($tag)->remember( $tag,config('configure.sCache'), function() use( $data ){
-            $obj = new \stdClass();
-            $obj->default = StageTemplate::where('status',1)->with('stageTemplateToTemplateTag')->with(['stageTemplateToCompanyTemplate'=>function( $query ) use( $data ){
-                $query->where('companyid',$data['companyid']);
-            }])->get();
-            $obj->definition = CompanyStageTemplate::where('companyid',$data['companyid'])->with('stageTemplateToTemplateTag')->orderBy('isdefault','desc')->orderBy('id','desc')->paginate(config('configure.sPage'));
-            return $obj;
+            return CompanyStageTemplate::where('companyid',$data['companyid'])->with('stageTemplateToTemplateTag')->orderBy('isdefault','desc')->orderBy('id','desc')->get();
         });
         return $value;
     }

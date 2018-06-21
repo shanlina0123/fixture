@@ -453,7 +453,7 @@ class WxAuthorize
     {
         $token = $this->getUserAccessToken($appid);
         $url = 'https://api.weixin.qq.com/wxa/release?access_token='.$token;
-        $post = [];
+        $post = (object)array();
         $data = wxPostCurl( $url, $post );
         $data = json_decode($data,true);
         if( $data['errcode'] == 0 )
@@ -461,6 +461,7 @@ class WxAuthorize
             //更新数据库
             $res = SmallProgram::where('authorizer_appid',$appid)->first();
             $res->sourcecode = 3;//发布上线
+            $res->errmsg = '小程序发布成功';//发布上线
             $res->save();
         }
     }

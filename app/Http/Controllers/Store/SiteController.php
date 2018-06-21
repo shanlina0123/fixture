@@ -22,45 +22,54 @@ class SiteController extends StoreBaseController
      */
     public function store()
     {
-        $data = trimValue( $this->request->all() );
-        $data['companyid'] = $this->apiUser->companyid;
-        $data['storeid'] = $this->apiUser->storeid;
-        $data['uid'] = $this->apiUser->id;
+        $data = trimValue( $this->request->all());
         $validator = Validator::make(
-            $data,[
-                'companyid'=>'bail|required|numeric',//公司
-                'storeid'=>'bail|required|numeric',//门店
-                'addr'=>'bail|required|max:255',//地址
-                'lng'=>'bail|present',//经度
-                'lat'=>'bail|present',//维度
-                'name'=>'bail|required|max:20',//项目名称
-                'doornumber'=>'bail|present|max:100',//门牌
-                'stageid'=>'bail|required|numeric',//阶段id
-                'stagetemplateid'=>'bail|required|numeric',//默认阶段模板id 或 自定义阶段模板id
-                'isopen'=>'bail|required|numeric',//是否公开
-            ],[
-                'companyid.required'=>'公司信息未获取到',
-                'companyid.numeric'=>'公司信息数据类型不正确',
-                'storeid.numeric'=>'门店信息数据类型不正确',
-                'storeid.required'=>'门店信息未获取到',
-                'addr.required'=>'请填写地址',
-                'name.required'=>'项目名称不能为空',
-                'name.max'=>'项目名称最大长度为20个字符',
-                'doornumber.max'=>'门牌名称最大长度为100个字符',
-                'stageid.required'=>'请选择阶段',
-                'stageid.numeric'=>'阶段数据类型不正确',
-                'stagetemplateid.required'=>'请选择模板',
-                'stagetemplateid.numeric'=>'模板数据类型不正确',
-                'isopen.required'=>'请选择是否公开',
+            $data, [
+            'storeid' => 'bail|required|numeric',//门店
+            'name' => 'bail|required|max:20',//项目名称
+            'stageid' => 'bail|required|numeric',//阶段id
+            'addr' => 'bail|required|max:255',//地址
+            'lng' => 'bail|present',//经度
+            'lat' => 'bail|present',//维度
+            'doornumber' => 'present|max:100',//门牌
+            'roomtypeid' => 'present',//户型
+            'room' => 'present',//房型
+            'office' => 'present',//房型
+            'kitchen' => 'present',//房型
+            'wei' => 'present',//房型
+            'acreage' => 'present',//面积
+            'roomstyleid' => 'present',//风格
+            'renovationmodeid' => 'present',//方式
+            'budget' => 'present',//预算
+            'photo' => 'present',//图片
+
+        ], [
+            'storeid.numeric' => '门店信息数据类型不正确',
+            'storeid.required' => '门店信息未获取到',
+            'addr.required' => '请填写地址',
+            'name.required' => '项目名称不能为空',
+            'name.max' => '项目名称最大长度为20个字符',
+            'doornumber.max' => '门牌名称最大长度为100个字符',
+            'stageid.required' => '请选择阶段',
+            'stageid.numeric' => '阶段数据类型不正确',
+            'addr.required' => '地址不能为空',
+            'roomtypeid.required' => '请选择户型',
+            'roomstyleid.required' => '请选择装修风格',
+            'renovationmodeid.required' => '请选择装修方式',
+            'budget.numeric' => '预算数据类型不正确',
             ]
         );
+        $data['companyid'] = $this->apiUser->companyid;
+        $data['createuserid'] = $this->apiUser->id;
+
         if ($validator->fails())
         {
             $messages = $validator->errors()->first();
             responseData(\StatusCode::CHECK_FORM,'验证失败','',$messages);
         }
 
-        $res = $this->site->siteSave( $data );
+        $model = new ServerSite();
+        $res = $model->siteSave( $data );
         if( $res == true )
         {
             Cache::tags(['site'.$data['companyid'],'siteHome'.$data['storeid'],'DynamicList'.$data['companyid']])->flush();

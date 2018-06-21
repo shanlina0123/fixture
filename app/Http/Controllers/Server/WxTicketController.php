@@ -167,7 +167,7 @@ class WxTicketController extends WxBaseController
 
                         if( $event == 'weapp_audit_fail' )
                         {
-                            $sourcecode = 0;
+                            $sourcecode = 3;
                             $msg = $data['Reason'];
                             $res = $this->wxAuthorize->wxExamine($appid,$sourcecode,$msg);
                             if( $res )

@@ -16,10 +16,10 @@
                 @else
                     <a href="javascript:;" class="btnlink">已授权</a>
                     @if( $data->uploadcode == 0 )
-                     <a href="{{route('wx-upcode',$data->authorizer_appid)}}" class="btnlink">提交小程序</a>
+                     <a href="{{route('wx-upcode',$data->authorizer_appid)}}" class="btnlink">上传小程序</a>
                     @else
                         @if( $data->sourcecode == 0 )
-                            <a href="{{route('wx-upsource-code',$data->authorizer_appid)}}" class="btnlink">发布小程序</a>
+                            <a href="{{route('wx-upsource-code',$data->authorizer_appid)}}" class="btnlink">提交审核</a>
                         @endif
                     @endif
                 @endif
@@ -40,7 +40,7 @@
         @if( $data && $data->sourcecode != 1 && $data->status == 0 )
             <h2 class="noticetext">审核信息</h2>
             <div class="noticeitem" style="color: red">
-                <p>{{ $data->errmsg }}</p>
+                <p>{!! $data->errmsg !!}</p>
             </div>
         @endif
     </div>

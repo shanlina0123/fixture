@@ -106,7 +106,6 @@ class SiteController extends ServerBaseController
         );
         $data = trimValue($request->all());
         $data['companyid'] = session('userInfo')->companyid;
-        $data['cityid'] = session('userInfo')->cityid;
         $data['createuserid'] = session('userInfo')['id'];
         $res = $this->site->siteSave($data);
         if ($res == true) {
