@@ -53,59 +53,11 @@ class SiteBusiness extends StoreBase
 
 
     /**
-     * 删除工地
-     */
-    public function siteDestroy( $data )
-    {
-        try{
-            $swhere['companyid'] = $data['companyid'];
-            $swhere['storeid'] = $data['storeid'];
-            $swhere['id'] = $data['id'];
-            $res = Site::where($swhere)->first();
-            if( $res )
-            {
-                DB::beginTransaction();
-                //删除工地动态
-                $dynamic = Dynamic::where(['companyid'=>$res->companyid,'sitetid'=>$res->id])->first();
-                if( $dynamic )
-                {
-                    //删除统计
-                    DynamicStatistics::where(['siteid'=>$res->id,'dynamicid'=>$dynamic->id])->delete();
-                    //删除评论
-                    DynamicComment::where(['siteid'=>$res->id,'dynamicid'=>$dynamic->id])->delete();
-                    //删除动态图片
-                    DynamicImages::where(['dynamicid'=>$dynamic->id])->deleted();
-
-                    $dynamic->delete();
-                }
-                //删除工地参与者
-                SiteInvitation::where('siteid',$res->id)->delete();
-                //删除工地阶段记录
-                SiteStageschedule::where('siteid',$res->id)->delete();
-                //删除观光团关注的工地
-                SiteFollowrecord::where('siteid',$res->id)->delete();
-                //删除工地
-                $res->delete();
-                DB::commit();
-                return true;
-            }else
-            {
-                responseData(\StatusCode::ERROR,'工地信息不存在',$res);
-            }
-        }catch (\Exception $e)
-        {
-            DB::rollBack();
-            return false;
-        }
-    }
-
-    /**
      * 工地是否公开
      */
     public function siteIsOpen( $data )
     {
         $sWhere['companyid'] = $data['companyid'];
-        $sWhere['storeid'] = $data['storeid'];
         $sWhere['id'] = $data['id'];
         $res = Site::where($sWhere)->first();
         if( $res )
@@ -147,7 +99,6 @@ class SiteBusiness extends StoreBase
     public function siteEdit( $data )
     {
         $sWhere['companyid'] = $data['companyid'];
-        $sWhere['storeid'] = $data['storeid'];
         $sWhere['id'] = $data['id'];
         $res = Site::where($sWhere)->first();
         if( $res )

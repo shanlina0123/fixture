@@ -35,7 +35,7 @@ Route::group(['middleware'=>'ApiCheck'], function () {
             Route::put('site/is-open', 'SiteController@isOpen');//工地是否公开
             Route::put('site/is-finish', 'SiteController@isFinish');//工地是否完工
             Route::post('site/edit', 'SiteController@siteEdit');//工地修改数据
-            Route::put('site/update', 'SiteController@siteUpdate');//工地修改数据
+            Route::put('site/update', 'SiteController@siteUpdate');//工地修改
             Route::get('site/info', 'SiteController@siteInfo');//工地详情
             Route::get('site/dynamic', 'SiteController@siteDynamic');//工地详情动态
             Route::put('site/renew', 'SiteController@siteRenew');//工地更新动态
@@ -48,10 +48,11 @@ Route::group(['middleware'=>'ApiCheck'], function () {
             Route::post('template/template-set', 'TemplateController@templateSet');//模板设置默认
             Route::post('template/template-destroy', 'TemplateController@templateDestroy');//模板删除
             //图片上传
-            Route::any('img/upload', 'PublicController@uploadImgToTemp');//模板删除
-            Route::get('img/del/{name}', 'PublicController@delImg');//模板删除
+            Route::any('img/upload', 'PublicController@uploadImgToTemp');
+            Route::get('img/del/{name}', 'PublicController@delImg');
             //周边地图
-            Route::post('map/address', 'PublicController@getMapAddress');//模板删除
+            Route::post('map/address', 'PublicController@getMapAddress');
+            Route::post('map/seach-address', 'PublicController@seachMapAddress');
 
         });
 

@@ -109,7 +109,7 @@ class SiteController extends ServerBaseController
         $data['createuserid'] = session('userInfo')['id'];
         $res = $this->site->siteSave($data);
         if ($res == true) {
-            Cache::tags(['site' . $data['companyid'], 'DynamicList' . $data['companyid']])->flush();
+            Cache::tags(['site'.$data['companyid'], 'DynamicList'.$data['companyid'],'siteHome'.$data['companyid']])->flush();
             return redirect()->route('site.index')->with('msg', '添加成功');
         } else {
             return redirect()->route('site.create')->withInput($request->all())->with('msg', '添加失败');
@@ -194,7 +194,7 @@ class SiteController extends ServerBaseController
         $data['companyid'] = $this->userInfo->companyid;
         $res = $this->site->siteUpdate($data, $id);
         if ($res->status == 1) {
-            Cache::tags(['site' . $data['companyid'], 'DynamicList' . $data['companyid']])->flush();
+            Cache::tags(['site'.$data['companyid'], 'DynamicList'.$data['companyid'],'siteHome'.$data['companyid']])->flush();
             return redirect()->route('site.index')->with('msg', $res->msg);
         } else {
             return redirect()->route('site.index')->withInput($request->all())->with('msg', $res->msg);
@@ -213,7 +213,7 @@ class SiteController extends ServerBaseController
         $companyId = $this->userInfo->companyid;
         $res = $this->site->siteDel($companyId, $id);
         if ($res == true) {
-            Cache::tags(['site' . $companyId, 'DynamicList' . $companyId])->flush();
+            Cache::tags(['site'.$companyId, 'DynamicList'.$companyId,'siteHome'.$companyId])->flush();
             return 'success';
         } else {
             return 'fail';
@@ -247,7 +247,7 @@ class SiteController extends ServerBaseController
             $data['createuserid'] = $this->userInfo->id;
             $res = $this->site->saveSiteRenew($data, $uuid);
             if ($res->status == 1) {
-                Cache::tags(['site' . $companyId, 'DynamicList' . $data['companyid']])->flush();
+                Cache::tags(['site'.$companyId, 'DynamicList'.$companyId,'siteHome'.$companyId])->flush();
                 return redirect()->route('site.index')->with('msg', '更新成功');
             } else {
                 return redirect()->back()->withInput($request->all())->with('msg', '更新失败');
@@ -286,7 +286,7 @@ class SiteController extends ServerBaseController
         $data['companyid'] = $this->userInfo->companyid;
         $res = $this->site->siteIsOpen($data);
         if ($res == true) {
-            Cache::tags(['site' . $data['companyid']])->flush();
+            Cache::tags(['site'.$data['companyid'], 'DynamicList'.$data['companyid'],'siteHome'.$data['companyid']])->flush();
             responseData(\StatusCode::SUCCESS, '修改成功', $res);
         } else {
             responseData(\StatusCode::ERROR, '修改失败', $res);

@@ -61,4 +61,24 @@ class PublicController extends StoreBaseController
             responseData(\StatusCode::ERROR,'');
         }
     }
+
+
+
+    /**
+     *  获取腾讯地图搜索的地址
+     */
+    public function seachMapAddress( Request $request )
+    {
+        $keyword = $request->input('keyword');
+        if( $keyword )
+        {
+            $url = 'https://apis.map.qq.com/ws/place/v1/suggestion/?filter%3Dcategory%3D%E5%B0%8F%E5%8C%BA&keyword='.$keyword.'&key=N6LBZ-XRSWP-NM5DY-LW7S6-GCKO7-WBFF7';
+            $data = file_get_contents($url);
+            $data = json_decode($data);
+            if( $data->status == 0 )
+            {
+                responseData(\StatusCode::SUCCESS,'小区信息',$data->data);
+            }
+        }
+    }
 }
