@@ -293,6 +293,7 @@ class SiteBusiness extends ServerBase
             $kitchen = $data['kitchen']?$data['kitchen'].'厨':'';
             $wei = $data['wei']?$data['wei'].'卫':'';
             $site->roomshap = $room.$office.$kitchen.$wei;
+            $site->roomshapnumber = $data['room'].','.$data['office'].','.$data['kitchen'].','.$data['wei'];
             $site->isopen =  array_has($data,'isopen')?1:0;
             $site->isfinish = 0;
             $site->createuserid = $data['createuserid'];
@@ -420,6 +421,7 @@ class SiteBusiness extends ServerBase
         $kitchen = $data['kitchen']?$data['kitchen'].'厨':'';
         $wei = $data['wei']?$data['wei'].'卫':'';
         $site->roomshap = $room.$office.$kitchen.$wei;
+        $site->roomshapnumber = $data['room'].','.$data['office'].','.$data['kitchen'].','.$data['wei'];
         $site->isopen =  array_has($data,'isopen')?1:0;
         $site->isfinish = 0;
         if( $site->save() )

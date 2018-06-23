@@ -13,9 +13,9 @@ MySQL - 5.5.5-10.1.30-MariaDB : Database - xxs_fixture
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`fixture` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`xxs_fixture` /*!40100 DEFAULT CHARACTER SET utf8 */;
 
-USE `fixture`;
+USE `xxs_fixture`;
 
 /*Table structure for table `fixture_activity` */
 
@@ -961,6 +961,7 @@ CREATE TABLE `fixture_site` (
   `lat` varchar(30) DEFAULT NULL COMMENT '维度',
   `doornumber` varchar(100) DEFAULT NULL COMMENT '门牌',
   `acreage` decimal(5,2) DEFAULT NULL COMMENT '面积-平方米 不包含单位',
+  `roomshapnumber` varchar(20) DEFAULT NULL COMMENT '房型按照英文逗号写入',
   `roomshap` varchar(20) DEFAULT NULL COMMENT '房型 几室几厅几厨几卫',
   `explodedossurl` varchar(255) DEFAULT NULL COMMENT '展示图',
   `codeimg` varchar(255) DEFAULT NULL,
@@ -1078,7 +1079,7 @@ CREATE TABLE `fixture_small_program` (
   `verify_ticket` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '每隔10分钟定时推送',
   `seturl` tinyint(1) DEFAULT NULL COMMENT '1设置url成功 0设置失败',
   `uploadcode` tinyint(1) DEFAULT NULL COMMENT '1代码上传成功 0代码上传失败',
-  `sourcecode` tinyint(1) DEFAULT NULL COMMENT '1审核成功 0代码提交失败 2.审核中',
+  `sourcecode` tinyint(1) DEFAULT NULL COMMENT '1审核成功 0代码提交失败 2.审核中 3.审核失败',
   `errmsg` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '发布小程序信息',
   `auditid` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '发布小程序审核编号',
   `created_at` datetime DEFAULT NULL,
@@ -1144,7 +1145,7 @@ CREATE TABLE `fixture_user` (
   `password` char(32) DEFAULT NULL COMMENT '密码',
   `nickname` varchar(200) DEFAULT NULL COMMENT '姓名/昵称',
   `resume` varchar(255) DEFAULT NULL COMMENT '个人简介',
-  `faceimg` longtext COMMENT '头像',
+  `faceimg` varchar(255) DEFAULT NULL COMMENT '头像',
   `wechatopenid` varchar(100) DEFAULT NULL COMMENT '微信openid',
   `isadmin` tinyint(1) DEFAULT '0' COMMENT '是否管理员，无默认，0不是 1是',
   `isadminafter` tinyint(1) DEFAULT '0' COMMENT '是否后端创建过来的 1是 0不是',

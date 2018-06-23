@@ -104,10 +104,10 @@ class SiteBusiness extends StoreBase
         if( $res )
         {
             $res->store = $res->siteToStore?$res->siteToStore->name:'';//关联店铺
-            //公司模板
-            $res->tag = CompanyStageTemplate::where(['companyid'=>$data['companyid'],'id'=>$res->stagetemplateid])->with(['stageTemplateToTemplateTag'=>function($query){
-                $query->orderBy('sort','asc')->select('id','name','stagetemplateid');
-            }])->select('id','name')->first();
+            //公司模板阶段
+            $res->tagName = $res->siteToCommpanyTag?$res->siteToCommpanyTag->name:'';
+            //模板
+            $res->tag = CompanyStageTemplateTag::where(['stagetemplateid'=>$res->stagetemplateid,'companyid'=>$res->companyid])->get();
             $res->roomStyle = $this->getRoomStyle( $data['companyid'] ); //装修风格
             $res->renovationMode = $this->getRenovationMode( $data['companyid'] );//装修方式
             $res->roomType = $this->getRoomType( $data['companyid'] ); //户型
@@ -167,64 +167,6 @@ class SiteBusiness extends StoreBase
             Cache::put('renovationMode'.$companyId,$renovationMode,config('configure.sCache'));
         }
         return $renovationMode;
-    }
-
-    /**
-     * @param $data
-     * 修改工地
-     */
-    public function siteUpdate( $data )
-    {
-        $site = Site::where(['id'=>$data['id'],'companyid'=>$data['companyid'],'storeid'=>$data['storeid']])->first();
-        if( $site == false )
-        {
-            responseData(\StatusCode::ERROR,'未查询到信息');
-        }
-        if( $site->isfinish == 1 )
-        {
-            responseData(\StatusCode::ERROR,'已完工不可修改');
-        }
-        if( $data['photo'] )
-        {
-            $res = $this->toSsoImg($site->uuid,$data['photo']);
-            if( $res == true )
-            {
-                if( $site->explodedossurl )
-                {
-                    //删除原始图片
-                    (new \Upload())->delImg($site->explodedossurl);
-                }
-                $site->explodedossurl = 'site/'.$site->uuid.'/info/'.$data['photo'];
-            }
-        }
-        $site->name = $data['name'];
-        $site->stageid = $data['stageid'];
-        $site->addr = $data['addr'];
-        $site->lng = $data['lng'];
-        $site->lat = $data['lat'];
-        $site->doornumber = $data['doornumber'];//门牌
-        $site->roomtypeid = $data['roomtypeid'];//户型
-        $site->roomstyleid = $data['roomstyleid'];//风格
-        $site->renovationmodeid = $data['renovationmodeid'];//方式
-        $site->budget = $data['budget'];//预算
-        $site->acreage = $data['acreage'];//面积
-        $site->roomshap = $data['room'].'室'.$data['office'].'厅'.$data['kitchen'].'厨'.$data['wei'].'卫';//房型
-        if( $site->save() )
-        {
-            return true;
-        }else return false;
-    }
-
-    /**
-     * @param $uuid
-     * @param $name
-     * @return bool
-     * 图片上传到oss
-     */
-    public function toSsoImg( $uuid, $name )
-    {
-        $upload = new \Upload();
-        return $upload->uploadProductImage( $uuid, $name, 'site_info' );
     }
 
 

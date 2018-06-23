@@ -74,7 +74,7 @@ class WxApiLogin
             {
                 $uToken = new UserToken();
                 $uToken->uuid = create_uuid();
-                $uToken->type = $res->type;
+                $uToken->type = $user->type;
                 $uToken->token = str_random(60);
                 $uToken->expiration = time()+17280000;//200天
                 $uToken->userid = $user->id;
