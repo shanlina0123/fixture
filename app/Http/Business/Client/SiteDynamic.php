@@ -93,4 +93,81 @@ class SiteDynamic extends ClientBase
             return false;
         }
     }
+
+    /**
+     * 动态详情
+     */
+    public function dynamicInfo($where)
+    {
+        return Dynamic::where($where)->with('dynamicToImages')->first();
+    }
+
+    /**
+     * @param $where
+     * @param $data
+     * 修改动态
+     */
+    public function dynamicUp($where,$data)
+    {
+        $res = Dynamic::where($where)->first();
+        if( $res )
+        {
+            try{
+                DB::beginTransaction();
+                //查询
+                $res->content = $data['content'];
+                //添加图片
+                $img = $data['img'];
+                if( $img )
+                {
+                    $upload = new \Upload();
+                    $arr = explode(',',$data['img']);
+                    foreach ( $arr as $k=>$row )
+                    {
+                        $res =  $upload->uploadProductImage( $res->sitetid, $row, 'site_dynamic' );
+                        $img = array();
+                        if( $res )
+                        {
+                            //写入数据库
+                            $img[$k]['dynamicid'] = $res->id;
+                            $img[$k]['ossurl'] = 'site/'.$res->sitetid.'/dynamic/'.$row;
+                            $img[$k]['type'] = 0;
+                            $img[$k]['created_at'] = date("Y-m-d H:i:s");
+                        }
+                        if( count($img) )
+                        {
+                            DynamicImages::insert( $img );
+                        }
+                    }
+                }
+                //删除图片
+                $delImg = $data['delimg'];
+                if( $delImg )
+                {
+                    $upload = new \Upload();
+                    $arr = explode(',',$data['delimg']);
+                    foreach ( $arr as $k=>$row )
+                    {
+                        $where['dynamicid'] = $res->id;
+                        $where['ossurl'] = $row;
+                        $del = DynamicImages::where($where)->delete();
+                        if( $del )
+                        {
+                            $upload->delImg($row);
+                        }
+                    }
+                }
+                $res->save();
+                DB::commit();
+                return true;
+            }catch ( \Exception $e )
+            {
+                DB::rollBack();
+                return false;
+            }
+        }else
+        {
+            return false;
+        }
+    }
 }

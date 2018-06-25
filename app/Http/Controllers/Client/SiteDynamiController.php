@@ -97,4 +97,50 @@ class SiteDynamiController extends ClientBaseController
         }
         responseData(\StatusCode::ERROR,'删除失败',$res);
     }
+
+    /**
+     * 修改动态
+     */
+    public function dynamicUp()
+    {
+        $data = $this->request->all();
+        $user = $this->apiUser;
+        if( $this->request->method() === 'POST' )
+        {
+            $validator = Validator::make(
+                $data,
+                [
+                    'id' => 'bail|required',
+                    'content'=>'required|max:300',
+                    'img'=>'present',
+                    'delimg'=>'present',
+                ], [
+                    'id.required' => 'ID不能为空',
+                    'content.required' => '内容不能为空',
+                    'content.max' => '内容不能超过300个字',
+                    'img.present' => '图片缺少',
+                    'delimg.present' => '图片缺少',
+                ]
+            );
+            if ($validator->fails())
+            {
+                $messages = $validator->errors()->first();
+                responseData(\StatusCode::CHECK_FORM, '验证失败', '', $messages);
+            }
+            $where['id'] = $data['id'];
+            $where['companyid'] = $user->companyid;
+            $res = $this->dynamic->dynamicUp($where,$data);
+            if(  $res == true )
+            {
+                responseData(\StatusCode::SUCCESS,'修改成功');
+            }
+            responseData(\StatusCode::ERROR,'修改失败');
+        }else
+        {
+           $where['id'] = $data['id'];
+           $where['companyid'] = $user->companyid;
+           $res = $this->dynamic->dynamicInfo($where);
+           responseData(\StatusCode::SUCCESS,'动态收据',$res);
+        }
+    }
 }

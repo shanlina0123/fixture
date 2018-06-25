@@ -124,26 +124,35 @@ class SiteController extends StoreBaseController
     public function searchSiteList()
     {
         $data = trimValue( $this->request->all() );
-        $data['companyid'] = $this->apiUser->companyid;
-        $data['storeid'] = $this->apiUser->storeid;
-        $validator = Validator::make(
-            $data,
-            [
-                'companyid'=>'bail|required',//公司
-                'storeid'=>'bail|required',//门店
-                'isfinish'=>'bail|required'
-            ],[
-                'companyid.required'=>'公司信息未获取到',
-                'storeid.required'=>'门店信息未获取到',
-                'isfinish'=>'项目未获取到'
-            ]
-        );
-        if ($validator->fails())
+        $user = $this->apiUser;
+        //判断用户信息如果是B端只显示当前店铺的动态
+        if( $user->type == 0 )
         {
-            $messages = $validator->errors()->first();
-            responseData(\StatusCode::CHECK_FORM,'验证失败','',$messages);
+            if( $user->isinvitationed != 1 )
+            {
+                //B端用户
+                switch ( (int)$user->islook )
+                {
+                    case 1:
+                        //全部
+                        break;
+                    case 2:
+                        //城市
+                        $where['cityid'] = $user->cityid;
+                        break;
+                    case 3:
+                        //门店
+                        $where['storeid'] = $user->storeid;
+                        break;
+                }
+            }
+        }else
+        {
+            responseData(\StatusCode::ERROR,'工地列表',[]);
         }
-        $res = $this->site->siteList( $data );
+        $where['companyid'] = $this->apiUser->companyid;
+        $where['isfinish'] = $data['isfinish'];
+        $res = $this->site->searchSiteList( $where, $data );
         responseData(\StatusCode::SUCCESS,'工地检索列表',$res);
     }
 

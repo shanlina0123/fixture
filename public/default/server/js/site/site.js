@@ -262,7 +262,13 @@ $("#suggestId").keyup(function () {
                 }
                 $("#seach").empty();
                 $("#seach").append(str);
-                $("#seach").show();
+                if( str )
+                {
+                    $("#seach").show();
+                }else
+                {
+                    $("#seach").hide();
+                }
             }
         }
     },'json')

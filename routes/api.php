@@ -31,6 +31,7 @@ Route::group(['middleware'=>'ApiCheck'], function () {
             //工地
             Route::post('site/store', 'SiteController@store');//发布工地
             Route::get('site/site-list', 'SiteController@siteList');//工地列表
+            Route::get('site/search-site-list', 'SiteController@searchSiteList');//工地检索
             Route::delete('site/site-destroy', 'SiteController@siteDestroy');//工地删除
             Route::put('site/is-open', 'SiteController@isOpen');//工地是否公开
             Route::put('site/is-finish', 'SiteController@isFinish');//工地是否完工
@@ -88,6 +89,9 @@ Route::group(['middleware'=>'ApiCheck'], function () {
             Route::get('client/company-info', 'ClientCompanyController@companyInfo');
             //中奖列表
             Route::get('client/lucky-record', 'ClientActivityLuckyRecordController@luckyRecordList');
+            //动态修改
+            Route::match(['get', 'post'], 'client/dynamic-up', 'SiteDynamiController@dynamicUp');
+
         });
     });
     /**

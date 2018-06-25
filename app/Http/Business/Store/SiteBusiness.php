@@ -51,6 +51,23 @@ class SiteBusiness extends StoreBase
         return $value;
     }
 
+    /**
+     * @param $sWhere
+     * @param $data
+     * @return mixed
+     * 搜索工地
+     */
+    public function searchSiteList( $sWhere, $data )
+    {
+        $sql =  Site::where( $sWhere )->orderBy('id','desc')->with(
+            [
+                'siteToCommpanyTag'=>function( $query ){
+                    $query->select('id','stagetemplateid','name');
+                }
+            ]
+        )->where('name','like',"%{$data['name']}%")->select('id','uuid','name','addr','explodedossurl','stageid','isfinish','isopen','linkednum','follownum');
+        return $sql->paginate(config('configure.sPage'));
+    }
 
     /**
      * 工地是否公开
@@ -193,7 +210,7 @@ class SiteBusiness extends StoreBase
                     }]);
                 }
             ]
-        )->select('explodedossurl','addr','budget','acreage','roomtypeid','roomstyleid','renovationmodeid','stagetemplateid','companyid','id','roomshap','stageid','name','storeid','cityid','linkednum','follownum')->first();
+        )->select('explodedossurl','addr','budget','acreage','roomtypeid','roomstyleid','renovationmodeid','stagetemplateid','companyid','id','roomshap','stageid','name','storeid','cityid','linkednum','follownum','uuid')->first();
         if( !$res )
         {
             responseData(\StatusCode::ERROR,'工地未公开');
