@@ -132,6 +132,7 @@ class SiteDynamiController extends ClientBaseController
             $res = $this->dynamic->dynamicUp($where,$data);
             if(  $res == true )
             {
+                Cache::tags(['DynamicList'.$user->companyid])->flush();
                 responseData(\StatusCode::SUCCESS,'修改成功');
             }
             responseData(\StatusCode::ERROR,'修改失败');

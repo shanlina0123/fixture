@@ -68,7 +68,7 @@ class ClientAppointmentController extends ClientBaseController
         $res = $this->clientAppointment->Appointment( $data );
         if( $res == true )
         {
-            Cache::tags(['client'.$data['companyid']])->flush();
+            Cache::tags(['client'.$data['companyid'],'clientWx'.$data['companyid']])->flush();
             //写日志
             //发给C端
             event('log.notice',array('type'=>4,$this->apiUser,'event'=>$data));

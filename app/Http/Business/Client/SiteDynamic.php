@@ -124,9 +124,9 @@ class SiteDynamic extends ClientBase
                     $arr = explode(',',$data['img']);
                     foreach ( $arr as $k=>$row )
                     {
-                        $res =  $upload->uploadProductImage( $res->sitetid, $row, 'site_dynamic' );
+                        $addImg = $upload->uploadProductImage( $res->sitetid, $row, 'site_dynamic' );
                         $img = array();
-                        if( $res )
+                        if( $addImg )
                         {
                             //写入数据库
                             $img[$k]['dynamicid'] = $res->id;
@@ -145,15 +145,15 @@ class SiteDynamic extends ClientBase
                 if( $delImg )
                 {
                     $upload = new \Upload();
-                    $arr = explode(',',$data['delimg']);
-                    foreach ( $arr as $k=>$row )
+                    $arrDel = explode(',',$data['delimg']);
+                    foreach ( $arrDel as $dk=>$dRow )
                     {
-                        $where['dynamicid'] = $res->id;
-                        $where['ossurl'] = $row;
-                        $del = DynamicImages::where($where)->delete();
+                        $imgWhere['dynamicid'] = $res->id;
+                        $imgWhere['ossurl'] = $dRow;
+                        $del = DynamicImages::where($imgWhere)->delete();
                         if( $del )
                         {
-                            $upload->delImg($row);
+                            $upload->delImg($dRow);
                         }
                     }
                 }
