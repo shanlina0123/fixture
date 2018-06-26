@@ -319,12 +319,15 @@ CREATE TABLE `fixture_conf_sys` (
 DROP TABLE IF EXISTS `fixture_conf_vipfunctionpoint`;
 
 CREATE TABLE `fixture_conf_vipfunctionpoint` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `vipmechanismid` int(11) DEFAULT NULL COMMENT '会员机制id',
-  `name` varchar(255) DEFAULT NULL COMMENT '名称',
-  `content` longtext COMMENT '内容 json',
-  `status` tinyint(1) DEFAULT '1' COMMENT '状态 默认1 ，1启用 0禁用',
-  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+   `id` int(11) NOT NULL AUTO_INCREMENT,
+   `name` varchar(255) DEFAULT NULL COMMENT '名称',
+   `value` varchar(255) DEFAULT NULL,
+   `text` varchar(255) DEFAULT NULL COMMENT '标准版value',
+   `vipvalue` varchar(11) DEFAULT NULL COMMENT 'vip版value',
+   `viptext` varchar(255) DEFAULT NULL,
+   `content` longtext COMMENT '说明',
+   `status` tinyint(1) DEFAULT '1' COMMENT '状态 默认1 ，1启用 0禁用',
+   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='配置 - 会员机制功能';
 
