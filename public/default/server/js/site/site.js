@@ -49,8 +49,9 @@ layui.use(['form', 'layer','upload'], function() {
             var len = $('#update_img').find("img").length;
             if( len < 9 )
             {
+                var i=0;
                 obj.preview(function(index, file, result){
-                    $('#update_img').append('<img src="'+ result +'" alt="'+ file.name +'" class="layui-upload-img">');
+                    //$('#update_img').append(' <div class="ImgWrap fl"><span><img src="/default/server/images/close.png" onclick="delTempImg('+i+',this)"></span><img src="'+ result +'" alt="'+ file.name +'" class="layui-upload-img"></div>');
                 });
             }
         }
@@ -65,6 +66,7 @@ layui.use(['form', 'layer','upload'], function() {
                     if( arr.length < 9 )
                     {
                         arr.push(res.data.name);
+                        $('#update_img').append('<div class="ImgWrap fl"><span><img src="/default/server/images/close.png" data-title="'+ res.data.name +'" onclick="delTempImg(this)"></span><img src="'+ res.data.src +'" alt="'+ res.data.name +'" class="layui-upload-img"></div>');
                         $("#img").val(arr.join());
                     }else
                     {
@@ -73,6 +75,7 @@ layui.use(['form', 'layer','upload'], function() {
 
                 }else
                 {
+                    $('#update_img').append('<div class="ImgWrap fl"><span><img src="/default/server/images/close.png" data-title="'+ res.data.name +'" onclick="delTempImg(this)"></span><img src="'+ res.data.src +'" alt="'+ res.data.name +'" class="layui-upload-img"></div>');
                     $("#img").val(res.data.name);
                 }
             }
@@ -141,8 +144,56 @@ layui.use(['form', 'layer','upload'], function() {
 
 });
 
+/**
+ * 删除临时图片
+ */
+function delTempImg( index )
+{
+    var name = $(index).attr('data-title');
+    $.get('/upload-temp-del/'+name);
+    $(index).parents('.ImgWrap').remove();
+}
 
+/**
+ * 编辑删除图片
+ */
+function delUpImg( index ) {
+    var name = $(index).attr('data-title');
+    var delimg = $("#delimg").val();
+    if( delimg )
+    {
+        var arr = delimg.split(',');
+            arr.push(name);
+        $("#delimg").val(arr.join(','));
+    }else
+    {
+        $("#delimg").val(name);
+    }
+    $(index).parents('.ImgWrap').remove();
+}
 
+/**
+ * 删除动态
+ */
+function delDynamic( index )
+{
+    var url = $(index).data('url');
+    layer.confirm('您确认要删除吗？', {
+        icon: 3, title:'删除',
+        btn: ['确认','取消'] //按钮
+    }, function(){
+        $.post(url,{_method:'DELETE'},function ( msg ) {
+            if( msg == 'success' )
+            {
+                layer.msg('删除成功',{icon:1});
+                $(index).parents('tr').remove();
+            }else
+            {
+                layer.msg('删除失败', {icon: 5, time: 2000, shift: 6});
+            }
+        })
+    });
+}
 /**
  * 表单验证
  */

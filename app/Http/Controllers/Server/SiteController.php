@@ -109,7 +109,7 @@ class SiteController extends ServerBaseController
         $data['createuserid'] = session('userInfo')['id'];
         $res = $this->site->siteSave($data);
         if ($res == true) {
-            Cache::tags(['site'.$data['companyid'], 'DynamicList'.$data['companyid'],'siteHome'.$data['companyid']])->flush();
+            Cache::tags(['site'.$data['companyid'], 'DynamicList'.$data['companyid'],'siteHome'.$data['companyid'],'DynamicListPc'.$data['companyid']])->flush();
             return redirect()->route('site.index')->with('msg', '添加成功');
         } else {
             return redirect()->route('site.create')->withInput($request->all())->with('msg', '添加失败');
@@ -247,7 +247,7 @@ class SiteController extends ServerBaseController
             $data['createuserid'] = $this->userInfo->id;
             $res = $this->site->saveSiteRenew($data, $uuid);
             if ($res->status == 1) {
-                Cache::tags(['site'.$companyId, 'DynamicList'.$companyId,'siteHome'.$companyId])->flush();
+                Cache::tags(['site'.$companyId, 'DynamicList'.$companyId,'siteHome'.$companyId,'DynamicListPc'.$companyId])->flush();
                 return redirect()->route('site.index')->with('msg', '更新成功');
             } else {
                 return redirect()->back()->withInput($request->all())->with('msg', '更新失败');

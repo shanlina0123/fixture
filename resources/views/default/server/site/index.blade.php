@@ -84,13 +84,10 @@
                                         @if($row->isopen==0)style="display: none;"
                                         @endif   url="{{route('site-extension',$row->id)}}">推广
                                 </button>
-                                <a class="layui-btn" href="{{route('site-renew',$row->uuid)}}"
-                                   @if($row->isfinish==1)style="display: none;"@endif>更新</a>
-                                <a class="layui-btn" href="{{route('site.edit',$row->uuid)}}"
-                                   @if($row->isfinish==1)style="display: none;"@endif>编辑</a>
-                                <button type="button" class="layui-btn deleteBtn" onclick="del(this)"
-                                        data-url="{{route('site.destroy',$row->uuid)}}">删除
-                                </button>
+                                <a class="layui-btn" href="{{route('site-renew',$row->uuid)}}"@if($row->isfinish==1)style="display: none;"@endif>更新</a>
+                                <a class="layui-btn" href="{{route('dynamic-index',base64_encode($row->id))}}"@if($row->isfinish==1)style="display: none;"@endif>项目动态</a>
+                                <a class="layui-btn" href="{{route('site.edit',$row->uuid)}}" @if($row->isfinish==1)style="display: none;"@endif>编辑</a>
+                                <button type="button" class="layui-btn deleteBtn" onclick="del(this)" data-url="{{route('site.destroy',$row->uuid)}}">删除</button>
                             </div>
                         </td>
                     </tr>

@@ -46,6 +46,7 @@ Route::group(['namespace' => 'Server'], function () {
 
        //上传图片
         Route::any('upload-temp-img', 'PublicController@uploadImgToTemp');
+        Route::get('upload-temp-del/{name}', 'PublicController@delTempImg');
         //Vip
         Route::get("vip","VipController@index")->name("vip-index");//列表
         //通知
@@ -122,6 +123,11 @@ Route::group(['namespace' => 'Server'], function () {
             Route::delete("lucky/prize/{id}","ActivityLuckyController@deleteprize")->name("lucky-prize-delete");//删除奖项-执行
             Route::put("lucky/setting/{id}","ActivityLuckyController@setting")->name("lucky-setting");//上线/下线
             Route::get("lucky/extension/{id}","ActivityLuckyController@extension")->name("lucky-extension");//推广详情
+            //项目动态
+            Route::get('dynamic/{id}', 'DynamicController@getDynamicList')->name("dynamic-index");//动态列表
+            Route::get('dynamic/edit/{uuid}', 'DynamicController@edit')->name("dynamic-edit");//动态修改
+            Route::put('dynamic/update/{uuid}', 'DynamicController@update')->name("dynamic-update");//动态修改
+            Route::delete('dynamic/destroy/{uuid}', 'DynamicController@destroy')->name("dynamic-destroy");//动态删除
 
         });
     });

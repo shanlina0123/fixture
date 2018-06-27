@@ -216,9 +216,11 @@ class SiteBusiness extends StoreBase
         }
         //公司模板
         $res->tag = CompanyStageTemplateTag::orderBy('sort','asc')->where(['stagetemplateid'=>$res->stagetemplateid,'companyid'=>$res->companyid])->select('id','name')->get();
+        //工地参与者
         $res->siteInvitation = SiteInvitation::where(['companyid'=>$data['companyid'],'siteid'=>$data['id']])->with(['invitationToUser'=>function($query){
             $query->select('id','positionid','nickname','faceimg')->with('userToPosition');
         }])->get();
+        //自己关注统计
         $res->siteToFolloWrecord = $res->siteToFolloWrecord()->where('userid',$data['userid'])->count();
         return $res;
     }

@@ -108,20 +108,11 @@ function dataType( $data )
  * @return string
  * 返回图片地址
  */
-function getImgUrl( $path,$type=null )
+function getImgUrl( $path )
 {
 
     $uploads="/".config("configure.uploads")."/";
-    switch ($type)
-    {
-        case "site":
-            $realPath=$uploads.config("configure.site.logo");
-            break;
-        default;
-            $realPath="";
-            break;
-    }
-    return $path&&file_exists(".".$uploads.$path)?$uploads.$path:$realPath;
+    return $uploads.$path;
 }
 
 /**
