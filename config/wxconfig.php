@@ -28,7 +28,7 @@ return [
     'version'=>'2.0.0',//小程序模板版本
     'desc'=>'云易装v2.0',//小程序模板版本描述
     "wxCode"=>[
-            "lucky"=>"pages/prize/prize",
+            "lucky"=>"pages/activity/prize/prize",
             "site"=>"pages/projectdetail/projectdetail",
             "allow"=>"pages/allowlogin/allowlogin"
         ]
