@@ -9,6 +9,9 @@
 namespace App\Http\Business\Store;
 
 
+use App\Http\Model\Site\SiteParticipant;
+use Illuminate\Support\Facades\Cache;
+
 class ParticipantBusiness
 {
     /**
@@ -17,6 +20,14 @@ class ParticipantBusiness
      */
     public function participantList( $where )
     {
-
+       if(Cache::has('siteParticipant'.$where['companyid']))
+       {
+           $data = Cache::get('siteParticipant'.$where['companyid']);
+       }else
+       {
+           $data = SiteParticipant::where($where)->with('participantToPosition')->get();
+           Cache::put('siteParticipant'.$where['companyid'],$data,config('configure.sCache'));
+       }
+       return $data;
     }
 }

@@ -56,6 +56,8 @@ Route::group(['middleware'=>'ApiCheck'], function () {
             Route::post('map/seach-address', 'PublicController@seachMapAddress');
             //客户列表
             Route::get('client/client-list', 'ClientController@clientList');
+            //参与者列表
+            Route::get('participant/participant-list', 'ParticipantController@participantList');
 
         });
 
