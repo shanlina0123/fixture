@@ -41,3 +41,20 @@ INSERT INTO `fixture_conf_vipfunctionpoint` VALUES ('16', 'vip_has_role', '0', '
 INSERT INTO `fixture_conf_vipfunctionpoint` VALUES ('17', 'vip_has_auth', '0', '有', '1', '有', '角色操作权限', '1', null);
 INSERT INTO `fixture_conf_vipfunctionpoint` VALUES ('18', 'vip_has_look', '0', '有', '1', '有', '角色视野权限', '1', null);
 INSERT INTO `fixture_conf_vipfunctionpoint` VALUES ('19', 'vip_has_charts', '1', '简单数据分析', '1', '活动效果分析、客户转化率分析、渠道分析等更详细的数据分析、主流业务增长', '数据分析', '1', null);
+
+#团队成员参与的工地
+ALTER TABLE `fixture_site_invitation` MODIFY COLUMN `userid`  int(11) NULL DEFAULT NULL COMMENT '参与者id，对应用户user表id' AFTER `siteid`;
+
+#团队成员
+ALTER TABLE `fixture_site_participant` DROP COLUMN `siteid`;
+
+ALTER TABLE `fixture_site_participant` ADD COLUMN `companyid`  int(11) NULL DEFAULT NULL COMMENT '公司id' AFTER `uuid`;
+
+ALTER TABLE `fixture_site_participant` MODIFY COLUMN `nickname`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '被邀请者昵称' AFTER `positionid`;
+
+ALTER TABLE `fixture_site_participant` MODIFY COLUMN `faceimg`  longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '被邀请者头像' AFTER `nickname`;
+
+ALTER TABLE `fixture_site_participant` MODIFY COLUMN `wechatopenid`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '被邀请者微信openid' AFTER `faceimg`;
+
+ALTER TABLE `fixture_site_participant` ADD COLUMN `userid`  int(11) NULL DEFAULT NULL COMMENT '邀请者id' AFTER `wechatopenid`;
+

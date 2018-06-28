@@ -636,12 +636,12 @@ class WxAuthorize
             $postData['page'] = config('wxconfig.wxCode.'.$type);//扫描后对应的path
             $postData['width'] = $width?$width:800;//自定义的尺寸
             $postData['auto_color'] = false;//是否自定义颜色
-            $color = array(
-                "r"=>"221",
-                "g"=>"0",
-                "b"=>"0",
-            );
-            $postData['line_color'] = $color;//自定义的颜色值
+//            $color = array(
+//                "r"=>"221",
+//                "g"=>"0",
+//                "b"=>"0",
+//            );
+//            $postData['line_color'] = $color;//自定义的颜色值
             $postData = json_encode($postData);
             $da = get_http_array($url,$postData);
             echo json_encode($da);//echo直接在浏览器显示或者存储到服务器等其他操作
