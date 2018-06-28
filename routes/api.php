@@ -54,6 +54,8 @@ Route::group(['middleware'=>'ApiCheck'], function () {
             //周边地图
             Route::post('map/address', 'PublicController@getMapAddress');
             Route::post('map/seach-address', 'PublicController@seachMapAddress');
+            //客户列表
+            Route::get('client/client-list', 'ClientController@clientList');
 
         });
 

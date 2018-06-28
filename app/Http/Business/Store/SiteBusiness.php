@@ -8,24 +8,15 @@
 
 namespace App\Http\Business\Store;
 use App\Http\Business\Common\StoreBase;
-use App\Http\Model\Company\CompanyStageTemplate;
 use App\Http\Model\Company\CompanyStageTemplateTag;
 use App\Http\Model\Data\RenovationMode;
 use App\Http\Model\Data\RoomStyle;
 use App\Http\Model\Data\RoomType;
-use App\Http\Model\Data\StageTemplate;
-use App\Http\Model\Data\StageTemplateTag;
 use App\Http\Model\Dynamic\Dynamic;
-use App\Http\Model\Dynamic\DynamicComment;
-use App\Http\Model\Dynamic\DynamicImages;
-use App\Http\Model\Dynamic\DynamicStatistics;
 use App\Http\Model\Site\Site;
-use App\Http\Model\Site\SiteFollowrecord;
 use App\Http\Model\Site\SiteInvitation;
 use App\Http\Model\Site\SiteParticipant;
-use App\Http\Model\Site\SiteStageschedule;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 
 class SiteBusiness extends StoreBase
 {
@@ -195,7 +186,11 @@ class SiteBusiness extends StoreBase
     {
         $sWhere['companyid'] = $data['companyid'];
         $sWhere['id'] = $data['id'];
-        $sWhere['isopen'] = 1;
+        if( $data['userType'] == 1 )
+        {
+            //不公开只针对C端
+            $sWhere['isopen'] = 1;
+        }
         $res = Site::where( $sWhere )->orderBy('id','desc')->with(
             [
                 'siteToRenovationMode'=>function( $query ){ //装修方式
@@ -221,9 +216,11 @@ class SiteBusiness extends StoreBase
         }
         //公司模板
         $res->tag = CompanyStageTemplateTag::orderBy('sort','asc')->where(['stagetemplateid'=>$res->stagetemplateid,'companyid'=>$res->companyid])->select('id','name')->get();
+        //工地参与者
         $res->siteInvitation = SiteInvitation::where(['companyid'=>$data['companyid'],'siteid'=>$data['id']])->with(['invitationToUser'=>function($query){
             $query->select('id','positionid','nickname','faceimg')->with('userToPosition');
         }])->get();
+        //自己关注统计
         $res->siteToFolloWrecord = $res->siteToFolloWrecord()->where('userid',$data['userid'])->count();
         return $res;
     }

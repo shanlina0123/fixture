@@ -92,7 +92,7 @@ class SiteDynamiController extends ClientBaseController
         $res = $this->dynamic->destroyDynamic( $where );
         if( $res )
         {
-            Cache::tags(['DynamicList'.$user->companyid])->flush();
+            Cache::tags(['DynamicList'.$user->companyid,'DynamicListPc'.$user->companyid])->flush();
             responseData(\StatusCode::SUCCESS,'删除成功');
         }
         responseData(\StatusCode::ERROR,'删除失败',$res);
@@ -132,6 +132,7 @@ class SiteDynamiController extends ClientBaseController
             $res = $this->dynamic->dynamicUp($where,$data);
             if(  $res == true )
             {
+                Cache::tags(['DynamicList'.$user->companyid,'DynamicListPc'.$user->companyid])->flush();
                 responseData(\StatusCode::SUCCESS,'修改成功');
             }
             responseData(\StatusCode::ERROR,'修改失败');

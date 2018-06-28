@@ -1,5 +1,5 @@
 @extends('server.layout.content')
-@section('title','跟进项目')
+@section('title','动态编辑')
 @section('css')
     <style>
         .layui-upload-img {
@@ -22,23 +22,16 @@
 @section('content')
 <div class="main">
     <fieldset class="layui-elem-field layui-field-title">
-        <legend>更新项目</legend>
+        <legend>动态编辑</legend>
     </fieldset>
     <div class="fullForm">
-        <form class="layui-form" id="layui-form" method="post" action="{{route('site-renew',$data->uuid)}}">
+        <form class="layui-form" id="layui-form" method="post" action="{{route('dynamic-update',$data->uuid)}}">
             {{csrf_field()}}
-            <div class="layui-form-item">
-                <label class="layui-form-label">选择阶段</label>
-                <div class="layui-input-block">
-                    @foreach( $data->tage as $row )
-                        <input type="radio" name="stagetagid" lay-filter="radio"  data-name="{{$row->name}}" @if($row->id == $data->stageid ) checked="checked" @endif datatype="*" nullmsg="请选择阶段" value="{{$row->id}}" title="{{$row->name}}" >
-                    @endforeach
-                </div>
-            </div>
+            {{ method_field('PUT') }}
             <div class="layui-form-item">
                 <label class="layui-form-label">内容</label>
                 <div class="layui-input-block">
-                    <textarea name="content" maxlength="255" datatype="*1-300" nullmsg="请填写内容" errormsg="内容为1-300个字符" placeholder="说点什么" class="layui-textarea"></textarea>
+                    <textarea name="content" maxlength="255" datatype="*1-300" nullmsg="请填写内容" errormsg="内容为1-300个字符" placeholder="说点什么" class="layui-textarea">{{$data->content}}</textarea>
                 </div>
             </div>
             <input type="hidden" name="title" value="{{$data->name}}">
@@ -48,7 +41,14 @@
                     <button type="button" class="layui-btn" id="updateImg"><i class="layui-icon"></i>上传图片</button>
                     <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
                         预览图：
-                        <div class="layui-upload-list clearfix" id="update_img"></div>
+                        <div class="layui-upload-list clearfix" id="update_img">
+                            @foreach( $data->dynamicToImages as $row )
+                            <div class="ImgWrap fl">
+                                <span><img src="/default/server/images/close.png" data-title="{{$row->ossurl}}" onclick="delUpImg(this)"></span>
+                                <img src="{{getImgUrl($row->ossurl)}}" class="layui-upload-img"  width="100" height="100">
+                            </div>
+                            @endforeach
+                        </div>
                     </blockquote>
                 </div>
             </div>
@@ -72,11 +72,8 @@
                 <button type="button" class="layui-btn"  id="btn_submit">立即提交</button>
             </div>
             <input type="hidden" id="img" name="img">
-            @foreach( $data->tage as $row )
-                @if($row->id == $data->stageid )
-                 <input type="hidden" name="sitestagename" value="{{$row->name}}" id="sitestagename">
-                @endif
-            @endforeach
+            <input type="hidden" id="delimg" name="delimg">
+            <input type="hidden" value="{{$url}}" name="url">
         </form>
     </div>
 </div>

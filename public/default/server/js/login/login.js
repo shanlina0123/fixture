@@ -73,7 +73,7 @@ function time()
     {
         $me.removeAttr("disabled");
         $("#phone").attr("readonly", false);
-        $me.text("获取短信验证码");
+        $me.text("重新获取");
         $me.css({
             "background": "#19aa4b",
             "border-color": "#19aa4b"

@@ -156,6 +156,15 @@ class PublicController extends ServerBaseController
         responseData(\StatusCode::ERROR,'发送失败');
     }
 
+
+    /**
+     * 删除临时图片
+     */
+    public function delTempImg($name)
+    {
+        @unlink(public_path().'/temp/'.$name);
+
+    }
     /*public function city()
     {
 
