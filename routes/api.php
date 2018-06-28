@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
 
 Route::post('user/login', 'Common\WxApiLoginController@login');//登陆
 Route::post('user/openid', 'Common\WxApiLoginController@getOpenid');//登陆
+Route::get('participant/position-code', 'Store\ParticipantController@code');
 Route::group(['middleware'=>'ApiCheck'], function () {
     //权限验证
     Route::group(['middleware' =>'ApiAuthCheck'], function () {
@@ -58,6 +59,7 @@ Route::group(['middleware'=>'ApiCheck'], function () {
             Route::get('client/client-list', 'ClientController@clientList');
             //参与者列表
             Route::get('participant/participant-list', 'ParticipantController@participantList');
+            Route::get('participant/position-list', 'ParticipantController@positionList');
 
         });
 

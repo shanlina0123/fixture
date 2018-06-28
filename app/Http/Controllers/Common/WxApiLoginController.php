@@ -37,7 +37,17 @@ class WxApiLoginController extends Controller
             $companyid = $request->input('companyid');
             $nickname = $request->input('nickname');
             $faceimg = $request->input('faceimg');
-            $res = $this->user->userLogin( $openid, $companyid,$nickname,$faceimg );
+            //为真就是绑定的用户或者邀请的用户
+            $scene = $request->input('scene');
+            if( $scene )
+            {
+                //绑定的用户或者邀请的用户
+                $res = $this->user->userChangeType( $openid, $companyid,$nickname,$faceimg, $scene );
+            }else
+            {
+                //登陆
+                $res = $this->user->userLogin( $openid, $companyid,$nickname,$faceimg );
+            }
             responseData(\StatusCode::SUCCESS,"用户信息", $res );
         }else
         {
