@@ -46,6 +46,8 @@ INSERT INTO `fixture_conf_vipfunctionpoint` VALUES ('19', 'vip_has_charts', '1',
 ALTER TABLE `fixture_site_invitation` MODIFY COLUMN `userid`  int(11) NULL DEFAULT NULL COMMENT '参与者id，对应用户user表id' AFTER `siteid`;
 
 #团队成员
+ALTER TABLE `fixture_site_participant` DROP COLUMN `siteid`;
+
 ALTER TABLE `fixture_site_participant` ADD COLUMN `companyid`  int(11) NULL DEFAULT NULL COMMENT '公司id' AFTER `uuid`;
 
 ALTER TABLE `fixture_site_participant` MODIFY COLUMN `nickname`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '被邀请者昵称' AFTER `positionid`;
