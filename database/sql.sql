@@ -1023,12 +1023,12 @@ DROP TABLE IF EXISTS `fixture_site_participant`;
 
 CREATE TABLE `fixture_site_participant` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uuid` char(32) DEFAULT NULL COMMENT '唯一索引',
+  `uuid` char(32) DEFAULT NULL COMMENT '唯一索引id',
+  `companyid` int(11) DEFAULT NULL COMMENT '公司id',
+  `storeid` int(11) DEFAULT NULL COMMENT '门店id',
+  `cityid` int(11) DEFAULT NULL COMMENT '市id',
   `siteid` int(11) DEFAULT NULL COMMENT '工地id',
-  `positionid` int(11) DEFAULT NULL COMMENT '职位id',
-  `nickname` varchar(255) DEFAULT NULL COMMENT '昵称',
-  `faceimg` longtext COMMENT '头像',
-  `wechatopenid` varchar(255) DEFAULT NULL COMMENT '微信openid',
+  `userid` int(11) DEFAULT NULL COMMENT '参与者id，对应用户user表id',
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='工地参与者（团队成员）';

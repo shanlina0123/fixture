@@ -8,9 +8,12 @@
 namespace App\Http\Business\Common;
 
 use App\Http\Model\Filter\FilterRoleFunction;
+use App\Http\Model\Site\SiteParticipant;
 use App\Http\Model\User\User;
 use App\Http\Model\User\UserToken;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+
 class WxApiLogin
 {
     /**
@@ -90,6 +93,111 @@ class WxApiLogin
         }
     }
 
+    /**
+     * @param $openid
+     * @param $companyid
+     * @param $nickname
+     * @param $faceimg
+     * @param $scene 携带的参数
+     * 变更用户身份
+     */
+    public function userChangeType( $openid, $companyid,$nickname,$faceimg, $scene )
+    {
+        parse_str($scene,$arr);
+        switch ( (int)$arr['type'] )
+        {
+            case 1://邀请参与
+                $res = User::where(['wechatopenid'=>$openid,'companyid'=>$companyid])->first();
+                if( $res )
+                {
+                    //查询到了用户
+                    if( $res->type == 0 )
+                    {
+                        if( $res->isadminafter == 1 )
+                        {
+                            responseData(\StatusCode::ERROR,"您已经绑定了管理者不能再次绑定");
+                        }else
+                        {
+                            responseData(\StatusCode::ERROR,"您已是成员不能重复绑定");
+                        }
+                    }else
+                    {
+                        //C端的用户变为成员
+                        try{
+                            DB::beginTransaction();
+                            //1修改用户表
+                            $res->type = 0;
+                            $res->isinvitationed = 1;
+                            $user = $res->save();
+                            //添加成员表
+                            $participant = new SiteParticipant();
+                            $participant->uuid = create_uuid();
+                            $participant->companyid = $companyid;
+                            $participant->positionid = $arr['positionid'];
+                            $participant->nickname = $nickname;
+                            $participant->faceimg = $faceimg;
+                            $participant->wechatopenid = $openid;
+                            $participant->userid = $arr['uid'];
+                            $participant->created_at = date("Y-m-d H:i:s");
+                            $participant->save();
+                            DB::commit();
+                            if( $user && $participant->id )
+                            {
+                                return $this->userLogin( $openid, $companyid,$nickname,$faceimg );
+                            }
+                            responseData(\StatusCode::ERROR,"邀请失败");
+                        }catch ( Exception $e )
+                        {
+                            DB::rollBack();
+                            responseData(\StatusCode::ERROR,"邀请失败");
+                        }
+                    }
+                }else
+                {
+                    //注册成邀请的用户
+                    try{
+                        DB::beginTransaction();
+                        //1修改用户表
+                        $user = new User();
+                        $user->uuid = create_uuid();
+                        $user->companyid = $companyid;
+                        $user->wechatopenid = $openid;
+                        $user->isadmin = 0;
+                        $user->isadminafter = 0;
+                        $res->type = 0;
+                        $res->isinvitationed = 1;
+                        $user->status = 1;
+                        $user->nickname = $nickname;
+                        $user->faceimg = $faceimg;
+                        $user = $res->save();
+
+                        //添加成员表
+                        $participant = new SiteParticipant();
+                        $participant->uuid = create_uuid();
+                        $participant->companyid = $companyid;
+                        $participant->positionid = $arr['positionid'];
+                        $participant->nickname = $nickname;
+                        $participant->faceimg = $faceimg;
+                        $participant->wechatopenid = $openid;
+                        $participant->userid = $arr['uid'];
+                        $participant->save();
+                        DB::commit();
+                        if( $user->id && $participant->id )
+                        {
+                            return $this->userLogin( $openid, $companyid,$nickname,$faceimg );
+                        }
+                        responseData(\StatusCode::ERROR,"邀请失败");
+                    }catch ( Exception $e )
+                    {
+                        DB::rollBack();
+                        responseData(\StatusCode::ERROR,"邀请失败");
+                    }
+                }
+                break;
+            case 2://绑定用户
+                break;
+        }
+    }
     /**
      * 获取openid
      */

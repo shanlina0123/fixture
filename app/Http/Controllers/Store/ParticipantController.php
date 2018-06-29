@@ -9,6 +9,8 @@
 namespace App\Http\Controllers\Store;
 
 
+use App\Http\Business\Common\WxAlone;
+use App\Http\Business\Common\WxAuthorize;
 use App\Http\Business\Store\ParticipantBusiness;
 use App\Http\Controllers\Common\StoreBaseController;
 
@@ -34,31 +36,35 @@ class ParticipantController extends StoreBaseController
         responseData(\StatusCode::SUCCESS,'参与者列表',$res);
     }
 
+    /**
+     * 职位
+     */
+    public function  positionList()
+    {
+        $where['status'] = 1;
+        $where['companyid'] = $this->apiUser->companyid;
+        $res = $this->participant->positionList( $where );
+        responseData(\StatusCode::SUCCESS,'职位列表',$res);
+    }
 
     /**
-     * 工地参与者
+     * 二维码
      */
-    public function siteParticipantList()
+    public function code()
     {
-        $user = $this->apiUser;
-        $where['companyid'] = $user->companyid;
-        $data = trimValue( $this->request->all());
-        $validator = Validator::make(
-            $data, [
-            'storeid' => 'bail|required|numeric',//门店
-            ],
-            [
-             'storeid.numeric' => '门店信息数据类型不正确',
-            ]
-        );
-        $where['siteid'] = $data['siteid'];
-        if ($validator->fails())
+        //1单独部署
+        if( config('wxtype.type') == 1 )
         {
-            $messages = $validator->errors()->first();
-            responseData(\StatusCode::CHECK_FORM,'验证失败','',$messages);
+            $wx = new WxAlone();
+        }else
+        {
+            $wx = new WxAuthorize();
         }
-
-        //$res =
-
+        $companyid = $this->request->input('companyid');
+        $uid = $this->request->input('uid');
+        $positionid = $this->request->input('positionid');
+        $type = 'allow';
+        $scene = http_build_query(['uid'=>$uid,'positionid'=>$positionid,'type'=>1]);
+        $wx->createWxappCode($companyid,$type, $scene,'400');
     }
 }
