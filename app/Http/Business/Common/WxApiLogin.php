@@ -103,8 +103,9 @@ class WxApiLogin
      */
     public function userChangeType( $openid, $companyid,$nickname,$faceimg, $scene )
     {
+        //u代表用户id   p代表职位id   t代表类型 1为邀请2为绑定  因为此字段长度限制为32位所有简写
         parse_str($scene,$arr);
-        switch ( (int)$arr['type'] )
+        switch ( (int)$arr['t'] )
         {
             case 1://邀请参与
                 $res = User::where(['wechatopenid'=>$openid,'companyid'=>$companyid])->first();
@@ -133,11 +134,11 @@ class WxApiLogin
                             $participant = new SiteParticipant();
                             $participant->uuid = create_uuid();
                             $participant->companyid = $companyid;
-                            $participant->positionid = $arr['positionid'];
+                            $participant->positionid = $arr['p'];
                             $participant->nickname = $nickname;
                             $participant->faceimg = $faceimg;
                             $participant->wechatopenid = $openid;
-                            $participant->userid = $arr['uid'];
+                            $participant->userid = $arr['u'];
                             $participant->created_at = date("Y-m-d H:i:s");
                             $participant->save();
                             DB::commit();
@@ -175,11 +176,11 @@ class WxApiLogin
                         $participant = new SiteParticipant();
                         $participant->uuid = create_uuid();
                         $participant->companyid = $companyid;
-                        $participant->positionid = $arr['positionid'];
+                        $participant->positionid = $arr['p'];
                         $participant->nickname = $nickname;
                         $participant->faceimg = $faceimg;
                         $participant->wechatopenid = $openid;
-                        $participant->userid = $arr['uid'];
+                        $participant->userid = $arr['u'];
                         $participant->save();
                         DB::commit();
                         if( $user->id && $participant->id )

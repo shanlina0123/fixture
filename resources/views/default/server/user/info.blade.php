@@ -14,7 +14,7 @@
                     <label class="layui-form-label">姓名</label>
                     <div class="layui-input-block">
                         <input type="text" value="{{$user->nickname}}" class="layui-input" readonly  style="width: 25%;float:left;">
-                        {{--<a href="javascript:;" style="line-height:38px;color: #01AAED" class="binwx" url="{{route('user-wxcode')}}">绑定微信</a>--}}
+                        <a href="javascript:;" style="line-height:38px;color: #01AAED" class="binwx" url="{{route('user-wxcode')}}">绑定微信</a>
                     </div>
                 </div>
                 <div class="layui-form-item">

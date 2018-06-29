@@ -64,7 +64,8 @@ class ParticipantController extends StoreBaseController
         $uid = $this->request->input('uid');
         $positionid = $this->request->input('positionid');
         $type = 'allow';
-        $scene = http_build_query(['uid'=>$uid,'positionid'=>$positionid,'type'=>1]);
+        //u代表用户id   p代表职位id   t代表类型 1为邀请2为绑定  因为此字段长度限制为32位所有简写
+        $scene = http_build_query(['u'=>$uid,'p'=>$positionid,'t'=>1]);
         $wx->createWxappCode($companyid,$type, $scene,'400');
     }
 }

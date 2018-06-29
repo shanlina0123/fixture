@@ -1184,6 +1184,21 @@ CREATE TABLE `fixture_user_token` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户 - token';
 
+DROP TABLE IF EXISTS `fixture_company_wxtemplet`;
+CREATE TABLE `fixture_company_wxtemplet` (
+   `id` int(11) NOT NULL AUTO_INCREMENT,
+   `wid` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '原始模板ID',
+   `name` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '模板名称',
+   `companyid` int(11) DEFAULT NULL COMMENT '公司id',
+   `templateid` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '模板id',
+   `content` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '模板内容',
+   `type` tinyint(2) DEFAULT NULL COMMENT '1.客户预约通知',
+   `created_at` datetime DEFAULT NULL COMMENT '添加时间',
+   PRIMARY KEY (`id`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+
+
+
 /*Data for the table `fixture_user_token` */
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

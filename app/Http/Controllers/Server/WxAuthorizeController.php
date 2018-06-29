@@ -7,6 +7,7 @@
  */
 namespace App\Http\Controllers\Server;
 use App\Http\Business\Common\WxAuthorize;
+use App\Http\Business\Server\WxTempletBusiness;
 use App\Http\Controllers\Common\WxBaseController;
 use App\Http\Model\Wx\SmallProgram;
 use Illuminate\Http\Request;
@@ -69,6 +70,9 @@ class WxAuthorizeController extends WxBaseController
         {
             //清除授权码
             Cache::forget('pre_auth_code'.session('userInfo')['id']);
+            //添加模板
+            $temple = new WxTempletBusiness;
+            $temple->addTemplet($this->userInfo->companyid);
             return redirect()->route('user-authorize')->with('msg','授权成功');
 
         }else
