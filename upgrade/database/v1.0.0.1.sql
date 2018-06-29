@@ -10,8 +10,7 @@ ALTER TABLE `fixture_conf_vipfunctionpoint` MODIFY COLUMN `content`  longtext CH
 ALTER TABLE `fixture_conf_vipfunctionpoint` DROP COLUMN `vipmechanismid`;
 #授权
 ALTER TABLE `fixture_small_program` MODIFY COLUMN `sourcecode`  tinyint(1) NULL DEFAULT NULL COMMENT '1审核成功 0代码提交失败 2.审核中  3.审核失败' AFTER `uploadcode`;
-#用户
-ALTER TABLE `fixture_user` MODIFY COLUMN `faceimg`  longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '头像' AFTER `resume`;
+
 SET FOREIGN_KEY_CHECKS=1;
 
 -- ----------------------------
