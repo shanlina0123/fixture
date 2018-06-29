@@ -19,7 +19,6 @@
                             @if($list['functionList']!=null)@foreach($list['functionList'] as $index=>$item)
                                 <li>
                                     <div class="basePower">
-                                        <div class="powerName">菜单权限</div>
                                         <div class="basePowerWrap">
                                             <div class="allPower">
                                                 <input type="checkbox" name="funcislook[{{$item['id']}}]" tolook="@if($list["roleFunctionList"]!=null&&array_key_exists($item["id"],$list["roleFunctionList"])){{$list["roleFunctionList"][$item['id']]['islook']}}@else 1 @endif" class="functionidSubmit" lay-skin="primary" lay-filter="allChoose" title="{{$item["menuname"]}}" value="{{$item["id"]}}" @if($list["roleFunctionList"]!=null&&array_key_exists($item["id"],$list["roleFunctionList"]))checked=""@endif/>

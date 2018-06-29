@@ -47,6 +47,7 @@ class ApiAuthCheck
                         }
                         $user->tokenToUser->islook = $islook;
                         $request->attributes->add(['apiUser'=>$user]);//添加api用户信息
+
                     }else
                     {
                         //视野权限
@@ -62,6 +63,27 @@ class ApiAuthCheck
                     }
                 }
             }
+
+            //标准版访问限制
+/*            if($user->tokenToUser->vipmechanismid==1)
+            {
+                //vip操作权限
+                $vipAllowController = ConfVipfunctionpoint::where("status", 1)->where("type", "allow")->where("controller", $routeController)->select();
+                //存在限制的控制器
+                if ($vipAllowController) {
+                    foreach ($vipAllowController as $k => $v) {
+                        //存在限制的方法
+                        if ($v["method"] == $routeMethod) {
+                            //标准版的数据值0无 1有
+                            if (!$v["value"]) {
+                                responseData(\StatusCode::AUTH_ERROR, "您无权限操作,请升级为专业版");
+                            }
+                        }
+
+                    }
+                }
+            }*/
+
         }
         return $next($request);
     }

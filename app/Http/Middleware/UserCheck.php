@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Middleware;
+use App\Http\Model\Company\Company;
 use App\Http\Model\Filter\FilterFunction;
 use App\Http\Model\Filter\FilterRoleFunction;
 use App\Http\Model\User\User;
@@ -40,11 +41,18 @@ class UserCheck
              }
          }
 
+        //vip版本
+        $userInfo["vipmechanismid"]=Company::where("id",$userInfo["companyid"])->value("vipmechanismid");
+        session(['userInfo'=>$userInfo]);
+
          //获取菜单+重置session
         if($userInfo["isadmin"]==0)
         {
             $this->getMenue();
         }
+
+
+
         return $next($request);
     }
 
