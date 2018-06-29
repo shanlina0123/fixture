@@ -282,7 +282,7 @@ class RolesBusiness extends ServerBase
         //所有功能列表
         $list["functionList"] =Cache::get($tag1, function () use ($tag1) {
             //默认条件
-            $objList = FilterFunction::where(["ismenu"=>1,"status"=>1])->select("id", "menuname", "pid", "level")->orderBy('sort', 'asc')->get();
+            $objList = FilterFunction::where(["status"=>1])->select("id", "menuname", "pid", "level")->orderBy('sort', 'asc')->get();
             //结果检测
             if (empty($objList)) {
                 return responseCData(\StatusCode::EMPTY_ERROR, "系统未配置权限功能，请联系管理员");
