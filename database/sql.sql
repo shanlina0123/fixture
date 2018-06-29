@@ -222,6 +222,7 @@ CREATE TABLE `fixture_company` (
   `logo` longtext COMMENT '企业logo',
   `clientappid` varchar(100) DEFAULT NULL COMMENT '客户小程序appid',
   `deadline` datetime DEFAULT NULL COMMENT '机制过期时间，过期后自动成为标准版（后台自动定期处理）',
+  `covermap` varchar(255) DEFAULT NULL COMMENT '封面图',
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   `updated_at` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
@@ -1022,14 +1023,15 @@ CREATE TABLE `fixture_site_invitation` (
 DROP TABLE IF EXISTS `fixture_site_participant`;
 
 CREATE TABLE `fixture_site_participant` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uuid` char(32) DEFAULT NULL COMMENT '唯一索引id',
-  `companyid` int(11) DEFAULT NULL COMMENT '公司id',
-  `storeid` int(11) DEFAULT NULL COMMENT '门店id',
-  `cityid` int(11) DEFAULT NULL COMMENT '市id',
-  `siteid` int(11) DEFAULT NULL COMMENT '工地id',
-  `userid` int(11) DEFAULT NULL COMMENT '参与者id，对应用户user表id',
-  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+   `id` int(11) NOT NULL AUTO_INCREMENT,
+   `uuid` char(32) DEFAULT NULL COMMENT '唯一索引',
+   `companyid` int(11) DEFAULT NULL COMMENT '公司id',
+   `positionid` int(11) DEFAULT NULL COMMENT '职位id',
+   `nickname` varchar(255) DEFAULT NULL COMMENT '被邀请者昵称',
+   `faceimg` longtext COMMENT '被邀请者头像',
+   `wechatopenid` varchar(255) DEFAULT NULL COMMENT '被邀请者微信openid',
+   `userid` int(11) DEFAULT NULL COMMENT '邀请者id',
+   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='工地参与者（团队成员）';
 
