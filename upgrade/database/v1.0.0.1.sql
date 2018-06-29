@@ -59,4 +59,8 @@ ALTER TABLE `fixture_site_invitation` ADD COLUMN `joinname`  varchar(255) CHARAC
 ALTER TABLE `fixture_site_invitation` ADD COLUMN `joinuserid`  int(11) NULL DEFAULT NULL COMMENT '参与者id' AFTER `joinname`;
 ALTER TABLE `fixture_site_invitation` MODIFY COLUMN `userid`  int(11) NULL DEFAULT NULL COMMENT '邀请者id，对应用户user表id' AFTER `joinuserid`;
 
+#工地动态权限录入
+INSERT INTO `fixture_filter_function` VALUES ('204', '751e6d517b8111e89f8694de807e34a0', '工地动态', '2', '4', '0', '工地动态', '2', 'DynamicController', 'dynamic-index', '1', '2018-06-29 17:47:38');
 
+#将动态权限加入有已经有项目管理的角色里。sql未完善待定
+#INSERT INTO  `fixture_filter_role_function` SELECT roleid,islook FROM `fixture_filter_role_function` where functionid=2 ;
