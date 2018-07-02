@@ -124,7 +124,8 @@ class WxTempletBusiness
                     'touser'=>$openid,
                     'template_id'=>$res->templateid,
                     "form_id"=> "{$data['formId']}",
-                    //'page'=>'client/client',
+                    //"form_id"=> "1530495726294",
+                    'page'=>'pages/client/client',
                     'data'=>array(
                         'keyword1'=>['value'=>$data['name']],//客户姓名
                         'keyword2'=>['value'=>$time],//预约时间
@@ -133,7 +134,9 @@ class WxTempletBusiness
                         'keyword5'=>['value'=>'客户预约信息进入查看更多'],
                     )
                 );
-                wxPostCurl($url,$post);
+                $a = wxPostCurl($url,$post);
+                log::error($post);
+                log::error($a);
                 break;
         }
     }
