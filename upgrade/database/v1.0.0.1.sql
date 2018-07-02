@@ -62,5 +62,27 @@ ALTER TABLE `fixture_site_invitation` MODIFY COLUMN `userid`  int(11) NULL DEFAU
 #工地动态权限录入
 INSERT INTO `fixture_filter_function` VALUES ('204', '751e6d517b8111e89f8694de807e34a0', '工地动态', '2', '4', '0', '工地动态', '2', 'DynamicController', 'dynamic-index', '1', '2018-06-29 17:47:38');
 
-#将动态权限加入有已经有项目管理的角色里。sql未完善待定
-#INSERT INTO  `fixture_filter_role_function` SELECT roleid,islook FROM `fixture_filter_role_function` where functionid=2 ;
+#将动态权限加入有已经有项目管理的角色里。
+DROP PROCEDURE IF EXISTS role_function;
+delimiter //
+CREATE PROCEDURE role_function()
+BEGIN
+  DECLARE strRoleid int;
+  DECLARE strIslook int;
+  DECLARE stop int default 0;
+  DECLARE cur cursor for(
+		SELECT roleid,islook FROM `fixture_filter_role_function` WHERE functionid=2 and roleid not in (
+			SELECT roleid FROM `fixture_filter_role_function` WHERE functionid=204 GROUP BY roleid
+		) GROUP BY roleid
+	);
+  DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET stop = null;
+  OPEN cur;
+		FETCH cur INTO strRoleid,strIslook;
+		WHILE (stop is not null)DO
+		INSERT INTO `fixture_filter_role_function` VALUES ('', REPLACE(UUID(),"-",""), strRoleid, '204', strIslook, now());
+		FETCH cur INTO strRoleid,strIslook;
+    END WHILE;
+	CLOSE cur;
+END;//
+delimiter ;
+call role_function();
