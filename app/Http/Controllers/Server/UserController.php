@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Server;
 use App\Http\Business\Common\WxAuthorize;
 use App\Http\Business\Server\UserBusiness;
+use App\Http\Business\Server\WxTempletBusiness;
 use App\Http\Controllers\Common\ServerBaseController;
 use App\Http\Model\User\User;
 use App\Http\Model\Wx\SmallProgram;
@@ -156,6 +157,7 @@ class UserController extends ServerBaseController
                     $data = json_decode($data,true);
                     if( array_has( $data,'access_token') )
                     {
+                        $temple = new WxTempletBusiness;
                         $res = SmallProgram::where(['companyid'=>$userInfo->companyid])->first();
                         if( $res )
                         {
@@ -164,6 +166,8 @@ class UserController extends ServerBaseController
                             if( $res->save() )
                             {
                                 Cache::put('access_token'.$userInfo->companyid,$data['access_token'],$data['expires_in']/60);
+                                //添加模板
+                                $temple->addTemplet($userInfo->companyid);
                                 return redirect()->route('user-authorize')->with('msg','授权成功');
                             }
                         }else
@@ -175,6 +179,8 @@ class UserController extends ServerBaseController
                             if( $obj->save() )
                             {
                                 Cache::put('access_token'.$userInfo->companyid,$data['access_token'],$data['expires_in']/60);
+                                //添加模板
+                                $temple->addTemplet($userInfo->companyid);
                                 return redirect()->route('user-authorize')->with('msg','授权成功');
                             }
                         }

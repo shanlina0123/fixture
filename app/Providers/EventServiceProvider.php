@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Http\Business\Server\WxTempletBusiness;
 use App\Http\Model\Company\Company;
 use App\Http\Model\Log\Notice;
 use App\Http\Model\Site\Site;
@@ -92,20 +93,28 @@ class EventServiceProvider extends ServiceProvider
                             $obj->siteid = $event['siteid'];
                             $obj->cityid = $site->cityid;
                             $obj->storeid = $site->storeid;
+                            $event['title'] = $obj->title;
                             break;
                         case 2:
                             $obj->title = '免费量房';
                             $obj->content = $notice_type?str_replace('【客户姓名】',$event['name'],config('template.5')):str_replace('【公司简称】',$name,config('template.1'));
                             $obj->siteid = 0;
+                            $event['title'] = $obj->title;
                             break;
                         case 4:
                             $obj->title = '快速报价';
                             $obj->content = $notice_type?str_replace('【客户姓名】',$event['name'],config('template.6')):str_replace('【公司简称】',$name,config('template.2'));
                             $obj->siteid = 0;
+                            $event['title'] = $obj->title;
                             break;
                         case 5:
-
                             break;
+                    }
+                    if( array_has($event,'formId') )
+                    {
+                        //发送小程序消息
+                        $temple = new WxTempletBusiness;
+                        $temple->sendTemplet($event,$user->companyid,1);
                     }
                     break;
             }
