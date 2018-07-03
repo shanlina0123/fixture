@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4b3d1f6c15b5aa58f008b5ef4ef738ea",
+    "content-hash": "c44329964516ce37e0a39d560122aefb",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -474,6 +474,50 @@
                 }
             ],
             "time": "2015-04-20T18:58:01+00:00"
+        },
+        {
+            "name": "jiguang/jmessage",
+            "version": "1.1.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jpush/jmessage-api-php-client.git",
+                "reference": "04f3666a18bd3e6ff591ef31b3e28a52cb30bfcf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://files.phpcomposer.com/files/jpush/jmessage-api-php-client/04f3666a18bd3e6ff591ef31b3e28a52cb30bfcf.zip",
+                "reference": "04f3666a18bd3e6ff591ef31b3e28a52cb30bfcf",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "JMessage\\": "src/JMessage/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "JiGuang",
+                    "email": "support@jpush.cn",
+                    "homepage": "https://www.jiguang.cn"
+                }
+            ],
+            "description": "JMessage's officially supported PHP client library for accessing JMessage APIs.",
+            "homepage": "https://github.com/jpush/jmessage-api-php-client",
+            "keywords": [
+                "api client",
+                "jiguang",
+                "jmessage"
+            ],
+            "time": "2018-01-24T07:01:12+00:00"
         },
         {
             "name": "laravel/framework",

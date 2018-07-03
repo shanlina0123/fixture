@@ -85,7 +85,7 @@
                             </div>
                             <div class="desli">
                                 <p>技术支持</p>
-                                <span>{!! config("configure.technology_support") !!}</span>
+                                <span>{!! config("configure.sys.site_icp") !!}</span>
                             </div>
                         </div>
                     </div>

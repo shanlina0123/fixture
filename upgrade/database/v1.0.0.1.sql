@@ -54,9 +54,7 @@ DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci
 ROW_FORMAT=Compact;
 #参与者被邀请的工地/工地成员
 ALTER TABLE `fixture_site_invitation` ADD COLUMN `participantid`  int(11) NULL DEFAULT NULL COMMENT '新建的成员信息id,对应成员表' AFTER `siteid`;
-ALTER TABLE `fixture_site_invitation` ADD COLUMN `joinpositionid`  int(11) NULL DEFAULT NULL COMMENT '参与者职位id,来自成员表或用户表职位id都行。' AFTER `participantid`;
-ALTER TABLE `fixture_site_invitation` ADD COLUMN `joinname`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '参与者姓名，来自成员表name' AFTER `joinpositionid`;
-ALTER TABLE `fixture_site_invitation` ADD COLUMN `joinuserid`  int(11) NULL DEFAULT NULL COMMENT '参与者id' AFTER `joinname`;
+ALTER TABLE `fixture_site_invitation` ADD COLUMN `joinuserid`  int(11) NULL DEFAULT NULL COMMENT '参与者id' AFTER `userid`;
 ALTER TABLE `fixture_site_invitation` MODIFY COLUMN `userid`  int(11) NULL DEFAULT NULL COMMENT '邀请者id，对应用户user表id' AFTER `joinuserid`;
 
 #工地动态权限录入
@@ -86,3 +84,11 @@ BEGIN
 END;//
 delimiter ;
 call role_function();
+
+#####以上已同步线上######
+#vip升级申请
+ALTER TABLE `fixture_log_vipupgrade` ADD COLUMN `status`  tinyint(4) NULL DEFAULT 0 COMMENT '状态 0申请中  1已申请' AFTER `deadline`;
+ALTER TABLE `fixture_log_vipupgrade` ADD COLUMN `updated_at`  datetime NULL DEFAULT NULL COMMENT '更新时间' AFTER `created_at`;
+
+#用户解绑
+ALTER TABLE `fixture_user` ADD COLUMN `oid`  int(11) NULL DEFAULT NULL COMMENT '之前的用户id,解绑后需要恢复的用户id' AFTER `token`;
