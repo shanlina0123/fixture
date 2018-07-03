@@ -18,7 +18,7 @@ layui.use(['layer','form'], function() {
 
 
     //初始化
-    /*if(!$("form").attr("phone"))
+    if(!$("form").attr("phone"))
     {
         layer.open({
             type: 1,
@@ -30,7 +30,7 @@ layui.use(['layer','form'], function() {
             area: ['600px', '400px'],
             content: $(".popWrap")
         })
-   }*/
+   }
 
     //更换手机弹窗
     $(".changePhone").click(function() {
@@ -49,10 +49,14 @@ layui.use(['layer','form'], function() {
     //二维码弹窗
     $(".binwx").click(function(){
         var url=$(this).attr("url");
+        var checkUrl = $(this).attr('data-check');
         $.getJSON(url,null,function(data){
-            if(data.status==1){
+            if(data.status==1)
+            {
                 $(".erweima").html("<img src='"+data.data.wxappcode+"' style='width:100%'>");
-            }else{
+                checkOpenid(checkUrl);
+            }else
+            {
                 $(".erweima").html("<div class='erweimatext'>"+data.messages+"</div>");
             }
 
@@ -95,7 +99,7 @@ layui.use(['layer','form'], function() {
                         layer.msg(data.messages);
                     }else
                     {
-                        time();
+                        Countdown();
                         $("#phone").attr("readonly", true);
                         $("#phone").addClass('layui-disabled');
                     }
@@ -113,7 +117,7 @@ layui.use(['layer','form'], function() {
  */
 var wait = 60;
 
-function time()
+function Countdown()
 {
     if (wait == 0)
     {
@@ -134,7 +138,7 @@ function time()
             "border-color": "#ccc"
         });
         wait--;
-        setTimeout(function(){time()}, 1000)
+        setTimeout(function(){Countdown()}, 1000)
     }
 }
 
@@ -156,4 +160,28 @@ $("#layui-form").Validform({
         }
     }
 });
+
+/**
+ * 检测openid
+ */
+var num=0;
+function checkOpenid(url)
+{
+    var i = setInterval(function()
+    {
+        num++;
+        $.get(url,function(data){
+            if( data == 'success' )
+            {
+                clearInterval(i);
+                window.location = location;
+            }
+        });
+        if ( num > 90 )
+        {
+            clearInterval(i);
+        }
+    }, 3000);
+
+}
 

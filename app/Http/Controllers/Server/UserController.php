@@ -25,13 +25,13 @@ class UserController extends ServerBaseController
      */
     public function userInfo()
     {
-        $userInfo = session('userInfo');
+        $userInfo = $this->userInfo;
         if( $this->request->method() == "GET" )
         {
-            $user = $userInfo;
+            $user = User::where(['companyid'=>$userInfo->companyid,'id'=>$userInfo->id])->first();
             //小程序审核通过放可微信绑定
             $sourcecode=SmallProgram::where("companyid",$user->companyid)->value("sourcecode");
-            $user["sourcecode"]=$sourcecode;
+            $user->sourcecode = $sourcecode;
             return view('server.user.info',compact('user'));
         }else
         {
@@ -209,25 +209,25 @@ class UserController extends ServerBaseController
     public function wxcode()
     {
         //获取小程序二维码
-        $list["wxappcode"]=url("wx-code/allow/null/600");
+        $uid = $this->userInfo->id;
+        $companyid = $this->userInfo->companyid;
+        $url = "wx-code/allow/u={$uid}&c={$companyid}&t=2/600";
+        $list["wxappcode"]= url($url);
         responseData(\StatusCode::SUCCESS, "", $list);
     }
 
     /****
-     *扫二维码后检测是否绑定微信---暂未调用
+     *扫二维码后检测是否绑定微信
      */
-    public function  bindWx()
+    public function checkOpenid()
     {
-        $userInfo = session('userInfo');
-        $userInfo["wechatopenid"]=User::where("id",$userInfo->id)->value("wechatopenid");
-        session(['userInfo'=>$userInfo]);
-        $user= session('userInfo');
-        if($user["wechatopenid"])
+        $userInfo = $this->userInfo;
+        $openid = User::where("id",$userInfo->id)->value("wechatopenid");
+        if( $openid )
         {
-            return redirect()->route('index');
-        }else{
-            return view('server.user.info',compact('user'));
+            Cache::put('userToken'.$userInfo->id,['token'=>create_uuid(),'type'=>1],config('session.lifetime'));
+            return 'success';
         }
-
+        return 'fail';
     }
 }

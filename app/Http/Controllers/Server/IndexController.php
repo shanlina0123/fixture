@@ -12,6 +12,7 @@ class IndexController extends ServerBaseController
      */
     public function index()
     {
+        //dd(http_build_query(['u'=>1,'p'=>2,'s'=>3,'t'=>1]));
         return view('server.index.index');
     }
 
