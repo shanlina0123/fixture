@@ -465,3 +465,13 @@ function getCurl( $url, $herder=1 )
     return ['controller' => $class, 'method' => $method];
 }
 
+/***
+ * 极光账号username
+ * @param $userid
+ * @param string $pre
+ * @return string
+ */
+function username($userid,$pre="jmessage_"){
+     return $pre.$userid;
+}
+

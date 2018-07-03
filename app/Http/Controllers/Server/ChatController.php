@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Server;
 use App\Http\Business\Server\ChatBusiness;
 use App\Http\Controllers\Common\ServerBaseController;
 use Illuminate\Http\Request;
-use JMessage\JMessage;
-
 
 /***
  * 聊天管理
@@ -51,12 +49,10 @@ class ChatController extends ServerBaseController
      */
     public  function  getListData()
     {
-        //        $appKey = config('jmessage.appKey');
-        //        $masterSecret = config('jmessage.masterSecret');
-        //        $client = new JMessage($appKey, $masterSecret);
         //业务调用
         $list = $this->chat_business->index($this->userInfo->companyid);
         return   responseCData(\StatusCode::SUCCESS,"",$list);
     }
+
 
 }
