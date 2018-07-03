@@ -230,6 +230,58 @@ class WxApiLogin
                 }
                 break;
             case 2://绑定用户
+                $res = User::where(['id'=>$arr['u'],'companyid'=>$arr['c']])->first();
+                if( $res )
+                {
+                    try{
+                        DB::beginTransaction();
+                        //查看有无其他身份
+                        $other = User::where(['companyid'=>$arr['c'],'wechatopenid'=>$openid])->first();
+                        if( $other )
+                        {
+                            if( $other->isadminafter == 1 && $other->type == 0 )
+                            {
+                                responseData(\StatusCode::ERROR,"您的账号已绑定不能再次绑定");
+                            }else
+                            {
+                                //清除用户的token
+                                $uToken = UserToken::where('userid',$other->id)->first();
+                                Cache::forget($uToken->token);
+                                $uToken->delete();
+
+                                //存在其他身份
+                                $res->wechatopenid = $openid;
+                                $res->oid = $other->id;
+                                $upRes = $res->save();
+                                //暂时清除其他身份
+                                $other->wechatopenid = '';
+                                $upOther = $other->save();
+                                if( $upOther && $upRes)
+                                {
+                                    DB::commit();
+                                    return $this->userLogin( $openid, $companyid,$nickname,$faceimg );
+                                }
+                            }
+                        }else
+                        {
+                            //不存在其他身份
+                            $res->wechatopenid = $openid;
+                            if($res->save())
+                            {
+                                DB::commit();
+                                return $this->userLogin( $openid, $companyid,$nickname,$faceimg );
+                            }
+
+                        }
+                        DB::rollBack();
+                        responseData(\StatusCode::ERROR,"绑定失败");
+                    }catch ( Exception $e )
+                    {
+                        DB::rollBack();
+                        responseData(\StatusCode::ERROR,"绑定失败");
+                    }
+                }
+                responseData(\StatusCode::ERROR,"绑定失败");
                 break;
         }
     }

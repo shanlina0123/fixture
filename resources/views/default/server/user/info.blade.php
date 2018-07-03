@@ -14,7 +14,11 @@
                     <label class="layui-form-label">姓名</label>
                     <div class="layui-input-block">
                         <input type="text" value="{{$user->nickname}}" class="layui-input" readonly  style="width: 25%;float:left;">
-                        <a href="javascript:;" style="line-height:38px;color: #01AAED" class="binwx" url="{{route('user-wxcode')}}">绑定微信</a>
+                        @if($user->wechatopenid)
+                            已绑定
+                        @else
+                            <a href="javascript:;" style="line-height:38px;color: #01AAED" class="binwx" url="{{route('user-wxcode')}}" data-check="{{route('check-openid')}}">绑定微信</a>
+                        @endif
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -65,8 +69,8 @@
     <!--二维码弹窗-->
     <div class="erweimapop" style="display: none;" >
         <div class="erweima">
-            @if($user["sourcecode"]!=1)
-                <div class="erweimatext">抱歉您所在公司未进行小程序授权，暂不能进行微信绑定</div>
+            @if($user->sourcecode!=1)
+                <div class="erweimatext">小程序为发布成功，暂不能进行微信绑定</div>
             @endif
         </div>
         <p class="poptext">扫描二维码认证您的身份</p>
