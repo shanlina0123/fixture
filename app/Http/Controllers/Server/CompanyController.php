@@ -49,7 +49,7 @@ class CompanyController extends ServerBaseController
 
             $data = trimValue(array_except($request->all(),['_token']));
             $res = $this->company->setCompany($data);
-            if( $res->ststus == 1 )
+            if($res->ststus == 1)
             {
                 $userInfo = session('userInfo');
                 Cache::forget('CompanyInfo'.$userInfo->companyid);

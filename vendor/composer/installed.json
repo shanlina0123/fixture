@@ -708,6 +708,52 @@
         ]
     },
     {
+        "name": "jiguang/jmessage",
+        "version": "1.1.9",
+        "version_normalized": "1.1.9.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/jpush/jmessage-api-php-client.git",
+            "reference": "04f3666a18bd3e6ff591ef31b3e28a52cb30bfcf"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://files.phpcomposer.com/files/jpush/jmessage-api-php-client/04f3666a18bd3e6ff591ef31b3e28a52cb30bfcf.zip",
+            "reference": "04f3666a18bd3e6ff591ef31b3e28a52cb30bfcf",
+            "shasum": ""
+        },
+        "require": {
+            "ext-curl": "*",
+            "php": ">=5.4"
+        },
+        "time": "2018-01-24T07:01:12+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "JMessage\\": "src/JMessage/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "JiGuang",
+                "email": "support@jpush.cn",
+                "homepage": "https://www.jiguang.cn"
+            }
+        ],
+        "description": "JMessage's officially supported PHP client library for accessing JMessage APIs.",
+        "homepage": "https://github.com/jpush/jmessage-api-php-client",
+        "keywords": [
+            "api client",
+            "jiguang",
+            "jmessage"
+        ]
+    },
+    {
         "name": "laravel/framework",
         "version": "v5.5.39",
         "version_normalized": "5.5.39.0",
