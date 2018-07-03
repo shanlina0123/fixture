@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers\Common;
 
+use App\Http\Business\Common\JmessageBusiness;
 use App\Http\Business\Common\SystemMessage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -85,5 +86,24 @@ class SystemMessageController extends Controller
         }
         responseData(\StatusCode::ERROR,'读取失败');
 
+    }
+
+    /**
+     * -------------------------------------------------
+     *
+     *   极光消息
+     *
+     * -------------------------------------------------
+     */
+
+
+    /**
+     * 极光初始化
+     */
+    public function getJmessageInIt()
+    {
+        $Jmessages = new JmessageBusiness();
+        $res = $Jmessages->getJmessageInIt();
+        responseData(\StatusCode::SUCCESS,'初始化信息',$res);
     }
 }
