@@ -1,5 +1,5 @@
 @extends('server.layout.content')
-@section("title")门店管理@endsection
+@section("title")VIP升级@endsection
 @section('content')
 <div class="main">
     @if($data["tipname"])
