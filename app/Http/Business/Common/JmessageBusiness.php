@@ -13,6 +13,8 @@ use JMessage\IM\Friend;
 use JMessage\IM\Resource;
 class JmessageBusiness
 {
+    public $appKey;
+    public $masterSecret;
     public $jmessageClient;
     public $jmessageUser;
     public $jmessageFriend;
@@ -20,12 +22,21 @@ class JmessageBusiness
     public function __construct()
     {
         //聊天init
-        $appKey = config('jmessage.appKey');
-        $masterSecret = config('jmessage.masterSecret');
-        $this->jmessageClient = new JMessage($appKey, $masterSecret);//客户端
+        $this->appKey = config('jmessage.appKey');
+        $this->masterSecret = config('jmessage.masterSecret');
+        $this->jmessageClient = new JMessage($this->appKey, $this->masterSecret);//客户端
         $this->jmessageUser = new User($this->jmessageClient);//用户
         $this->jmessageFriend = new  Friend($this->jmessageClient);//好友
         $this->jmessageResource = new  Resource($this->jmessageClient);//Resource 媒体资源
+    }
+
+    public function  getAppKey()
+    {
+        return $this->appKey;
+    }
+    public function  getMasterSecret()
+    {
+        return $this->masterSecret;
     }
 
     /***
