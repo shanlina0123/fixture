@@ -52,11 +52,9 @@ class WxAlone
      */
     public function getAccessToken( $companyid )
     {
-        if( Cache::get('access_token').$companyid )
+        if( Cache::get('access_token'.$companyid ) )
         {
-
             $access_token = Cache::get('access_token'.$companyid);
-
         }else
         {
             $res = SmallProgram::where(['companyid'=>$companyid])->first();

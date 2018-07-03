@@ -59,7 +59,12 @@ Route::group(['middleware'=>'ApiCheck'], function () {
             Route::get('client/client-list', 'ClientController@clientList');
             //参与者列表
             Route::get('participant/participant-list', 'ParticipantController@participantList');
+            //职位列表
             Route::get('participant/position-list', 'ParticipantController@positionList');
+            //添加成员
+            Route::post('participant/participant-save', 'ParticipantController@addParticipant');
+            //删除成员
+            Route::delete('participant/participant-del', 'ParticipantController@delParticipant');
 
         });
 

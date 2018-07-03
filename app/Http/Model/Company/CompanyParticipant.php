@@ -6,16 +6,16 @@
  * Time: 10:38
  */
 
-namespace App\Http\Model\Site;
+namespace App\Http\Model\Company;
 
 
 use Illuminate\Database\Eloquent\Model;
 
-class SiteParticipant extends Model
+class CompanyParticipant extends Model
 {
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
-    protected $table = 'site_participant';
+    protected $table = 'company_participant';
     public $timestamps = false;
 
 

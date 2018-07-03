@@ -9,7 +9,7 @@ class SiteInvitation extends Model
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
     protected $table = 'site_invitation';
-    public $timestamps = true;
+    public $timestamps = false;
 
 
     /**
@@ -36,6 +36,6 @@ class SiteInvitation extends Model
      */
     public function invitationToUser()
     {
-        return $this->belongsTo('App\Http\Model\User\User','userid','id');
+        return $this->belongsTo('App\Http\Model\User\User','joinuserid','id');
     }
 }

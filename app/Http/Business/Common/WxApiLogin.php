@@ -7,7 +7,10 @@
  */
 namespace App\Http\Business\Common;
 
+use App\Http\Model\Company\CompanyParticipant;
 use App\Http\Model\Filter\FilterRoleFunction;
+use App\Http\Model\Site\Site;
+use App\Http\Model\Site\SiteInvitation;
 use App\Http\Model\Site\SiteParticipant;
 use App\Http\Model\User\User;
 use App\Http\Model\User\UserToken;
@@ -126,26 +129,41 @@ class WxApiLogin
                         //C端的用户变为成员
                         try{
                             DB::beginTransaction();
+                            //查询成员信息
+                            $participant = CompanyParticipant::where(['companyid'=>$companyid,'id'=>$arr['p']])->first();
                             //1修改用户表
                             $res->type = 0;
                             $res->isinvitationed = 1;
+                            $res->positionid = $participant->positionid;
                             $user = $res->save();
-                            //添加成员表
-                            $participant = new SiteParticipant();
-                            $participant->uuid = create_uuid();
-                            $participant->companyid = $companyid;
-                            $participant->positionid = $arr['p'];
-                            $participant->nickname = $nickname;
-                            $participant->faceimg = $faceimg;
-                            $participant->wechatopenid = $openid;
-                            $participant->userid = $arr['u'];
-                            $participant->created_at = date("Y-m-d H:i:s");
-                            $participant->save();
-                            DB::commit();
-                            if( $user && $participant->id )
+                            //判断是不是添加了
+                            $Invitation = SiteInvitation::where(['companyid'=>$companyid,'siteid'=>$arr['s']])->first();
+                            if( $Invitation )
                             {
+                                responseData(\StatusCode::ERROR,"您已是此项目成员");
+                            }
+                            //工地对应区域
+                            $site = Site::where(['companyid'=>$companyid,'id'=>$arr['s']])->first();
+
+
+                            //添加工地成员表
+                            $siteInvitation = new SiteInvitation();
+                            $siteInvitation->uuid = create_uuid();
+                            $siteInvitation->companyid = $companyid;
+                            $siteInvitation->storeid = $site->storeid;
+                            $siteInvitation->cityid = $site->cityid;
+                            $siteInvitation->siteid = $arr['s'];
+                            $siteInvitation->participantid = $arr['p'];//成员信息id
+                            $siteInvitation->userid = $arr['u'];
+                            $siteInvitation->joinuserid = $res->id;
+                            $siteInvitation->created_at = date("Y-m-d H:i:s");
+                            $siteInvitation->save();
+                            if( $user && $siteInvitation->id )
+                            {
+                                DB::commit();
                                 return $this->userLogin( $openid, $companyid,$nickname,$faceimg );
                             }
+                            DB::rollBack();
                             responseData(\StatusCode::ERROR,"邀请失败");
                         }catch ( Exception $e )
                         {
@@ -158,10 +176,13 @@ class WxApiLogin
                     //注册成邀请的用户
                     try{
                         DB::beginTransaction();
-                        //1修改用户表
+                        //查询成员信息
+                        $participant = CompanyParticipant::where(['companyid'=>$companyid,'id'=>$arr['p']])->first();
+                        //用户表
                         $user = new User();
                         $user->uuid = create_uuid();
                         $user->companyid = $companyid;
+                        $user->positionid = $participant->positionid;
                         $user->wechatopenid = $openid;
                         $user->isadmin = 0;
                         $user->isadminafter = 0;
@@ -170,23 +191,36 @@ class WxApiLogin
                         $user->status = 1;
                         $user->nickname = $nickname;
                         $user->faceimg = $faceimg;
-                        $user = $res->save();
+                        $user->save();
 
-                        //添加成员表
-                        $participant = new SiteParticipant();
-                        $participant->uuid = create_uuid();
-                        $participant->companyid = $companyid;
-                        $participant->positionid = $arr['p'];
-                        $participant->nickname = $nickname;
-                        $participant->faceimg = $faceimg;
-                        $participant->wechatopenid = $openid;
-                        $participant->userid = $arr['u'];
-                        $participant->save();
-                        DB::commit();
-                        if( $user->id && $participant->id )
+                        //判断是不是添加了
+                        $Invitation = SiteInvitation::where(['companyid'=>$companyid,'siteid'=>$arr['s']])->first();
+                        if( $Invitation )
                         {
+                            responseData(\StatusCode::ERROR,"您已是此项目成员");
+                        }
+                        //工地对应区域
+                        $site = Site::where(['companyid'=>$companyid,'id'=>$arr['s']])->first();
+                        //查询成员信息
+
+                        //添加工地成员表
+                        $siteInvitation = new SiteInvitation();
+                        $siteInvitation->uuid = create_uuid();
+                        $siteInvitation->companyid = $companyid;
+                        $siteInvitation->storeid = $site->storeid;
+                        $siteInvitation->cityid = $site->cityid;
+                        $siteInvitation->siteid = $arr['s'];
+                        $siteInvitation->participantid = $res->id;//成员信息id
+                        $siteInvitation->userid = $arr['p'];
+                        $siteInvitation->joinuserid = $res->id;
+                        $siteInvitation->created_at = date("Y-m-d H:i:s");
+                        $siteInvitation->save();
+                        if( $user->id && $siteInvitation->id )
+                        {
+                            DB::commit();
                             return $this->userLogin( $openid, $companyid,$nickname,$faceimg );
                         }
+                        DB::rollBack();
                         responseData(\StatusCode::ERROR,"邀请失败");
                     }catch ( Exception $e )
                     {
