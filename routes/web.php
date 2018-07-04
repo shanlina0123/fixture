@@ -57,9 +57,10 @@ Route::group(['namespace' => 'Server'], function () {
         //通知
         Route::get("notice","NoticeController@index")->name("notice-index");//列表
         Route::get("notice/listen/{time}","NoticeController@listen")->name("notice-listen");//监听
-        //消息
+        //聊天消息
         #Route::get("message","MessageController@index")->name("message-index");//列表
-        Route::get("chat","ChatController@index")->name("chat-index");//列表
+        Route::get("chat","ChatController@index")->name("chat-index");//主页面
+        Route::get("chat/list","ChatController@getListData")->name("chat-list");//列表
 
         //腾讯地图
         Route::post('map-address', 'PublicController@getMapAddress')->name('map-address');//获取腾讯地图搜索的地址

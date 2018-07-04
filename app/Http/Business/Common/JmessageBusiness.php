@@ -73,7 +73,7 @@ class JmessageBusiness
         return $obj;
 
     }
-    
+
     /***
      * 获取所有用户
      * @param $count
@@ -88,12 +88,12 @@ class JmessageBusiness
     /**
      * 极光 - User 注册用户
      */
-    public function userRegister($username,$pwd=null)
+    public function userRegister($username,$pwd=null,$nickname=null)
     {
         $this->setClient();
         $this->setUser();
         $pwd=$pwd?$pwd:config('jmessage.defaultpwd');
-        return $this->jmessageUser->register($username,$pwd);
+        return $this->jmessageUser->register($username,$pwd,$nickname);
     }
 
     /**
@@ -130,7 +130,7 @@ class JmessageBusiness
     }
 
     /***
-     * 查询用户在线状态
+     * 修改密码
      * @param $username
      */
     public function userUpdatePassword($username,$password)
@@ -141,7 +141,7 @@ class JmessageBusiness
     }
 
     /***
-     * 查询用户在线状态
+     * 删除用户
      * @param $username
      */
     public function userDelete($username)
@@ -163,6 +163,7 @@ class JmessageBusiness
         $this->setUser();
         return $this->jmessageUser->forbidden($username,$enabled);
     }
+
 
     /***
      * 获取好友列表

@@ -27,8 +27,9 @@ class TestBusiness
         $jmessage = new JmessageBusiness();
 
 //        //用户信息
-//        $a = $jmessage->userShow("4445");
-//        print_r($a);
+        $a = $jmessage->userShow(username(1));
+        print_r($a);
+
 //        //所有用户
 //        $b = $jmessage->userGetalllist(100, 0);
 //        print_r($b);
@@ -45,9 +46,20 @@ class TestBusiness
 //        }
 
         //检查用户在线状态$e["body"]["login"] /$e["body"]["onine"]
-        $e = $jmessage->userStat(username(1));
-        print_r($e);
+//        $e = $jmessage->userStat(username(1));
+//        print_r($e);
 
+        //修改用户信息
+//        $f = $jmessage->userUpdate(username(1),["nickname"=>"管理员"]);
+//        print_r($f);
+//
+//        //添加好友
+//        $g=$jmessage->friendAdd("test1",["test2","test3"]);
+//        print_r($g);
+
+//        //获取用户好友列表
+//        $h=$jmessage->friendListAll("test1");
+//        print_r($h);
 
         //原生上传
 //        $appKey = config('jmessage.appKey');
