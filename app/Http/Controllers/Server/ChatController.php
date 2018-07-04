@@ -33,31 +33,19 @@ class ChatController extends ServerBaseController
      */
     public function index()
     {
-        //获取列表数据
-        $dataSource = $this->getListData();//数据集合
-        $list = $dataSource["data"];//数据
-        $errorMsg = $dataSource["messages"];//错误消息
-        //处理ajax请求
-        if($this->request->ajax()){
-            responseAjax($dataSource);
-        }
-        return view('server.chat.index',compact('list'))->with("errorMsg",$errorMsg);
+        return view('server.chat.index');
     }
+
+
 
     /***
      * 获取列表数据集
      */
     public  function  getListData()
     {
-        //检查是否是管理员
-        if($this->userInfo->isadmin==0)
-        {
-
-        }
-
         //业务调用
-        $list = $this->chat_business->index($this->userInfo->id);
-        return   responseCData(\StatusCode::SUCCESS,"",$list);
+        $list = $this->chat_business->getListData($this->userInfo->id,$this->userInfo->faceimg,$this->userInfo->jguser);
+        responseData(\StatusCode::SUCCESS,"",$list);
     }
 
 

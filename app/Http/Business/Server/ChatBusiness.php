@@ -9,6 +9,7 @@
 namespace App\Http\Business\Server;
 use App\Http\Business\Common\JmessageBusiness;
 use App\Http\Business\Common\ServerBase;
+use App\Http\Model\User\User;
 
 class ChatBusiness extends ServerBase
 {
@@ -23,19 +24,42 @@ class ChatBusiness extends ServerBase
     /***
      * 获取用户信息+好友列表
      */
-    public function index($userid)
+    public function getListData($userid,$faceimg,$jguser)
     {
+        $defaultFaceimg=e(pix_asset('server/images/default.png'));
         //极光账号
         $username=username($userid);
-
-        //检查极光账号是否登录
-        $this->jmessage->userStat(username($userid));
-
+        //检查是否有管理员账号
+        if(!$jguser)
+        {
+            $newUser=$this->jmessage->userRegister($username);
+            //检测是否注册成功
+            if (!array_key_exists("error", $newUser["body"][0])) {
+                //更新user
+                User::where(['id'=>$userid])->update(["jguser"=>username($userid)]);
+                //重置session
+                $loginUserInfo=session("userInfo");
+                $loginUserInfo["jguser"]=$username;
+                session(["userInfo",$loginUserInfo]);
+            }
+            $list["friend"]=[];
+        }else{
+            //好友列表
+            $friend=$this->jmessage->friendListAll($username);
+            $friend["body"]=[["username"=>"jmessage_2"],["username"=>"jmessage_3"]];
+            $friendUsers=array_column($friend["body"],"username",null);
+            $listFriend=User::whereIn("jguser",$friendUsers)->select("jguser","faceimg")->get()->toArray();
+            $listFriend=$listFriend?array_column($listFriend,null,"jguser"):"";
+            foreach($friend["body"] as $k=>$item)
+            {
+                $friend["body"][$k]["faceimg"]=$listFriend?$listFriend[$item["username"]]["faceimg"]:$defaultFaceimg;
+            }
+            $list["friend"]=$friend["body"];
+        }
         //用户信息
-        $list["user"]=$this->jmessage->userShow();
-        //好友列表
-        $list["friends"]=$this->jmessage->friendListAll($username);
-        return $list;
+        $userShow=$this->jmessage->userShow($username);
+        $list["user"]=["username"=>$userShow["body"]["username"],"faceimg"=>$faceimg?$faceimg:$defaultFaceimg,"nickname"=>$userShow["body"]["nickname"]];
+       return $list;
     }
 
 

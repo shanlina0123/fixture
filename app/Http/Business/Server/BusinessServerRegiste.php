@@ -6,6 +6,7 @@
  * Time: 10:39
  */
 namespace App\Http\Business\Server;
+use App\Http\Business\Common\JmessageBusiness;
 use App\Http\Business\Common\ServerBase;
 use App\Http\Model\User\User;
 use Illuminate\Support\Facades\Cache;
@@ -35,7 +36,7 @@ class BusinessServerRegiste extends ServerBase
          {
              //TODO::注册极光账号
              $jmessage =  new JmessageBusiness();
-             $jguser=$jmessage->userRegister(username($res->id));
+             $jguser=$jmessage->userRegister(username($res->id),null,$res->nickname);
              if(!array_key_exists("error",$jguser["body"][0])){
                  User::where(['id'=>$res->id])->update(["jguser"=>username($res->id)]);
              }else{

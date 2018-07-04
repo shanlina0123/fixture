@@ -49,6 +49,6 @@
 </body>
 <script type="text/javascript" src="{{pix_asset('server/plugins/layui/layui.js',false)}}"></script>
 <script type="text/javascript" src="{{pix_asset('server/js/common/common.js')}}"></script>
-<script type="text/javascript" src="{{pix_asset('server/js/public/listen.js')}}"></script>
+{{--<script type="text/javascript" src="{{pix_asset('server/js/public/listen.js')}}"></script>--}}
 @yield('js')
 </html>

@@ -1,4 +1,3 @@
-
 <div class="layui-side-scroll">
     <ul class="layui-nav layui-nav-tree" lay-filter="test">
         @if(session("userInfo")->isadmin==0)

@@ -32,10 +32,10 @@
         }
     </style>
 </head>
-<body >
-
-<div id="chat"></div>
-<script src="{{pix_asset('server/plugins/chat/dist/vue.js',false)}}"></script>
-<script src="{{pix_asset('server/plugins/chat/dist/main.js')}}"></script>
+<body url="{{route('chat-list')}}">
+<div id="chat" ></div>
+<script type="text/javascript" src="{{pix_asset('server/js/common/document.js')}}"></script>
+<script type="text/javascript" src="{{pix_asset('server/plugins/chat/dist/vue.js',false)}}"></script>
+<script type="text/javascript" src="{{pix_asset('server/plugins/chat/dist/main.js')}}"></script>
 </body>
 </html>
