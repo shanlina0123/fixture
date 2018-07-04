@@ -106,4 +106,12 @@ class SystemMessageController extends Controller
         $res = $Jmessages->getJmessageInIt();
         responseData(\StatusCode::SUCCESS,'初始化信息',$res);
     }
+
+    /**
+     * 极光注册
+     */
+    public function jmessageRegister()
+    {
+        $data['userid'] = $this->apiUser->id;
+    }
 }
