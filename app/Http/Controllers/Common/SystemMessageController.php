@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Common;
 use App\Http\Business\Common\JmessageBusiness;
 use App\Http\Business\Common\SystemMessage;
 use App\Http\Controllers\Controller;
+use App\Http\Model\User\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
@@ -112,6 +113,34 @@ class SystemMessageController extends Controller
      */
     public function jmessageRegister()
     {
-        $data['userid'] = $this->apiUser->id;
+        $userid = $this->apiUser->id;
+        $Jmessages = new JmessageBusiness();
+        $userName = username($userid);
+        $user =  $Jmessages->userRegister( $userName );
+        if ( !array_key_exists("error", $user["body"][0]) )
+        {
+            $userInfo = User::where(['id'=>$userid,'companyid'=>$this->apiUser->companyid])->first();
+            $userInfo->jguser = $user["body"][0]["username"];
+            $userInfo->save();
+
+            $obj = new \stdClass();
+            $obj->username = $userInfo->jguser;
+            $obj->pass = config('jmessage.defaultpwd');
+            responseData(\StatusCode::SUCCESS,'注册成功',$obj);
+
+       }else
+       {
+           responseData(\StatusCode::ERROR,'注册失败');
+       }
+    }
+
+    /**
+     * 极光好友列表
+     */
+    public function jmessageFriendList()
+    {
+        $userid = $this->apiUser->id;
+        $Jmessages = new JmessageBusiness();
+        responseData(\StatusCode::SUCCESS,'好友列表');
     }
 }
