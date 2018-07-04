@@ -55,6 +55,25 @@ class JmessageBusiness
          $this->jmessageResource = new  Resource($this->jmessageClient);//Resource 媒体资源
     }
 
+    /**
+     * @return \stdClass
+     * 初始化
+     */
+    public function getJmessageInIt()
+    {
+        $random_str = str_random(10);
+        $timestamp = msecTime();
+        $str ="appkey=".$this->appKey."&timestamp=".$timestamp."&random_str=".$random_str."&key=".$this->masterSecret;
+        $signature = md5($str);
+        $obj = new \stdClass();
+        $obj->appkey = $this->appKey;
+        $obj->random_str = $random_str;
+        $obj->signature = $signature;
+        $obj->timestamp = $timestamp;
+        return $obj;
+
+    }
+    
     /***
      * 获取所有用户
      * @param $count

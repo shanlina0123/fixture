@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 Route::post('user/login', 'Common\WxApiLoginController@login');//登陆
 Route::post('user/openid', 'Common\WxApiLoginController@getOpenid');//登陆
 Route::get('participant/position-code', 'Store\ParticipantController@code');
+Route::get('jmessage/init', 'Common\SystemMessageController@getJmessageInIt');//极光初始化
 Route::group(['middleware'=>'ApiCheck'], function () {
     //权限验证
     Route::group(['middleware' =>'ApiAuthCheck'], function () {
@@ -120,6 +121,12 @@ Route::group(['middleware'=>'ApiCheck'], function () {
     Route::get('lucky/my-luck', 'Common\LuckyController@myLucky');
     Route::get('lucky/draw', 'Common\LuckyController@lucyDraw');
     Route::post('lucky/client', 'Common\LuckyController@lucyClient');
+
+    /**
+     * 极光推送
+     */
+
+
 });
 
 

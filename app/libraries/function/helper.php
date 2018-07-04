@@ -475,3 +475,13 @@ function username($userid,$pre="jmessage_"){
      return $pre.$userid;
 }
 
+
+/**
+ * @return float
+ * 毫秒
+ */
+function msecTime()
+{
+    list($msec, $sec) = explode(' ', microtime());
+    return (float)sprintf('%.0f', (floatval($msec) + floatval($sec)) * 1000);
+}
