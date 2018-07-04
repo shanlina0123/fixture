@@ -27,6 +27,10 @@ class ChatBusiness extends ServerBase
     {
         //极光账号
         $username=username($userid);
+
+        //检查极光账号是否登录
+        $this->jmessage->userStat(username($userid));
+
         //用户信息
         $list["user"]=$this->jmessage->userShow();
         //好友列表

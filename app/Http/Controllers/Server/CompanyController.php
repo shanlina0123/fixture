@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Server;
+use App\Http\Business\Common\JmessageBusiness;
 use App\Http\Business\Server\CompanyBusiness;
 use App\Http\Controllers\Common\ServerBaseController;
 use Illuminate\Http\Request;
@@ -54,6 +55,7 @@ class CompanyController extends ServerBaseController
                 $userInfo = session('userInfo');
                 Cache::forget('CompanyInfo'.$userInfo->companyid);
                 Cache::tags(['site'.$userInfo->companyid])->flush();
+
                 if( $data['returnUrl'] )
                 {
                     return redirect($data['returnUrl']);

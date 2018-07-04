@@ -8,6 +8,7 @@
 
 namespace App\Http\Business\Server;
 
+use App\Http\Business\Common\JmessageBusiness;
 use App\Http\Business\Common\ServerBase;
 use App\Http\Model\Data\Position;
 use App\Http\Model\Filter\FilterRole;
@@ -171,6 +172,11 @@ class AdminBusiness extends ServerBase
                 DB::commit();
                 //删除缓存
                 Cache::tags(["Admin-PageList","Data-CateList"])->flush();
+
+                //TODO::注册极光账号
+//                $jmessage =  new JmessageBusiness();
+//                $jmessage->userRegister(username($adminid));
+
             } else {
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR, "新增失败");
@@ -311,6 +317,12 @@ class AdminBusiness extends ServerBase
                 Cache::tags(["Admin-PageList"])->flush();
                 //修改token
                 Cache::put('userToken' . $adminData['id'], ['token' => $adminData['token'], 'type' => 1], config('session.lifetime'));
+
+                //TODO::禁用/启用极光账号
+//                $jmessage =  new JmessageBusiness();
+//                $forbidden=$admin["status"]==1?false:true;
+//                $jmessage->userForbidden(username($adminData["id"]),$forbidden);
+
                 return ["status" => $admin["status"]];
             } else {
                 DB::rollBack();
@@ -379,6 +391,11 @@ class AdminBusiness extends ServerBase
                 Cache::tags(["Admin-PageList"])->flush();
                 //修改token
                 Cache::put('userToken' . $row['id'], ['token' => $row['token'], 'type' => 2], config('session.lifetime'));
+
+                //TODO::删除极光账号
+//                $jmessage =  new JmessageBusiness();
+//                $jmessage->userDelete(username($row["id"]));
+
             } else {
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR, "删除失败");

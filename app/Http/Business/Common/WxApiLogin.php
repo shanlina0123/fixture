@@ -158,9 +158,10 @@ class WxApiLogin
                             $siteInvitation->joinuserid = $res->id;
                             $siteInvitation->created_at = date("Y-m-d H:i:s");
                             $siteInvitation->save();
-                            if( $user && $siteInvitation->id )
+                            if($user && $siteInvitation->id )
                             {
                                 DB::commit();
+                                 //TODO::邀请的用户 - 扩展极光 此代码未加入
                                 return $this->userLogin( $openid, $companyid,$nickname,$faceimg );
                             }
                             DB::rollBack();
@@ -259,6 +260,13 @@ class WxApiLogin
                                 if( $upOther && $upRes)
                                 {
                                     DB::commit();
+                                    //TODO::绑定管理员的操作
+                                    //修改极光账号信息
+                                    if($other["isadmin"]==1){
+                                        $jmessage =  new JmessageBusiness();
+                                        $jmessage->userUpdate(username($other->id),['nickname' =>$nickname]);
+                                    }
+
                                     return $this->userLogin( $openid, $companyid,$nickname,$faceimg );
                                 }
                             }
@@ -269,6 +277,14 @@ class WxApiLogin
                             if($res->save())
                             {
                                 DB::commit();
+
+                                //TODO::绑定管理员的操作
+                                //修改极光账号信息
+                                if($res["isadmin"]==1){
+                                    $jmessage =  new JmessageBusiness();
+                                    $jmessage->userUpdate(username($res->id),['nickname' =>$nickname]);
+                                }
+
                                 return $this->userLogin( $openid, $companyid,$nickname,$faceimg );
                             }
 

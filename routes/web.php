@@ -34,6 +34,9 @@ Route::group(['namespace' => 'Server'], function () {
     Route::get("filter/lock","ErrorController@lock")->name("error-lock");//无权限
     Route::get("filter/coming","ErrorController@coming")->name("error-coming");//敬请期待
 
+    //测试
+    Route::get("test/index","TestController@index")->name("test-index");//test
+
     //中间件登录认证路由
     Route::group(['middleware' => ['checkUser']], function () {
         Route::get('/', 'IndexController@index')->name('index'); //入口
