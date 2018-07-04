@@ -41,7 +41,9 @@ class UserCheck
              }
          }
 
+
         //vip版本
+        $userInfo= session("userInfo");
         $userInfo["vipmechanismid"]=Company::where("id",$userInfo["companyid"])->value("vipmechanismid");
         session(['userInfo'=>$userInfo]);
 
@@ -50,8 +52,6 @@ class UserCheck
         {
             $this->getMenue();
         }
-
-
 
         return $next($request);
     }

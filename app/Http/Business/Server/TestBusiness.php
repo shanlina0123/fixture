@@ -27,8 +27,8 @@ class TestBusiness
         $jmessage = new JmessageBusiness();
 
 //        //用户信息
-        $a = $jmessage->userShow(username(1));
-        print_r($a);
+//        $a = $jmessage->userShow(username(1));
+//        print_r($a);
 
 //        //所有用户
 //        $b = $jmessage->userGetalllist(100, 0);
@@ -54,12 +54,12 @@ class TestBusiness
 //        print_r($f);
 //
 //        //添加好友
-//        $g=$jmessage->friendAdd("test1",["test2","test3"]);
+//        $g=$jmessage->friendAdd("jmessage_3",["test2","test3"]);
 //        print_r($g);
 
 //        //获取用户好友列表
-//        $h=$jmessage->friendListAll("test1");
-//        print_r($h);
+        $h=$jmessage->friendListAll("jmessage_3");
+        print_r($h);
 
         //原生上传
 //        $appKey = config('jmessage.appKey');

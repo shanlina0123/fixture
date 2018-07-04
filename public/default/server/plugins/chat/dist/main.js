@@ -392,6 +392,18 @@
                             //some js code
                         },
                         success:function(data){
+                            var userList=[];
+                            if(data.data.friend)
+                            {
+                                data.data.friend.forEach(function(value,index,array){
+                                    userList.push({
+                                        id: value.username,
+                                        name: value.nickname,
+                                        img: value.faceimg
+                                    });
+                                });
+
+                            }
                             var a = new Date,
                                 l = {
                                     user: {
@@ -399,16 +411,7 @@
                                         name: data.data.user.nickname,
                                         img: data.data.user.faceimg
                                     },
-                                    userList: [{
-                                        id: 2,
-                                        name: "示例介绍4444",
-                                        img: "dist/images/2.png"
-                                    },
-                                        {
-                                            id: 3,
-                                            name: "webpackffff",
-                                            img: "dist/images/3.jpg"
-                                        }],
+                                    userList: userList,
                                     sessionList: [{
                                         userId: 2,
                                         messages: [{
