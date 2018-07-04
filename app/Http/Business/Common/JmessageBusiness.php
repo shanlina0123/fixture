@@ -24,12 +24,36 @@ class JmessageBusiness
         //聊天init
         $this->appKey = config('jmessage.appKey');
         $this->masterSecret = config('jmessage.masterSecret');
-        $this->jmessageClient = new JMessage($this->appKey, $this->masterSecret);//客户端
-        $this->jmessageUser = new User($this->jmessageClient);//用户
-        $this->jmessageFriend = new  Friend($this->jmessageClient);//好友
-        $this->jmessageResource = new  Resource($this->jmessageClient);//Resource 媒体资源
     }
 
+    /***
+     * 实例化客户端
+     */
+    public function  setClient()
+    {
+        $this->jmessageClient = new JMessage($this->appKey, $this->masterSecret);//客户端
+    }
+    /***
+     * 实例化用户
+     */
+    public function setUser()
+    {
+        $this->jmessageUser = new User($this->jmessageClient);//用户
+    }
+    /***
+     * 实例化好友
+     */
+    public function setFriend()
+    {
+        $this->jmessageFriend = new  Friend($this->jmessageClient);//好友
+    }
+    /***
+     * 实例化资源
+     */
+    public function setResource()
+    {
+         $this->jmessageResource = new  Resource($this->jmessageClient);//Resource 媒体资源
+    }
 
     /**
      * @return \stdClass
@@ -47,24 +71,29 @@ class JmessageBusiness
         $obj->signature = $signature;
         $obj->timestamp = $timestamp;
         return $obj;
+
+    }
+    
+    /***
+     * 获取所有用户
+     * @param $count
+     * @param int $start
+     */
+    public function userGetalllist($count,$start=0){
+        $this->setClient();
+        $this->setUser();
+       return  $this->jmessageUser->listAll($count,$start);
     }
 
-    /***
-     * 设置username
-     * @param $userid
-     * @param string $pre
-     * @return string
-     */
-    public function userSetName($userid,$pre="jmessage_"){
-        return $pre.$userid;
-    }
     /**
      * 极光 - User 注册用户
      */
-    public function userRegister($username,$pwd)
+    public function userRegister($username,$pwd=null)
     {
+        $this->setClient();
+        $this->setUser();
         $pwd=$pwd?$pwd:config('jmessage.defaultpwd');
-        $this->jmessageUser->register($username,$pwd);
+        return $this->jmessageUser->register($username,$pwd);
     }
 
     /**
@@ -72,7 +101,9 @@ class JmessageBusiness
      */
     public function userShow($username)
     {
-        $this->jmessageUser->show($username);
+        $this->setClient();
+        $this->setUser();
+        return $this->jmessageUser->show($username);
     }
     /**
      * 极光 - User 更新用户信息
@@ -82,7 +113,9 @@ class JmessageBusiness
      */
     public function userUpdate($username,$options)
     {
-        $this->jmessageUser->update($username,$options);
+        $this->setClient();
+        $this->setUser();
+        return $this->jmessageUser->update($username,$options);
     }
 
     /***
@@ -91,7 +124,9 @@ class JmessageBusiness
      */
     public function userStat($username)
     {
-        $this->jmessageUser->stat($username);
+        $this->setClient();
+        $this->setUser();
+        return $this->jmessageUser->stat($username);
     }
 
     /***
@@ -100,7 +135,9 @@ class JmessageBusiness
      */
     public function userUpdatePassword($username,$password)
     {
-        $this->jmessageUser->updatePassword($username,$password);
+        $this->setClient();
+        $this->setUser();
+        return $this->jmessageUser->updatePassword($username,$password);
     }
 
     /***
@@ -109,7 +146,9 @@ class JmessageBusiness
      */
     public function userDelete($username)
     {
-        $this->jmessageUser->delete($username);
+        $this->setClient();
+        $this->setUser();
+        return $this->jmessageUser->delete($username);
     }
 
     /***
@@ -120,7 +159,9 @@ class JmessageBusiness
      */
     public function userForbidden($username,$enabled)
     {
-        $this->jmessageUser->forbidden($username,$enabled);
+        $this->setClient();
+        $this->setUser();
+        return $this->jmessageUser->forbidden($username,$enabled);
     }
 
     /***
@@ -129,7 +170,9 @@ class JmessageBusiness
      */
     public function friendListAll($username)
     {
-        $this->jmessageFriend->listAll($username);
+        $this->setClient();
+        $this->setFriend();
+        return $this->jmessageFriend->listAll($username);
     }
 
     /***
@@ -141,7 +184,9 @@ class JmessageBusiness
      */
     public function friendAdd($username,$friends)
     {
-        $this->jmessageFriend->add($username,$friends);
+        $this->setClient();
+        $this->setFriend();
+        return $this->jmessageFriend->add($username,$friends);
     }
 
     /***
@@ -151,7 +196,9 @@ class JmessageBusiness
      */
     public function friendRemove($username,$friends)
     {
-        $this->jmessageFriend->remove($username,$friends);
+        $this->setClient();
+        $this->setFriend();
+        return $this->jmessageFriend->remove($username,$friends);
     }
 
     /***
@@ -174,7 +221,9 @@ class JmessageBusiness
      */
     public function friendUpdateNotename($username,$options)
     {
-        $this->jmessageFriend->remove($username,$options);
+        $this->setClient();
+        $this->setFriend();
+        return $this->jmessageFriend->remove($username,$options);
     }
 
     /***
@@ -191,7 +240,9 @@ class JmessageBusiness
      */
     public function resourceUpload($type,$path)
     {
-        $this->jmessageResource->upload($type, $path);
+        $this->setClient();
+        $this->setResource();
+        return $this->jmessageResource->upload($type, $path);
     }
 
 
@@ -201,6 +252,8 @@ class JmessageBusiness
      */
     public function resourceDownload($mediaId)
     {
-        $this->jmessageResource->download($mediaId);
+        $this->setClient();
+        $this->setResource();
+        return $this->jmessageResource->download($mediaId);
     }
 }

@@ -9,6 +9,8 @@ namespace App\Http\Business\Server;
 use App\Http\Business\Common\ServerBase;
 use App\Http\Model\User\User;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
+
 class BusinessServerRegiste extends ServerBase
 {
     /**
@@ -31,6 +33,15 @@ class BusinessServerRegiste extends ServerBase
          $res->nickname = "管理员";
          if( $res->save() )
          {
+             //TODO::注册极光账号
+             $jmessage =  new JmessageBusiness();
+             $jguser=$jmessage->userRegister(username($res->id));
+             if(!array_key_exists("error",$jguser["body"][0])){
+                 User::where(['id'=>$res->id])->update(["jguser"=>username($res->id)]);
+             }else{
+                 return false;
+                 Log::error("------极光PC管理员注册失败------".json_encode($jguser));
+             }
              return true;
          }else
          {

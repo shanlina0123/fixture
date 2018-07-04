@@ -49,8 +49,14 @@ class ChatController extends ServerBaseController
      */
     public  function  getListData()
     {
+        //检查是否是管理员
+        if($this->userInfo->isadmin==0)
+        {
+
+        }
+
         //业务调用
-        $list = $this->chat_business->index($this->userInfo->companyid);
+        $list = $this->chat_business->index($this->userInfo->id);
         return   responseCData(\StatusCode::SUCCESS,"",$list);
     }
 
