@@ -2,6 +2,9 @@
 @section('title','预约客户')
 @section('content')
     <div class="main">
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>预约客户</legend>
+        </fieldset>
         <div class="addBtnWrap">
             <div class="topSort layui-inline">
                 <form class="layui-form"  method="get" action="{{route('client.index')}}">

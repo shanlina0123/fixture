@@ -2,6 +2,9 @@
 @section("title")VIP升级@endsection
 @section('content')
 <div class="main">
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>VIP升级</legend>
+    </fieldset>
     @if($data["tipname"])
         <h1 class="notice">{{$data["tipname"]}}</h1>
     @else

@@ -4,6 +4,9 @@
 @endsection
 @section('content')
     <div class="main">
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>项目列表</legend>
+        </fieldset>
         <!--项目描述-->
         <div class="projectWrap">
             当前项目数：<span>{{$data->total()}}</span>/<span>2</span>

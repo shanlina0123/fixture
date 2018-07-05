@@ -96,6 +96,7 @@ a:focus {
 }
 .layui-logo img {
   width: 120px;
+  margin-right: 10px;
 }
 .main {
   padding: 15px;

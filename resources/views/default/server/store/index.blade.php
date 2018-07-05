@@ -2,6 +2,9 @@
 @section("title")门店管理@endsection
 @section('content')
     <div class="main">
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>门店列表</legend>
+        </fieldset>
         <div style="display: none" id="errorMsg" content="{{$errorMsg}}"></div>
         <div class="addBtnWrap">
             <button type="button" class="layui-btn addBtn">新增门店</button>
