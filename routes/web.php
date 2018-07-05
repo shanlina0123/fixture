@@ -61,6 +61,8 @@ Route::group(['namespace' => 'Server'], function () {
         #Route::get("message","MessageController@index")->name("message-index");//列表
         Route::get("chat","ChatController@index")->name("chat-index");//主页面
         Route::get("chat/list","ChatController@getListData")->name("chat-list");//列表
+        Route::get("chat/init","ChatController@getInit")->name("chat-init");//配置
+        Route::get("chat/login","ChatController@getLogin")->name("chat-login");//登录用户
 
         //腾讯地图
         Route::post('map-address', 'PublicController@getMapAddress')->name('map-address');//获取腾讯地图搜索的地址

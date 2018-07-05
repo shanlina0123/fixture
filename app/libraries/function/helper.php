@@ -485,3 +485,20 @@ function msecTime()
     list($msec, $sec) = explode(' ', microtime());
     return (float)sprintf('%.0f', (floatval($msec) + floatval($sec)) * 1000);
 }
+
+/**
+ * 解析json串
+ * @param type $json_str
+ * @return type
+ */
+function analyJson($json_str) {
+    $json_str = str_replace('＼＼', '', $json_str);
+    $out_arr = array();
+    preg_match('/{.*}/', $json_str, $out_arr);
+    if (!empty($out_arr)) {
+        $result = json_decode($out_arr[0], true);
+    } else {
+        return false;
+    }
+    return $result;
+}

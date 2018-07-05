@@ -1,5 +1,14 @@
+var leftData=[];
+var leftUser={};
+var leftUserList=[];
+var LeftSessionList=[{messages: []}];
+var fetchData=[];
+
+
+
 !
-    function (e) {
+
+    function(e) {
         function t(r) {
             if (s[r]) return s[r].exports;
             var i = s[r] = {
@@ -7,40 +16,39 @@
                 id: r,
                 loaded: !1
             };
+
             return e[r].call(i.exports, i, i.exports, t),
                 i.loaded = !0,
                 i.exports
         }
-
         var s = {};
         return t.m = e,
             t.c = s,
             t.p = "/dist/",
             t(0)
-    }([function (e, t, s) {
+    } ([function(e, t, s) {
         "use strict";
         function r(e) {
-            return e && e.__esModule ? e : {
+            return e && e.__esModule ? e: {
                 "default": e
             }
         }
-
         var i = s(32),
             o = r(i);
         Vue.config.debug = !0,
             new Vue(o["default"])
     },
-        function (e, t) {
-            e.exports = function () {
+        function(e, t) {
+            e.exports = function() {
                 var e = [];
-                return e.toString = function () {
+                return e.toString = function() {
                     for (var e = [], t = 0; t < this.length; t++) {
                         var s = this[t];
                         s[2] ? e.push("@media " + s[2] + "{" + s[1] + "}") : e.push(s[1])
                     }
                     return e.join("")
                 },
-                    e.i = function (t, s) {
+                    e.i = function(t, s) {
                         "string" == typeof t && (t = [[null, t, ""]]);
                         for (var r = {},
                                  i = 0; i < this.length; i++) {
@@ -49,13 +57,13 @@
                         }
                         for (i = 0; i < t.length; i++) {
                             var n = t[i];
-                            "number" == typeof n[0] && r[n[0]] || (s && !n[2] ? n[2] = s : s && (n[2] = "(" + n[2] + ") and (" + s + ")"), e.push(n))
+                            "number" == typeof n[0] && r[n[0]] || (s && !n[2] ? n[2] = s: s && (n[2] = "(" + n[2] + ") and (" + s + ")"), e.push(n))
                         }
                     },
                     e
             }
         },
-        function (e, t, s) {
+        function(e, t, s) {
             function r(e, t) {
                 for (var s = 0; s < e.length; s++) {
                     var r = e[s],
@@ -74,7 +82,6 @@
                     }
                 }
             }
-
             function i(e) {
                 for (var t = [], s = {},
                          r = 0; r < e.length; r++) {
@@ -95,7 +102,6 @@
                 }
                 return t
             }
-
             function o() {
                 var e = document.createElement("style"),
                     t = m();
@@ -103,7 +109,6 @@
                     t.appendChild(e),
                     e
             }
-
             function n() {
                 var e = document.createElement("link"),
                     t = m();
@@ -111,7 +116,6 @@
                     t.appendChild(e),
                     e
             }
-
             function a(e, t) {
                 var s, r, i;
                 if (t.singleton) {
@@ -119,23 +123,22 @@
                     s = h || (h = o()),
                         r = l.bind(null, s, a, !1),
                         i = l.bind(null, s, a, !0)
-                } else e.sourceMap && "function" == typeof URL && "function" == typeof URL.createObjectURL && "function" == typeof URL.revokeObjectURL && "function" == typeof Blob && "function" == typeof btoa ? (s = n(), r = u.bind(null, s), i = function () {
+                } else e.sourceMap && "function" == typeof URL && "function" == typeof URL.createObjectURL && "function" == typeof URL.revokeObjectURL && "function" == typeof Blob && "function" == typeof btoa ? (s = n(), r = u.bind(null, s), i = function() {
                     s.parentNode.removeChild(s),
                     s.href && URL.revokeObjectURL(s.href)
-                }) : (s = o(), r = c.bind(null, s), i = function () {
+                }) : (s = o(), r = c.bind(null, s), i = function() {
                     s.parentNode.removeChild(s)
                 });
                 return r(e),
-                    function (t) {
+                    function(t) {
                         if (t) {
                             if (t.css === e.css && t.media === e.media && t.sourceMap === e.sourceMap) return;
                             r(e = t)
                         } else i()
                     }
             }
-
             function l(e, t, s, r) {
-                var i = s ? "" : r.css;
+                var i = s ? "": r.css;
                 if (e.styleSheet) e.styleSheet.cssText = g(t, i);
                 else {
                     var o = document.createTextNode(i),
@@ -144,7 +147,6 @@
                         n.length ? e.insertBefore(o, n[t]) : e.appendChild(o)
                 }
             }
-
             function c(e, t) {
                 var s = t.css,
                     r = t.media;
@@ -155,7 +157,6 @@
                     e.appendChild(document.createTextNode(s))
                 }
             }
-
             function u(e, t) {
                 var s = t.css,
                     r = (t.media, t.sourceMap);
@@ -167,29 +168,28 @@
                 e.href = URL.createObjectURL(i),
                 o && URL.revokeObjectURL(o)
             }
-
             var d = {},
-                p = function (e) {
+                p = function(e) {
                     var t;
-                    return function () {
+                    return function() {
                         return "undefined" == typeof t && (t = e.apply(this, arguments)),
                             t
                     }
                 },
-                f = p(function () {
+                f = p(function() {
                     return /msie [6-9]\b/.test(window.navigator.userAgent.toLowerCase())
                 }),
-                m = p(function () {
+                m = p(function() {
                     return document.head || document.getElementsByTagName("head")[0]
                 }),
                 h = null,
                 x = 0;
-            e.exports = function (e, t) {
+            e.exports = function(e, t) {
                 t = t || {},
                 "undefined" == typeof t.singleton && (t.singleton = f());
                 var s = i(e);
                 return r(s, t),
-                    function (e) {
+                    function(e) {
                         for (var o = [], n = 0; n < s.length; n++) {
                             var a = s[n],
                                 l = d[a.id];
@@ -209,23 +209,22 @@
                         }
                     }
             };
-            var g = function () {
+            var g = function() {
                 var e = [];
-                return function (t, s) {
+                return function(t, s) {
                     return e[t] = s,
                         e.filter(Boolean).join("\n")
                 }
-            }()
+            } ()
         },
         , , , , ,
-        function (e, t, s) {
+        function(e, t, s) {
             "use strict";
             function r(e) {
-                return e && e.__esModule ? e : {
+                return e && e.__esModule ? e: {
                     "default": e
                 }
             }
-
             Object.defineProperty(t, "__esModule", {
                 value: !0
             });
@@ -241,25 +240,38 @@
                 f = r(p);
             t["default"] = {
                 el: "#chat",
-                data: function () {
-                    var e = o["default"].fetch();
-                    return {
-                        user: e.user,
-                        userList: e.userList,
-                        sessionList: e.sessionList,
-                        search: "",
-                        sessionIndex: 0
-                    }
+                data: function() {
+                        var e = o["default"].fetch();
+                        if(typeof(e)=="undefined")
+                        {
+                            return {
+                                user: leftUser,
+                                userList:leftUserList,
+                                sessionList:LeftSessionList,
+                                search: "",
+                                sessionIndex: 0
+                            }
+
+                        }else{
+                            return {
+                                user: e.user,
+                                userList:e.userList,
+                                sessionList:e.sessionList,
+                                search: "",
+                                sessionIndex: 0
+                            }
+                        }
+
                 },
                 computed: {
-                    session: function () {
+                    session: function() {
                         return this.sessionList[this.sessionIndex]
                     }
                 },
                 watch: {
                     sessionList: {
                         deep: !0,
-                        handler: function () {
+                        handler: function() {
                             o["default"].save({
                                 user: this.user,
                                 userList: this.userList,
@@ -276,7 +288,7 @@
                 }
             }
         },
-        function (e, t) {
+        function(e, t) {
             "use strict";
             Object.defineProperty(t, "__esModule", {
                 value: !0
@@ -285,7 +297,7 @@
                     props: ["user", "search"]
                 }
         },
-        function (e, t) {
+        function(e, t) {
             "use strict";
             Object.defineProperty(t, "__esModule", {
                 value: !0
@@ -293,21 +305,21 @@
                 t["default"] = {
                     props: ["userList", "sessionIndex", "session", "search"],
                     methods: {
-                        select: function (e) {
+                        select: function(e) {
                             this.sessionIndex = this.userList.indexOf(e)
                         }
                     },
                     filters: {
-                        search: function (e) {
+                        search: function(e) {
                             var t = this;
-                            return e.filter(function (e) {
+                            return e.filter(function(e) {
                                 return e.name.indexOf(t.search) > -1
                             })
                         }
                     }
                 }
         },
-        function (e, t) {
+        function(e, t) {
             "use strict";
             Object.defineProperty(t, "__esModule", {
                 value: !0
@@ -315,48 +327,48 @@
                 t["default"] = {
                     props: ["session", "user", "userList"],
                     computed: {
-                        sessionUser: function () {
+                        sessionUser: function() {
                             var e = this,
-                                t = this.userList.filter(function (t) {
+                                t = this.userList.filter(function(t) {
                                     return t.id === e.session.userId
                                 });
                             return t[0]
                         }
                     },
                     filters: {
-                        avatar: function (e) {
-                            var t = e.self ? this.user : this.sessionUser;
+                        avatar: function(e) {
+                            var t = e.self ? this.user: this.sessionUser;
                             return t && t.img
                         },
-                        time: function (e) {
+                        time: function(e) {
                             return "string" == typeof e && (e = new Date(e)),
                             e.getHours() + ":" + e.getMinutes()
                         }
                     },
                     directives: {
-                        "scroll-bottom": function () {
+                        "scroll-bottom": function() {
                             var e = this;
-                            Vue.nextTick(function () {
+                            Vue.nextTick(function() {
                                 e.el.scrollTop = e.el.scrollHeight - e.el.clientHeight
                             })
                         }
                     }
                 }
         },
-        function (e, t) {
+        function(e, t) {
             "use strict";
             Object.defineProperty(t, "__esModule", {
                 value: !0
             }),
                 t["default"] = {
                     props: ["session"],
-                    data: function () {
+                    data: function() {
                         return {
                             text: ""
                         }
                     },
                     methods: {
-                        inputing: function (e) {
+                        inputing: function(e) {
                             e.ctrlKey && 13 === e.keyCode && this.text.length && (this.session.messages.push({
                                 text: this.text,
                                 date: new Date,
@@ -366,191 +378,387 @@
                     }
                 }
         },
-        function (e, t, s) {
+        function(e, t, s) {
             "use strict";
             function r(e) {
-                return e && e.__esModule ? e : {
+                return e && e.__esModule ? e: {
                     "default": e
                 }
             }
-
             Object.defineProperty(t, "__esModule", {
                 value: !0
             });
             var i = s(14),
                 o = r(i),
-                n = "VUE-CHAT-v3";
-
-            t["default"] = {
-                fetch: function () {
-                    ajax({
-                        type:"GET",
-                        url:"chat/list",
-                        dataType:"json",
-                        data:{},
-                        beforeSend:function(){
-                            //some js code
-                        },
-                        success:function(data){
-                            var userList=[];
-                            if(data.data.friend)
-                            {
-                                data.data.friend.forEach(function(value,index,array){
-                                    userList.push({
-                                        id: value.username,
-                                        name: value.nickname,
-                                        img: value.faceimg
-                                    });
-                                });
-
-                            }
-                            var a = new Date,
-                                l = {
-                                    user: {
-                                        id: data.data.user.username,
-                                        name: data.data.user.nickname,
-                                        img: data.data.user.faceimg
-                                    },
-                                    userList: userList,
-                                    sessionList: [{
-                                        userId: 2,
-                                        messages: [{
-                                            text: "Hello，这是一个基于Vue + Webpack构建的简单chat示例，聊天记录保存在localStorge。简单演示了Vue的基础特性和webpack配置。",
-                                            date: a
-                                        },
-                                            {
-                                                text: "项目地址: https://github.com/coffcer/vue-chat",
-                                                date: a
-                                            }]
-                                    },
-                                        {
-                                            userId: 3,
-                                            messages: []
-                                        }]
-                                };
-                            localStorage.setItem(n, (0, o["default"])(l))
-                        },
-                        error:function(){
-                            console.log("error")
-                        }
-                    });
-                    return JSON.parse(localStorage.getItem(n))
-                },
-                save: function (e) {
-                    localStorage.setItem(n, (0, o["default"])(e))
+                n = "YYGSOFT-CHAT-V1";
+            //开启debug
+            window.JIM = new JMessage({
+                debug: true
+            });
+            //异常断线监听
+            JIM.onDisconnect(function () {
+                //console.log("【disconnect】");
+            });
+            if (!localStorage.getItem(n)) {
+                if(isInit()==false)
+                {
+                    init();
                 }
             }
+
+            setTimeout(function () {
+                var a = new Date,
+                    l = {
+                        user: leftUser,
+                        userList: leftUserList,
+                        sessionList:LeftSessionList,
+                    };
+                localStorage.setItem(n, (0, o["default"])(l))
+            }, 8000);
+
+                t["default"] = {
+                    fetch: function() {
+                        setTimeout(function (t,n) {
+                            return JSON.parse(localStorage.getItem(n))
+                        },14000);
+                    },
+                    save: function(e) {
+                        setTimeout(function (t,n) {
+                         localStorage.setItem(n, (0, o["default"])(e))
+                        },14000);
+                    }
+                }
+
+
+
+
+
         },
-        function (e, t, s) {
+        function(e, t, s) {
             e.exports = {
                 "default": s(15),
                 __esModule: !0
             }
         },
-        function (e, t, s) {
+        function(e, t, s) {
             var r = s(16);
-            e.exports = function (e) {
+            e.exports = function(e) {
                 return (r.JSON && r.JSON.stringify || JSON.stringify).apply(JSON, arguments)
             }
         },
-        function (e, t) {
+        function(e, t) {
             var s = e.exports = {
                 version: "1.2.6"
             };
             "number" == typeof __e && (__e = s)
         },
-        function (e, t, s) {
+        function(e, t, s) {
             t = e.exports = s(1)(),
                 t.push([e.id, ".m-text{height:10pc;border-top:1px solid #ddd}.m-text textarea{padding:10px;height:100%;width:100%;border:none;outline:0;font-family:Micrsofot Yahei;resize:none}", ""])
         },
-        function (e, t, s) {
+        function(e, t, s) {
             t = e.exports = s(1)(),
                 t.push([e.id, "#chat{overflow:hidden;border-radius:3px}#chat .main,#chat .sidebar{height:100%}#chat .sidebar{float:left;width:200px;color:#f4f4f4;background-color:#2e3238}#chat .main{position:relative;overflow:hidden;background-color:#eee}#chat .m-text{position:absolute;width:100%;bottom:0;left:0}#chat .m-message{height:calc(100% - 10pc)}", ""])
         },
-        function (e, t, s) {
+        function(e, t, s) {
             t = e.exports = s(1)(),
                 t.push([e.id, ".m-card{padding:9pt;border-bottom:1px solid #24272c}.m-card footer{margin-top:10px}.m-card .avatar,.m-card .name{vertical-align:middle}.m-card .avatar{border-radius:2px}.m-card .name{display:inline-block;margin:0 0 0 15px;font-size:1pc}.m-card .search{padding:0 10px;width:100%;font-size:9pt;color:#fff;height:30px;line-height:30px;border:1px solid #3a3a3a;border-radius:4px;outline:0;background-color:#26292e}", ""])
         },
-        function (e, t, s) {
+        function(e, t, s) {
             t = e.exports = s(1)(),
                 t.push([e.id, ".m-list li{padding:9pt 15px;border-bottom:1px solid #292c33;cursor:pointer;-webkit-transition:background-color .1s;transition:background-color .1s}.m-list li:hover{background-color:hsla(0,0%,100%,.03)}.m-list li.active{background-color:hsla(0,0%,100%,.1)}.m-list .avatar,.m-list .name{vertical-align:middle}.m-list .avatar{border-radius:2px}.m-list .name{display:inline-block;margin:0 0 0 15px}", ""])
         },
-        function (e, t, s) {
+        function(e, t, s) {
             t = e.exports = s(1)(),
                 t.push([e.id, '.m-message{padding:10px 15px;overflow-y:scroll}.m-message li{margin-bottom:15px}.m-message .time{margin:7px 0;text-align:center}.m-message .time>span{display:inline-block;padding:0 18px;font-size:9pt;color:#fff;border-radius:2px;background-color:#dcdcdc}.m-message .avatar{float:left;margin:0 10px 0 0;border-radius:3px}.m-message .text{display:inline-block;position:relative;padding:0 10px;max-width:calc(100% - 40px);min-height:30px;line-height:2.5;font-size:9pt;text-align:left;word-break:break-all;background-color:#fafafa;border-radius:4px}.m-message .text:before{content:" ";position:absolute;top:9px;right:100%;border:6px solid transparent;border-right-color:#fafafa}.m-message .self{text-align:right}.m-message .self .avatar{float:right;margin:0 0 0 10px}.m-message .self .text{background-color:#b2e281}.m-message .self .text:before{right:inherit;left:100%;border-right-color:transparent;border-left-color:#b2e281}', ""])
         },
-        function (e, t, s) {
+        function(e, t, s) {
             var r = s(17);
             "string" == typeof r && (r = [[e.id, r, ""]]);
             s(2)(r, {});
             r.locals && (e.exports = r.locals)
         },
-        function (e, t, s) {
+        function(e, t, s) {
             var r = s(18);
             "string" == typeof r && (r = [[e.id, r, ""]]);
             s(2)(r, {});
             r.locals && (e.exports = r.locals)
         },
-        function (e, t, s) {
+        function(e, t, s) {
             var r = s(19);
             "string" == typeof r && (r = [[e.id, r, ""]]);
             s(2)(r, {});
             r.locals && (e.exports = r.locals)
         },
-        function (e, t, s) {
+        function(e, t, s) {
             var r = s(20);
             "string" == typeof r && (r = [[e.id, r, ""]]);
             s(2)(r, {});
             r.locals && (e.exports = r.locals)
         },
-        function (e, t, s) {
+        function(e, t, s) {
             var r = s(21);
             "string" == typeof r && (r = [[e.id, r, ""]]);
             s(2)(r, {});
             r.locals && (e.exports = r.locals)
         },
-        function (e, t) {
+        function(e, t) {
             e.exports = "<div><div class=sidebar><card :user=user :search.sync=search></card><list :user-list=userList :session=session :session-index.sync=sessionIndex :search=search></list></div><div class=main><message :session=session :user=user :user-list=userList></message><text :session=session></text></div></div>"
         },
-        function (e, t) {
+        function(e, t) {
             e.exports = '<div class=m-card><header><img class=avatar width=40 height=40 :alt=user.name :src=user.img><p class=name>{{user.name}}</p></header><footer><input class=search placeholder="search user..." v-model=search></footer></div>'
         },
-        function (e, t) {
+        function(e, t) {
             e.exports = '<div class=m-list><ul><li v-for="item in userList | search" :class="{ active: session.userId === item.id }" @click=select(item)><img class=avatar width=30 height=30 :alt=item.name :src=item.img><p class=name>{{item.name}}</p></li></ul></div>'
         },
-        function (e, t) {
-            e.exports = '<div class=m-message v-scroll-bottom=session.messages><ul><li v-for="item in session.messages"><p class=time><span>{{item.date | time}}</span></p><div class=main :class="{ self: item.self }"><img class=avatar width=30 height=30 :src="item | avatar"><div class=text>{{item.text}}</div></div></li></ul></div>'
-        },
-        function (e, t) {
+        function(e, t) {
+             e.exports = '<div class=m-message v-scroll-bottom=session.messages><ul><li v-for="item in session.messages"><p class=time><span>{{item.date | time}}</span></p><div class=main :class="{ self: item.self }"><img class=avatar width=30 height=30 :src="item | avatar"><div class=text>{{item.text}}</div></div></li></ul></div>'
+          },
+        function(e, t) {
             e.exports = '<div class=m-text><textarea placeholder="按 Ctrl + Enter 发送" v-model=text @keyup=inputing></textarea></div>'
         },
-        function (e, t, s) {
+        function(e, t, s) {
             s(23),
                 e.exports = s(8),
             e.exports.__esModule && (e.exports = e.exports["default"]),
-                ("function" == typeof e.exports ? e.exports.options : e.exports).template = s(27)
+                ("function" == typeof e.exports ? e.exports.options: e.exports).template = s(27)
         },
-        function (e, t, s) {
+        function(e, t, s) {
             s(24),
                 e.exports = s(9),
             e.exports.__esModule && (e.exports = e.exports["default"]),
-                ("function" == typeof e.exports ? e.exports.options : e.exports).template = s(28)
+                ("function" == typeof e.exports ? e.exports.options: e.exports).template = s(28)
         },
-        function (e, t, s) {
+        function(e, t, s) {
             s(25),
                 e.exports = s(10),
             e.exports.__esModule && (e.exports = e.exports["default"]),
-                ("function" == typeof e.exports ? e.exports.options : e.exports).template = s(29)
+                ("function" == typeof e.exports ? e.exports.options: e.exports).template = s(29)
         },
-        function (e, t, s) {
+        function(e, t, s) {
             s(26),
                 e.exports = s(11),
             e.exports.__esModule && (e.exports = e.exports["default"]),
-                ("function" == typeof e.exports ? e.exports.options : e.exports).template = s(30)
+                ("function" == typeof e.exports ? e.exports.options: e.exports).template = s(30)
         },
-        function (e, t, s) {
+        function(e, t, s) {
             s(22),
                 e.exports = s(12),
             e.exports.__esModule && (e.exports = e.exports["default"]),
-                ("function" == typeof e.exports ? e.exports.options : e.exports).template = s(31)
+                ("function" == typeof e.exports ? e.exports.options: e.exports).template = s(31)
         }]);
+
+
+/**
+ * 解决ajax CSRF
+ */
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
+
+/**
+ * 获取数据ajax-get请求
+ * @author laixm
+ */
+$.getJSON = function (url, data, callback) {
+    $.ajax({
+        url: url,
+        type: "get",
+        contentType: "application/json",
+        dataType: "json",
+        timeout: 10000,
+        data: data,
+        async:false,
+        success: function (data) {
+            ////console.log(data);
+            callback(data);
+        }
+    });
+};
+
+//追加显示
+function appendToDashboard(text) {
+    $('#dashboard').append('<p style="margin-left: 16px">' + text + '</p>')
+}
+//初始化
+function init() {
+    $.getJSON($("#init-url").val(),{},function (data) {
+        JIM.init({
+            "appkey": data.data.appkey,
+            "random_str": data.data.random_str,
+            "signature": data.data.signature,
+            "timestamp": data.data.timestamp,
+            "flag": data.data.flag,
+
+        }).onSuccess(function (data) {
+            //console.log('success:' + JSON.stringify(data));
+            appendToDashboard('success' + JSON.stringify(data));
+            if(isLogin()==false)
+            {
+                login();
+            }
+        }).onFail(function (data) {
+            //console.log('error:' + JSON.stringify(data))
+            appendToDashboard('error: ' + JSON.stringify(data));
+        });
+    });
+}
+//获取连接状态
+function isConnect() {
+    //console.log('isConnect:' + JIM.isConnect());
+    appendToDashboard('isConnect : ' + JIM.isConnect());
+    return JIM.isConnect();
+}
+//获取初始化状态
+function isInit() {
+    //console.log('isInit:' + JIM.isInit());
+    appendToDashboard('isInit : ' + JIM.isInit());
+    return JIM.isInit();
+}
+//获取登录状态
+function isLogin() {
+    //console.log('isLogin:' + JIM.isLogin());
+    appendToDashboard('isLogin : ' + JIM.isLogin());
+    return JIM.isLogin();
+}
+//登录
+function login() {
+    $.getJSON($("#login-url").val(), null, function (data) {
+        if (data.status == 1) {
+            var ajaxData=data;
+
+            JIM.login({
+                'username': data.data.username,
+                'password': data.data.password
+            }).onSuccess(function (data) {
+                //console.log('success:' + JSON.stringify(data));
+                appendToDashboard(JSON.stringify(data));
+
+                JIM.onMsgReceive(function (data) {
+                    data = JSON.stringify(data);
+                    //console.log('1msg_receive:' + data);
+                    appendToDashboard('msg_receive:' + data);
+                });
+
+                JIM.onEventNotification(function (data) {
+                    //console.log('event_receive: ' + JSON.stringify(data));
+                    appendToDashboard('event_receive: ' + JSON.stringify(data));
+                });
+
+                JIM.onSyncConversation(function (data) { //离线消息同步监听
+                    //console.log(data);
+                    appendToDashboard('event_receive: ' + JSON.stringify(data));
+                });
+
+                JIM.onUserInfUpdate(function (data) {
+                    //console.log('onUserInfUpdate : ' + JSON.stringify(data));
+                    appendToDashboard('onUserInfUpdate : ' + JSON.stringify(data));
+                });
+
+                JIM.onSyncEvent(function (data) {
+                    //console.log('onSyncEvent : ' + JSON.stringify(data));
+                    appendToDashboard('onSyncEvent : ' + JSON.stringify(data));
+                });
+
+                JIM.onMsgReceiptChange(function (data) {
+                    //console.log('onMsgReceiptChange : ' + JSON.stringify(data));
+                    appendToDashboard('onMsgReceiptChange : ' + JSON.stringify(data));
+
+                });
+
+                JIM.onSyncMsgReceipt(function (data) {
+                    //console.log('onSyncMsgReceipt : ' + JSON.stringify(data));
+                    appendToDashboard('onSyncMsgReceipt : ' + JSON.stringify(data));
+
+                });
+
+                JIM.onMutiUnreadMsgUpdate(function (data) {
+                    //console.log('onConversationUpdate : ' + JSON.stringify(data));
+                    appendToDashboard('onConversationUpdate : ' + JSON.stringify(data));
+
+                });
+
+                JIM.onTransMsgRec(function (data) {
+                    //console.log('onTransMsgRec : ' + JSON.stringify(data));
+                    appendToDashboard('onTransMsgRec : ' + JSON.stringify(data));
+                });
+
+                JIM.onRoomMsg(function (data) {
+                    //console.log('onRoomMsg  : ' + JSON.stringify(data));
+                    appendToDashboard('onRoomMsg  : ' + JSON.stringify(data));
+                });
+
+                //登陆者
+                 leftUser={id: ajaxData.data.username, name: ajaxData.data.nickname, img: ajaxData.data.faceimg};
+                //消息列表
+                 LeftSessionList=[{
+                    userId: 2,
+                    messages: [{
+                        text: "Hello，这是一个基于Vue + Webpack构建的简单chat示例，聊天记录保存在localStorge。简单演示了Vue的基础特性和webpack配置。",
+                        date: '22:23'
+                    },{
+                        text: "项目地址: https://github.com/coffcer/vue-chat",
+                        date: "55:20"}]
+                },{
+                    userId: 3,
+                    messages: []
+                }];
+                //会话列表
+                 getConversation();
+            }).onFail(function (data) {
+                //console.log('error:' + JSON.stringify(data));
+                appendToDashboard('error: ' + JSON.stringify(data));
+            }).onTimeout(function (data) {
+                //console.log('timeout:' + JSON.stringify(data));
+                appendToDashboard('timeout: ' + JSON.stringify(data));
+            });
+        }
+    });
+
+}
+
+//获取会话列表
+function getConversation() {
+    JIM.getConversation().onSuccess(function(data) {
+        //console.log('success:' + JSON.stringify(data));
+        appendToDashboard('success: ' +JSON.stringify(data));
+        leftUserList= [{
+            id: 2,
+            name: "BBB",
+            img: "dist/images/2.png"
+        },
+            {
+                id: 3,
+                name: "CCC",
+                img: "dist/images/3.jpg"
+            }];
+
+    }).onFail(function(data) {
+        //console.log('error:' + JSON.stringify(data));
+        appendToDashboard('error: ' +JSON.stringify(data));
+    });
+}
+
+//发送单聊消息
+function sendSingleMsg() {
+    var across_user=$("");
+    JIM.sendSingleMsg({
+        'target_username' : across_user,
+        'appkey' :  across_appkey,
+        'content' : '12221',
+        'no_offline' : false,
+        'no_notification' : false,
+        //'custom_notification':{'enabled':true,'title':'title','alert':'alert','at_prefix':'atprefix'}
+        need_receipt:true
+    }).onSuccess(function(data,msg) {
+        console.log('success data:' + JSON.stringify(data));
+        console.log('succes msg:' + JSON.stringify(msg));
+        appendToDashboard('success: ' +JSON.stringify(data));
+    }).onFail(function(data) {
+        console.log('error:' + JSON.stringify(data));
+        appendToDashboard('error: ' +JSON.stringify(data));
+    });
+}
+

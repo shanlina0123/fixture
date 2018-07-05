@@ -27,7 +27,6 @@ class ChatBusiness extends ServerBase
      */
     public function getListData($userid,$faceimg,$jguser)
     {
-        Cache::put('userToken'.$userid,['token'=>create_uuid(),'type'=>1],config('session.lifetime'));
         $defaultFaceimg=e(pix_asset('server/images/default.png'));
         //极光账号
         $username=username($userid);
@@ -52,7 +51,7 @@ class ChatBusiness extends ServerBase
             $listFriend=$listFriend?array_column($listFriend,null,"jguser"):"";
             foreach($friend["body"] as $k=>$item)
             {
-                $friend["body"][$k]["faceimg"]=$listFriend?$listFriend[$item["username"]]["faceimg"]:$defaultFaceimg;
+                $friend["body"][$k]["faceimg"]=$listFriend[$item["username"]]["faceimg"]?$listFriend[$item["username"]]["faceimg"]:$defaultFaceimg;
             }
             $list["friend"]=$friend["body"];
         }
@@ -63,6 +62,28 @@ class ChatBusiness extends ServerBase
     }
 
 
+    /***
+     * 获取初始化配置
+     * @return \stdClass
+     */
+    public  function getInit()
+    {
+       return  $this->jmessage->getJmessageInIt();
+    }
+
+    /***
+     * 获取login用户
+     * @return \stdClass
+     */
+    public function getLogin($userid,$faceimg)
+    {
+        $defaultFaceimg=e(pix_asset(config("jmessage.defaultfaceimg")));
+        $userShow=$this->jmessage->userShow(username($userid));
+        return [
+            "username"=>$userShow["body"]["username"],
+            "password"=>config('jmessage.defaultpwd'),
+            "faceimg"=>$faceimg?$faceimg:$defaultFaceimg,"nickname"=>$userShow["body"]["nickname"]];
+    }
 
 
 }
