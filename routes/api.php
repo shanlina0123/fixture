@@ -127,6 +127,8 @@ Route::group(['middleware'=>'ApiCheck'], function () {
      */
 
     Route::post('jmessage/register', 'Common\SystemMessageController@jmessageRegister');//极光注册
+    Route::get('jmessage/friend-list', 'Common\SystemMessageController@jmessageFriendList');//好友列表
+    Route::post('jmessage/friend-add', 'Common\SystemMessageController@jmessageFriendAdd');//好友添加
 
 });
 
