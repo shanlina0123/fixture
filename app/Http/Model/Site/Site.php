@@ -94,4 +94,13 @@ class Site extends Model
     {
         return $this->belongsTo('App\Http\Model\Company\Company','companyid','id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * 关联工地
+     */
+    public function siteToUser()
+    {
+        return $this->belongsTo('App\Http\Model\User\User','createuserid','id');
+    }
 }

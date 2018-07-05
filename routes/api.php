@@ -20,7 +20,7 @@ use Illuminate\Http\Request;
 Route::post('user/login', 'Common\WxApiLoginController@login');//登陆
 Route::post('user/openid', 'Common\WxApiLoginController@getOpenid');//登陆
 Route::get('participant/position-code', 'Store\ParticipantController@code');
-Route::get('jmessage/init', 'Common\SystemMessageController@getJmessageInIt');//极光初始化
+Route::post('jmessage/init', 'Common\SystemMessageController@getJmessageInIt');//极光初始化
 Route::group(['middleware'=>'ApiCheck'], function () {
     //权限验证
     Route::group(['middleware' =>'ApiAuthCheck'], function () {
@@ -126,6 +126,9 @@ Route::group(['middleware'=>'ApiCheck'], function () {
      * 极光推送
      */
 
+    Route::post('jmessage/register', 'Common\SystemMessageController@jmessageRegister');//极光注册
+    Route::get('jmessage/friend-list', 'Common\SystemMessageController@jmessageFriendList');//好友列表
+    Route::post('jmessage/friend-add', 'Common\SystemMessageController@jmessageFriendAdd');//好友添加
 
 });
 

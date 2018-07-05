@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Common;
 use App\Http\Business\Common\JmessageBusiness;
 use App\Http\Business\Common\SystemMessage;
 use App\Http\Controllers\Controller;
+use App\Http\Model\User\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
@@ -105,5 +106,70 @@ class SystemMessageController extends Controller
         $Jmessages = new JmessageBusiness();
         $res = $Jmessages->getJmessageInIt();
         responseData(\StatusCode::SUCCESS,'初始化信息',$res);
+    }
+
+    /**
+     * 极光注册
+     */
+    public function jmessageRegister()
+    {
+        $userid = $this->apiUser->id;
+        $Jmessages = new JmessageBusiness();
+        $userName = username($userid);
+        $user =  $Jmessages->userRegister( $userName,'',$this->apiUser->nickname,['faceimg'=>$this->apiUser->faceimg]);
+        if ( !array_key_exists("error", $user["body"][0]) )
+        {
+            $userInfo = User::where(['id'=>$userid,'companyid'=>$this->apiUser->companyid])->first();
+            $userInfo->jguser = $user["body"][0]["username"];
+            $userInfo->save();
+
+            $obj = new \stdClass();
+            $obj->username = $userInfo->jguser;
+            $obj->pass = config('jmessage.defaultpwd');
+            responseData(\StatusCode::SUCCESS,'注册成功',$obj);
+
+       }else
+       {
+           responseData(\StatusCode::ERROR,'注册失败');
+       }
+    }
+
+    /**
+     * 极光好友列表
+     */
+    public function jmessageFriendList()
+    {
+        $companyid = $this->apiUser->companyid;
+        $Jmessages = new JmessageBusiness();
+        $res = $Jmessages->friendListAll($this->apiUser->jguser);
+        $arr = [];
+        $userName = array_pluck($res['body'],'username');
+        $img = User::where('companyid',$companyid)->whereIn('jguser',$userName)->pluck('faceimg', 'jguser');
+        foreach ( $img as $jguser=>$faceimg )
+        {
+            foreach ( $res['body'] as $row )
+            {
+                if( $row['username'] == $jguser )
+                {
+                    $obj = new \stdClass();
+                    $obj->username = $row['username'];
+                    $obj->nickname = $row['nickname'];
+                    $obj->faceimg = $faceimg?$faceimg:"../../../images/uhead.png";
+                    $arr[] = $obj;
+                }
+            }
+        }
+        responseData(\StatusCode::SUCCESS,'好友列表',$arr);
+    }
+
+    /**
+     * 添加好友
+     */
+    public function jmessageFriendAdd()
+    {
+        $username = $this->apiUser->jguser;
+        $friends = $this->request->input('username');
+        $Jmessages = new JmessageBusiness();
+        $Jmessages->friendAdd($username,[$friends]);
     }
 }

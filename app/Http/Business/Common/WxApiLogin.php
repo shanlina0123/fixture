@@ -62,6 +62,7 @@ class WxApiLogin
 
             $res->Authorization = $uToken->token;
             $res->expiration = $uToken->expiration;
+            $res->jmessagePass = config('jmessage.defaultpwd');
             return $res;
         }else
         {
@@ -89,6 +90,7 @@ class WxApiLogin
                 {
                     $user->Authorization = $uToken->token;
                     $user->expiration = $uToken->expiration;
+                    $user->jmessagePass = config('jmessage.defaultpwd');
                     return $user;
                 }
             }
@@ -287,7 +289,6 @@ class WxApiLogin
 
                                 return $this->userLogin( $openid, $companyid,$nickname,$faceimg );
                             }
-
                         }
                         DB::rollBack();
                         responseData(\StatusCode::ERROR,"绑定失败");

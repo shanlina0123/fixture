@@ -203,9 +203,12 @@ class SiteBusiness extends StoreBase
                     $query->select('id','siteid','userid')->with(['followToUser'=>function( $query ){
                         $query->select('faceimg','id')->orderBy('id','desc')->take(8);
                     }]);
+                },'siteToUser'=>function($query)
+                {
+                    $query->select('jguser','nickname','faceimg','id');
                 }
             ]
-        )->select('explodedossurl','addr','budget','acreage','roomtypeid','roomstyleid','renovationmodeid','stagetemplateid','companyid','id','roomshap','stageid','name','storeid','cityid','linkednum','follownum','uuid')->first();
+        )->select('explodedossurl','addr','budget','acreage','roomtypeid','roomstyleid','renovationmodeid','stagetemplateid','companyid','id','roomshap','stageid','name','storeid','cityid','linkednum','follownum','uuid','createuserid')->first();
         if( !$res )
         {
             responseData(\StatusCode::ERROR,'工地未公开');
