@@ -139,12 +139,12 @@ class SystemMessageController extends Controller
      */
     public function jmessageFriendList()
     {
-        $companyid = $this->apiUser->companyid;
+        //$companyid = $this->apiUser->companyid;
         $Jmessages = new JmessageBusiness();
         $res = $Jmessages->friendListAll($this->apiUser->jguser);
         $arr = [];
         $userName = array_pluck($res['body'],'username');
-        $img = User::where('companyid',$companyid)->whereIn('jguser',$userName)->pluck('faceimg', 'jguser');
+        $img = User::whereIn('jguser',$userName)->pluck('faceimg', 'jguser');
         foreach ( $img as $jguser=>$faceimg )
         {
             foreach ( $res['body'] as $row )
@@ -172,4 +172,26 @@ class SystemMessageController extends Controller
         $Jmessages = new JmessageBusiness();
         $Jmessages->friendAdd($username,[$friends]);
     }
+
+
+    /**
+     * 好友信息
+     */
+    public function jmessageGetUserInfo()
+    {
+        $username = $this->request->input('username');
+        $Jmessages = new JmessageBusiness();
+        $user = $Jmessages->userShow($username);
+        var_dump($user);
+    }
+
+    /**
+     * 头像
+     */
+    public function jmessageGetUserFace()
+    {
+        $userName = $this->request->input('username');
+        $img = User::whereIn('jguser',$userName)->pluck('faceimg','jguser');
+    }
+
 }
