@@ -10,6 +10,7 @@ namespace App\Http\Business\Server;
 use App\Http\Business\Common\JmessageBusiness;
 use App\Http\Business\Common\ServerBase;
 use App\Http\Model\User\User;
+use Illuminate\Support\Facades\Cache;
 
 class ChatBusiness extends ServerBase
 {
@@ -32,27 +33,25 @@ class ChatBusiness extends ServerBase
         //检查是否有管理员账号
         if(!$jguser)
         {
+            echo 1;
             $newUser=$this->jmessage->userRegister($username);
             //检测是否注册成功
             if (!array_key_exists("error", $newUser["body"][0])) {
                 //更新user
                 User::where(['id'=>$userid])->update(["jguser"=>username($userid)]);
                 //重置session
-                $loginUserInfo=session("userInfo");
-                $loginUserInfo["jguser"]=$username;
-                session(["userInfo",$loginUserInfo]);
+                Cache::put('userToken'.$userid,['token'=>create_uuid(),'type'=>1],config('session.lifetime'));
             }
             $list["friend"]=[];
         }else{
             //好友列表
             $friend=$this->jmessage->friendListAll($username);
-            $friend["body"]=[["username"=>"jmessage_2"],["username"=>"jmessage_3"]];
             $friendUsers=array_column($friend["body"],"username",null);
             $listFriend=User::whereIn("jguser",$friendUsers)->select("jguser","faceimg")->get()->toArray();
             $listFriend=$listFriend?array_column($listFriend,null,"jguser"):"";
             foreach($friend["body"] as $k=>$item)
             {
-                $friend["body"][$k]["faceimg"]=$listFriend?$listFriend[$item["username"]]["faceimg"]:$defaultFaceimg;
+                $friend["body"][$k]["faceimg"]=$listFriend[$item["username"]]["faceimg"]?$listFriend[$item["username"]]["faceimg"]:$defaultFaceimg;
             }
             $list["friend"]=$friend["body"];
         }
@@ -63,6 +62,28 @@ class ChatBusiness extends ServerBase
     }
 
 
+    /***
+     * 获取初始化配置
+     * @return \stdClass
+     */
+    public  function getInit()
+    {
+       return  $this->jmessage->getJmessageInIt();
+    }
+
+    /***
+     * 获取login用户
+     * @return \stdClass
+     */
+    public function getLogin($userid,$faceimg)
+    {
+        $defaultFaceimg=e(pix_asset(config("jmessage.defaultfaceimg")));
+        $userShow=$this->jmessage->userShow(username($userid));
+        return [
+            "username"=>$userShow["body"]["username"],
+            "password"=>config('jmessage.defaultpwd'),
+            "faceimg"=>$faceimg?$faceimg:$defaultFaceimg,"nickname"=>$userShow["body"]["nickname"]];
+    }
 
 
 }

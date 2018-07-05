@@ -17,6 +17,68 @@
             width: 100%;
             height: 80px;
         }
+        .layui-tab-card>.layui-tab-title-onlyshow .layui-this:after {
+            border-top: none;
+            border-width: 1px;
+            border-bottom-color: #fff;
+        }
+
+        .layui-tab-title-onlyshow, .layui-tab-title-onlyshow .layui-this:after{
+            border-color: #e6e6e6;
+        }
+
+        .layui-tab-card>.layui-tab-title-onlyshow {
+            background-color: #f2f2f2;
+        }
+
+        .layui-tab-title-onlyshow {
+            position: relative;
+            left: 0;
+            height: 40px;
+            white-space: nowrap;
+            font-size: 0;
+            border-bottom-width: 1px;
+            transition: all .2s;
+            -webkit-transition: all .2s;
+            border-bottom-style: solid;
+        }
+
+        .layui-tab-title-onlyshow .layui-this:after {
+            position: absolute;
+            left: 0;
+            top: 0;
+            content: '';
+            width: 100%;
+            height: 41px;
+            border-width: 1px;
+            border-style: solid;
+            border-bottom-color: #fff;
+            border-radius: 2px 2px 0 0;
+            box-sizing: border-box;
+            pointer-events: none;
+
+        }
+
+        .layui-tab-card>.layui-tab-title-onlyshow .layui-this {
+            background-color: #fff;
+        }
+        .layui-tab-card>.layui-tab-title-onlyshow li {
+            margin-right: -1px;
+            margin-left: -1px;
+        }
+        .layui-tab-title-onlyshow li {
+            display: inline-block;
+            vertical-align: middle;
+            font-size: 14px;
+            transition: all .2s;
+            -webkit-transition: all .2s;
+            position: relative;
+            line-height: 40px;
+            min-width: 65px;
+            padding: 0 15px;
+            text-align: center;
+            cursor: pointer;
+        }
     </style>
 @endsection
 @section('content')
@@ -27,11 +89,17 @@
             <form class="layui-form"  id="0" method="put" action="{{route('lucky-update','id')}}" multiple="true"  autoActioin="{{route('lucky-update','id')}}">
                 {{csrf_field()}}
                 <div class="layui-tab layui-tab-card">
-                    <ul class="layui-tab-title">
-                        <li class="layui-this">基础设置</li>
-                        <li>派奖方式</li>
-                        <li>奖项设置</li>
-                        <li>高级设置</li>
+                    <ul class="layui-tab-title-onlyshow" >
+                        <li id="luck_show_tab1" class="layui-this">基础设置</li>
+                        <li id="luck_show_tab2">派奖方式</li>
+                        <li id="luck_show_tab3">奖项设置</li>
+                        <li id="luck_show_tab4">高级设置</li>
+                    </ul>
+                    <ul class="layui-tab-title" style="display:none">
+                        <li id="luck_tab1" class="layui-this">基础设置</li>
+                        <li id="luck_tab2" >派奖方式</li>
+                        <li id="luck_tab3" >奖项设置</li>
+                        <li id="luck_tab4">高级设置</li>
                     </ul>
                     <div class="layui-tab-content">
                         <!--基础设置-->
@@ -79,7 +147,7 @@
                                             <input type="radio" name="ispeoplelimit" value="1" title="限制" lay-filter="filterNum" >
                                         </div>
                                         <div class="layui-form-inline forLineheight hidden">
-                                            <input type="number"  name="peoplelimitnum" class="layui-input" value="" min="1"  maxlength="5" max="99999"/>人参与
+                                            <input type="number"  name="peoplelimitnum" id="peoplelimitnum" class="layui-input" value="" min="1"  maxlength="5" max="99999"/>人参与
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
@@ -131,19 +199,19 @@
                                             <input type="radio" name="ischancelimit" value="1" title="限制" lay-filter="filterNum">
                                         </div>
                                         <div class="layui-form-inline forLineheight hidden">
-                                            每人最多有&nbsp;<input type="number" name="chancelimitnum" class="layui-input" min="1"  maxlength="5" max="99999">次
+                                            每人最多有&nbsp;<input type="number" name="chancelimitnum" id="chancelimitnum" class="layui-input" min="1"  maxlength="5" max="99999">次
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
                                         <label class="layui-form-label" style="width:83px"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>每人抽奖次数</label>
                                         <div class="layui-form-inline forLineheight">
-                                            每人最多中奖&nbsp;<input type="number" name="everywinnum" class="layui-input " min="1"  maxlength="5" max="99999">次
+                                            每人最多中奖&nbsp;<input type="number" name="everywinnum" id="everywinnum" class="layui-input " min="1"  maxlength="5" max="99999">次
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
                                         <label class="layui-form-label"><i class="layui-icon"  style="font-size: 12px; color: #FF5722;">*</i>总中奖率</label>
                                         <div class="layui-form-inline forLineheight">
-                                            <input type="number" name="winpoint" class="layui-input " min="1"  maxlength="5" max="99999">% &nbsp;<span>每10次抽检3次获奖</span>
+                                            <input type="number" name="winpoint" id="winpoint" class="layui-input " min="1"  maxlength="5" max="99999">% &nbsp;<span>每10次抽检3次获奖</span>
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
@@ -214,8 +282,8 @@
                                     <div class="layui-form-item">
                                         <label class="layui-form-label">上线/下线</label>
                                         <div class="layui-input-block">
-                                            <input type="radio" name="isonline" value="1" title="上线" >
-                                            <input type="radio" name="isonline" value="0" title="下线" checked>
+                                            <input type="radio" name="isonline" value="1" title="上线" checked>
+                                            <input type="radio" name="isonline" value="0" title="下线" >
                                         </div>
                                     </div>
                             </div>
@@ -224,7 +292,9 @@
                 </div>
                 <div class="btns">
                     <button type="button"  class="layui-btn" id="showBtn">预览</button>
-                    <button type="button"  class="layui-btn ajaxSubmit">保存</button>
+                    <button type="button"  class="layui-btn prevShow" id="prev1" index="1" style="display: none">上一步</button>
+                    <button type="button"  class="layui-btn nextShow" id="next" index="1">下一步</button>
+                    <button type="button"  class="layui-btn ajaxSubmit" style="display: none">保存</button>
                 </div>
             </form>
         </div>

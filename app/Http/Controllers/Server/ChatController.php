@@ -49,4 +49,24 @@ class ChatController extends ServerBaseController
     }
 
 
+    /***
+     * 获取init配置
+     */
+    public function getInit()
+    {
+        //业务调用
+        $data = $this->chat_business->getInit();
+        responseData(\StatusCode::SUCCESS,"",$data);
+    }
+
+    /***
+     * 获取login用户
+     */
+    public function getLogin()
+    {
+        //业务调用
+        $data = $this->chat_business->getLogin($this->userInfo->id,$this->userInfo->faceimg);
+        responseData(\StatusCode::SUCCESS,"",$data);
+    }
+
 }

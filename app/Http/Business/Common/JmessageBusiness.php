@@ -70,6 +70,7 @@ class JmessageBusiness
         $obj->random_str = $random_str;
         $obj->signature = $signature;
         $obj->timestamp = $timestamp;
+        $obj->flag = 1;
         return $obj;
 
     }
@@ -88,12 +89,15 @@ class JmessageBusiness
     /**
      * 极光 - User 注册用户
      */
-    public function userRegister($username,$pwd=null,$nickname=null)
+    public function userRegister($username,$pwd=null,$nickname=null,$extras=null)
     {
         $this->setClient();
         $this->setUser();
         $pwd=$pwd?$pwd:config('jmessage.defaultpwd');
-        return $this->jmessageUser->register($username,$pwd,$nickname);
+        $faceimg=config('jmessage.defaultfaceimg');
+        $extras=$extras?(strlen(trim($extras["faceimg"]))>0?$extras["faceimg"]:$faceimg):$faceimg;
+        $jsonObj=(object)$extras;
+        return $this->jmessageUser->register($username,$pwd,$nickname,$jsonObj);
     }
 
     /**

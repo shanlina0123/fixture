@@ -18,7 +18,7 @@
         body {
             color: #4d4d4d;
             font: 14px/1.4em 'Helvetica Neue', Helvetica, 'Microsoft Yahei', Arial, sans-serif;
-            background: #f5f5f5 url('{{pix_asset('server/plugins/chat/dist/bg.jpg')}}') no-repeat center;
+            background: #f5f5f5 url('{{pix_asset('server/images/chatbg.jpg')}}') no-repeat center;
             background-size: cover;
             font-smoothing: antialiased;
         }
@@ -32,10 +32,16 @@
         }
     </style>
 </head>
-<body url="{{route('chat-list')}}">
-<div id="chat" ></div>
-<script type="text/javascript" src="{{pix_asset('server/js/common/document.js')}}"></script>
-<script type="text/javascript" src="{{pix_asset('server/plugins/chat/dist/vue.js',false)}}"></script>
-<script type="text/javascript" src="{{pix_asset('server/plugins/chat/dist/main.js')}}"></script>
+<body >
+<div id="dashboard" style="display: none"></div>
+<input type="hidden" id="init-url" value="{{route('chat-init')}}" />
+<input type="hidden" id="login-url" value="{{route('chat-login')}}" />
+<input type="hidden" id="main-js" value="{{pix_asset('server/js/chat/main.js')}}" />
+<div id="chat"></div>
+<script type="text/javascript" src="{{pix_asset('server/plugins/jquery/jquery-2.1.4.min.js',false)}}"></script>
+<script type="text/javascript" src="{{pix_asset('server/plugins/vue/vue.js',false)}}"></script>
+<script type="text/javascript" src="{{pix_asset('server/plugins/chat/jmessage-sdk-web.2.6.0.min.js',false)}}"></script>
+<script type="text/javascript" src="{{pix_asset('server/js/chat/main.js')}}"></script>
+
 </body>
 </html>

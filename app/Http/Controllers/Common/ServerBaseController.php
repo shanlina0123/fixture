@@ -46,6 +46,8 @@ class ServerBaseController extends Controller
             }
 
             $this->userInfo = $userInfo;
+
+
             return $next($request);
         });
 

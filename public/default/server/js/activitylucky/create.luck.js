@@ -55,7 +55,7 @@ layui.use(['form', 'layer', 'jquery', 'laydate', 'upload'], function () {
             $('[name=picture]', lasttr).val("");
             $('[name=name]', lasttr).val("");
             $('[name=num]', lasttr).val("");
-            $(lasttr).attr("id",0);
+            $(lasttr).attr("id", 0);
             layuiForm.render();
             uploadMuilty('#uploadImg' + newIndex);
         } else {
@@ -149,43 +149,72 @@ layui.use(['form', 'layer', 'jquery', 'laydate', 'upload'], function () {
     }
 
 
-    //新增、修改
+    //上一步
+    $(".prevShow").click(function () {
+        var stepIndex = $(this).attr("index") * 1;//当前索引
+        $(".layui-tab-title-onlyshow>li").removeClass("layui-this");
+        $('#luck_show_tab' + stepIndex).addClass("layui-this");
+        $('#luck_tab' + stepIndex).click();
+        //下一步页面索引
+
+        //上一步页面索引
+        $(this).attr("index", nexIndex);
+    });
+
+    //下一步
+    $(".nextShow").click(function () {
+        var form = $(this).parents("form");
+        var stepIndex = $(this).attr("index") * 1;//当前索引
+        if (stepIndex == 4) {
+            layer.msg("无此操作", {icon: 2});
+            return false;
+        }
+        var nexIndex = stepIndex + 1;//下一步索引
+        var prevIndex = nexIndex - 1;//上一步索引
+        var id = $(form).attr("id");
+        //表单验证
+        if (checkForm(id, stepIndex)) {
+            //选中当前
+            $(".layui-tab-title-onlyshow>li").removeClass("layui-this");
+            $('#luck_show_tab' + nexIndex).addClass("layui-this");
+            $('#luck_tab' + nexIndex).click();
+            //下一步页面索引
+            $(this).attr("index", nexIndex);
+            if (nexIndex == 4) {
+                $(this).hide();//隐藏下一步
+                $(".ajaxSubmit").show();//显示保存
+            }
+        }
+    })
+
+    //保存（新增、修改）
     $(".ajaxSubmit").click(function () {
         var form = $(this).parents("form");
-        //上线
-        if($("input[name=isonline]",form).val()==1&&$(".defaulttr").length<8)
-        {
-            layer.msg("上线前必须有8个奖项",{icon: 2,time: 1000});
-        }
-        var title = $("#title", form).val();
-        var id=$(form).attr("id");
-        if(id)setAutoToFormUrl(form,"id");
-        else setFormUrl(form,"id");
-        var postData=getPostData(this,form);
-        //表单验证
-        if(checkForm(title,1))
-        {
-            $.ajaxSubmit(form,postData,doStoreOrUpdate);
-        }
+        var id = $(form).attr("id");
+        //提交表单
+        if (id) setAutoToFormUrl(form, "id");
+        else setFormUrl(form, "id");
+        var postData = getPostData(this, form);
+
+        $.ajaxSubmit(form, postData, doStoreOrUpdate);
     });
 
     //新增、修改Ajax结果处理
-    var doStoreOrUpdate=function (data) {
-        var form=$("form");
-        form.attr("id",data.data.id);
-        if(data.status===1){
-            if(data.data.isonline==1)
-            {
-                window.location.href=data.data.listurl;
+    var doStoreOrUpdate = function (data) {
+        var form = $("form");
+        form.attr("id", data.data.id);
+        if (data.status === 1) {
+            if (data.data.isonline == 1) {
+                window.location.href = data.data.listurl;
             }
-            $("[name=bgurl]",form).val("");
-            $("[name=makeurl]",form).val("");
-            $("[name=loseurl]",form).val("");
-            $("[name=picture]",form).val("");
+            $("[name=bgurl]", form).val("");
+            $("[name=makeurl]", form).val("");
+            $("[name=loseurl]", form).val("");
+            $("[name=picture]", form).val("");
             setRowData(data.data.prizeIds);
-            layer.msg(data.messages,{icon: 1,time: 1000});
-        }else{
-            layer.msg(data.messages, {icon: 2,time: 2000});
+            layer.msg(data.messages, {icon: 1, time: 1000});
+        } else {
+            layer.msg(data.messages, {icon: 2, time: 2000});
         }
     }
 
@@ -196,82 +225,76 @@ function deleteItem(index) {
 
     layer.confirm('确定要删除吗？', {
         btn: ['确定', '取消']
-    },function(){
-        var id=$(index).parents("tr").attr("id");
-        if(id)
-        {
-            $.deleteJSON($(index).attr("url"),null,function(data){
+    }, function () {
+        var id = $(index).parents("tr").attr("id");
+        if (id) {
+            $.deleteJSON($(index).attr("url"), null, function (data) {
                 $(index).parents("tr").remove();
                 layer.msg('删除成功', {icon: 1});
             });
-        }else{
+        } else {
             $(index).parents("tr").remove();
         }
     });
 }
 
 
-
 //添加修改的post
-var getPostData=function (obj,form) {
+var getPostData = function (obj, form) {
     return {
-        "id":$(form).attr("id"),
-        "storeid":$("[name=storeid]",form).val(),
-        "title":$("[name=title]",form).val(),
-        "resume":$("[name=resume]",form).val(),
-        "startdate":$("[name=startdate]",form).val(),
-        "enddate":$("[name=enddate]",form).val(),
-        "ispeoplelimit":$("[name=ispeoplelimit]:checked",form).val(),
-        "peoplelimitnum":$("[name=peoplelimitnum]",form).val(),
-        "bgurl":$("[name=bgurl]",form).val(),
-        "makeurl":$("[name=makeurl]",form).val(),
-        "loseurl":$("[name=loseurl]",form).val(),
-        "ischancelimit":$("[name=ischancelimit]:checked",form).val(),
-        "chancelimitnum":$("[name=chancelimitnum]",form).val(),
-        "everywinnum":$("[name=everywinnum]",form).val(),
-        "winpoint":$("[name=winpoint]",form).val(),
-        "ishasconnectinfo":$("[name=ishasconnectinfo]:checked",form).val(),
-        "prizelist":getRowPostData(form),
-        "sharetitle":$("[name=sharetitle]",form).val(),
-        "isonline":$("[name=isonline]:checked",form).val(),
-        "ispublic":$(obj).attr("ispublic"),
+        "id": $(form).attr("id"),
+        "storeid": $("[name=storeid]", form).val(),
+        "title": $("[name=title]", form).val(),
+        "resume": $("[name=resume]", form).val(),
+        "startdate": $("[name=startdate]", form).val(),
+        "enddate": $("[name=enddate]", form).val(),
+        "ispeoplelimit": $("[name=ispeoplelimit]:checked", form).val(),
+        "peoplelimitnum": $("[name=peoplelimitnum]", form).val(),
+        "bgurl": $("[name=bgurl]", form).val(),
+        "makeurl": $("[name=makeurl]", form).val(),
+        "loseurl": $("[name=loseurl]", form).val(),
+        "ischancelimit": $("[name=ischancelimit]:checked", form).val(),
+        "chancelimitnum": $("[name=chancelimitnum]", form).val(),
+        "everywinnum": $("[name=everywinnum]", form).val(),
+        "winpoint": $("[name=winpoint]", form).val(),
+        "ishasconnectinfo": $("[name=ishasconnectinfo]:checked", form).val(),
+        "prizelist": getRowPostData(form),
+        "sharetitle": $("[name=sharetitle]", form).val(),
+        "isonline": $("[name=isonline]:checked", form).val(),
+        "ispublic": $(obj).attr("ispublic"),
     };
 }
 
 
-
 //设置录入成功后的数据
-var setRowData=function (data) {
-    var postData=[];
+var setRowData = function (data) {
+    var postData = [];
     var strJson;
-    var obj=$(".defaulttr");
-    for(var i=0;i<obj.length;i++)
-    {
-        var one=obj.get(i);
-        var levelid=$("[name=levelid]",one).val();
-        var rsid=data[levelid];
-         $(one).attr("id",rsid);
-         $(".deleteBtn",one).attr("url").replace("id",rsid);
+    var obj = $(".defaulttr");
+    for (var i = 0; i < obj.length; i++) {
+        var one = obj.get(i);
+        var levelid = $("[name=levelid]", one).val();
+        var rsid = data[levelid];
+        $(one).attr("id", rsid);
+        $(".deleteBtn", one).attr("url").replace("id", rsid);
     }
     return postData;
 }
 
 //整理勾选提交的数据
-var getRowPostData=function () {
-    var postData=[];
+var getRowPostData = function () {
+    var postData = [];
     var strJson;
-    var obj=$(".defaulttr");
-    for(var i=0;i<obj.length;i++)
-    {
-        var one=obj.get(i);
-        var picture=$("[name=picture]",one).val();
-        var name=$("[name=name]",one).val();
-        var num=$("[name=num]",one).val();
-        var levelid=$("[name=levelid]",one).val();
-        var id=$(one).attr("id");
-        if(name&&num&&levelid)
-        {
-            var strJson={id:id,picture:picture,name:name,num:num,levelid:levelid};
+    var obj = $(".defaulttr");
+    for (var i = 0; i < obj.length; i++) {
+        var one = obj.get(i);
+        var picture = $("[name=picture]", one).val();
+        var name = $("[name=name]", one).val();
+        var num = $("[name=num]", one).val();
+        var levelid = $("[name=levelid]", one).val();
+        var id = $(one).attr("id");
+        if (name && num && levelid) {
+            var strJson = {id: id, picture: picture, name: name, num: num, levelid: levelid};
             postData.push(strJson);
         }
     }
@@ -280,40 +303,89 @@ var getRowPostData=function () {
 
 //预览
 $("#showBtn").click(function () {
-      //动态数据
-      var form=$("form");
-      var startdate=$("[name=startdate]",form).val();
-      var enddate=$("[name=enddate]",form).val();
-      var resume=$("[name=resume]",form).val();
-      var bgurl=$("#bgurl",form).find("img").attr("src");
-      var makeurl=$("#makeurl",form).find("img").attr("src");
-      var loseurl=$("#loseurl",form).find("img").attr("src");
-      //预览
-      var showDiv=$("#showContent");
-      startdate&&enddate?$("#luckydate",showDiv).html(startdate+" 到 "+enddate):"";
-      resume?$("#resume",showDiv).html(resume):"";
-      bgurl?$("#bgurl",showDiv).css("background","url("+bgurl+") center top no-repeat"):"";
-      makeurl?$("#makeurl",showDiv).find("img").attr("src",makeurl):"";
-      loseurl?$("#loseurl",showDiv).find("img").attr("src",loseurl):"";
-        var obj=$(".defaulttr");
-        for(var i=0;i<obj.length;i++)
-        {
-            var one=obj.get(i);
-            var picture=$(".imgHome",one).find("img").attr("src");
-            picture?$("#prizeList"+i).find("img").attr("src",picture):"";
-        }
+    //动态数据
+    var form = $("form");
+    var startdate = $("[name=startdate]", form).val();
+    var enddate = $("[name=enddate]", form).val();
+    var resume = $("[name=resume]", form).val();
+    var bgurl = $("#bgurl", form).find("img").attr("src");
+    var makeurl = $("#makeurl", form).find("img").attr("src");
+    var loseurl = $("#loseurl", form).find("img").attr("src");
+    //预览
+    var showDiv = $("#showContent");
+    startdate && enddate ? $("#luckydate", showDiv).html(startdate + " 到 " + enddate) : "";
+    resume ? $("#resume", showDiv).html(resume) : "";
+    bgurl ? $("#bgurl", showDiv).css("background", "url(" + bgurl + ") center top no-repeat") : "";
+    makeurl ? $("#makeurl", showDiv).find("img").attr("src", makeurl) : "";
+    loseurl ? $("#loseurl", showDiv).find("img").attr("src", loseurl) : "";
+    var obj = $(".defaulttr");
+    for (var i = 0; i < obj.length; i++) {
+        var one = obj.get(i);
+        var picture = $(".imgHome", one).find("img").attr("src");
+        picture ? $("#prizeList" + i).find("img").attr("src", picture) : "";
+    }
 });
 
 //表单验证
-var checkForm = function (title,id) {
-    if(id=="")
-    {
-        layer.msg("请求错误",{icon: 2});
+var checkForm = function (id, stepIndex) {
+    if (id == "") {
+        layer.msg("请求错误", {icon: 2});
         return false;
     }
-    if (title == "") {
-        layer.msg("标题不能为空", {icon: 2});
-        return false;
+    switch (stepIndex) {
+        case 1:
+            if ($("#storeid").val() == "") {
+                layer.msg("门店不能为空", {icon: 2});
+                return false;
+            }
+            if ($("#title").val() == "") {
+                layer.msg("标题不能为空", {icon: 2});
+                return false;
+            }
+
+            if ($("#resume").val() == "") {
+                layer.msg("活动简介不能为空", {icon: 2});
+                return false;
+            }
+            if ($("#startdate").val() == "") {
+                layer.msg("开始时间不能为空", {icon: 2});
+                return false;
+            }
+            if ($("#enddate").val() == "") {
+                layer.msg("结束时间不能为空", {icon: 2});
+                return false;
+            }
+            if ($("#startdate").val() >=$("#enddate").val()) {
+                layer.msg("开始时间不能大于等于结束时间", {icon: 2});
+                return false;
+            }
+            if ($("input[name=ispeoplelimit]:checked").val() == 1 && $("#peoplelimitnum").val() == "") {
+                layer.msg("人数限制不能为空", {icon: 2});
+                return false;
+            }
+            break;
+        case 2:
+            if ($("input[name=ischancelimit]:checked").val() == 1 && $("#chancelimitnum").val() == "") {
+                layer.msg("总抽奖机会人数限制不能为空", {icon: 2});
+                return false;
+            }
+            if ($("#everywinnum").val() == "") {
+                layer.msg("每人抽奖次数不能为空", {icon: 2});
+                return false;
+            }
+            if ($("#winpoint").val() == "") {
+                layer.msg("总中奖率不能为空", {icon: 2});
+                return false;
+            }
+            break;
+        case 3:
+            if ($(".defaulttr").length < 8) {
+                layer.msg("至少上传8种奖品", {icon: 2, time: 1000});
+                return false;
+            }
+
+            name
+            break;
     }
     return true;
 }
@@ -321,14 +393,12 @@ var checkForm = function (title,id) {
 //正整数
 $("input[type=number]").keyup(function () {
     $(this).val($(this).val().replace(/[^0-9]*$/, ''));
-    if($(this).val()==0)
-    {
-        $(this).val($(this).val().replace(0,''));
+    if ($(this).val() == 0) {
+        $(this).val($(this).val().replace(0, ''));
     }
 }).bind("paste", function () {  //CTR+V事件处理
     $(this).val($(this).val().replace(/[^0-9]*$/, ''));
-    if($(this).val()==0)
-    {
-        $(this).val($(this).val().replace(0,''));
+    if ($(this).val() == 0) {
+        $(this).val($(this).val().replace(0, ''));
     }
 }).css("ime-mode", "disabled"); //CSS设置输入法不可用
