@@ -159,6 +159,7 @@ class ActivityLuckyBusiness extends ServerBase
             return $storeList;
         });
 
+
         //获取门店数据
         $tagKey2 = base64_encode(mosaic("", $tag2, $companyid, $cityid, $storeid, $islook));
         $list["storeList"] = Cache::tags($tag2)->remember($tagKey2, config('configure.sCache'), function () use ($isadmin, $lookWhere) {

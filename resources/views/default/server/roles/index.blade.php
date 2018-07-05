@@ -2,6 +2,9 @@
 @section("title")角色管理@endsection
 @section('content')
     <div class="main">
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>角色列表</legend>
+        </fieldset>
         <div style="display: none" id="errorMsg" content="{{$errorMsg}}"></div>
         <!--新增和筛选部分-->
         <div class="addBtnWrap">

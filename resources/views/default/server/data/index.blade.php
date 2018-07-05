@@ -2,8 +2,10 @@
 @section("title")属性管理@endsection
 @section('content')
     <div class="main">
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>系统属性列表</legend>
+        </fieldset>
         <div style="display: none" id="errorMsg" content="{{$errorMsg}}"></div>
-        <h1 class="pageTitle">系统属性列表</h1>
             <table class="layui-table">
                 <thead>
                 <tr>

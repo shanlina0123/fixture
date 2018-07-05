@@ -153,23 +153,40 @@ layui.use(['form', 'layer', 'jquery', 'laydate', 'upload'], function () {
     $(".prevShow").click(function () {
         var stepIndex = $(this).attr("index") * 1;//当前索引
         var nextIndex=stepIndex+1;//下一页索引
+        var prevIndex=stepIndex-1;
+        if (stepIndex < 1) {
+            layer.msg("无此操作", {icon: 2});
+            return false;
+        }
+        //切换到上一个页面
         $(".layui-tab-title-onlyshow>li").removeClass("layui-this");
-        $('#luck_show_tab' + prevIndex).addClass("layui-this");
-        $('#luck_tab' + prevIndex).click();
-        //下一步页面索引
+        $('#luck_show_tab' + stepIndex).addClass("layui-this");
+        $('#luck_tab' + stepIndex).click();
 
+        if(stepIndex==1)
+        {
+            $(this).hide();//隐藏上一步
+            $('.nextShow').show();//显示下一步
+            $(".ajaxSubmit").hide();//隐藏保存
+        }else{
+            $('.nextShow').show();//显示下一步
+            $(".ajaxSubmit").hide();//隐藏保存
+        }
+
+        //下一步页面索引
+         $(".nextShow").attr("index",stepIndex);
         //上一步页面索引
-        $(this).attr("index", nexIndex);
+        $(this).attr("index", prevIndex);
     });
 
     //下一步
     $(".nextShow").click(function () {
         var form = $(this).parents("form");
-        var stepIndex = $(this).attr("index") * 1;//当前索引
-        var nexIndex=stepIndex+1;//下一步索引
-        var prevIndex=nexIndex-1;//上一步索引
+        var stepIndex = $(this).attr("index") * 1;//当前索引 1
+        var nexIndex=stepIndex+1;//下一步索引 2
+        var prevIndex=nexIndex-1;//上一步索引 1
         var id = $(form).attr("id");
-        if (stepIndex == 4) {
+        if (stepIndex >= 4) {
             layer.msg("无此操作", {icon: 2});
             return false;
         }
@@ -179,17 +196,24 @@ layui.use(['form', 'layer', 'jquery', 'laydate', 'upload'], function () {
             $(".layui-tab-title-onlyshow>li").removeClass("layui-this");
             $('#luck_show_tab' + nexIndex).addClass("layui-this");
             $('#luck_tab' + nexIndex).click();
+
             //最后一步
-            if (nexIndex == 4) {
+            if (stepIndex == 3) {
                 $(this).hide();//隐藏下一步
                 $(".ajaxSubmit").show();//显示保存
+            }else{
+                $(this).show();//显示下一步
+                $(".ajaxSubmit").hide();//隐藏保存
             }
-        }
-        //设置下一页索引
-        $(this).attr("index",nexIndex);
 
-        //设置上一页索引
-        $(".prevShow").attr("index",prevIndex);
+            //设置下一页索引
+            $(this).attr("index",nexIndex);
+
+            //设置上一页索引
+            $(".prevShow").attr("index",prevIndex);
+            $(".prevShow").show();
+        }
+
     })
 
     //保存（新增、修改）
@@ -201,6 +225,7 @@ layui.use(['form', 'layer', 'jquery', 'laydate', 'upload'], function () {
         else setFormUrl(form, "id");
         var postData = getPostData(this, form);
 
+        $(this).attr("disabled","disabled");
         $.ajaxSubmit(form, postData, doStoreOrUpdate);
     });
 
@@ -209,16 +234,19 @@ layui.use(['form', 'layer', 'jquery', 'laydate', 'upload'], function () {
         var form = $("form");
         form.attr("id", data.data.id);
         if (data.status === 1) {
-            if (data.data.isonline == 1) {
+            layer.msg(data.messages, {icon: 1, time: 500},function(){
                 window.location.href = data.data.listurl;
-            }
-            $("[name=bgurl]", form).val("");
-            $("[name=makeurl]", form).val("");
-            $("[name=loseurl]", form).val("");
-            $("[name=picture]", form).val("");
-            setRowData(data.data.prizeIds);
-            layer.msg(data.messages, {icon: 1, time: 1000});
+            });
+            //if (data.data.isonline == 1) {
+          //  window.location.href = data.data.listurl;
+           // }
+           //  $("[name=bgurl]", form).val("");
+           //  $("[name=makeurl]", form).val("");
+           //  $("[name=loseurl]", form).val("");
+           //  $("[name=picture]", form).val("");
+           //  setRowData(data.data.prizeIds);
         } else {
+            $(".ajaxSubmit",form).removeAttr("disabled");
             layer.msg(data.messages, {icon: 2, time: 2000});
         }
     }
@@ -387,9 +415,27 @@ var checkForm = function (id, stepIndex) {
             if ($(".defaulttr").length < 8) {
                 layer.msg("至少上传8种奖品", {icon: 2, time: 1000});
                 return false;
+            }else{
+                var levelArrData=[];
+                for(var i=0;i<8;i++)
+                {
+                    var leveid=$($("select[name=levelid]").get(i)).val();
+                    if($($("input[name=name]").get(i)).val()=="" || $($("input[name=num]").get(i)).val()=="" || leveid=="")
+                    {
+                        layer.msg("请完善奖品,图片无则使用系统默认图", {icon: 2, time: 1000});
+                        return false;
+                        break;
+                    }
+                    if(leveid){
+                        levelArrData.push(leveid);
+                    }
+                }
+                if(checkArrRepeat(levelArrData))
+                {
+                    layer.msg("奖项等级重复，请重新选择", {icon: 2, time: 1000});
+                    return false;
+                }
             }
-
-            name
             break;
     }
     return true;

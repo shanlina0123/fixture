@@ -111,8 +111,8 @@
 }
 .uploadImgWrap {
   position: relative;
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   border: 1px solid #eee;
   cursor: pointer;
 }
@@ -120,8 +120,8 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   z-index: 20;
   background: none;
   opacity: 0;
@@ -130,8 +130,8 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   z-index: 10;
 }
 .editBtns {

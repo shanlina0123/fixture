@@ -2,6 +2,9 @@
 @section("title")活动管理@endsection
 @section('content')
     <div class="main">
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>抽奖列表</legend>
+        </fieldset>
         <div style="display: none" id="errorMsg" content="{{$errorMsg}}"></div>
         <!--新增和筛选部分-->
         <div class="addBtnWrap">
@@ -72,16 +75,16 @@
                         </td>
                         <td>
                             <div class="layui-btn-group">
-                                <button type="button" class="layui-btn spreadBtn"
+                                <a type="button" class="layui-btn spreadBtn"
                                         @if($item->isonline==0)style="display: none;"@endif url="{{route('lucky-extension',$item->id)}}">推广
-                                </button>
+                                </a>
                                 <a type="button" class="layui-btn seeBtn" url="{{route('lucky-edit',$item->id)}}"
                                    @if($item->isonline==0)style="display: none;"@endif>查看</a>
                                 <a type="button" class="layui-btn editBtn" url="{{route('lucky-edit',$item->id)}}"
                                    @if($item->isonline==1)style="display: none;"@endif >编辑</a>
-                                <button type="button" class="layui-btn deleteBtn" url="{{route('lucky-delete',$item->id)}}"
+                                <a type="button" class="layui-btn deleteBtn" url="{{route('lucky-delete',$item->id)}}"
                                         @if($item->isonline==1)style="display: none;"@endif >删除
-                                </button>
+                                </a>
                             </div>
                         </td>
                     </tr>
