@@ -76,7 +76,7 @@
                                         <label class="layui-form-label">活动背景图</label>
                                         <div class="layui-input-block layui-upload baseUrl">
                                             <button type="button" class="layui-btn tab1Upload"><i class="layui-icon"></i>上传图片</button>
-                                            <span class="imgnotice">请上传640px*1500px的图片</span>
+                                            <span class="imgnotice">请上传640px*1500px的图片,最大{{config("configure.maxImgSize")}}</span>
                                             <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
                                                 预览图：
                                                 <div class="layui-upload-list showUrl" id="bgurl"></div>
@@ -88,7 +88,7 @@
                                         <label class="layui-form-label">立即抽奖图</label>
                                         <div class="layui-input-block layui-upload baseUrl">
                                             <button type="button" class="layui-btn tab1Upload"><i class="layui-icon"></i>上传图片 </button>
-                                            <span class="imgnotice">请上传134px*134px的图片</span>
+                                            <span class="imgnotice">请上传134px*134px的图片,最大{{config("configure.maxImgSize")}}</span>
                                             <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
                                                 预览图：
                                                 <div class="layui-upload-list showUrl" id="makeurl"></div>
@@ -101,7 +101,7 @@
                                         <div class="layui-input-block layui-upload baseUrl">
                                             <button type="button" class="layui-btn tab1Upload"><i class="layui-icon"></i>上传图片
                                             </button>
-                                            <span class="imgnotice">请上传460px*430px的图片</span>
+                                            <span class="imgnotice">请上传460px*430px的图片,最大{{config("configure.maxImgSize")}}</span>
                                             <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
                                                 预览图：
                                                 <div class="layui-upload-list showUrl" id="loseurl"></div>

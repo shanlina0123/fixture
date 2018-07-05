@@ -24,7 +24,7 @@ return [
    // "showUploads"=>$_SERVER["REQUEST_SCHEME"]."://".$_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"]."/uploads",//图片预览路径
     "uploads"=>"uploads",//图片文件路径
     "temp"=>"/temp/",//图片临时目录
-
+     "maxImgSize"=>"2M",//图片最大上传大小
     /**
      * ----------------------------
      *  模板配置
