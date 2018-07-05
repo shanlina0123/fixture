@@ -27,11 +27,11 @@ class AuthCheck
             }
        }
         //验证VIP权限
-        $vipflag= $this->authVip($admin_user);
-        if($vipflag==false)
-        {
-            return redirect()->route('vip-index')->with('msg', '无权限,请升级为专业版');
-        }
+//        $vipflag= $this->authVip($admin_user);
+//        if($vipflag==false)
+//        {
+//            return redirect()->route('vip-index')->with('msg', '无权限,请升级为专业版');
+//        }
 
         return $next($request);
     }
