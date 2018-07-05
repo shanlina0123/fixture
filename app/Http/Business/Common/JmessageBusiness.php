@@ -94,7 +94,8 @@ class JmessageBusiness
         $this->setClient();
         $this->setUser();
         $pwd=$pwd?$pwd:config('jmessage.defaultpwd');
-        $extras=$extras?$extras:["faceimg"=>config('jmessage.defaultfaceimg')];
+        $faceimg=config('jmessage.defaultfaceimg');
+        $extras=$extras?(strlen(trim($extras["faceimg"]))>0?$extras["faceimg"]:$faceimg):$faceimg;
         $jsonObj=(object)$extras;
         return $this->jmessageUser->register($username,$pwd,$nickname,$jsonObj);
     }

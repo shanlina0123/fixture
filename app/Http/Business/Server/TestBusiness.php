@@ -36,15 +36,15 @@ class TestBusiness
 //        print_r($c);
 
 //        //注册
-//        $d = $jmessage->userRegister("CXCX",null,"嘻嘻cvcv嘻");
+//        $d = $jmessage->userRegister("WEWE",null,"嘻嘻WEWE嘻",["faceimg"=>""]);
 //        if (array_key_exists("error", $d["body"][0])) {
 //            echo $d["body"][0]["username"] . " 注册失败";
 //        } else {
 //            echo $d["body"][0]["username"] . " 注册成功";
 //        }
-
+//
 //        //用户信息
-//        $a = $jmessage->userShow("CXCX");
+//        $a = $jmessage->userShow("WEWE");
 //        print_r($a);
 
 
