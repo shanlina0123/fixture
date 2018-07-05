@@ -152,9 +152,10 @@ layui.use(['form', 'layer', 'jquery', 'laydate', 'upload'], function () {
     //上一步
     $(".prevShow").click(function () {
         var stepIndex = $(this).attr("index") * 1;//当前索引
+        var nextIndex=stepIndex+1;//下一页索引
         $(".layui-tab-title-onlyshow>li").removeClass("layui-this");
-        $('#luck_show_tab' + stepIndex).addClass("layui-this");
-        $('#luck_tab' + stepIndex).click();
+        $('#luck_show_tab' + prevIndex).addClass("layui-this");
+        $('#luck_tab' + prevIndex).click();
         //下一步页面索引
 
         //上一步页面索引
@@ -165,26 +166,30 @@ layui.use(['form', 'layer', 'jquery', 'laydate', 'upload'], function () {
     $(".nextShow").click(function () {
         var form = $(this).parents("form");
         var stepIndex = $(this).attr("index") * 1;//当前索引
+        var nexIndex=stepIndex+1;//下一步索引
+        var prevIndex=nexIndex-1;//上一步索引
+        var id = $(form).attr("id");
         if (stepIndex == 4) {
             layer.msg("无此操作", {icon: 2});
             return false;
         }
-        var nexIndex = stepIndex + 1;//下一步索引
-        var prevIndex = nexIndex - 1;//上一步索引
-        var id = $(form).attr("id");
         //表单验证
         if (checkForm(id, stepIndex)) {
-            //选中当前
+            //切换到下一个页面
             $(".layui-tab-title-onlyshow>li").removeClass("layui-this");
             $('#luck_show_tab' + nexIndex).addClass("layui-this");
             $('#luck_tab' + nexIndex).click();
-            //下一步页面索引
-            $(this).attr("index", nexIndex);
+            //最后一步
             if (nexIndex == 4) {
                 $(this).hide();//隐藏下一步
                 $(".ajaxSubmit").show();//显示保存
             }
         }
+        //设置下一页索引
+        $(this).attr("index",nexIndex);
+
+        //设置上一页索引
+        $(".prevShow").attr("index",prevIndex);
     })
 
     //保存（新增、修改）

@@ -292,8 +292,8 @@
                 </div>
                 <div class="btns">
                     <button type="button"  class="layui-btn" id="showBtn">预览</button>
-                    <button type="button"  class="layui-btn prevShow" id="prev1" index="1" style="display: none">上一步</button>
-                    <button type="button"  class="layui-btn nextShow" id="next" index="1">下一步</button>
+                    <button type="button"  class="layui-btn prevShow"  index="1" style="display: none">上一步</button>
+                    <button type="button"  class="layui-btn nextShow"  index="1">下一步</button>
                     <button type="button"  class="layui-btn ajaxSubmit" style="display: none">保存</button>
                 </div>
             </form>
