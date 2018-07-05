@@ -85,7 +85,7 @@ END;//
 delimiter ;
 call role_function();
 
-#####以上已同步线上######
+
 #vip升级申请
 ALTER TABLE `fixture_log_vipupgrade` ADD COLUMN `status`  tinyint(4) NULL DEFAULT 0 COMMENT '状态 0申请中  1已申请' AFTER `deadline`;
 ALTER TABLE `fixture_log_vipupgrade` ADD COLUMN `updated_at`  datetime NULL DEFAULT NULL COMMENT '更新时间' AFTER `created_at`;
@@ -95,3 +95,4 @@ ALTER TABLE `fixture_user` ADD COLUMN `oid`  int(11) NULL DEFAULT NULL COMMENT '
 #用户对应极光账号
 ALTER TABLE `fixture_user` ADD COLUMN `jguser`  varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '极光账号' AFTER `oid`;
 
+#####以上已同步线上######

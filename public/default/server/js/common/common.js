@@ -184,3 +184,8 @@ if( $(".layui-nav-tree").find(".layui-this").length )
     }
 }
 
+// 验证重复元素，有重复返回true；否则返回false
+function checkArrRepeat(a)
+{
+    return /(\x0f[^\x0f]+)\x0f[\s\S]*\1/.test("\x0f"+a.join("\x0f\x0f") +"\x0f");
+}

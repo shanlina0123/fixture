@@ -1,23 +1,7 @@
 @extends('server.layout.content')
 @section("title")活动管理@endsection
 @section('css')
-    <style>
-        .layui-btn+.layui-btn {
-            margin-left: 4px;
-        }
-        .formTab {
-            margin-right: 20px;
-            margin-bottom: 50px;
-        }
-        .showImg {
-            max-width: 100%;
-            max-height:500px;
-        }
-        .imgHomeShow{
-            width: 100%;
-            height: 80px;
-        }
-    </style>
+    <link rel="stylesheet" href="{{pix_asset('server/css/luck.css')}}">
 @endsection
 @section('content')
     <div class="main">

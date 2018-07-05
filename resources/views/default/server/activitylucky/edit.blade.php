@@ -1,23 +1,7 @@
 @extends('server.layout.content')
 @section("title")活动管理@endsection
 @section('css')
-    <style>
-        .layui-btn+.layui-btn {
-            margin-left: 4px;
-        }
-        .formTab {
-            margin-right: 20px;
-            margin-bottom: 50px;
-        }
-        .showImg {
-            max-width: 100%;
-            max-height:500px;
-        }
-        .imgHomeShow{
-            width: 100%;
-            height: 80px;
-        }
-    </style>
+ <link rel="stylesheet" href="{{pix_asset('server/css/luck.css')}}">
 @endsection
 @section('content')
     <div class="main">
@@ -27,11 +11,17 @@
             <form class="layui-form"  id="{{$list["luckData"]["id"]}}" method="put" action="{{route('lucky-update',$list["luckData"]["id"])}}" multiple="true"  autoActioin="{{route('lucky-update','id')}}">
                 {{csrf_field()}}
                 <div class="layui-tab layui-tab-card">
-                    <ul class="layui-tab-title">
-                        <li class="layui-this">基础设置</li>
-                        <li>派奖方式</li>
-                        <li>奖项设置</li>
-                        <li>高级设置</li>
+                    <ul class="layui-tab-title-onlyshow" >
+                        <li id="luck_show_tab1" class="layui-this">基础设置</li>
+                        <li id="luck_show_tab2">派奖方式</li>
+                        <li id="luck_show_tab3">奖项设置</li>
+                        <li id="luck_show_tab4">高级设置</li>
+                    </ul>
+                    <ul class="layui-tab-title" style="display:none">
+                        <li id="luck_tab1" class="layui-this">基础设置</li>
+                        <li id="luck_tab2" >派奖方式</li>
+                        <li id="luck_tab3" >奖项设置</li>
+                        <li id="luck_tab4">高级设置</li>
                     </ul>
                     <div class="layui-tab-content">
                         <!--基础设置-->
@@ -79,7 +69,7 @@
                                             <input type="radio" name="ispeoplelimit" value="1" title="限制" lay-filter="filterNum" @if($list['luckData']["ispeoplelimit"]==1) checked @endif >
                                         </div>
                                         <div class="layui-form-inline forLineheight  @if($list['luckData']["ispeoplelimit"]==0)  hidden @endif">
-                                            <input type="number" name="peoplelimitnum" class="layui-input" value="{{$list['luckData']["peoplelimitnum"]}}" min="1" maxlength="5" max="99999"/>人参与
+                                            <input type="number" name="peoplelimitnum" id="peoplelimitnum" class="layui-input" value="{{$list['luckData']["peoplelimitnum"]}}" min="1" maxlength="5" max="99999"/>人参与
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
@@ -137,19 +127,19 @@
                                             <input type="radio" name="ischancelimit" value="1" title="限制" lay-filter="filterNum" @if($list['luckData']["ischancelimit"]==1) checked @endif>
                                         </div>
                                         <div class="layui-form-inline forLineheight @if($list['luckData']["ischancelimit"]==0) hidden @endif">
-                                            每人最多有&nbsp;<input type="number" name="chancelimitnum" class="layui-input" value="{{$list['luckData']["chancelimitnum"]}}" min="1" maxlength="5" max="99999">次
+                                            每人最多有&nbsp;<input type="number" name="chancelimitnum" id="chancelimitnum"  class="layui-input" value="{{$list['luckData']["chancelimitnum"]}}" min="1" maxlength="5" max="99999">次
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
                                         <label class="layui-form-label" style="width:83px"><i class="layui-icon" style="font-size: 12px; color: #FF5722;">*</i>每人抽奖次数</label>
                                         <div class="layui-form-inline forLineheight">
-                                            每人最多中奖&nbsp;<input type="number" name="everywinnum" class="layui-input"  value="{{$list['luckData']["everywinnum"]}}" min="1" maxlength="5" max="99999">次
+                                            每人最多中奖&nbsp;<input type="number" name="everywinnum" id="everywinnum" class="layui-input"  value="{{$list['luckData']["everywinnum"]}}" min="1" maxlength="5" max="99999">次
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
                                         <label class="layui-form-label"><i class="layui-icon"  style="font-size: 12px; color: #FF5722;">*</i>总中奖率</label>
                                         <div class="layui-form-inline forLineheight">
-                                            <input type="number" name="winpoint" class="layui-input" value="{{$list['luckData']["winpoint"]}}" min="1" maxlength="5" max="99999">% &nbsp;<span>每10次抽检3次获奖</span>
+                                            <input type="number" name="winpoint" id="winpoint" class="layui-input" value="{{$list['luckData']["winpoint"]}}" min="1" maxlength="5" max="99999">% &nbsp;<span>每10次抽检3次获奖</span>
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
@@ -180,7 +170,7 @@
                                                 <!--<button type="button" class="layui-btn uploadBtn uploadImg"></button>-->
                                                 <input name="file" type="file" class="uploadBtn uploadImg prizelist"  id="uploadImg{{$k}}" selectIndex="{{$k}}">
                                                 <input type="hidden" name="picture" />
-                                                <div class="imgHome" style="background: url({{pix_asset('server/images/add.png')}}) center center no-repeat">
+                                                <div class="imgHome" style="background: url({{pix_asset('server/images/add.png')}}) center center no-repeat;background-size: 60px;">
                                                     @if($itemPrize['picture'])<img src="{{"/".config('configure.uploads')."/".$itemPrize['picture']}}"  class="layui-upload-img imgHomeShow">@endif
                                                 </div>
                                             </div>
@@ -193,7 +183,7 @@
                                         </td>
                                         <td>
                                             <div class="layui-input-inline">
-                                                <select name="levelid" lay-verify="required" lay-search="" id="levelid"   nullmsg="请选择奖项级别" >
+                                                <select name="levelid" lay-verify="required" lay-search="" id="levelid"   nullmsg="请选择奖项级别"  >
                                                     <option value="">请选择</option>
                                                     @if($list['levelList']!=null) @foreach($list['levelList'] as $k=>$item)
                                                         <option value="{{$item->id}}" @if($itemPrize['levelid']==$item->id) selected @endif>{{$item->name}}</option>
@@ -267,7 +257,9 @@
                 </div>
                 <div class="btns">
                     <button type="button"  class="layui-btn" id="showBtn">预览</button>
-                    <button type="button"  class="layui-btn ajaxSubmit"  >保存</button>
+                    <button type="button"  class="layui-btn prevShow"  index="0" style="display: none">上一步</button>
+                    <button type="button"  class="layui-btn nextShow"  index="1">下一步</button>
+                    <button type="button"  class="layui-btn ajaxSubmit" style="display: none">保存</button>
                 </div>
             </form>
         </div>

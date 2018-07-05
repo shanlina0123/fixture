@@ -1,85 +1,7 @@
 @extends('server.layout.content')
 @section("title")活动管理@endsection
 @section('css')
-    <style>
-        .layui-btn+.layui-btn {
-            margin-left: 4px;
-        }
-        .formTab {
-            margin-right: 20px;
-            margin-bottom: 50px;
-        }
-        .showImg {
-            max-width: 100%;
-            max-height:500px;
-        }
-        .imgHomeShow{
-            width: 100%;
-            height: 80px;
-        }
-        .layui-tab-card>.layui-tab-title-onlyshow .layui-this:after {
-            border-top: none;
-            border-width: 1px;
-            border-bottom-color: #fff;
-        }
-
-        .layui-tab-title-onlyshow, .layui-tab-title-onlyshow .layui-this:after{
-            border-color: #e6e6e6;
-        }
-
-        .layui-tab-card>.layui-tab-title-onlyshow {
-            background-color: #f2f2f2;
-        }
-
-        .layui-tab-title-onlyshow {
-            position: relative;
-            left: 0;
-            height: 40px;
-            white-space: nowrap;
-            font-size: 0;
-            border-bottom-width: 1px;
-            transition: all .2s;
-            -webkit-transition: all .2s;
-            border-bottom-style: solid;
-        }
-
-        .layui-tab-title-onlyshow .layui-this:after {
-            position: absolute;
-            left: 0;
-            top: 0;
-            content: '';
-            width: 100%;
-            height: 41px;
-            border-width: 1px;
-            border-style: solid;
-            border-bottom-color: #fff;
-            border-radius: 2px 2px 0 0;
-            box-sizing: border-box;
-            pointer-events: none;
-
-        }
-
-        .layui-tab-card>.layui-tab-title-onlyshow .layui-this {
-            background-color: #fff;
-        }
-        .layui-tab-card>.layui-tab-title-onlyshow li {
-            margin-right: -1px;
-            margin-left: -1px;
-        }
-        .layui-tab-title-onlyshow li {
-            display: inline-block;
-            vertical-align: middle;
-            font-size: 14px;
-            transition: all .2s;
-            -webkit-transition: all .2s;
-            position: relative;
-            line-height: 40px;
-            min-width: 65px;
-            padding: 0 15px;
-            text-align: center;
-            cursor: pointer;
-        }
-    </style>
+ <link rel="stylesheet" href="{{pix_asset('server/css/luck.css')}}">
 @endsection
 @section('content')
     <div class="main">
@@ -240,7 +162,7 @@
                                                 <!--<button type="button" class="layui-btn uploadBtn uploadImg"></button>-->
                                                 <input name="file" type="file" class="uploadBtn uploadImg prizelist"  id="uploadImg0" selectIndex="0">
                                                 <input type="hidden" name="picture" />
-                                                <div class="imgHome" style="background: url({{pix_asset('server/images/add.png')}}) center center no-repeat"></div>
+                                                <div class="imgHome" style="background: url({{pix_asset('server/images/add.png')}}) center center no-repeat;background-size: 60px;"></div>
                                             </div>
                                         </td>
                                         <td>
@@ -292,7 +214,7 @@
                 </div>
                 <div class="btns">
                     <button type="button"  class="layui-btn" id="showBtn">预览</button>
-                    <button type="button"  class="layui-btn prevShow"  index="1" style="display: none">上一步</button>
+                    <button type="button"  class="layui-btn prevShow"  index="0" style="display: none">上一步</button>
                     <button type="button"  class="layui-btn nextShow"  index="1">下一步</button>
                     <button type="button"  class="layui-btn ajaxSubmit" style="display: none">保存</button>
                 </div>
