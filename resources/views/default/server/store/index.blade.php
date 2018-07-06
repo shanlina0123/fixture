@@ -44,8 +44,8 @@
                             @else
                                 <div class="layui-btn-group">
                                     <div class="layui-btn-group">
-                                        <button type="button" class="layui-btn editBtn">编辑</button>
-                                        <button type="button" class="layui-btn deleteBtn" url="{{route('store-delete','uuid')}}">删除</button>
+                                        <a type="button" class="layui-btn editBtn">编辑</a>
+                                        <a type="button" class="layui-btn deleteBtn" url="{{route('store-delete','uuid')}}">删除</a>
                                     </div>
                                 </div>
                             @endif

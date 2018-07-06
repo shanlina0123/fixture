@@ -115,7 +115,7 @@
                 <label class="layui-form-label">项目封面</label>
                 <div class="layui-upload-drag" id="test10" style="float: left">
                     <i class="layui-icon"></i>
-                    <p>点击上传，或将文件拖拽到此处（项目封面：建议上传效果图）</p>
+                    <p>请上传750px*360px的图片,最大{{config("configure.maxImgSize")}}（项目封面：建议上传效果图）</p>
                 </div>
                 <div class="uploadImg layui-inline fl" style="margin-left: 20px;"><img id="src" src="{{getImgUrl($data->info->explodedossurl)}}" style="max-width: 100%;max-height:135px;"></div>
                 <input type="hidden" name="photo" id="photo" value="">

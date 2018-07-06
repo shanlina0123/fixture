@@ -28,7 +28,7 @@
                         <td>
                             <div class="layui-btn-group">
                                 <a class="layui-btn" href="{{route('dynamic-edit',$row->uuid)}}">编辑</a>
-                                <button type="button" class="layui-btn deleteBtn" onclick="delDynamic(this)" data-url="{{route('dynamic-destroy',$row->uuid)}}">删除</button>
+                                <a type="button" class="layui-btn deleteBtn" onclick="delDynamic(this)" data-url="{{route('dynamic-destroy',$row->uuid)}}">删除</a>
                             </div>
                         </td>
                     </tr>
