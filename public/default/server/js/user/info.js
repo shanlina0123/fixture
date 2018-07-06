@@ -20,16 +20,20 @@ layui.use(['layer','form'], function() {
     //初始化
     if(!$("form").attr("phone"))
     {
-        layer.open({
-            type: 1,
-            title:"绑定手机",
-            closeBtn: 1,
-            shadeClose: true,
-            scrollbar: false,
-            skin: 'layui-layer-rim',
-            area: ['600px', '400px'],
-            content: $(".popWrap")
-        })
+        if($(".userInfoPop").length>0)
+        {
+            layer.open({
+                type: 1,
+                title:"绑定手机",
+                closeBtn: 1,
+                shadeClose: true,
+                scrollbar: false,
+                skin: 'layui-layer-rim',
+                area: ['600px', '400px'],
+                content: $(".popWrap")
+            })
+        }
+
    }
 
     //更换手机弹窗

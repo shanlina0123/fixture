@@ -12,7 +12,6 @@ layui.use(['form', 'layer','upload'], function() {
     upload.render({
         elem: '#test10',
         exts:"jpg|png|jpeg",
-        size:5120,
         url: '/upload-temp-img',
         accept:'images',
         acceptMime:'image/*',
@@ -23,13 +22,19 @@ layui.use(['form', 'layer','upload'], function() {
         ,done: function(res)
         {
             layer.closeAll('loading'); //关闭loading
-            $("#src").attr('src',res.data.src);
-            $("#photo").val(res.data.name);
-            $(".uploadImg").show();
+            if(res.code==1)
+            {
+                $("#src").attr('src',res.data.src);
+                $("#photo").val(res.data.name);
+                $(".uploadImg").show();
+            }else{
+                layer.msg(res.msg,{icon: 2,  time:2000});
+            }
             //console.log(res)
         },
         error: function(index, upload){
             layer.closeAll('loading'); //关闭loading
+            layer.msg(res.msg,{icon: 2,  time:2000});
         }
     });
 
@@ -56,8 +61,9 @@ layui.use(['form', 'layer','upload'], function() {
             }
         }
         ,done: function(res){
+            layer.closeAll('loading'); //关闭loading
             //上传完毕
-            if( res.code )
+            if( res.code==1)
             {
                 var img = $("#img").val();
                 if( img )
@@ -78,7 +84,13 @@ layui.use(['form', 'layer','upload'], function() {
                     $('#update_img').append('<div class="ImgWrap fl"><span><img src="/default/server/images/close.png" data-title="'+ res.data.name +'" onclick="delTempImg(this)"></span><img src="'+ res.data.src +'" alt="'+ res.data.name +'" class="layui-upload-img"></div>');
                     $("#img").val(res.data.name);
                 }
+            }else{
+                layer.msg(res.msg,{icon: 2,  time:2000});
             }
+        },
+        error: function (index, upload) {
+            layer.closeAll('loading'); //关闭loading
+            layer.msg(res.msg,{icon: 2,  time:2000});
         }
     });
     form.on('select(stagetemplate)', function(data){

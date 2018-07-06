@@ -269,7 +269,7 @@ class AdminBusiness extends ServerBase
                 Cache::tags(["Admin-PageList","Data-CateList"])->flush();
 
                 //修改token
-                Cache::put('userToken' . $row['id'], ['token' => $row['token'], 'type' => 1], config('session.lifetime'));
+                Cache::put('userToken' . $row['id'], ['token' => create_uuid(), 'type' => 2], config('session.lifetime'));
 
             } else {
                 DB::rollBack();
@@ -316,7 +316,7 @@ class AdminBusiness extends ServerBase
                 //删除缓存
                 Cache::tags(["Admin-PageList"])->flush();
                 //修改token
-                Cache::put('userToken' . $adminData['id'], ['token' => $adminData['token'], 'type' => 1], config('session.lifetime'));
+                Cache::put('userToken' . $adminData['id'], ['token' => create_uuid(), 'type' => 2], config('session.lifetime'));
 
                 //TODO::禁用/启用极光账号
 //                $jmessage =  new JmessageBusiness();
@@ -341,7 +341,7 @@ class AdminBusiness extends ServerBase
     /***
      * 删除用户 - 执行
      */
-    public function delete($uuid)
+    public function delete($userid,$uuid)
     {
         try {
             //开启事务
@@ -390,11 +390,12 @@ class AdminBusiness extends ServerBase
                 //删除缓存
                 Cache::tags(["Admin-PageList"])->flush();
                 //修改token
-                Cache::put('userToken' . $row['id'], ['token' => $row['token'], 'type' => 2], config('session.lifetime'));
+                Cache::put('userToken' . $row['id'], ['token' => create_uuid(), 'type' => 2], config('session.lifetime'));
 
                 //TODO::删除极光账号
-//                $jmessage =  new JmessageBusiness();
-//                $jmessage->userDelete(username($row["id"]));
+                $jmessage =  new JmessageBusiness();
+                $jmessage->userDelete(username($row["id"]));
+
 
             } else {
                 DB::rollBack();

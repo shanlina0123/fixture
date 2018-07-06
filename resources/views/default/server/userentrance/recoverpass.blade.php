@@ -38,7 +38,7 @@
 <div class="loginBg">
     <div class="loginWrap forgetwrap">
         <div class="loginInner">
-            <img src="{{pix_asset('server/images/topLogo.png')}}" class="loginLogo">
+            <a href="{{route('login')}}"> <img src="{{pix_asset('server/images/topLogo.png')}}" class="loginLogo"></a>
             <div class="errorWrap">
                 <div class="loginError">
                     <span>{{session('msg')}}</span>
@@ -55,8 +55,8 @@
                     <input type="text" class="layui-input" placeholder="手机号" id="phone" name="phone" datatype="m"  nullmsg="请输入手机号码" errormsg="手机号码有误" autocomplete="off">
                 </div>
                 <div class="layui-form-item clearfix">
-                    <input type="text" name="code" lay-verify="title" autocomplete="off" placeholder="短信验证码" class="layui-input codeInput fl">
-                    <button type="button" type="button" class="layui-btn msgUncode fr" data-url="{{route('sms-code')}}" data-type="4" >发送验证码</button>
+                    <input type="text" name="code" lay-verify="title" autocomplete="off" placeholder="短信验证码" class="layui-input codeInput fl" style="width: 72%">
+                    <button type="button" type="button" class="layui-btn msgUncode fr" data-url="{{route('sms-code')}}" data-type="4" style="width: 27%">发送验证码</button>
                 </div>
                 <div class="layui-form-item">
                     <input type="password" class="layui-input" name="password" datatype="*6-12" placeholder="请输入6-12位字母+数字(区分大小写)" nullmsg="请输入密码" errormsg="密码范围在6~12位之间"  autocomplete="off">

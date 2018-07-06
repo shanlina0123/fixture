@@ -153,7 +153,7 @@
                         </div>
                         <!--奖项设置-->
                         <div class="layui-tab-item tabItem">
-                            <div class="imgnotice">请上传134px*134px的图片</div>
+                            <div class="imgnotice">请上传134px*134px的图片,最大{{config("configure.maxImgSize")}}</div>
                                 <table class="layui-table priceTable">
                                     <tr>
                                         <th>奖品图片</th>

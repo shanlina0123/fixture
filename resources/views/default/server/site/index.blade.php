@@ -83,14 +83,14 @@
                                    @endif  lay-filter="isOpen" @endif lay-skin="switch" lay-text="是|否"></td>
                         <td>
                             <div class="layui-btn-group">
-                                <button type="button" class="layui-btn publicBtn"
+                                <a type="button" class="layui-btn publicBtn"
                                         @if($row->isopen==0)style="display: none;"
                                         @endif   url="{{route('site-extension',$row->id)}}">推广
-                                </button>
+                                </a>
                                 <a class="layui-btn" href="{{route('site-renew',$row->uuid)}}"@if($row->isfinish==1)style="display: none;"@endif>更新</a>
                                 <a class="layui-btn" href="{{route('dynamic-index',base64_encode($row->id))}}"@if($row->isfinish==1)style="display: none;"@endif>项目动态</a>
                                 <a class="layui-btn" href="{{route('site.edit',$row->uuid)}}" @if($row->isfinish==1)style="display: none;"@endif>编辑</a>
-                                <button type="button" class="layui-btn deleteBtn" onclick="del(this)" data-url="{{route('site.destroy',$row->uuid)}}">删除</button>
+                                <a type="button" class="layui-btn deleteBtn" onclick="del(this)" data-url="{{route('site.destroy',$row->uuid)}}">删除</a>
                             </div>
                         </td>
                     </tr>

@@ -41,9 +41,9 @@
                                 默认
                              @else
                                 <div class="layui-btn-group">
-                                    <button type="button" class="layui-btn editBtn">编辑</button>
+                                    <a type="button" class="layui-btn editBtn">编辑</a>
                                     <a class="layui-btn authBtn" url="{{route('roles-auth','roleid')}}" >权限设置</a>
-                                    <button type="button" class="layui-btn deleteBtn" url="{{route('roles-delete','uuid')}}">删除</button>
+                                    <a type="button" class="layui-btn deleteBtn" url="{{route('roles-delete','uuid')}}">删除</a>
                                 </div>
                              @endif
                         </td>

@@ -39,6 +39,7 @@
                 <label class="layui-form-label">上传图片</label>
                 <div class="layui-input-block layui-upload">
                     <button type="button" class="layui-btn" id="updateImg"><i class="layui-icon"></i>上传图片</button>
+                    <span class="imgnotice">请上传240px*240px的图片,最大{{config("configure.maxImgSize")}}</span>
                     <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
                         预览图：
                         <div class="layui-upload-list clearfix" id="update_img">

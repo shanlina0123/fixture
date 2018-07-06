@@ -1,5 +1,5 @@
 @extends('server.layout.content')
-@section('title','项目管理')
+@section('title','个人资料')
 @section('css')
     <link rel="stylesheet" href="{{pix_asset('server/css/login.css')}}">
 @endsection
@@ -46,7 +46,7 @@
 @endsection
 @section('other')
     <!--更换手机弹窗-->
-    <div class="popWrap" style="display: none">
+    <div class="popWrap userInfoPop" style="display: none">
         <form class="layui-form" id="layui-form" action="{{route('user-info')}}" method="post">
             {{csrf_field()}}
             <div class="layui-form-item">
@@ -55,8 +55,8 @@
             </div>
             <div class="layui-form-item clearfix">
                 <input type="text" name="code" autocomplete="off" datatype="n4-4" nullmsg="请输入验证码" errormsg="验证码不正确"
-                       placeholder="短信验证码" class="layui-input codeInput fl">
-                <button type="button" class="layui-btn msgUncode fr" data-url="{{route('sms-code')}}" data-type="2">
+                       placeholder="短信验证码" class="layui-input codeInput fl" style="width:72%">
+                <button type="button" class="layui-btn msgUncode fr" data-url="{{route('sms-code')}}" data-type="2" style="width: 27%">
                     发送验证码
                 </button>
             </div>

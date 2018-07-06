@@ -15,25 +15,30 @@ $.get('/default/server/json/city.json',function ( data )
             upload.render({
                 elem: '#test10',
                 exts: "jpg|png|jpeg",
-                size: 5120,
                 url: '/upload-temp-img',
                 before: function (obj) {
                     layer.load(); //上传loading
                 }
                 , done: function (res) {
                     layer.closeAll('loading'); //关闭loading
-                    if( $(".uploadImg").length )
-                    {
-                        $("#src").attr('src', res.data.src);
-                    }else
-                    {
-                        $("#companyLogo").append('<div class="uploadImg layui-inline fl"><img width="230" height="132" id="src" src="'+res.data.src+'" class="layui-upload-img"> </div>');
+                    if (res.code == 1) {
+                        if( $(".uploadImg").length )
+                        {
+                            $("#src").attr('src', res.data.src);
+                        }else
+                        {
+                            $("#companyLogo").append('<div class="uploadImg layui-inline fl"><img width="230" height="132" id="src" src="'+res.data.src+'" class="layui-upload-img"> </div>');
+                        }
+                        $("#logo").val(res.data.name);
+                        //console.log(res)
+                    }else{
+                        layer.msg(res.msg,{icon: 2,  time:2000});
                     }
-                    $("#logo").val(res.data.name);
-                    //console.log(res)
+
                 },
                 error: function (index, upload) {
                     layer.closeAll('loading'); //关闭loading
+                    layer.msg(res.msg,{icon: 2,  time:2000});
                 }
             });
 

@@ -42,8 +42,8 @@
                         <td><?php foreach($v->shi as $kk=>$vv){echo $vv->name;} ?></td>
                         <td>
                             <div class="layui-btn-group">
-                                <button type="button" id ='{{$v->id}}' class="layui-btn editBtn">编辑</button>
-                                <button type="button" id ='{{$v->id}}' class="layui-btn deleteBtn">删除</button>
+                                <a type="button" id ='{{$v->id}}' class="layui-btn editBtn">编辑</a>
+                                <a type="button" id ='{{$v->id}}' class="layui-btn deleteBtn">删除</a>
                             </div>
                         </td>
                     </tr>
