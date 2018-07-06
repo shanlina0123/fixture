@@ -2,11 +2,6 @@
 @section('title','个人资料')
 @section('css')
     <link rel="stylesheet" href="{{pix_asset('server/css/login.css')}}">
-    <style>
-        .layui-input.codeInput {
-            width: 326px;
-        }
-    </style>
 @endsection
 @section('content')
     <div class="main">
@@ -60,8 +55,8 @@
             </div>
             <div class="layui-form-item clearfix">
                 <input type="text" name="code" autocomplete="off" datatype="n4-4" nullmsg="请输入验证码" errormsg="验证码不正确"
-                       placeholder="短信验证码" class="layui-input codeInput fl">
-                <button type="button" class="layui-btn msgUncode fr" data-url="{{route('sms-code')}}" data-type="2">
+                       placeholder="短信验证码" class="layui-input codeInput fl" style="width:72%">
+                <button type="button" class="layui-btn msgUncode fr" data-url="{{route('sms-code')}}" data-type="2" style="width: 27%">
                     发送验证码
                 </button>
             </div>

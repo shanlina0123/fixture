@@ -87,8 +87,8 @@
                                 <input type="text" name="username" id="phone" datatype="m"  nullmsg="请输入手机号码" errormsg="手机号码不正确"  placeholder="手机号" class="layui-input">
                             </div>
                             <div class="layui-form-item clearfix">
-                                <input type="text" name="code" placeholder="短信验证码" datatype="n4-4" nullmsg="请输入验证码" errormsg="验证码不正确" class="layui-input codeInput fl">
-                                <button type="button" type="button" class="layui-btn msgUncode fr" data-url="{{route('sms-code')}}" data-type="4" >发送验证码</button>
+                                <input type="text" name="code" placeholder="短信验证码" datatype="n4-4" nullmsg="请输入验证码" errormsg="验证码不正确" class="layui-input codeInput fl" style="width:72%">
+                                <button type="button" type="button" class="layui-btn msgUncode fr" data-url="{{route('sms-code')}}" data-type="4" style="width:27%">发送验证码</button>
                             </div>
                             <div class="layui-form-item loginBtn">
                                 <button class="layui-btn loginButton" type="button" id="btn_submit2">登录</button>
