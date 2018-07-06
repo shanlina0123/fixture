@@ -22,14 +22,47 @@ $.get('/default/server/json/city.json',function ( data )
                 , done: function (res) {
                     layer.closeAll('loading'); //关闭loading
                     if (res.code == 1) {
-                        if( $(".uploadImg").length )
+                        if( $("#companyLogoImg").length )
                         {
-                            $("#src").attr('src', res.data.src);
+                            $("#companySrc").attr('src', res.data.src);
                         }else
                         {
-                            $("#companyLogo").append('<div class="uploadImg layui-inline fl"><img width="230" height="132" id="src" src="'+res.data.src+'" class="layui-upload-img"> </div>');
+                            $("#companyLogo").append('<div class="uploadImg layui-inline fl"><img width="230" height="132" id="companySrc" src="'+res.data.src+'" class="layui-upload-img"> </div>');
                         }
-                        $("#logo").val(res.data.name);
+                        $("#companyLogoName").val(res.data.name);
+                        //console.log(res)
+                    }else{
+                        layer.msg(res.msg,{icon: 2,  time:2000});
+                    }
+
+                },
+                error: function (index, upload) {
+                    layer.closeAll('loading'); //关闭loading
+                    layer.msg(res.msg,{icon: 2,  time:2000});
+                }
+            });
+
+            /**
+             * 拖拽上传
+             */
+            upload.render({
+                elem: '#test11',
+                exts: "jpg|png|jpeg",
+                url: '/upload-temp-img',
+                before: function (obj) {
+                    layer.load(); //上传loading
+                }
+                , done: function (res) {
+                    layer.closeAll('loading'); //关闭loading
+                    if (res.code == 1) {
+                        if( $("#covermapImg").length )
+                        {
+                            $("#covermapSrc").attr('src', res.data.src);
+                        }else
+                        {
+                            $("#covermap").append('<div class="uploadImg layui-inline fl"><img width="230" height="132" id="covermapSrc" src="'+res.data.src+'" class="layui-upload-img"> </div>');
+                        }
+                        $("#covermapName").val(res.data.name);
                         //console.log(res)
                     }else{
                         layer.msg(res.msg,{icon: 2,  time:2000});

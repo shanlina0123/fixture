@@ -51,6 +51,7 @@ class CompanyBusiness extends ServerBase
                 //查询是否写入工地
                 $storeID = Store::where(['companyid'=>$res->id,'isdefault'=>1])->value('id');
                 $site = Site::where(['companyid'=>$res->id,'storeid'=>$storeID])->count();
+                //logo
                 if( $data['logo'] )
                 {
                     $upload = new \Upload();
@@ -64,6 +65,21 @@ class CompanyBusiness extends ServerBase
                         $res->logo = 'user/'.$res->uuid.'/'.$data['logo'];
                     }
                 }
+                //封面
+                if( $data['covermap'] )
+                {
+                    $upload = new \Upload();
+                    $isImg =  $upload->uploadProductImage( $res->uuid, $data['covermap'], 'user' );
+                    if( $isImg == true )
+                    {
+                        if($res->covermap)
+                        {
+                            $upload->delImg( $res->covermap );
+                        }
+                        $res->covermap = 'user/'.$res->uuid.'/'.$data['covermap'];
+                    }
+                }
+
                 if( $site )
                 {
                     $obj->ststus = 1;
@@ -113,6 +129,7 @@ class CompanyBusiness extends ServerBase
                 //公司信息
                 $obj = new Company();
                 $obj->uuid = create_uuid();
+                //logo
                 if( $data['logo'] )
                 {
                     $upload = new \Upload();
@@ -120,6 +137,16 @@ class CompanyBusiness extends ServerBase
                     if($isImg!==false)
                     {
                         $obj->logo = 'user/'.$obj->uuid.'/'.$data['logo'];
+                    }
+                }
+                //封面
+                if( $data['covermap'] )
+                {
+                    $upload = new \Upload();
+                    $isImg =  $upload->uploadProductImage( $obj->uuid, $data['covermap'], 'user' );
+                    if($isImg!==false)
+                    {
+                        $obj->covermap = 'user/'.$obj->uuid.'/'.$data['covermap'];
                     }
                 }
                 $obj->provinceid = $data['provinceid'];
