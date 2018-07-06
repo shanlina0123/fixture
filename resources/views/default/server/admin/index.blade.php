@@ -1,5 +1,16 @@
 @extends('server.layout.content')
 @section("title")用户管理@endsection
+
+@section("css")
+    <style>
+        .popWrap .layui-form-label {
+            width: 10%!important;
+        }
+        .popWrap .layui-form-item .layui-input-inline {
+            width: 80%!important;
+        }
+    </style>
+    @endsection
 @section('content')
     <div class="main">
         <fieldset class="layui-elem-field layui-field-title">
@@ -93,7 +104,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" style="font-size: 14px;">姓名</label>
                 <div class="layui-input-inline">
-                    <input type="text" class="layui-input" id="nickname">
+                    <input type="text" class="layui-input" id="nickname" maxlength="100" minlength="1" size="100" >
                 </div>
             </div>
             <div class="layui-form-item">
@@ -114,7 +125,13 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" style="font-size: 14px;">账户</label>
                 <div class="layui-input-inline">
-                    <input type="text" class="layui-input" id="username">
+                    <input type="text" class="layui-input" id="username" maxlength="20" minlength="3"  size="20" placeholder="3-20位字符">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="font-size: 14px;">密码</label>
+                <div class="layui-input-inline">
+                    <input type="password" class="layui-input"  id="password"  maxlength="12" minlength="6" size="12" placeholder="请输入6-12位字母+数字(区分大小写)">
                 </div>
             </div>
             <div class="layui-form-item">
@@ -147,7 +164,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" style="font-size: 14px;">姓名</label>
                 <div class="layui-input-inline">
-                    <input type="text" class="layui-input"  id="nickname">
+                    <input type="text" class="layui-input"  id="nickname" maxlength="100" minlength="1" size="100">
                 </div>
             </div>
             <div class="layui-form-item">
@@ -165,7 +182,13 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" style="font-size: 14px;">账户</label>
                 <div class="layui-input-inline">
-                    <input type="text" class="layui-input"  id="username">
+                    <input type="text" class="layui-input"  id="username" maxlength="20" minlength="3"  size="20" placeholder="3-20位字符">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="font-size: 14px;">密码</label>
+                <div class="layui-input-inline">
+                    <input type="password" class="layui-input"  id="password" maxlength="12" minlength="6"  size="12" placeholder="请输入6-12位字母+数字(区分大小写)">
                 </div>
             </div>
             <div class="layui-form-item">

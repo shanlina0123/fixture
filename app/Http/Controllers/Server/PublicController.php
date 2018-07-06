@@ -33,6 +33,15 @@ class PublicController extends ServerBaseController
         $obj = new \stdClass();
         $src = new \stdClass();
         if( $request->file('file') == false ) return '';
+        //检验大小
+        $fileSize=$request->file('file')->getSize();
+        if(!$request->file('file')->getSize() || $fileSize>config("configure.maxImgSizeByte"))
+        {
+            $obj->code = 0;
+            $obj->msg = $fileSize."图片大小不能低于0或超过".config("configure.maxImgSize");;
+            $obj->data = '';
+            return response()->json($obj, 200);
+        }
         try {
             $res = $request->file('file')->store('temp', 'temp');
             $name = explode('/',$res)[1];

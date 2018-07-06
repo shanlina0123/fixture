@@ -37,7 +37,7 @@
 <div class="loginBg">
     <div class="loginWrap">
         <div class="loginInner">
-            <img src="{{pix_asset('server/images/topLogo.png')}}" class="loginLogo">
+            <a href="{{route('login')}}"><img src="{{pix_asset('server/images/topLogo.png')}}" class="loginLogo"></a>
             <div class="errorWrap">
                 <div class="loginError">
                     <span>{{session('msg')}}</span>
@@ -64,7 +64,7 @@
                     <input type="password" class="layui-input" name="password_confirmation" datatype="*" placeholder="确认密码" recheck="password" nullmsg="请输入密码" errormsg="您两次输入的账号密码不一致" autocomplete="off">
                 </div>
                 <div class="registDeel">
-                    <input type="checkbox" lay-skin="primary" datatype="*" errormsg="请选择用户注册协议"  name="agree">
+                    <input type="checkbox" lay-skin="primary" datatype="*" nullmsg="请选择用户注册协议" errormsg="请选择用户注册协议"  name="agree">
                     <a href="javascript:;">用户注册协议</a>
                 </div>
                 <div class="layui-form-item loginBtn">

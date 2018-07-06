@@ -111,6 +111,6 @@ class LoginController extends ServerBaseController
     public function signOut()
     {
         session()->flush();
-        return redirect()->route('login');
+       return redirect()->route('login');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Server;
 use App\Http\Business\Server\AdminBusiness;
 use App\Http\Controllers\Common\ServerBaseController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -33,6 +34,7 @@ class AdminController extends ServerBaseController
      */
     public function index()
     {
+
         //获取列表数据
         $dataSource = $this->getListData();//数据集合
         $list = $dataSource["data"];//数据
@@ -79,16 +81,18 @@ class AdminController extends ServerBaseController
     public function store()
     {
         //获取请求参数
-        $data = $this->getData(["nickname", "username", "storeid", "roleid", "status"], $this->request->all());
+        $data = $this->getData(["nickname", "username","password", "storeid", "roleid", "status"], $this->request->all());
         //验证规则
         $validator = Validator::make($data, [
             "nickname" => 'required|max:100|min:1',
-            "username" => 'required|max:100|min:1',
+            "username" => 'required|max:20|min:3',
+            "password" => 'required|max:12|min:6',
             "roleid" => 'required|numeric',
             'storeid' => 'present|numeric',
             "status" => 'required|numeric',
         ], ['nickname.required' => '姓名不能为空', 'nickname.max' => '姓名长度不能大于100个字符', 'nickname.min' => '姓名长度不能小于1个字符',
-            'username.required' => '账号不能为空', 'username.max' => '账号长度不能大于100个字符', 'username.min' => '账号长度不能小于1个字符',
+            'username.required' => '账号不能为空', 'username.max' => '账号长度不能大于20个字符', 'username.min' => '账号长度不能小于3个字符',
+            'password.required' => '密码不能为空', 'password.max' => '密码长度不能大于12个字符', 'password.min' => '密码长度不能小于6个字符',
             'roleid.required' => '角色不能为空', 'roleid.numeric' => '角色只能是数字格式',
             'storeid.present' => '门店参数缺少', 'storeid.numeric' => '门店只能是数字格式',
             'status.required' => '锁定不能为空', 'status.numeric' => '锁定只能是数字格式']);
@@ -97,14 +101,16 @@ class AdminController extends ServerBaseController
             responseData(\StatusCode::PARAM_ERROR, "验证失败", "", $validator->errors());
         }
 
+        //密码
+        if (!preg_match_all("/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,12}$$/",$data["password"],$array))
+        {
+            responseData(\StatusCode::PARAM_ERROR, "密码格式错误,请输入6-12位字母+数字(区分大小写)", "", ["password" => ["密码格式错误"]]);
+        }
+
         //检测锁定值是否符合预定义
         if (!in_array($data["status"], [0, 1])) {
             responseData(\StatusCode::PARAM_ERROR, "验证失败", "", ["status" => ["锁定值不符合预定义"]]);
         }
-
-        //默认密码
-        $data["password"] = config("configure.adminPwd");
-
 
         //非管理员
         if($data["roleid"]>1)
@@ -128,19 +134,21 @@ class AdminController extends ServerBaseController
     public function update($uuid)
     {
         //获取请求参数
-        $data = $this->getData(["nickname", "username", "storeid", "roleid", "status"], $this->request->all());
+        $data = $this->getData(["nickname", "username","password", "storeid", "roleid", "status"], $this->request->all());
         //拼接验证数据集
         $validateData = array_merge(["uuid" => $uuid], $data);
 
         //定义验证规则
         $validator = Validator::make($validateData, [
             "nickname" => 'required|max:100|min:1',
-            "username" => 'required|max:100|min:1',
+            "username" => 'required|max:20|min:3',
+            "password" => 'required|max:12|min:6',
             "roleid" => 'required|numeric',
             'storeid' => 'present|numeric',
             "status" => 'required|numeric',
         ], ['nickname.required' => '姓名不能为空', 'nickname.max' => '姓名长度不能大于100个字符', 'nickname.min' => '姓名长度不能小于1个字符',
-            'username.required' => '账号不能为空', 'username.max' => '账号长度不能大于100个字符', 'username.min' => '账号长度不能小于1个字符',
+            'username.required' => '账号不能为空', 'username.max' => '账号长度不能大于20个字符', 'username.min' => '账号长度不能小于3个字符',
+            'password.required' => '密码不能为空', 'password.max' => '密码长度不能大于12个字符', 'password.min' => '密码长度不能小于6个字符',
             'roleid.required' => '角色不能为空', 'roleid.numeric' => '角色只能是数字格式',
             'storeid.required' => '门店不能为空', 'storeid.numeric' => '门店只能是数字格式',
             'status.required' => '锁定不能为空', 'status.numeric' => '锁定只能是数字格式']);
@@ -149,12 +157,17 @@ class AdminController extends ServerBaseController
         if ($validator->fails()) {
             responseData(\StatusCode::PARAM_ERROR, "验证失败", "", $validator->errors());
         }
+
+        //密码
+        if (!preg_match_all("/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,12}$$/",$data["password"],$array))
+        {
+            responseData(\StatusCode::PARAM_ERROR, "密码格式错误,请输入6-12位字母+数字(区分大小写)", "", ["password" => ["密码格式错误"]]);
+        }
+
          //状态检测
         if (!in_array($data["status"], [0, 1])) {
             responseData(\StatusCode::PARAM_ERROR, "验证失败", "", ["status" => ["状态只能设置为有效和无效，不能进行其他设置"]]);
         }
-        //默认密码
-        $data["password"] = config("configure.adminPwd");
 
         //获取业务数据
         $this->admin_business->update($uuid, $data);
@@ -198,7 +211,7 @@ class AdminController extends ServerBaseController
             responseData(\StatusCode::PARAM_ERROR, "参数错误");
         }
         //获取业务数据
-        $this->admin_business->delete($uuid);
+        $this->admin_business->delete($this->userInfo->id,$uuid);
         //接口返回结果
         responseData(\StatusCode::SUCCESS, "删除成功");
     }

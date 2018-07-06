@@ -32,6 +32,8 @@ class BusinessServerRegiste extends ServerBase
          $res->status = 1;
          $res->roleid = 1;
          $res->nickname = "管理员";
+         $res->isdefault = 1;
+
          if( $res->save() )
          {
              //TODO::注册极光账号

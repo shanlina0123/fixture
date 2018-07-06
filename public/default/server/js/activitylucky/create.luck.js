@@ -69,7 +69,6 @@ layui.use(['form', 'layer', 'jquery', 'laydate', 'upload'], function () {
     upload.render({
         elem: '.tab1Upload',
         exts: "jpg|png|jpeg",
-        size: 5120,
         url: '/upload-temp-img',
         accept: 'images',
         acceptMime: 'image/*',
@@ -77,7 +76,7 @@ layui.use(['form', 'layer', 'jquery', 'laydate', 'upload'], function () {
             layer.msg('图片上传中...', {icon: 16, shade: 0.01, time: 0})
         }
         , done: function (res) {
-            layer.closeAll();
+            layer.closeAll('loading'); //关闭loading
             if (res.code == 1) {
                 var parent = this.item.parents(".baseUrl")
                 layer.closeAll('loading'); //关闭loading
@@ -85,12 +84,12 @@ layui.use(['form', 'layer', 'jquery', 'laydate', 'upload'], function () {
                 $(".showUrl", parent).append("<img class='showImg' src='" + res.data.src + "'/>");
                 $(".hiddenUrl", parent).val(res.data.name);
             } else {
-                layer.msg("上传失败", {icon: 2})
+                layer.msg(res.msg,{icon: 2,  time:2000});
             }
-
         },
         error: function (index, upload) {
-            layer.closeAll();
+            layer.closeAll('loading'); //关闭loading
+            layer.msg(res.msg,{icon: 2,  time:2000});
         }
     });
 
@@ -127,7 +126,7 @@ layui.use(['form', 'layer', 'jquery', 'laydate', 'upload'], function () {
                 }
             }
             , done: function (res) {
-                layer.closeAll();
+                layer.closeAll('loading'); //关闭loading
                 //上传完毕
                 if (res.code == 1) {
                     if ($(".imgHomeShow").length > 8) {
@@ -139,11 +138,12 @@ layui.use(['form', 'layer', 'jquery', 'laydate', 'upload'], function () {
                     var parent = parentsList.get(selectIndex);
                     $('[name=picture]', parent).val(res.data.name);
                 } else {
-                    layer.msg("上传失败", {icon: 2})
+                    layer.msg(res.msg,{icon: 2,  time:2000});
                 }
             },
             error: function (index, upload) {
-                layer.closeAll();
+                layer.closeAll('loading'); //关闭loading
+                layer.msg(res.msg,{icon: 2,  time:2000});
             }
         });
     }

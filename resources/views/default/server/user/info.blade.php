@@ -1,7 +1,12 @@
 @extends('server.layout.content')
-@section('title','项目管理')
+@section('title','个人资料')
 @section('css')
     <link rel="stylesheet" href="{{pix_asset('server/css/login.css')}}">
+    <style>
+        .layui-input.codeInput {
+            width: 326px;
+        }
+    </style>
 @endsection
 @section('content')
     <div class="main">
@@ -46,7 +51,7 @@
 @endsection
 @section('other')
     <!--更换手机弹窗-->
-    <div class="popWrap" style="display: none">
+    <div class="popWrap userInfoPop" style="display: none">
         <form class="layui-form" id="layui-form" action="{{route('user-info')}}" method="post">
             {{csrf_field()}}
             <div class="layui-form-item">

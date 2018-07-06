@@ -18,6 +18,7 @@ class UserCheck
         {
             return redirect()->route('login');
         }
+
          //监听用户信息是否发生变化
          if ( Cache::has('userToken'.$userInfo['id']) )
          {
@@ -37,17 +38,19 @@ class UserCheck
              {
                  //用户修改了重要信息需要其他用户退出
                  session(['userInfo'=>false]);
+                 Cache::forget('userToken'.$userInfo['id']);
                  return redirect()->route('login');
              }
-         }
 
+         }
 
         //vip版本
         $userInfo= session("userInfo");
         $userInfo["vipmechanismid"]=Company::where("id",$userInfo["companyid"])->value("vipmechanismid");
         session(['userInfo'=>$userInfo]);
 
-         //获取菜单+重置session
+
+        //获取菜单+重置session
         if($userInfo["isadmin"]==0)
         {
             $this->getMenue();

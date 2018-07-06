@@ -104,6 +104,13 @@ class UserController extends ServerBaseController
                     /*'code.numeric'=>'验证码不正确',*/
                 ]
             );
+
+            //密码
+            if (!preg_match_all("/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,12}$$/",$this->request->input('password'),$array))
+            {
+                return redirect()->route('set-pass')->with('msg','密码格式错误,请输入6-12位字母+数字(区分大小写)');
+            }
+
             $phone = $this->request->input('phone');
             /*if( config('configure.is_sms') == true ) {
                 $code = $this->request->input('code');
