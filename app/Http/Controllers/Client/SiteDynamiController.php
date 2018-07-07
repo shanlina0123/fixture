@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Client;
 use App\Http\Business\Client\SiteDynamic;
 use App\Http\Controllers\Common\ClientBaseController;
+use App\Http\Model\Site\SiteInvitation;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 class SiteDynamiController extends ClientBaseController
@@ -26,7 +27,7 @@ class SiteDynamiController extends ClientBaseController
      */
     public function getDynamicList()
     {
-        $sitetid = $this->request->input('sitetid');
+        $siteID = '';//工地ID
         $user = $this->apiUser;
         //判断用户信息如果是B端只显示当前店铺的动态
         if( $user->type == 0 )
@@ -48,18 +49,15 @@ class SiteDynamiController extends ClientBaseController
                         $where['storeid'] = $user->storeid;
                         break;
                 }
-            }
-        }else
-        {
-            //C端用户全部展示
-            if(  $sitetid )
+            }else
             {
-                //有工地ID
-                $where['sitetid'] = $sitetid;
+                //被邀请的用户
+                //1.查询参与的的工地动态
+                $siteID = SiteInvitation::where(['storeid'=>$user->storeid,'joinuserid'=>$user->id])->pluck('siteid')->toArray();
             }
         }
         $where['companyid'] = $this->apiUser->companyid;
-        $res = $this->dynamic->DynamicList( $where, $this->request,$user );
+        $res = $this->dynamic->DynamicList( $where, $this->request, $user, $siteID );
         responseData(\StatusCode::SUCCESS,'动态信息',$res);
     }
 

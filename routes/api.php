@@ -58,7 +58,7 @@ Route::group(['middleware'=>'ApiCheck'], function () {
             Route::post('map/seach-address', 'PublicController@seachMapAddress');
             //客户列表
             Route::get('client/client-list', 'ClientController@clientList');
-            //参与者列表
+            //成员列表
             Route::get('participant/participant-list', 'ParticipantController@participantList');
             //职位列表
             Route::get('participant/position-list', 'ParticipantController@positionList');
@@ -66,6 +66,11 @@ Route::group(['middleware'=>'ApiCheck'], function () {
             Route::post('participant/participant-save', 'ParticipantController@addParticipant');
             //删除成员
             Route::delete('participant/participant-del', 'ParticipantController@delParticipant');
+            //参与者店铺列表
+            Route::get('store/invitation-list', 'StoreController@invitationStoreList');
+            //参与者切换门店
+            Route::put('store/invitation-storeup', 'StoreController@invitationStoreUp');
+
 
         });
 

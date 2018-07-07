@@ -25,6 +25,7 @@ class ClientAppointment
         $client->name = $data['name'];
         $client->area = array_has($data,'area')?$data['area']:0;
         $client->content = $data['content'];
+        $client->clientcity = array_has($data,'clientcity')?$data['clientcity']:'';
         $client->wechatopenid = $data['wechatopenid'];
         $client->created_at = date("Y-m-d H:i:s");
         return $client->save();

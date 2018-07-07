@@ -96,3 +96,5 @@ ALTER TABLE `fixture_user` ADD COLUMN `oid`  int(11) NULL DEFAULT NULL COMMENT '
 ALTER TABLE `fixture_user` ADD COLUMN `jguser`  varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '极光账号' AFTER `oid`;
 
 #####以上已同步线上######
+
+ALTER TABLE `fixture`.`fixture_client`  CHANGE `clientcity` `clientcity` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL  COMMENT '客户所在城市';

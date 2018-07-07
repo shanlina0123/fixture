@@ -160,7 +160,7 @@ class UserController extends ServerBaseController
                             if ($res->save()) {
                                 Cache::put('access_token' . $userInfo->companyid, $data['access_token'], $data['expires_in'] / 60);
                                 //添加模板
-                                $temple->addTemplet($userInfo->companyid);
+                                //$temple->addTemplet($userInfo->companyid);
                                 return redirect()->route('user-authorize')->with('msg', '小程序授权成功');
                             }
                         } else {
@@ -171,7 +171,7 @@ class UserController extends ServerBaseController
                             if ($obj->save()) {
                                 Cache::put('access_token' . $userInfo->companyid, $data['access_token'], $data['expires_in'] / 60);
                                 //添加模板
-                                $temple->addTemplet($userInfo->companyid);
+                                //$temple->addTemplet($userInfo->companyid);
                                 return redirect()->route('user-authorize')->with('msg', '小程序授权成功');
                             }
                         }

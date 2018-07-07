@@ -133,11 +133,7 @@ class WxApiLogin
                             DB::beginTransaction();
                             //查询成员信息
                             $participant = CompanyParticipant::where(['companyid'=>$companyid,'id'=>$arr['p']])->first();
-                            //1修改用户表
-                            $res->type = 0;
-                            $res->isinvitationed = 1;
-                            $res->positionid = $participant->positionid;
-                            $user = $res->save();
+
                             //判断是不是添加了
                             $Invitation = SiteInvitation::where(['companyid'=>$companyid,'siteid'=>$arr['s']])->first();
                             if( $Invitation )
@@ -147,6 +143,13 @@ class WxApiLogin
                             //工地对应区域
                             $site = Site::where(['companyid'=>$companyid,'id'=>$arr['s']])->first();
 
+                            //1修改用户表 根据当前的工地区域来
+                            $res->type = 0;
+                            $res->storeid = $site->storeid;//门店
+                            $res->cityid = $site->cityid;//城市
+                            $res->isinvitationed = 1;
+                            $res->positionid = $participant->positionid;
+                            $user = $res->save();
 
                             //添加工地成员表
                             $siteInvitation = new SiteInvitation();

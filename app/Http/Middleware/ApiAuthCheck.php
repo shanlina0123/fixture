@@ -9,7 +9,7 @@ class ApiAuthCheck
 {
     public function handle($request, Closure $next)
     {
-        $user = $request->get('apiUser');
+        /*$user = $request->get('apiUser');
 
         if( $user->userType == 0 || $user->tokenToUser->isinvitationed == 1 ) //B端用户或者参与的人
         {
@@ -65,7 +65,7 @@ class ApiAuthCheck
             }
 
             //标准版访问限制
-/*            if($user->tokenToUser->vipmechanismid==1)
+            if($user->tokenToUser->vipmechanismid==1)
             {
                 //vip操作权限
                 $vipAllowController = ConfVipfunctionpoint::where("status", 1)->where("type", "allow")->where("controller", $routeController)->select();
@@ -82,9 +82,8 @@ class ApiAuthCheck
 
                     }
                 }
-            }*/
-
-        }
+            }
+        }*/
         return $next($request);
     }
 }
