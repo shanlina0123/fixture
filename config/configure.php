@@ -14,7 +14,7 @@ return [
      * ---------------------------
      */
     "sPage"=>10,//每页显示条数
-    "sCache"=>5,//缓存时长
+    "sCache"=>60,//缓存时长
 
     /**
      * ---------------------------
@@ -24,8 +24,8 @@ return [
    // "showUploads"=>$_SERVER["REQUEST_SCHEME"]."://".$_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"]."/uploads",//图片预览路径
     "uploads"=>"uploads",//图片文件路径
     "temp"=>"/temp/",//图片临时目录
-     "maxImgSize"=>"2M",//图片最大上传大小
-     "maxImgSizeByte"=>"2097152",//图片最大上传大小
+    "maxImgSize"=>"2M",//图片最大上传大小
+    "maxImgSizeByte"=>"2097152",//图片最大上传大小
 
     /**
      * ----------------------------
@@ -78,5 +78,9 @@ return [
     "sys"=>[
         'site_phone'=>"029-89379272",
         'site_icp'=>"页面技术由西安灰熊家族网络科技提供（<a href='http://www.yygsoft.com'  class='colorbule' target=''>点击了解</a>）提供，技术支持方仅能提供页面技术，不承担由活动引起的相关法律责任"
-        ]
+        ],
+    /**
+     * 应用名称配置
+     */
+    'applicationName'=>'云易装'
 ];
