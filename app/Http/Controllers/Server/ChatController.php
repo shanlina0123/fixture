@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Server;
 use App\Http\Business\Server\ChatBusiness;
 use App\Http\Controllers\Common\ServerBaseController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 /***
  * 聊天管理
@@ -33,10 +34,16 @@ class ChatController extends ServerBaseController
      */
     public function index()
     {
-        return view('server.chat.index');
+        //获取列表数据
+        $dataSource = $this->getListData();//数据集合
+        $list = $dataSource["data"];//数据
+        $errorMsg = $dataSource["messages"];//错误消息
+        //处理ajax请求
+        if($this->request->ajax()){
+            responseAjax($dataSource);
+        }
+        return view('server.chat.index',compact('list'))->with("errorMsg",$errorMsg);
     }
-
-
 
     /***
      * 获取列表数据集
@@ -44,29 +51,34 @@ class ChatController extends ServerBaseController
     public  function  getListData()
     {
         //业务调用
-        $list = $this->chat_business->getListData($this->userInfo->id,$this->userInfo->faceimg,$this->userInfo->jguser);
-        responseData(\StatusCode::SUCCESS,"",$list);
+        $list = $this->chat_business->getListData($this->userInfo->id,$this->userInfo->jguser);
+        return responseCData(\StatusCode::SUCCESS,"",$list);
     }
 
 
     /***
-     * 获取init配置
+     * 获取用户聊天列表
+     * @param $initKeys
+     * @param $data
+     * @return array
      */
-    public function getInit()
+    public function getUserMessageData()
     {
-        //业务调用
-        $data = $this->chat_business->getInit();
-        responseData(\StatusCode::SUCCESS,"",$data);
-    }
+        //获取请求参数
+        $data=$this->getData(["jguser"],$this->request->all());
+        //验证规则
+        $validator = Validator::make($data,[
+            "jguser"=>'required',
+        ],['jguser.required'=>'极光用户不能为空']);
+        //进行验证
+        if ($validator->fails()) {
+            responseData(\StatusCode::PARAM_ERROR,$validator->errors()->first(),"",$validator->errors());
+        }
+        //执行业务处理
+        $list=$this->chat_business->getUserMessageData($data["jguser"]);
+        //接口返回结果
+        responseData(\StatusCode::SUCCESS,"获取成功",$list);
 
-    /***
-     * 获取login用户
-     */
-    public function getLogin()
-    {
-        //业务调用
-        $data = $this->chat_business->getLogin($this->userInfo->id,$this->userInfo->faceimg);
-        responseData(\StatusCode::SUCCESS,"",$data);
     }
 
 }

@@ -502,3 +502,14 @@ function analyJson($json_str) {
     }
     return $result;
 }
+
+//PHP返回昨天的日期
+function get_last_date() {
+    $tomorrow = mktime(0,0,0,date("m"),date("d")-1,date("Y"));
+    return date("Y-m-d 00:00:00", $tomorrow);
+}
+//PHP返回今天的日期
+function get_today_date() {
+    $today=date("Y-m-d H:i:s");
+    return $today;
+}

@@ -25,22 +25,24 @@ class ChatBusiness extends ServerBase
     /***
      * 获取用户信息+好友列表
      */
-    public function getListData($userid,$faceimg,$jguser)
+    public function getListData($userid)
     {
-        $defaultFaceimg=e(pix_asset('server/images/default.png'));
+        $defaultFaceimg=config("jmessage.defaultfaceimg");
         //极光账号
         $username=username($userid);
+
+        $jguser= User::where(['id'=>$userid])->value("jguser");
         //检查是否有管理员账号
         if(!$jguser)
         {
-            echo 1;
             $newUser=$this->jmessage->userRegister($username);
             //检测是否注册成功
             if (!array_key_exists("error", $newUser["body"][0])) {
+                $token=create_uuid();
                 //更新user
-                User::where(['id'=>$userid])->update(["jguser"=>username($userid)]);
+                User::where(['id'=>$userid])->update(["jguser"=>username($userid),"token"=>$token]);
                 //重置session
-                Cache::put('userToken'.$userid,['token'=>create_uuid(),'type'=>1],config('session.lifetime'));
+                Cache::put('userToken'.$userid,['token'=>$token,'type'=>1],config('session.lifetime'));
             }
             $list["friend"]=[];
         }else{
@@ -57,33 +59,34 @@ class ChatBusiness extends ServerBase
         }
         //用户信息
         $userShow=$this->jmessage->userShow($username);
-        $list["user"]=["username"=>$userShow["body"]["username"],"faceimg"=>$faceimg?$faceimg:$defaultFaceimg,"nickname"=>$userShow["body"]["nickname"]];
+        $list["user"]=[
+            "username"=>$userShow["body"]["username"],
+            "faceimg"=>$userShow["body"]["extras"]["scalar"],
+            "nickname"=>array_key_exists("nickname",$userShow["body"])?$userShow["body"]["nickname"]:$userShow["body"]["username"],
+            "password"=>config('jmessage.defaultpwd')
+        ];
+
+        //获取初始化配置
+        $list["init"]=$this->jmessage->getJmessageInIt();
        return $list;
     }
 
 
-    /***
-     * 获取初始化配置
-     * @return \stdClass
-     */
-    public  function getInit()
-    {
-       return  $this->jmessage->getJmessageInIt();
-    }
 
     /***
-     * 获取login用户
-     * @return \stdClass
+     * 获取用户消息列表，2天的。
+     * @param $username
+     * @param int $count
      */
-    public function getLogin($userid,$faceimg)
+    public function getUserMessageData($username,$count=1000)
     {
-        $defaultFaceimg=e(pix_asset(config("jmessage.defaultfaceimg")));
-        $userShow=$this->jmessage->userShow(username($userid));
-        return [
-            "username"=>$userShow["body"]["username"],
-            "password"=>config('jmessage.defaultpwd'),
-            "faceimg"=>$faceimg?$faceimg:$defaultFaceimg,"nickname"=>$userShow["body"]["nickname"]];
+        //获取用户消息列表
+        $list=$this->jmessage->userGetUserMessage($username,$count);
+        if(array_key_exists("error",$list["body"]))
+        {
+            responseData(\StatusCode::ERROR,"获取失败");
+        }
+        return $list["body"];
     }
-
 
 }

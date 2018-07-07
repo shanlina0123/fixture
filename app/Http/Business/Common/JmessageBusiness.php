@@ -11,6 +11,7 @@ use JMessage\JMessage;
 use JMessage\IM\User;
 use JMessage\IM\Friend;
 use JMessage\IM\Resource;
+use JMessage\IM\Report;
 class JmessageBusiness
 {
     public $appKey;
@@ -19,6 +20,7 @@ class JmessageBusiness
     public $jmessageUser;
     public $jmessageFriend;
     public $jmessageResource;
+    public $jmessageReport;
     public function __construct()
     {
         //聊天init
@@ -54,7 +56,13 @@ class JmessageBusiness
     {
          $this->jmessageResource = new  Resource($this->jmessageClient);//Resource 媒体资源
     }
-
+    /***
+     * 实例化消息列表
+     */
+    public function setReport()
+    {
+        $this->jmessageReport = new  Report($this->jmessageClient);//Report 获取消息
+    }
     /**
      * @return \stdClass
      * 初始化
@@ -261,4 +269,23 @@ class JmessageBusiness
         $this->setResource();
         return $this->jmessageResource->download($mediaId);
     }
+
+
+    /***
+     * 获取用户的聊天消息
+     * @param $username
+     * @param $count
+     * @param $beginTime
+     * @param $endTime
+     */
+    public function userGetUserMessage($username,$count=100, $beginTime=null, $endTime=null)
+    {
+        $this->setClient();
+        $this->setReport();
+        $count=$count?$count:100;
+        $beginTime=$beginTime?$beginTime:get_last_date();
+        $endTime=$endTime?$endTime:get_today_date();
+        return $this->jmessageReport->getUserMessages($username, $count, $beginTime, $endTime);
+    }
+
 }

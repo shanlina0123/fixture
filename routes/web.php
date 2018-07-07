@@ -52,7 +52,7 @@ Route::group(['namespace' => 'Server'], function () {
         Route::get('upload-temp-del/{name}', 'PublicController@delTempImg');
         //Vip
         Route::get("vip","VipController@index")->name("vip-index");//列表
-        Route::get("vip/store","VipController@store")->name("vip-store");//申请专业版
+        Route::get("vip/store","VipController@store")->name("vip-store");//申请标准版
 
         //通知
         Route::get("notice","NoticeController@index")->name("notice-index");//列表
@@ -60,9 +60,9 @@ Route::group(['namespace' => 'Server'], function () {
         //聊天消息
         #Route::get("message","MessageController@index")->name("message-index");//列表
         Route::get("chat","ChatController@index")->name("chat-index");//主页面
-        Route::get("chat/list","ChatController@getListData")->name("chat-list");//列表
         Route::get("chat/init","ChatController@getInit")->name("chat-init");//配置
         Route::get("chat/login","ChatController@getLogin")->name("chat-login");//登录用户
+        Route::post("chat/message","ChatController@getUserMessageData")->name("chat-message");//获取用户聊天记录
 
         //腾讯地图
         Route::post('map-address', 'PublicController@getMapAddress')->name('map-address');//获取腾讯地图搜索的地址

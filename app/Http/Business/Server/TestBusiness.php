@@ -35,16 +35,21 @@ class TestBusiness
 //        $c = $jmessage->resourceUpload("file", "http://local.fixture.com/default/server/images/topLogo.png");
 //        print_r($c);
 
-//        //注册
-//        $d = $jmessage->userRegister("WEWE",null,"嘻嘻WEWE嘻",["faceimg"=>""]);
-//        if (array_key_exists("error", $d["body"][0])) {
-//            echo $d["body"][0]["username"] . " 注册失败";
-//        } else {
-//            echo $d["body"][0]["username"] . " 注册成功";
+        //注册
+//        $registerData=["15"=>"aaa","16"=>"bbb","17"=>"ccc","18"=>"ddds"];
+//        foreach($registerData as $k=>$v)
+//        {
+//            $d = $jmessage->userRegister(username($k),null,$v);
+//            if (array_key_exists("error", $d["body"][0])) {
+//                echo $d["body"][0]["username"] . " 注册失败\r\n";
+//            } else {
+//                echo $d["body"][0]["username"] . " 注册成功\r\n";
+//            }
 //        }
+
 //
 //        //用户信息
-//        $a = $jmessage->userShow("WEWE");
+//      $a = $jmessage->userShow(username(8));
 //        print_r($a);
 
 
@@ -52,16 +57,16 @@ class TestBusiness
 //        $e = $jmessage->userStat(username(1));
 //        print_r($e);
 
-        //修改用户信息
-//        $f = $jmessage->userUpdate(username(1),["nickname"=>"管理员"]);
+       // 修改用户信息
+//        $f = $jmessage->userUpdate(username(8),["nickname"=>"管理员","extras"=>["scalar"=>"http://local.fixture.com/default/server/images/chatimg.jpg?v=20180613"]]);
 //        print_r($f);
 //
 //        //添加好友
-//        $g=$jmessage->friendAdd("jmessage_3",["jmessage_4","jmessage_5"]);
+//        $g=$jmessage->friendAdd("jmessage_8",["jmessage_15","jmessage_16","jmessage_17","jmessage_18"]);
 //        print_r($g);
 
 //        //获取用户好友列表
-//        $h=$jmessage->friendListAll("jmessage_3");
+//        $h=$jmessage->friendListAll("jmessage_8");
 //        print_r($h);
 
         //删除好友
@@ -76,6 +81,11 @@ class TestBusiness
 //        $jmessageResource = new  Resource($jmessageClient);//Resource 媒体资源
 //        $x = $jmessageResource->upload("image", "http://local.fixture.com/default/server/images/topLogo.png");
 //        print_r($x);
+
+
+        //获取用户消息列表
+//        $j=$jmessage->userGetUserMessage("jmessage_11",0,1000);
+//        print_r($j);
     }
 
 

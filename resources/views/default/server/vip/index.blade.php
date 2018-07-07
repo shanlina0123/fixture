@@ -8,7 +8,7 @@
     @if($data["tipname"])
         <h1 class="notice">{{$data["tipname"]}}</h1>
     @else
-        <h1 class="notice">您当前使用的是<span style="color: #1E9FFF">{{$data["name"]}}</span>@if($data['id']==1) 开放更多功能请购买<span style="color: #1E9FFF">专业版</span>@endif</h1>
+        <h1 class="notice">您当前使用的是<span style="color: #1E9FFF">{{$data["name"]}}</span>@if($data['id']==1) 开放更多功能请购买<span style="color: #1E9FFF">标准版</span>@endif</h1>
         <div class="centerBtnWrap"><button type="button" class="layui-btn addBtn" url="{{route('vip-store')}}">立即升级</button></div>
     @endif
     <p class="describe">云易装平台版本功能明</p>
@@ -16,8 +16,8 @@
         <thead>
         <tr>
             <th>功能</th>
+            <th>免费版</th>
             <th>标准版</th>
-            <th>专业版</th>
             <th>定制版</th>
         </tr>
         </thead>

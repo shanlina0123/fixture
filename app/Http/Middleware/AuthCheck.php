@@ -30,7 +30,7 @@ class AuthCheck
 //        $vipflag= $this->authVip($admin_user);
 //        if($vipflag==false)
 //        {
-//            return redirect()->route('vip-index')->with('msg', '无权限,请升级为专业版');
+//            return redirect()->route('vip-index')->with('msg', '无权限,请升级为标准版');
 //        }
 
         return $next($request);
@@ -83,7 +83,7 @@ class AuthCheck
         //当前访问控制器
         $routeController = $current["controller"];
 
-        //vip-标准版权限访问权
+        //vip-免费版权限访问权
         if($admin_user["vipmechanismid"]==1)
         {
             //vip限制的控制器
