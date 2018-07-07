@@ -43,7 +43,8 @@
                 </div>
             </div>
             <input type="hidden" id="fulladdr" name="fulladdr" value="{{$data?$data->fulladdr:''}}" >
-            <input type="hidden" id="logo" value="" name="logo" value="" >
+            <input type="hidden" id="companyLogoName" value="" name="logo"  >
+            <input type="hidden" id="covermapName" value="" name="covermap">
             <div class="layui-form-item">
                 <label class="layui-form-label">详细地址</label>
                 <div class="layui-input-block">
@@ -68,9 +69,16 @@
                     <i class="layui-icon"></i>
                     <p>请上传174px*64px的图片,最大{{config("configure.maxImgSize")}}</p>
                 </div>
-                @if( $data && $data->logo )  <div class="uploadImg layui-inline fl"><img  id="src" width="230" height="132" src="{{getImgUrl($data?$data->logo:'')}}" class="layui-upload-img"> </div> @endif
+                @if( $data && $data->logo )  <div  id="companyLogoImg" class="uploadImg layui-inline fl"><img  id="companySrc" width="230" height="132" src="{{getImgUrl($data?$data->logo:'')}}" class="layui-upload-img"> </div> @endif
             </div>
-
+            <div class="layui-form-item" id="covermap">
+                <label class="layui-form-label">首页封面</label>
+                <div class="layui-upload-drag" id="test11" style="float: left">
+                    <i class="layui-icon"></i>
+                    <p>请上传750px*250px的图片,最大{{config("configure.maxImgSize")}}</p>
+                </div>
+                @if( $data && $data->covermap )  <div  id="covermapImg" class="uploadImg layui-inline fl"><img  id="covermapSrc" width="230" height="132" src="{{getImgUrl($data?$data->covermap:'')}}" class="layui-upload-img"> </div> @endif
+            </div>
             <div class="submitButWrap">
                 <button type="button" class="layui-btn" id="btn_submit">立即提交</button>
             </div>

@@ -22,19 +22,25 @@ class SiteDynamic extends ClientBase
     /**
      * 动态列表
      */
-    public function DynamicList( $where, $request, $user )
+    public function DynamicList( $where, $request, $user, $siteID )
     {
-        //Cache::flush();
         $tag = 'DynamicList'.$where['companyid'];
-        if( $user->isinvitationed == 1 )
+        if(is_array($siteID))
         {
-            //参与者的动态
+            //缓存标签
+            $tagWhere = $request->input('page').implode('',$where).implode('',$siteID);
+        }else
+        {
+            $tagWhere = $request->input('page').implode('',$where);
         }
-        $tagWhere = $request->input('page').implode('',$where);
-        $value = Cache::tags($tag)->remember( $tag.$tagWhere,config('configure.sCache'), function() use( $where, $request ){
-            $sql = Dynamic::where( $where )->orderBy('id','desc')->with('dynamicToImages');//关联图片
-
-                 //关联用户
+        $value = Cache::tags($tag)->remember( $tag.$tagWhere,config('configure.sCache'), function() use( $where, $request,$siteID ){
+                $sql = Dynamic::where( $where )->orderBy('id','desc')->with('dynamicToImages');//关联图片
+                //参与者的动态
+                if( $siteID )
+                {
+                    $sql->whereIn('sitetid',$siteID);
+                }
+                //关联用户
                 $sql->with(['dynamicToUser'=>function( $query ) use($where){
                     //关联用户表的职位
                     $query->with(['userToPosition'=>function( $query ) use($where){

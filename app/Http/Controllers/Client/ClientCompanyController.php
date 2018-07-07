@@ -26,10 +26,13 @@ class ClientCompanyController extends ClientBaseController
     {
         $user = $this->apiUser;
         $where['id'] = $user->companyid;
-        if( Cache::has('CompanyInfo'.$user->companyid) ){
+        if( Cache::get('CompanyInfo'.$user->companyid) )
+        {
             $res = Cache::get('CompanyInfo'.$user->companyid);
-        }else{
-            $res = Company::where($where)->select('name','fullname','phone','fulladdr','resume','logo')->first();
+        }else
+        {
+            $res = Company::where($where)->select('name','fullname','phone','fulladdr','resume','logo','covermap')->first();
+            $res->applicationName = config('configure.applicationName');
             Cache::put('CompanyInfo'.$user->companyid,$res,config('configure.sCache'));
         }
         if( !$res )

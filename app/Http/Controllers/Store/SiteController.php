@@ -22,6 +22,12 @@ class SiteController extends StoreBaseController
      */
     public function store()
     {
+        //邀请的用户不能删除
+        $user = $this->apiUser;
+        if( $user->type == 0 && $user->isinvitationed == 1)
+        {
+            responseData(\StatusCode::ERROR,'您无发布权限');
+        }
         $data = trimValue( $this->request->all());
         $validator = Validator::make(
             $data, [
@@ -162,6 +168,12 @@ class SiteController extends StoreBaseController
      */
     public function siteDestroy()
     {
+        //邀请的用户不能删除
+        $user = $this->apiUser;
+        if( $user->type == 0 && $user->isinvitationed == 1)
+        {
+            responseData(\StatusCode::ERROR,'您无删除权限');
+        }
         $data = trimValue( $this->request->all() );
         $data['companyid'] = $this->apiUser->companyid;
         $validator = Validator::make(
