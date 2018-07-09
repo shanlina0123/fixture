@@ -79,37 +79,37 @@ function login() {
 
         JIM.onUserInfUpdate(function (data) {
             appendToDashboard('onUserInfUpdate : ' + JSON.stringify(data));
-            alert("onUserInfUpdate");
+            //alert("onUserInfUpdate");
         });
 
         JIM.onSyncEvent(function (data) {
             appendToDashboard('onSyncEvent : ' + JSON.stringify(data));
-            alert("onSyncEvent");
+            //alert("onSyncEvent");
         });
 
         JIM.onMsgReceiptChange(function (data) {
             appendToDashboard('onMsgReceiptChange : ' + JSON.stringify(data));
-            alert("onMsgReceiptChange");
+            //alert("onMsgReceiptChange");
         });
 
         JIM.onSyncMsgReceipt(function (data) {
             appendToDashboard('onSyncMsgReceipt : ' + JSON.stringify(data));
-            alert("onSyncMsgReceipt");
+            //alert("onSyncMsgReceipt");
         });
 
         JIM.onMutiUnreadMsgUpdate(function (data) {
             appendToDashboard('onConversationUpdate : ' + JSON.stringify(data));
-            alert("onMutiUnreadMsgUpdate");
+            //alert("onMutiUnreadMsgUpdate");
         });
 
         JIM.onTransMsgRec(function (data) {
             appendToDashboard('onTransMsgRec : ' + JSON.stringify(data));
-            alert("onTransMsgRec");
+            //alert("onTransMsgRec");
         });
 
         JIM.onRoomMsg(function (data) {
             appendToDashboard('onRoomMsg  : ' + JSON.stringify(data));
-            alert("onRoomMsg");
+            //alert("onRoomMsg");
         });
     }).onFail(function (data) {
         appendToDashboard('error: ' + JSON.stringify(data));

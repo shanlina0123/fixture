@@ -269,7 +269,7 @@ class WxApiLogin
                                     //修改极光账号信息
                                     if($other["isadmin"]==1){
                                         $jmessage =  new JmessageBusiness();
-                                        $jmessage->userUpdate(username($other->id),['nickname' =>$nickname]);
+                                        $jmessage->userUpdate($other["jguser"],['nickname' =>$nickname,"extras"=>["faceimg"=>$faceimg]]);
                                     }
 
                                     return $this->userLogin( $openid, $companyid,$nickname,$faceimg );
@@ -287,7 +287,7 @@ class WxApiLogin
                                 //修改极光账号信息
                                 if($res["isadmin"]==1){
                                     $jmessage =  new JmessageBusiness();
-                                    $jmessage->userUpdate(username($res->id),['nickname' =>$nickname]);
+                                    $jmessage->userUpdate($res["jguser"],['nickname' =>$nickname,"extras"=>["faceimg"=>$faceimg]]);
                                 }
 
                                 return $this->userLogin( $openid, $companyid,$nickname,$faceimg );

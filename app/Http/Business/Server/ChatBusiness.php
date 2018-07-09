@@ -67,7 +67,7 @@ class ChatBusiness extends ServerBase
 
         $list["user"]=[
             "username"=>$userShow["body"]["username"],
-            "faceimg"=>array_key_exists("extras",$userShow["body"])?(array_key_exists("scalar",$userShow["body"]["extras"])?$userShow["body"]["extras"]["scalar"]:$defaultFaceimg):$defaultFaceimg,
+            "faceimg"=>array_key_exists("extras",$userShow["body"])?(array_key_exists("faceimg",$userShow["body"]["extras"])?$userShow["body"]["extras"]["faceimg"]:$defaultFaceimg):$defaultFaceimg,
             "nickname"=>array_key_exists("nickname",$userShow["body"])?$userShow["body"]["nickname"]:$userShow["body"]["username"],
             "password"=>config('jmessage.defaultpwd')
         ];

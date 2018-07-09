@@ -49,8 +49,8 @@ class TestBusiness
 
 //
 //        //用户信息
-//      $a = $jmessage->userShow(username(8));
-//        print_r($a);
+      $a = $jmessage->userShow(username(8));
+        print_r($a);
 
 
         //检查用户在线状态$e["body"]["login"] /$e["body"]["onine"]
@@ -58,7 +58,7 @@ class TestBusiness
 //        print_r($e);
 
        // 修改用户信息
-//        $f = $jmessage->userUpdate(username(8),["nickname"=>"管理员","extras"=>["scalar"=>"http://local.fixture.com/default/server/images/chatimg.jpg?v=20180613"]]);
+//        $f = $jmessage->userUpdate(username(18),["nickname"=>"ddds","extras"=>["faceimg"=>"http://local.fixture.com/default/server/images/chatimg.jpg?v=20180613"]]);
 //        print_r($f);
 //
 //        //添加好友
