@@ -174,8 +174,8 @@ class AdminBusiness extends ServerBase
                 Cache::tags(["Admin-PageList","Data-CateList"])->flush();
 
                 //TODO::注册极光账号
-//                $jmessage =  new JmessageBusiness();
-//                $jmessage->userRegister(username($adminid));
+                $jmessage =  new JmessageBusiness();
+                $jmessage->userRegister(username($adminid),null,$data["nickname"]);
 
             } else {
                 DB::rollBack();
@@ -271,6 +271,10 @@ class AdminBusiness extends ServerBase
                 //修改token
                 Cache::put('userToken' . $row['id'], ['token' => create_uuid(), 'type' => 2], config('session.lifetime'));
 
+                //TODO::修改极光账号
+                $jmessage =  new JmessageBusiness();
+                $jmessage->userUpdate(username($row["id"]),["nickname"=>$data["nickname"]]);
+
             } else {
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR, "修改失败");
@@ -319,9 +323,9 @@ class AdminBusiness extends ServerBase
                 Cache::put('userToken' . $adminData['id'], ['token' => create_uuid(), 'type' => 2], config('session.lifetime'));
 
                 //TODO::禁用/启用极光账号
-//                $jmessage =  new JmessageBusiness();
-//                $forbidden=$admin["status"]==1?false:true;
-//                $jmessage->userForbidden(username($adminData["id"]),$forbidden);
+                $jmessage =  new JmessageBusiness();
+                $forbidden=$admin["status"]==1?false:true;
+                $jmessage->userForbidden(username($adminData["id"]),$forbidden);
 
                 return ["status" => $admin["status"]];
             } else {
@@ -392,11 +396,16 @@ class AdminBusiness extends ServerBase
                 //修改token
                 Cache::put('userToken' . $row['id'], ['token' => create_uuid(), 'type' => 2], config('session.lifetime'));
 
-                //TODO::删除极光账号
+               //TODO::删除好友关系
                 $jmessage =  new JmessageBusiness();
+                $userFriend=$jmessage->friendListAll(username($row["id2"])); //获取用户好友列表
+                if(!array_key_exists("error",$userFriend["body"]))
+                {
+                    $userFirendUsers=array_column( $userFriend["body"],"username",null);
+                    $jmessage->friendRemove(username($row["id"]),$userFirendUsers);
+                }
+                //TODO::删除极光账号
                 $jmessage->userDelete(username($row["id"]));
-
-
             } else {
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR, "删除失败");
