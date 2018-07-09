@@ -219,3 +219,49 @@ a:focus {
 .imgnotice {
   color: #c2c2c2;
 }
+/*分享*/
+.sharewrap {
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  top: 60px;
+  right: 0px;
+  border-bottom: 80px solid transparent;
+  border-right: 80px solid #f0ad4e;
+  z-index: 2000;
+  cursor: pointer;
+}
+.sharewrap img {
+  position: absolute;
+  display: block;
+  width: 30px;
+  height: 30px;
+  top: 10px;
+  left: 42px;
+}
+.sharepop {
+  display: none;
+
+}
+.sharepop li {
+  float: left;
+  text-align: center;
+  padding: 20px;
+  margin-left: 124px;
+}
+.sharepop li:first-child {
+  margin-left: 0;
+}
+.sharepop li p {
+  font-size: 14px;
+  height: 40px;
+  line-height: 40px;
+}
+.sharepop li a {
+  display: block;
+}
+.sharepop li a img {
+  display: block;
+  max-width: 258px;
+}
+

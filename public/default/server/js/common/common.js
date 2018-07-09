@@ -189,3 +189,17 @@ function checkArrRepeat(a)
 {
     return /(\x0f[^\x0f]+)\x0f[\s\S]*\1/.test("\x0f"+a.join("\x0f\x0f") +"\x0f");
 }
+
+/**
+ * 分享弹窗
+ */
+$(".sharewrap").click(function() {
+    layer.open({
+        type: 1,
+        closeBtn: 1,
+        title: false, //不显示标题
+        shadeClose: true,
+        area:['auto','auto'],
+        content: $('.sharepop'), //捕获的元素，注意：最好该指定的元素要存放在body最外层，否则可能被其它的相对元素所影响
+    });
+});

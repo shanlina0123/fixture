@@ -45,6 +45,16 @@
             @yield('content')
         </div>
     </div>
+    <!--分享功能-->
+    <div class="sharewrap" title="分享">
+        <img src="{{pix_asset('server/images/share.png')}}">
+    </div>
+    <ul class="sharepop clearfix">
+        <li>
+            <p>小程序码</p>
+            <a href="javascript:;"><img src="{{url('wx-code')}}/index/null/258"></a>
+        </li>
+    </ul>
     @yield('other')
 </body>
 <script type="text/javascript" src="{{pix_asset('server/plugins/layui/layui.js',false)}}"></script>

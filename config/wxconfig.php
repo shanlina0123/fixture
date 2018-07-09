@@ -30,6 +30,7 @@ return [
     "wxCode"=>[
             "lucky"=>"pages/activity/prize/prize",
             "site"=>"pages/projectdetail/projectdetail",
-            "allow"=>"pages/allowlogin/allowlogin"
+            "allow"=>"pages/allowlogin/allowlogin",
+            "index"=>"pages/index/index"
         ]
 ];

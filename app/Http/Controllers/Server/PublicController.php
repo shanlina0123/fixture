@@ -223,7 +223,7 @@ class PublicController extends ServerBaseController
     public function  getWxCodeImg( Request $request )
     {
         $companyid= session('userInfo')->companyid;
-        $sourcecode=1;//SmallProgram::where("companyid",$companyid)->value("sourcecode");
+        $sourcecode = 1;//SmallProgram::where("companyid",$companyid)->value("sourcecode");
         if($sourcecode!=1)
         {
             echo "";

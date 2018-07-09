@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Store;
 use App\Http\Business\Store\SiteBusiness;
 use App\Http\Business\Server\SiteBusiness as ServerSite;
 use App\Http\Controllers\Common\StoreBaseController;
+use App\Http\Model\Site\SiteInvitation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
@@ -93,6 +94,7 @@ class SiteController extends StoreBaseController
     {
         $data = trimValue( $this->request->all() );
         $user = $this->apiUser;
+        $siteID='';
         //判断用户信息如果是B端只显示当前店铺的动态
         if( $user->type == 0 )
         {
@@ -113,6 +115,11 @@ class SiteController extends StoreBaseController
                         $where['storeid'] = $user->storeid;
                         break;
                 }
+            }else
+            {
+                //被邀请的用户
+                //1.查询参与的的工地动态
+                $siteID = SiteInvitation::where(['storeid'=>$user->storeid,'joinuserid'=>$user->id])->pluck('siteid')->toArray();
             }
         }else
         {
@@ -120,7 +127,7 @@ class SiteController extends StoreBaseController
         }
         $where['companyid'] = $this->apiUser->companyid;
         $where['isfinish'] = $data['isfinish'];
-        $res = $this->site->siteList( $where, $data );
+        $res = $this->site->siteList( $where, $data, $siteID );
         responseData(\StatusCode::SUCCESS,'工地列表',$res);
     }
 

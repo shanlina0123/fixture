@@ -25,19 +25,31 @@ class SiteBusiness extends StoreBase
      * @return mixed
      * 工地列表
      */
-    public function siteList( $sWhere, $data )
+    public function siteList( $sWhere, $data, $siteID )
     {
         $tag = 'siteHome'.$sWhere['companyid'];
         $where = array_has($data,'page')?$data['page']:1;
-        $where = $where.implode('',$sWhere);
-        $value = Cache::tags($tag)->remember( $tag.$where,config('configure.sCache'), function() use( $sWhere, $data ){
-            return Site::where( $sWhere )->orderBy('id','desc')->with(
+        if(is_array($siteID))
+        {
+            //缓存标签
+            $where = $where.implode('',$sWhere).implode('',$siteID);
+        }else
+        {
+            $where = $where.implode('',$sWhere);
+        }
+        $value = Cache::tags($tag)->remember( $tag.$where,config('configure.sCache'), function() use( $sWhere, $data,$siteID ){
+            $site = Site::where( $sWhere )->orderBy('id','desc')->with(
                 [
                  'siteToCommpanyTag'=>function( $query ){
                      $query->select('id','stagetemplateid','name');
                  }
                 ]
-            )->select('id','uuid','name','addr','explodedossurl','stageid','isfinish','isopen','linkednum','follownum')->paginate(config('configure.sPage'));
+            );
+            if( $siteID )
+            {
+                $site->whereIn('id',$siteID);
+            }
+            return $site->select('id','uuid','name','addr','explodedossurl','stageid','isfinish','isopen','linkednum','follownum')->paginate(config('configure.sPage'));
         });
         return $value;
     }
