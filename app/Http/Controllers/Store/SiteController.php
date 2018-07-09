@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Store;
 use App\Http\Business\Store\SiteBusiness;
 use App\Http\Business\Server\SiteBusiness as ServerSite;
 use App\Http\Controllers\Common\StoreBaseController;
+use App\Http\Model\Company\Company;
+use App\Http\Model\Site\Site;
 use App\Http\Model\Site\SiteInvitation;
+use App\Http\Model\Vip\ConfVipfunctionpoint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
@@ -29,6 +32,19 @@ class SiteController extends StoreBaseController
         {
             responseData(\StatusCode::ERROR,'您无发布权限');
         }
+        //控制工地个数
+        $siteNum = Site::where('companyid',$user->companyid)->count();
+        if( $siteNum )
+        {
+            //查询版本
+            $vipvalue = Company::where('id',$user->companyid)->value('vipmechanismid');
+            $siteMax = ConfVipfunctionpoint::where(['name'=>'vip_max_site','vipvalue'=>$vipvalue])->value('value');
+            if( $siteNum >= $siteMax )
+            {
+                responseData(\StatusCode::ERROR,'当前项目数量已达到上线，需升级会员版本');
+            }
+        }
+
         $data = trimValue( $this->request->all());
         $validator = Validator::make(
             $data, [

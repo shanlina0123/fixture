@@ -474,16 +474,14 @@ class WxAuthorize
     public function getWxUserCategory( $token )
     {
         $url = 'https://api.weixin.qq.com/wxa/get_category?access_token='.$token;
-        $data = getCurl($url);
-        list($header, $body) = explode("\r\n\r\n", $data, 2);
-        //var_dump($body);
-        if( $body )
+        $data = getCurl($url,0);
+        if( $data )
         {
-            $body = json_decode($body,true);
+            $data = json_decode($data,true);
 
-            if($body['errcode'] == 0 )
+            if($data['errcode'] == 0 )
             {
-               return $body['category_list'];
+               return $data['category_list'];
             }
         }
         return false;
