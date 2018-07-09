@@ -228,7 +228,7 @@ a:focus {
   right: 0px;
   border-bottom: 80px solid transparent;
   border-right: 80px solid #f0ad4e;
-  z-index: 2000;
+  z-index: 200;
   cursor: pointer;
 }
 .sharewrap img {
