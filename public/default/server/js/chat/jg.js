@@ -74,7 +74,7 @@ function login() {
 
         JIM.onSyncConversation(function (data) { //离线消息同步监听
            appendToDashboard('离线消息event_receive: ' + JSON.stringify(data));
-           getSyncMessageList(JSON.parse(data));
+           getSyncMessageList(data);
         });
 
         JIM.onUserInfUpdate(function (data) {
@@ -265,9 +265,8 @@ function getReceiveMessageList(data)
 //获取消息列表回调(离线消息)
 function getSyncMessageList(data)
 {
-    data=data[0]["msgs"];
-    if (data.ength>0) {
-        $.each(data, function (i, n) {
+    if (data[0]["msgs"].length>0) {
+        $.each(data[0]["msgs"], function (i, n) {
             var parent=$("[jguser="+n.content.from_id+"]",$(".m-list"));
             $(".unread",parent).remove();
             $(parent).append("<span class=\"unread\"></span>");
