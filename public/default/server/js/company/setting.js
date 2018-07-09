@@ -22,7 +22,7 @@ $.get('/default/server/json/city.json',function ( data )
                 , done: function (res) {
                     layer.closeAll('loading'); //关闭loading
                     if (res.code == 1) {
-                        if( $("#companyLogoImg").length )
+                        if( $("#companySrc").length )
                         {
                             $("#companySrc").attr('src', res.data.src);
                         }else
@@ -55,7 +55,7 @@ $.get('/default/server/json/city.json',function ( data )
                 , done: function (res) {
                     layer.closeAll('loading'); //关闭loading
                     if (res.code == 1) {
-                        if( $("#covermapImg").length )
+                        if( $("#covermapSrc").length )
                         {
                             $("#covermapSrc").attr('src', res.data.src);
                         }else
