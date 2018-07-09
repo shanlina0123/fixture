@@ -69,7 +69,7 @@ function login() {
 
         JIM.onEventNotification(function (data) {
             appendToDashboard('event_receive: ' + JSON.stringify(data));
-            alert("onEventNotification")
+            //alert("onEventNotification")
         });
 
         JIM.onSyncConversation(function (data) { //离线消息同步监听
