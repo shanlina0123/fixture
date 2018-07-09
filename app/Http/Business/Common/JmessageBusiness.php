@@ -97,13 +97,18 @@ class JmessageBusiness
     /**
      * 极光 - User 注册用户
      */
-    public function userRegister($username,$pwd=null,$nickname=null,$extras=null)
+    public function userRegister($username,$pwd=null,$nickname=null,$extras=[])
     {
         $this->setClient();
         $this->setUser();
         $pwd=$pwd?$pwd:config('jmessage.defaultpwd');
         $faceimg=config('jmessage.defaultfaceimg');
-        $extras=$extras?(strlen(trim($extras["faceimg"]))>0?$extras["faceimg"]:$faceimg):$faceimg;
+        if(array_key_exists("faceimg",$extras))
+        {
+            $extras["faceimg"]=strlen(trim($extras["faceimg"]))>0?$extras["faceimg"]:$faceimg;
+        }else{
+            $extras["faceimg"]=$faceimg;
+        }
         $jsonObj=(object)$extras;
         return $this->jmessageUser->register($username,$pwd,$nickname,$jsonObj);
     }

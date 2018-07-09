@@ -36,7 +36,7 @@ class TestBusiness
 //        print_r($c);
 
         //注册
-//        $registerData=["15"=>"aaa","16"=>"bbb","17"=>"ccc","18"=>"ddds"];
+//        $registerData=["1"=>"店小二","12"=>"管理员","17"=>"管理员","25"=>"管理员","26"=>"吕瑞祥","33"=>"陈庚"];
 //        foreach($registerData as $k=>$v)
 //        {
 //            $d = $jmessage->userRegister(username($k),null,$v);
@@ -46,11 +46,12 @@ class TestBusiness
 //                echo $d["body"][0]["username"] . " 注册成功\r\n";
 //            }
 //        }
+//       die;
 
 //
 //        //用户信息
-      $a = $jmessage->userShow(username(8));
-        print_r($a);
+//      $a = $jmessage->userShow(username(8));
+//        print_r($a);
 
 
         //检查用户在线状态$e["body"]["login"] /$e["body"]["onine"]
