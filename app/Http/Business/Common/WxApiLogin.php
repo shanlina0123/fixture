@@ -267,9 +267,9 @@ class WxApiLogin
                                     DB::commit();
                                     //TODO::绑定管理员的操作
                                     //修改极光账号信息
-                                    if($other["isadmin"]==1){
+                                    if($other->isadmin==1){
                                         $jmessage =  new JmessageBusiness();
-                                        $jmessage->userUpdate($other["jguser"],['nickname' =>$nickname,"extras"=>["faceimg"=>$faceimg]]);
+                                        $jmessage->userUpdate($other->jguser,['nickname' =>$nickname,"extras"=>["faceimg"=>$faceimg]]);
                                     }
 
                                     return $this->userLogin( $openid, $companyid,$nickname,$faceimg );
@@ -285,9 +285,9 @@ class WxApiLogin
 
                                 //TODO::绑定管理员的操作
                                 //修改极光账号信息
-                                if($res["isadmin"]==1){
+                                if($res->isadmin==1){
                                     $jmessage =  new JmessageBusiness();
-                                    $jmessage->userUpdate($res["jguser"],['nickname' =>$nickname,"extras"=>["faceimg"=>$faceimg]]);
+                                    $jmessage->userUpdate($res->jguser,['nickname' =>$nickname,"extras"=>["faceimg"=>$faceimg]]);
                                 }
 
                                 return $this->userLogin( $openid, $companyid,$nickname,$faceimg );
