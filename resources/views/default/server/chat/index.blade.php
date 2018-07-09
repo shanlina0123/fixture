@@ -30,6 +30,7 @@
     <link rel="stylesheet" href="{{pix_asset('server/css/chat.css')}}">
 </head>
 <body>
+<div class="dwrap">
 <div class="dialogwrap clearfix">
     <div class="sidebar">
         <div class="m-card">
@@ -77,6 +78,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 <input type="hidden" id="appkey" value="{{$list["init"]->appkey}}"/>
 <input type="hidden" id="random_str" value="{{$list["init"]->random_str}}"/>

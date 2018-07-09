@@ -25,7 +25,7 @@ layui.use(['jquery', 'layer'], function () {
             var yy = e.pageY - $(this).offset().top;
             $(this).find(".deleteli").css("top", yy).css("left", xx);
         } else if (1 == e.which && (!$(e.target).is(".deleteli"))) {
-
+            $(".unread",this).remove();
             //左键
             $(this).addClass("active").siblings().removeClass("active");
             $(".main").removeClass("nomsg");
@@ -100,6 +100,7 @@ layui.use(['jquery', 'layer'], function () {
     })
     //回车发消息
     $("body").keyup(function (e) {
+
         var textareatext = $(".insearwrap textarea").val();
         var target_username=$(".active",$(".m-list")).attr("jguser");
         if (e.shiftKey == 1 && e.keyCode == 13) {
@@ -109,7 +110,9 @@ layui.use(['jquery', 'layer'], function () {
             }
             e.preventDefault();
         } else if (e.keyCode == 13) {
+            $(".insearwrap textarea").blur();
             sendSingleMsg(target_username,textareatext,false,"");
+
         }
 
     })

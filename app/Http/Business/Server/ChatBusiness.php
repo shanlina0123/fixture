@@ -29,11 +29,10 @@ class ChatBusiness extends ServerBase
     {
         $defaultFaceimg=config("jmessage.defaultfaceimg");
         //极光账号
-        $username=username($userid);
-
-        $jguser= User::where(['id'=>$userid])->value("jguser");
+        //$username=username($userid);
+        $username= User::where(['id'=>$userid])->value("jguser");
         //检查是否有管理员账号
-        if(!$jguser)
+        if(!$username)
         {
             $newUser=$this->jmessage->userRegister($username);
             //检测是否注册成功
@@ -49,19 +48,26 @@ class ChatBusiness extends ServerBase
             //好友列表
             $friend=$this->jmessage->friendListAll($username);
             $friendUsers=array_column($friend["body"],"username",null);
+
             $listFriend=User::whereIn("jguser",$friendUsers)->select("jguser","faceimg")->get()->toArray();
             $listFriend=$listFriend?array_column($listFriend,null,"jguser"):"";
             foreach($friend["body"] as $k=>$item)
             {
-                $friend["body"][$k]["faceimg"]=$listFriend[$item["username"]]["faceimg"]?$listFriend[$item["username"]]["faceimg"]:$defaultFaceimg;
+                if(in_array($item["username"],array_keys($listFriend)))
+                {
+                    $friend["body"][$k]["faceimg"]=$listFriend[$item["username"]]["faceimg"]?$listFriend[$item["username"]]["faceimg"]:$defaultFaceimg;
+                }else{
+                   unset($friend["body"][$k]);
+                }
             }
             $list["friend"]=$friend["body"];
         }
         //用户信息
         $userShow=$this->jmessage->userShow($username);
+
         $list["user"]=[
             "username"=>$userShow["body"]["username"],
-            "faceimg"=>$userShow["body"]["extras"]["scalar"],
+            "faceimg"=>array_key_exists("extras",$userShow["body"])?(array_key_exists("scalar",$userShow["body"]["extras"])?$userShow["body"]["extras"]["scalar"]:$defaultFaceimg):$defaultFaceimg,
             "nickname"=>array_key_exists("nickname",$userShow["body"])?$userShow["body"]["nickname"]:$userShow["body"]["username"],
             "password"=>config('jmessage.defaultpwd')
         ];

@@ -63,10 +63,8 @@ function login() {
         appendToDashboard('登录 sucess:' + JSON.stringify(data));
         JIM.onMsgReceive(function (data) {
             data = JSON.stringify(data);
-            appendToDashboard('msg_receive:' + JSON.stringify(data));
-            $("title").html("云易装 - 您有新消息");
+            appendToDashboard('新消息msg_receive:' + JSON.stringify(data));
             getReceiveMessageList(JSON.parse(data));
-
         });
 
         JIM.onEventNotification(function (data) {
@@ -75,9 +73,8 @@ function login() {
         });
 
         JIM.onSyncConversation(function (data) { //离线消息同步监听
-            appendToDashboard('event_receive离线消息: ' + JSON.stringify(data));
-            $("title").html("云易装 - 您有离线消息");
-            getSyncMessageList(JSON.parse(data));
+           appendToDashboard('离线消息event_receive: ' + JSON.stringify(data));
+           getSyncMessageList(JSON.parse(data));
         });
 
         JIM.onUserInfUpdate(function (data) {
@@ -149,6 +146,7 @@ function sendSingleMsg(target_username,content,reply,that) {
             showSendMessage(content,true);
             //滚动
             $(".m-message").scrollTop($(".m-message")[0].scrollHeight);
+            $(".insearwrap textarea").blur();
         }
 
     }).onFail(function (data) {
@@ -211,25 +209,44 @@ function getReceiveMessageList(data)
         var htmlData = "";
         if (data.messages.length > 0) {
             $.each(data.messages, function (i, n) {
-                var faceimg=n.content.msg_body.extras.faceimg;
-                var classposition=""
-                if(typeof(n.content.msg_body.extras)!="undefined")
+                var parent=$("[jguser="+n.content.from_id+"]",$(".m-list"));
+                $(".unread",parent).remove();
+                if(!parent.hasClass("active"))
                 {
-                    faceimg=n.content.msg_body.extras.faceimg;
+                    $(parent).append("<span class=\"unread\"></span>");
+                }else{
+
+                    //页面效果
+                    $(parent).addClass("active").siblings().removeClass("active");
+                    $(".main").removeClass("nomsg");
+                    $(".hasmeg").removeClass("hide");
+                    $(".mainuser span").text($(this).find(".name").text());
+                    $(parent).find(".deleteli").css("display", "none");
+                    $(parent).addClass("active").siblings().find(".deleteli").css("display", "none");
+
+                    //页面数据
+                    var faceimg=n.content.msg_body.extras.faceimg;
+                    var classposition=""
+                    if(typeof(n.content.msg_body.extras)!="undefined")
+                    {
+                        faceimg=n.content.msg_body.extras.faceimg;
+                    }
+                    htmlData += '<li class=\"clearfix\">\r\n' +
+                        '<p class=\"time\"><span>' + timestampToTime(n.ctime_ms) + '</span></p>\r\n' +
+                        '<div class=\"' + classposition + '\">\r\n' +
+                        '<img class=\"avatar\" width=\"30\" height=\"30\" src=\"' + faceimg + '\">\r\n' +
+                        '<div class=\"text\">'+n.content.msg_body.text,
+                    '<!-- <div class=\"textright hide\">\r\n' +
+                    '<a href=\"javascript:;\">复制</a>\r\n' +
+                    '<a href=\"javascript:;\">撤回</a>\r\n' +
+                    '<a href=\"javascript:;\">删除</a>\r\n' +
+                    '</div> -->\r\n' +
+                    '</div>\r\n' +
+                    '</div>\r\n' +
+                    '</li>\r\n';
                 }
-                htmlData += '<li class=\"clearfix\">\r\n' +
-                    '<p class=\"time\"><span>' + timestampToTime(n.ctime_ms) + '</span></p>\r\n' +
-                    '<div class=\"' + classposition + '\">\r\n' +
-                    '<img class=\"avatar\" width=\"30\" height=\"30\" src=\"' + faceimg + '\">\r\n' +
-                    '<div class=\"text\">'+n.content.msg_body.text,
-                '<!-- <div class=\"textright hide\">\r\n' +
-                '<a href=\"javascript:;\">复制</a>\r\n' +
-                '<a href=\"javascript:;\">撤回</a>\r\n' +
-                '<a href=\"javascript:;\">删除</a>\r\n' +
-                '</div> -->\r\n' +
-                '</div>\r\n' +
-                '</div>\r\n' +
-                '</li>\r\n';
+
+
             });
         } else {
             htmlData = '<li class=\"clearfix\"></li>';
@@ -245,43 +262,15 @@ function getReceiveMessageList(data)
 }
 
 
-
 //获取消息列表回调(离线消息)
 function getSyncMessageList(data)
 {
-    if (data.msgs.length>0) {
-        var htmlData = "";
-        if (data.msgs.length > 0) {
-            $.each(data.msgs, function (i, n) {
-                var faceimg=n.content.msg_body.extras.faceimg;
-                var classposition=""
-                if(typeof(n.content.msg_body.extras)!="undefined")
-                {
-                    faceimg=n.content.msg_body.extras.faceimg;
-                }
-                htmlData += '<li class=\"clearfix\">\r\n' +
-                    '<p class=\"time\"><span>' + timestampToTime(n.ctime_ms) + '</span></p>\r\n' +
-                    '<div class=\"' + classposition + '\">\r\n' +
-                    '<img class=\"avatar\" width=\"30\" height=\"30\" src=\"' + faceimg + '\">\r\n' +
-                    '<div class=\"text\">'+n.content.msg_body.text,
-                '<!-- <div class=\"textright hide\">\r\n' +
-                '<a href=\"javascript:;\">复制</a>\r\n' +
-                '<a href=\"javascript:;\">撤回</a>\r\n' +
-                '<a href=\"javascript:;\">删除</a>\r\n' +
-                '</div> -->\r\n' +
-                '</div>\r\n' +
-                '</div>\r\n' +
-                '</li>\r\n';
-            });
-        } else {
-            htmlData = '<li class=\"clearfix\"></li>';
-        }
-        $("#m-message-ul").append(htmlData);
-        //滚动
-        $(".m-message").scrollTop($(".m-message")[0].scrollHeight);
-
-    } else {
-        var htmlData = "";
-        $("#m-message-ul").html(htmlData);
+    data=data[0]["msgs"];
+    if (data.ength>0) {
+        $.each(data, function (i, n) {
+            var parent=$("[jguser="+n.content.from_id+"]",$(".m-list"));
+            $(".unread",parent).remove();
+            $(parent).append("<span class=\"unread\"></span>");
+        });
     }
 }
