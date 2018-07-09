@@ -64,8 +64,10 @@ class ApiAuthCheck
                 }
             }
 
-            //标准版访问限制
-            if($user->tokenToUser->vipmechanismid==1)
+
+            //免费版访问限制
+           if($user->tokenToUser->vipmechanismid==1)
+
             {
                 //vip操作权限
                 $vipAllowController = ConfVipfunctionpoint::where("status", 1)->where("type", "allow")->where("controller", $routeController)->select();
@@ -74,9 +76,9 @@ class ApiAuthCheck
                     foreach ($vipAllowController as $k => $v) {
                         //存在限制的方法
                         if ($v["method"] == $routeMethod) {
-                            //标准版的数据值0无 1有
+                            //免费版的数据值0无 1有
                             if (!$v["value"]) {
-                                responseData(\StatusCode::AUTH_ERROR, "您无权限操作,请升级为专业版");
+                                responseData(\StatusCode::AUTH_ERROR, "您无权限操作,请升级为标准版");
                             }
                         }
 

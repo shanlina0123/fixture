@@ -4,7 +4,7 @@ ALTER TABLE `fixture_small_program` MODIFY COLUMN `sourcecode`  tinyint(1) NULL 
 ALTER TABLE `fixture_company` ADD COLUMN `covermap`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '封面图' AFTER `deadline`;
 #会员机制
 ALTER TABLE `fixture_conf_vipfunctionpoint` ADD COLUMN `text`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER `name`;
-ALTER TABLE `fixture_conf_vipfunctionpoint` ADD COLUMN `value`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '标准版value' AFTER `text`;
+ALTER TABLE `fixture_conf_vipfunctionpoint` ADD COLUMN `value`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '免费版value' AFTER `text`;
 ALTER TABLE `fixture_conf_vipfunctionpoint` ADD COLUMN `vipvalue`  varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'vip版value' AFTER `value`;
 ALTER TABLE `fixture_conf_vipfunctionpoint` ADD COLUMN `viptext`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER `vipvalue`;
 ALTER TABLE `fixture_conf_vipfunctionpoint` MODIFY COLUMN `content`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '说明' AFTER `viptext`;
@@ -33,8 +33,8 @@ INSERT INTO `fixture_conf_vipfunctionpoint` VALUES ('17', 'vip_has_auth', '0', '
 INSERT INTO `fixture_conf_vipfunctionpoint` VALUES ('18', 'vip_has_look', '0', '无', '1', '有', '角色视野权限', 'has', 'RolesController', null, '1', '2018-06-29 15:53:02');
 INSERT INTO `fixture_conf_vipfunctionpoint` VALUES ('19', 'vip_has_charts', '1', '简单数据分析', '2', '活动效果分析、客户转化率分析、渠道分析等更详细的数据分析、主流业务增长', '数据分析', 'max', null, null, '1', '2018-06-29 15:53:04');
 #添加会员版本数据源数据
-INSERT INTO `fixture_data_vipmechanism` VALUES ('1', '标准版', '1', '2018-06-25 15:36:42');
-INSERT INTO `fixture_data_vipmechanism` VALUES ('2', '专业版', '1', '2018-06-25 15:36:44');
+INSERT INTO `fixture_data_vipmechanism` VALUES ('1', '免费版', '1', '2018-06-25 15:36:42');
+INSERT INTO `fixture_data_vipmechanism` VALUES ('2', '标准版', '1', '2018-06-25 15:36:44');
 
 #删除工地成员
 DROP TABLE `fixture_site_participant`;

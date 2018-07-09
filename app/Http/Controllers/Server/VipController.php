@@ -27,7 +27,7 @@ class VipController extends ServerBaseController
     }
 
     /***
-     * 升级申请专业版
+     * 升级申请标准版
      */
     public function  store()
     {
@@ -39,12 +39,12 @@ class VipController extends ServerBaseController
         }
         if($vipmechanismid==2)
         {
-            responseData(\StatusCode::PARAM_ERROR,"您已是专业版","","您已是专业版");
+            responseData(\StatusCode::PARAM_ERROR,"您已是标准版","","您已是标准版");
         }
         //执行业务处理
         $this->vip_business->store($this->userInfo->companyid,2);
         //接口返回结果
-        responseData(\StatusCode::SUCCESS,"您好，已收到您专业版升级申请，我们会尽快和您联系！");
+        responseData(\StatusCode::SUCCESS,"您好，已收到您标准版升级申请，我们会尽快和您联系！");
     }
 
 }

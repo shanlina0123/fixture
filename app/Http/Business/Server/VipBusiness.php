@@ -28,7 +28,7 @@ class VipBusiness extends ServerBase
         $data["tipname"]="";
         if ($upData) {
             if ($upData["status"] == 0) {
-                $data["tipname"] = "您好，已收到您专业版升级申请，我们会尽快和您联系！";
+                $data["tipname"] = "您好，已收到您标准版升级申请，我们会尽快和您联系！";
             }
         }
         //当前版本
@@ -36,13 +36,13 @@ class VipBusiness extends ServerBase
         switch ($data["id"])
         {
             case 1:
-                $data["name"]="标准版";
+                $data["name"]="免费版";
                 break;
             case 2:
-                $data["name"]="专业版";
+                $data["name"]="标准版";
                 break;
             default:
-                $data["name"]="标准版";
+                $data["name"]="免费版";
         }
 
         //VIP功能
@@ -52,7 +52,7 @@ class VipBusiness extends ServerBase
     }
 
     /****
-     * 申请专业版
+     * 申请标准版
      * @param $companyid
      * @param $vipmechanismid
      */
@@ -68,7 +68,7 @@ class VipBusiness extends ServerBase
                 if ($upData["status"] == 0)
                     responseData(\StatusCode::EXIST_ERROR, "您已申请过");
                 if ($upData["status"] == 1 && date("Y-m-d H:i:s") <= $upData["deadline"]) {
-                    responseData(\StatusCode::EXIST_ERROR, "您已是专业版");
+                    responseData(\StatusCode::EXIST_ERROR, "您已是标准版");
                 }
             }
 
