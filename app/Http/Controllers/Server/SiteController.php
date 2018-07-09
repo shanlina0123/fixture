@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Server;
 use App\Http\Business\Server\SiteBusiness;
 use App\Http\Controllers\Common\ServerBaseController;
+use App\Http\Model\Site\Site;
+use App\Http\Model\Vip\ConfVipfunctionpoint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
@@ -43,8 +45,17 @@ class SiteController extends ServerBaseController
      */
     public function create()
     {
-        //验证权限
-
+        //控制工地个数
+        $siteNum = Site::where('companyid',$this->userInfo->companyid)->count();
+        if( $siteNum )
+        {
+            //查询版本
+            $siteMax = ConfVipfunctionpoint::where(['name'=>'vip_max_site','vipvalue'=>$this->userInfo->vipmechanismid])->value('value');
+            if( $siteNum >= $siteMax )
+            {
+                return redirect()->route('vip-index')->with('msg', '当前项目数量已达到上线，需升级会员版本');
+            }
+        }
         //创建工地
         $data = new \stdClass();
         $data->store = $this->site->getStore($this->userInfo);
@@ -67,6 +78,17 @@ class SiteController extends ServerBaseController
      */
     public function store(Request $request)
     {
+        //控制工地个数
+        $siteNum = Site::where('companyid',$this->userInfo->companyid)->count();
+        if( $siteNum )
+        {
+            //查询版本
+            $siteMax = ConfVipfunctionpoint::where(['name'=>'vip_max_site','vipvalue'=>$this->userInfo->vipmechanismid])->value('value');
+            if( $siteNum >= $siteMax )
+            {
+                return redirect()->route('vip-index')->with('msg', '当前项目数量已达到上线，需升级会员版本');
+            }
+        }
         //表单验证
         $request->validate(
             [

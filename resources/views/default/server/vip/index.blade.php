@@ -36,6 +36,8 @@
             </tr>
         @endforeach
     </table>
+    <!--错误 -->
+    <input type="hidden" id="msg" value="{{session('msg')}}">
 </div>
 @endsection
 @section('other')

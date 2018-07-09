@@ -27,4 +27,8 @@ layui.use(['form', 'layer', 'jquery'], function() {
         })
 
     })
+    if( $("#msg").val() )
+    {
+        layer.msg($("#msg").val(), {icon: 1, time: 2000, shift: 6});
+    }
 });
