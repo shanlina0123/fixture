@@ -84,13 +84,22 @@ class ChatBusiness extends ServerBase
      * @param $username
      * @param int $count
      */
-    public function getUserMessageData($username,$count=1000)
+    public function getUserMessageData($userid,$username,$count=1000)
     {
         //获取用户消息列表
         $list=$this->jmessage->userGetUserMessage($username,$count);
         if(array_key_exists("error",$list["body"]))
         {
             responseData(\StatusCode::ERROR,"获取失败");
+        }else{
+            $all=[username($userid),$username];
+            foreach($list["body"]["messages"] as $k=>$v)
+            {
+                if(!in_array($v["from_id"],$all) || !in_array($v["target_id"],$all))
+                {
+                    unset($list["body"]["messages"][$k]);
+                }
+            }
         }
         return $list["body"];
     }

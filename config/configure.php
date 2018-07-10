@@ -82,5 +82,5 @@ return [
     /**
      * 应用名称配置
      */
-    'applicationName'=>'云易装'
+    'applicationName'=>'云易装',
 ];

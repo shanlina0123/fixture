@@ -14,7 +14,7 @@ class UserCheck
     public function handle($request, Closure $next)
     {
         $userInfo = session('userInfo');
-        if( $userInfo == false )
+        if( $userInfo == false  )
         {
             return redirect()->route('login');
         }
@@ -30,62 +30,46 @@ class UserCheck
                  {
                      $where['id'] = $userInfo['id'];
                      $res = User::where($where)->first();
-                     session(['userInfo'=>$res]);
+                     $res->islook=$userInfo["islook"];
+                     session('userInfo',$res);
                  }
              }
 
              if( $userToken['type'] == 2 && $userToken['token'] != $userInfo->token )
              {
                  //用户修改了重要信息需要其他用户退出
-                 session(['userInfo'=>false]);
+                 session('userInfo',false);
+                 session(['userInfo' => false,"menueInfo"=>false]);
                  Cache::forget('userToken'.$userInfo['id']);
+                 Cache::tags(["Admin-RoleAuth","Admin-Menue"])->flush();
                  return redirect()->route('login');
              }
 
          }
 
-        //vip版本
+        //vip版本-不要放登录处理器
         $userInfo= session("userInfo");
-        $userInfo["vipmechanismid"]=Company::where("id",$userInfo["companyid"])->value("vipmechanismid");
-        session(['userInfo'=>$userInfo]);
-
-
-        //获取菜单+重置session
-        if($userInfo["isadmin"]==0)
-        {
-            $this->getMenue();
-        }
+        $userInfo["vipmechanismid"]=$this->getVipType($userInfo->companyid);
+        session('userInfo',$userInfo);
 
         return $next($request);
     }
 
 
+
     /***
-     * 获取权限菜单
+     * 获取VIP版本
+     * @param $admin_user
+     * @param string $tag
+     * @return mixed
      */
-    protected function  getMenue()
+    protected function getVipType($companyid,$tag="Admin-VipType")
     {
-        //获取菜单重置session
-        $admin_user= session('userInfo');
-        $roleid=$admin_user["roleid"];
-        //角色的权限
-        $roleFunc= FilterRoleFunction::where("roleid",$roleid)->get();
-        $funcids=array_pluck($roleFunc,"functionid");
-        $admin_user["funcids"]=$funcids;
-        //菜单权限
-        $menueList=$authControler = FilterFunction::select("id","menuname","url","pid","level")->whereIn("id", $funcids)->where("status",1)->where("ismenu",1)->get();
-        $menueArray=list_to_tree($menueList->toArray(),"id","pid","_child",0);
-        $admin_user["menue"]=$menueArray;
-
-        //控制器视野权限
-        if(count($roleFunc->toArray())>0){
-            $functionLook=count($roleFunc->toArray())>0?array_column($roleFunc->toArray(),"islook","functionid"):0;
-            $admin_user["islook"]=max($functionLook);
-        }
-
-
-        //重置session
-        session(['userInfo'=>$admin_user]);
+        $tagKey = base64_encode(mosaic("", $tag, $companyid));
+        return Cache::tags($tag)->remember($tagKey, config('configure.sCache'), function () use ($companyid) {
+            return Company::where("id",$companyid)->value("vipmechanismid");
+        });
 
     }
+
 }

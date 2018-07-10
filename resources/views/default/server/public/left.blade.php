@@ -1,8 +1,8 @@
 <div class="layui-side-scroll">
     <ul class="layui-nav layui-nav-tree" lay-filter="test">
         @if(session("userInfo")->isadmin==0)
-            @if(session("userInfo")->menue)
-                @foreach(session("userInfo")->menue as $k=>$menue)
+            @if(session("menueInfo")->menue)
+                @foreach(session("menueInfo")->menue as $k=>$menue)
                     <li class="layui-nav-item @if($menue["url"]) @if(url()->current() == route($menue["url"]) ) layui-this @endif @endif">
                         <a href="@if($menue["url"]){{route($menue["url"])}}@else javascript:; @endif">{{$menue["menuname"]}}</a>
                         @if(array_key_exists("_child",$menue))

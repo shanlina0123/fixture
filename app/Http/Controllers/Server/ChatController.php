@@ -75,7 +75,7 @@ class ChatController extends ServerBaseController
             responseData(\StatusCode::PARAM_ERROR,$validator->errors()->first(),"",$validator->errors());
         }
         //执行业务处理
-        $list=$this->chat_business->getUserMessageData($data["jguser"]);
+        $list=$this->chat_business->getUserMessageData($this->userInfo->id,$data["jguser"]);
         //接口返回结果
         responseData(\StatusCode::SUCCESS,"获取成功",$list);
 

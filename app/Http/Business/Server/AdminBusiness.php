@@ -266,7 +266,7 @@ class AdminBusiness extends ServerBase
             if ($rs !== false) {
                 DB::commit();
                 //删除缓存
-                Cache::tags(["Admin-PageList","Data-CateList"])->flush();
+                Cache::tags(["Admin-PageList","Data-CateList","Admin-RoleAuth","Admin-Menue"])->flush();
 
                 //修改token
                 Cache::put('userToken' . $row['id'], ['token' => create_uuid(), 'type' => 2], config('session.lifetime'));

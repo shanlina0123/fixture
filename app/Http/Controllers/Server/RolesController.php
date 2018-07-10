@@ -216,7 +216,7 @@ class RolesController extends ServerBaseController
         }
 
         //获取业务数据
-        $this->roles_business->updateAuth($roleid,$data);
+        $this->roles_business->updateAuth($roleid,$this->userInfo->companyid,$data);
         //接口返回结果
         responseData(\StatusCode::SUCCESS,"勾选成功");
     }
