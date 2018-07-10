@@ -118,7 +118,6 @@ class WxTicketController extends WxBaseController
             $pc = new \WXBizMsgCrypt( $token, $encodingAesKey, $appId );
             $msg = '';
             $errCode = $pc->decryptMsg($msg_sign, $timeStamp, $nonce, $postStr, $msg);
-            Log::error('======errCode======'.$errCode);
             if ($errCode == 0)
             {
                 $data = $this->xmlToArr( $msg );
@@ -126,8 +125,6 @@ class WxTicketController extends WxBaseController
                 $toUsername = $data['ToUserName'];
                 $msgType = trim($data['MsgType']);
                 //用户信息
-                Log::error('======fromUsername======'.$fromUsername);
-                Log::error('======msgType======'.$msgType);
                 //默认xml数据包
                 $sendtime = time();
                 $sendtextTpl = "<xml>
@@ -142,7 +139,6 @@ class WxTicketController extends WxBaseController
                 {
                     case 'event'://事件=
                         $event = trim($data['Event']);
-                        Log::error('======event======'.$event);
                         //全网发布
                         if($toUsername == "gh_8dad206e9538")
                         {
@@ -167,7 +163,7 @@ class WxTicketController extends WxBaseController
                         {
                             $msg = $data['Reason'];
                             $res = SmallProgram::where('authorizer_appid',$appid)->first();
-                            $res->codestatus = 5;//审核失败
+                            $res->codestatus = 4;//审核失败
                             $res->errmsg = $msg;
                             if( $res->save() )
                             {
@@ -178,7 +174,6 @@ class WxTicketController extends WxBaseController
                     case 'text':
                         $keyword = trim($data['Content']);
                         //文本信息
-                        Log::error('======keyword ======'.$keyword);
                         //全网发布 微信模推送给第三方平台方
                         if( $toUsername == "gh_8dad206e9538" && $keyword == "TESTCOMPONENT_MSG_TYPE_TEXT" )
                         {
@@ -208,7 +203,6 @@ class WxTicketController extends WxBaseController
             }
 
         }
-        Log::error('======postr没有数据包======');
         exit("fail");
     }
 

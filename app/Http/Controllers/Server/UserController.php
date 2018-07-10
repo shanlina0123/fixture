@@ -32,8 +32,8 @@ class UserController extends ServerBaseController
         if ($this->request->method() == "GET") {
             $user = User::where(['companyid' => $userInfo->companyid, 'id' => $userInfo->id])->first();
             //小程序审核通过放可微信绑定
-            $sourcecode = SmallProgram::where("companyid", $user->companyid)->value("sourcecode");
-            $user->sourcecode = $sourcecode;
+            $codestatus = SmallProgram::where("companyid", $user->companyid)->value("codestatus");
+            $user->codestatus = $codestatus;
             return view('server.user.info', compact('user'));
         } else {
             $this->request->validate(
@@ -227,32 +227,40 @@ class UserController extends ServerBaseController
     {
         $userInfo = $this->userInfo;
         //1单独部署
-        if (config('wxtype.type') == 1) {
-            if ($this->request->method() == "GET") {
+        if (config('wxtype.type') == 1)
+        {
+            if ($this->request->method() == "GET")
+            {
                 $res = SmallProgram::where(['companyid' => $userInfo->companyid])->first();
                 return view('server.user.authorize', compact('res'));
 
-            } else {
+            } else
+            {
                 $res = SmallProgram::where(['companyid' => $userInfo->companyid])->first();
-                if ($res) {
+                if ($res)
+                {
                     $res->union_wechat_mp_appid = $this->request->input('union_wechat_mp_appid');
                     $res->union_wechat_mp_appsecret = $this->request->input('union_wechat_mp_appsecret');
                     $res->template_id = $this->request->input('template_id');
-                    if ($res->save()) {
+                    if ($res->save())
+                    {
                         return redirect()->route('user-authorize')->with('msg', '微信公众号授权成功');
                     }
-                } else {
+                }else
+                {
                     $obj = new SmallProgram();
                     $obj->companyid = $userInfo->companyid;
                     $obj->union_wechat_mp_appid = $this->request->input('union_wechat_mp_appid');
                     $obj->union_wechat_mp_appsecret = $this->request->input('union_wechat_mp_appsecret');
                     $res->template_id = $this->request->input('template_id');
-                    if ($obj->save()) {
+                    if ($obj->save())
+                    {
                         return redirect()->route('user-authorize')->with('msg', '微信公众号授权成功');
                     }
                 }
             }
-        } else {
+        }else
+        {
             $data = $this->user->getAuthorizeStatus($userInfo);
             return view('server.user.userauthorize', compact('data'));
         }

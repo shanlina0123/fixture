@@ -208,6 +208,7 @@ class WxAuthorize
             if( !array_has( $info,'authorizer_info') )
             {
                 $wx->codestatus = 1;//完善信息
+                $wx->errmsg = '请登录小程序后台完善： 设置-》基本设置';//完善信息
                 $wx->save();
             }else
             {
@@ -233,11 +234,13 @@ class WxAuthorize
                     }else
                     {
                         $wx->codestatus = 2;//分类信息
+                        $wx->errmsg = '请登录小程序后台完善： 设置-》基本设置-》服务类目';//完善信息
                         $wx->save();
                     }
                 }else
                 {
                     $wx->codestatus = 1;//完善信息
+                    $wx->errmsg = '请登录小程序后台完善： 设置-》基本设置';//完善信息
                     $wx->save();
                 }
             }
@@ -257,7 +260,7 @@ class WxAuthorize
         $acctoken = $this->getUserAccessToken( $appID );
         $wx = SmallProgram::where(['authorizer_appid'=>$appID,'companyid'=>$companyID])->first();
         $url = 'https://api.weixin.qq.com/wxa/modify_domain?access_token='.$acctoken;
-        $post['action'] = 'add';
+        $post['action'] = 'set';
         $post['requestdomain'] = config('wxconfig.requestdomain');
         $post['wsrequestdomain'] = config('wxconfig.wsrequestdomain');
         $post['uploaddomain'] = config('wxconfig.uploaddomain');
@@ -273,11 +276,13 @@ class WxAuthorize
             }else
             {
                 $wx->codestatus = 3; //设置url
+                $wx->errmsg = '请登录小程序后台删除：设置-》开发设置-》服务器域名';//完善信息
                 $wx->save();
             }
         }else
         {
             $wx->codestatus = 3; //设置url
+            $wx->errmsg = '请登录小程序后台删除：设置-》开发设置-》服务器域名';//完善信息
             $wx->save();
         }
 
@@ -319,11 +324,13 @@ class WxAuthorize
             }else
             {
                 $wx->codestatus = 4;//上传代码
+                $wx->errmsg = '小程序代码上传失败';//完善信息
                 $wx->save();
             }
         }else
         {
             $wx->codestatus = 4;//上传代码
+            $wx->errmsg = '小程序代码上传失败';//完善信息
             $wx->save();
         }
 
@@ -630,6 +637,19 @@ class WxAuthorize
         }
         echo "";
 
+    }
+
+    /**
+     * 小程序体验二维码
+     */
+    public function getWxExperienceCodeImg($companyid)
+    {
+        $accessToken = $this->getUserAccessToken(null, $companyid);
+        if($accessToken)
+        {
+            $url="https://api.weixin.qq.com/wxa/get_qrcode?access_token=".$accessToken;
+            echo getCurl($url,0);
+        }
     }
 
     /**

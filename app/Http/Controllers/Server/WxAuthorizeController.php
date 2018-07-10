@@ -83,59 +83,6 @@ class WxAuthorizeController extends WxBaseController
 
 
     /**
-     * @param $appid
-     * @return \Illuminate\Http\RedirectResponse
-     * 手动提交代码
-     */
-    public function upCode( $appid )
-    {
-        $user = session('userInfo');
-        $isUploadCode = SmallProgram::where(['authorizer_appid'=>$appid,'companyid'=>$user->companyid])->first();
-        if( $isUploadCode )
-        {
-            if( $isUploadCode->uploadcode == 1 )
-            {
-                return redirect()->route('user-authorize')->with('msg','代码已提交不能重复提交');
-            }
-            $res = $this->wx->upCode( $appid );
-            if( $res )
-            {
-                return redirect()->route('user-authorize')->with('msg','代码提交成功');
-            }
-            return redirect()->route('user-authorize')->with('msg','代码提交失败');
-
-        }else
-        {
-            return redirect()->back()->with('msg','地址不存在');
-        }
-    }
-
-
-    /**
-     * @param $appid
-     * @return \Illuminate\Http\RedirectResponse
-     * 手动发布代码
-     */
-    public function upSourceCode( $appid )
-    {
-        $user = session('userInfo');
-        $isUploadCode = SmallProgram::where(['authorizer_appid'=>$appid,'companyid'=>$user->companyid])->first();
-        if( $isUploadCode )
-        {
-            if( $isUploadCode->sourcecode != 0 )
-            {
-                return redirect()->route('user-authorize')->with('msg',$isUploadCode->errmsg);
-            }
-            $res = $this->wx->upCodeLine( '', $appid );
-            return redirect()->route('user-authorize')->with('msg',$res->msg);
-
-        }else
-        {
-            return redirect()->back()->with('msg','地址不存在');
-        }
-    }
-
-    /**
      * @param $auditid
      * 查询审核代码的状态
      */
@@ -154,6 +101,35 @@ class WxAuthorizeController extends WxBaseController
         {
             responseData(\StatusCode::ERROR,'审核代码不存在');
         }
+    }
+
+
+    /**
+     * 手动设置小程序审核流程
+     */
+    public function submission()
+    {
+        $companyid = $this->userInfo->companyid;
+        $code = SmallProgram::where('companyid',$companyid)->first();
+        switch ( $code->codestatus )
+        {
+            case 1://设置基本信息
+                $this->wx->wxInfo($code->authorizer_appid,$companyid);
+                break;
+            case 2://设置基本信息
+            case 3://设置url
+                $this->wx->setUrl($code->authorizer_appid,$companyid);
+                break;
+            case 4://上传代码
+                $this->wx->upCode($code->authorizer_appid,$companyid);
+                break;
+            case 5://提交审核
+                $this->wx->upCodeLine($code->authorizer_appid,$companyid);
+                break;
+            default:
+                return redirect()->route('user-authorize');
+        }
+        return redirect()->route('user-authorize')->with('msg','更新完成');
     }
 
 }

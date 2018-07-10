@@ -242,4 +242,14 @@ class PublicController extends ServerBaseController
             $wx->createWxappCode($companyid,$type, $scene,$width);
         }
     }
+
+    /**
+     * 小程序体验二维码
+     */
+    public function getWxExperienceCodeImg()
+    {
+        $companyid = session('userInfo')->companyid;
+        $wx = new WxAuthorize();
+        $wx->getWxExperienceCodeImg($companyid);
+    }
 }
