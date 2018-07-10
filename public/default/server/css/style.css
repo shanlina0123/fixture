@@ -287,15 +287,16 @@
   text-align: center;
   padding: 10px 0;
 }
+
+.erweimawrap img {
+  width: 258px;
+  height: 258px;
+}
 .erweimawrap {
-  width: 144px;
+  /* width: 144px; */
   padding: 10px;
   margin: 20px auto;
   box-shadow: 0 3px 20px #d2d2d2;
-}
-.erweimawrap img {
-  width: 144px;
-  height: 144px;
 }
 .part3 {
   display: none;

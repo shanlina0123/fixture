@@ -37,7 +37,7 @@
                 <div class="backmessage"><img src="{{pix_asset('server/images/succ.png')}}">&nbsp;授权成功！</div>
                 @if( $data->codestatus < 6 )
                     <div class="backtext">
-                        <span>错误原因：</span>{{$data->errmsg}}</span>
+                        <span>错误原因：</span>{!! $data->errmsg !!}</span>
                     </div>
                 @endif
             @else
@@ -49,27 +49,27 @@
                         <li @if( $data->codestatus == 1 ) class="fail" @else  class="success" @endif >
                             <span class="number">1</span>
                             <span class="name">检测用户信息</span>
-                            @if( $data->codestatus == 1 ) <a href="{{route('wx-submission')}}" target="blank">已完善点击提交</a>@endif
+                            @if( $data->codestatus == 1 ) <a href="{{route('wx-submission')}}">已完善点击提交</a>@endif
                         </li>
                         <li @if( $data->codestatus == 2 ) class="fail" @elseif( $data->codestatus > 2 )  class="success" @endif>
                             <span class="number">2</span>
                             <span class="name">检测类目设置</span>
-                            @if( $data->codestatus == 2 ) <a href="{{route('wx-submission')}}" target="blank">已设置点击提交</a> @endif
+                            @if( $data->codestatus == 2 ) <a href="{{route('wx-submission')}}">已设置点击提交</a> @endif
                         </li>
                         <li @if( $data->codestatus == 3 ) class="fail" @elseif( $data->codestatus > 3 )  class="success" @endif >
                             <span class="number">3</span>
                             <span class="name">检测服务器域名</span>
-                            @if( $data->codestatus == 3 ) <a href="{{route('wx-submission')}}" target="blank">点击去设置</a> @endif
+                            @if( $data->codestatus == 3 ) <a href="{{route('wx-submission')}}">点击去设置</a> @endif
                         </li>
                         <li @if( $data->codestatus == 4 ) class="fail" @elseif( $data->codestatus > 4 )  class="success" @endif>
                             <span class="number">4</span>
                             <span class="name">上传小程序代码</span>
-                            @if( $data->codestatus == 4 ) <a href="{{route('wx-submission')}}" target="blank">点击上传</a> @endif
+                            @if( $data->codestatus == 4 ) <a href="{{route('wx-submission')}}">点击上传</a> @endif
                         </li>
                         <li @if( $data->codestatus == 5 ) class="fail" @elseif( $data->codestatus > 5 )  class="success" @endif>
                             <span class="number">5</span>
                             <span class="name">小程序代码审核</span>
-                            @if( $data->codestatus == 5 ) <a href="{{route('wx-submission')}}" target="blank">点击提交</a> @endif
+                            @if( $data->codestatus == 5 ) <a href="{{route('wx-submission')}}">点击提交</a> @endif
                         </li>
                         <li @if( $data->codestatus == 6 ) class="fail" @elseif( $data->codestatus > 6 )  class="success" @endif>
                             <span class="number">6</span>
@@ -117,7 +117,6 @@
     <script type="text/javascript">
         layui.use(['form','layer'], function() {
             var layer = layui.layer;
-        });
             /**
              * 页面提示
              */
@@ -139,6 +138,7 @@
                 $(".tabbtnwrap .li3").addClass("on").siblings().removeClass("on");
                 $(".tabcontentwrap .part3").css("display", "block").siblings().css("display", "none");
             })
+        });
         /**
          * 表单验证
          */

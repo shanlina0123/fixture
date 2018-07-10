@@ -260,7 +260,7 @@ class WxAuthorize
         $acctoken = $this->getUserAccessToken( $appID );
         $wx = SmallProgram::where(['authorizer_appid'=>$appID,'companyid'=>$companyID])->first();
         $url = 'https://api.weixin.qq.com/wxa/modify_domain?access_token='.$acctoken;
-        $post['action'] = 'add';
+        $post['action'] = 'set';
         $post['requestdomain'] = config('wxconfig.requestdomain');
         $post['wsrequestdomain'] = config('wxconfig.wsrequestdomain');
         $post['uploaddomain'] = config('wxconfig.uploaddomain');

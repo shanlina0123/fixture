@@ -116,6 +116,7 @@ class WxAuthorizeController extends WxBaseController
             case 1://设置基本信息
                 $this->wx->wxInfo($code->authorizer_appid,$companyid);
                 break;
+            case 2://设置基本信息
             case 3://设置url
                 $this->wx->setUrl($code->authorizer_appid,$companyid);
                 break;
