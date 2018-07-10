@@ -624,3 +624,9 @@
   line-height: 30px;
   padding: 0 10px;
 }
+
+.channelBtn{
+  background-color: #f4645f!important;
+  padding-left: 35px!important;
+  padding-right: 35px!important;
+}

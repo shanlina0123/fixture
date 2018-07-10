@@ -84,7 +84,9 @@
                 <textarea placeholder="请输入内容" name="followcontent" class="layui-textarea"></textarea>
             </div>
         </div>
-        <div class="describe"><button type="button" id="btn_submit" class="layui-btn ">立即提交</button></div>
+        <div class="describe">
+            <button type="button" id="btn_submit" class="layui-btn ">立即提交</button>
+            <button type="button" class="layui-btn  channelBtn" >取消</button></div>
     </form>
     <div id="list">
 

@@ -55,7 +55,7 @@
     </div>
 @endsection
 @section('other')
-    <!--新增门店弹窗-->
+    <!--新增角色弹窗-->
     <div class="addWrap popWrap">
         <form class="layui-form"  id="addForm"  action="{{route('roles-store')}}" method="post" >
             <div class="layui-form-item">
@@ -66,10 +66,11 @@
             </div>
             <div class="layui-form-item popSubmitBtn">
                 <button type="button" class="layui-btn ajaxSubmit" id="add-btn">立即提交</button>
+                <button type="button" class="layui-btn  channelBtn" >取消</button>
             </div>
         </form>
     </div>
-    <!--编辑门店弹窗-->
+    <!--编辑角色弹窗-->
     <div class="editWrap popWrap">
         <form class="layui-form" id="editForm"  action="{{route('roles-update','uuid')}}" method="put">
             <div class="layui-form-item">
@@ -80,6 +81,7 @@
             </div>
             <div class="layui-form-item popSubmitBtn">
                 <button type="button" class="layui-btn ajaxSubmit" id="edit-btn">立即提交</button>
+                <button type="button" class="layui-btn  channelBtn" >取消</button>
             </div>
         </form>
     </div>
