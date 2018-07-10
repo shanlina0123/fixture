@@ -69,7 +69,8 @@ Route::group(['namespace' => 'Server'], function () {
 
         //二维码
         Route::get('wx-code/{type}/{scene}/{width}', 'PublicController@getWxCodeImg')->name('wx-code');
-
+        //体验小程序二维码
+        Route::get('wx-experience-code', 'PublicController@getWxExperienceCodeImg')->name('wx-experience-code');
         //中间件权限认证路由
         Route::group(['middleware' => ['checkAuth']], function () {
 
@@ -78,14 +79,10 @@ Route::group(['namespace' => 'Server'], function () {
             Route::match(['get', 'post'], 'company/setting', 'CompanyController@companySetting')->name('company-setting');  //公司信息设置
             //微信小程序认证页面
             Route::any('user/authorize', 'UserController@userAuthorize')->name('user-authorize');
-            //微信小程序代码管理
-            Route::get('wx/upcode/{appid}', 'WxAuthorizeController@upCode')->name('wx-upcode');//提交代码
-            Route::get('wx/upsourcecode/{appid}', 'WxAuthorizeController@upSourceCode')->name('wx-upsource-code');//发布代码
-            Route::get('wx/auditid', 'WxAuthorizeController@auditid');//发布代码审核状态查询
-
+            //微信小程序代码管理手动
+            Route::get('wx/submission', 'WxAuthorizeController@submission')->name('wx-submission');
             //微信公众号授权页面
             Route::any('user/mpauthorize', 'UserController@userMpAuthorize')->name('user-mpauthorize');
-
             //下面的是其他用户自定义权限
             //工地
             Route::resource('site', 'SiteController');//工地管理

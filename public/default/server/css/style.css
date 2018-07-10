@@ -171,6 +171,167 @@
 .bottomnotice .noticeitem p {
   line-height: 25px;
 }
+/*小程序授权页面*/
+.powerwrap {
+  width: 700px;
+}
+.tabbtnwrap {
+  background-color: #e2e2e2;
+  border-top: 1px solid #e2e2e2;
+  border-bottom: 1px solid #e2e2e2;
+}
+.tabbtnwrap li {
+  float: left;
+  width: 233px;
+  text-align: center;
+}
+.tabbtnwrap li.on {
+  background-color: #fff;
+}
+.tabbtnwrap li > a {
+  display: block;
+  padding: 10px;
+  color: #333;
+}
+.tabbtnwrap li > a:hover {
+  color: #333;
+}
+.tabcontentwrap {
+  border: 1px solid #e2e2e2;
+  border-top: none;
+  padding: 10px 15px;
+}
+.bottomnotice .warmnotice {
+  font-size: 14px;
+}
+.bottomnotice .noticetext {
+  font-size: 20px;
+  padding: 15px 0;
+}
+.bottomnotice .noticeitem p {
+  line-height: 25px;
+}
+.bottombtn {
+  text-align: center;
+  padding: 25px 0 20px 0;
+}
+.bottombtn button {
+  margin-left: 0;
+}
+.bottombtn .spacibtn {
+  height: 30px!important;
+}
+.part2 {
+  display: none;
+}
+.part2 .tips {
+  font-size: 16px;
+  text-align: center;
+  margin-top: 20px;
+}
+.part2 .backmessage {
+  height: 30px;
+  line-height: 30px;
+  margin: 10px auto;
+  font-size: 16px;
+  text-align: center;
+}
+.part2 .settingwrap {
+  width: 230px;
+  padding-left: 10px;
+  margin: 20px auto;
+}
+.part2 .settingwrapul {
+  border-left: 2px solid #bfbfbf;
+}
+.part2 .settingwrapul li {
+  margin-top: 20px;
+  font-size: 14px;
+  margin-left: -12px;
+}
+.part2 .settingwrapul li .number {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 20px;
+  text-align: center;
+  line-height: 20px;
+  color: #fff;
+  font-size: 12px;
+  background-color: #bfbfbf;
+}
+.part2 .settingwrapul li .name {
+  margin-left: 10px;
+}
+.part2 .settingwrapul li a {
+  color: #1E9FFF;
+  margin-left: 10px;
+}
+.part2 .settingwrapul li a:hover {
+  color: #1E9FFF;
+}
+.part2 .settingwrapul .success {
+  color: #009688;
+}
+.part2 .settingwrapul .success .number {
+  background-color: #009688;
+}
+.part2 .settingwrapul .fail {
+  color: #fe161b;
+}
+.part2 .settingwrapul .fail .number {
+  background-color: #fe161b;
+}
+.part2 .backtext {
+  color: #fe161b;
+  text-align: center;
+  padding: 10px 0;
+}
+.erweimawrap {
+  width: 144px;
+  padding: 10px;
+  margin: 20px auto;
+  box-shadow: 0 3px 20px #d2d2d2;
+}
+.erweimawrap img {
+  width: 144px;
+  height: 144px;
+}
+.part3 {
+  display: none;
+}
+.part3 .uploadmsg {
+  border: 1px solid #e2e2e2;
+  width: 500px;
+  margin: 20px auto 0 auto;
+}
+.part3 .uploadmsg li {
+  text-align: center;
+  height: 30px;
+  line-height: 30px;
+  border-top: 1px solid #e2e2e2;
+}
+.part3 .uploadmsg li:first-child {
+  border-top: none;
+}
+.part4 {
+  display: none;
+}
+.part4 .erweimawrapul {
+  text-align: center;
+  padding-top: 20px;
+}
+.part4 .erweimawrapul li {
+  display: inline-block;
+  text-align: center;
+  margin-left: 20px;
+}
+.part4 .erweimawrapul li:first-child {
+  margin-left: 0;
+}
+.part4 .erweimawrapul li p {
+  font-size: 14px;
+}
 /*抽奖预览页面*/
 .contentinner {
   width: 343px;
