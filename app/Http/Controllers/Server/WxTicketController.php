@@ -156,9 +156,7 @@ class WxTicketController extends WxBaseController
                         //代码审核结果
                         if( $event == 'weapp_audit_success' )
                         {
-                            $sourcecode = 1;
-                            $msg = '审核通过';
-                            $res = $this->wxAuthorize->wxExamine($appid,$sourcecode,$msg);
+                            $res = $this->wxAuthorize->wxaRelease($appid);
                             if( $res )
                             {
                                 exit("success");
@@ -167,10 +165,11 @@ class WxTicketController extends WxBaseController
 
                         if( $event == 'weapp_audit_fail' )
                         {
-                            $sourcecode = 3;
                             $msg = $data['Reason'];
-                            $res = $this->wxAuthorize->wxExamine($appid,$sourcecode,$msg);
-                            if( $res )
+                            $res = SmallProgram::where('authorizer_appid',$appid)->first();
+                            $res->codestatus = 5;//审核失败
+                            $res->errmsg = $msg;
+                            if( $res->save() )
                             {
                                 exit("success");
                             }

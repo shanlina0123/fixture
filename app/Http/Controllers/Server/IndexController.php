@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers\Server;
 
+use App\Http\Business\Common\WxAlone;
+use App\Http\Business\Common\WxAuthorize;
 use App\Http\Controllers\Common\ServerBaseController;
+use Illuminate\Http\Request;
+
 class IndexController extends ServerBaseController
 {
 
@@ -10,9 +14,8 @@ class IndexController extends ServerBaseController
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * 入口文件
      */
-    public function index()
+    public function index(Request $request)
     {
-        //dd(http_build_query(['u'=>1,'p'=>2,'s'=>3,'t'=>1]));
         return view('server.index.index');
     }
 

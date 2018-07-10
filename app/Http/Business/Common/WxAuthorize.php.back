@@ -29,6 +29,7 @@ class WxAuthorize
     }
 
 
+
     /**
      * @return string
      * 获取全局token
@@ -131,11 +132,100 @@ class WxAuthorize
 
 
     /**
+     * @param $data
+     * @param $info
+     * @param $setUrl
      * @param $code
      * @return bool
      * 授权回调
      */
     public function WxAuthorizeBack( $code )
+    {
+        try{
+
+            $url = 'https://api.weixin.qq.com/cgi-bin/component/api_query_auth?component_access_token='.$this->component_access_token;
+            $post['component_appid'] = $this->appid;
+            $post['authorization_code'] = $code;
+            $data = wxPostCurl( $url, $post );
+            if( $data )
+            {
+                $data = json_decode($data,true);
+                if( array_has( $data,'authorization_info') )
+                {
+                    $data = $data['authorization_info'];
+                    //用户信息
+                    $info = $this->wxInfo( $data['authorizer_appid'] );
+                    //设置小程序地址
+                    $setUrl = $this->setUrl( $data['authorizer_access_token']  );
+                    //提交代码
+                    $upCode = $this->upCode( $data['authorizer_appid'], $data['authorizer_access_token'] );
+                    //写入数据库
+                    $wx = SmallProgram::where(['authorizer_appid'=>$data['authorizer_appid']])->first();
+                    if( !$wx )
+                    {
+                        $companyID = session('userInfo')->companyid;
+                        $wx = new SmallProgram();
+                        $wx->companyid = $companyID;
+                    }
+                    $wx->authorization_info = json_encode($data);
+                    $wx->authorizer_appid = $data['authorizer_appid'];
+                    $wx->authorizer_access_token = $data['authorizer_access_token'];
+                    $wx->expires_in = time()+(int)$data['expires_in'];
+                    $wx->authorizer_refresh_token = $data['authorizer_refresh_token'];
+                    $wx->func_info = json_encode($data['func_info']);
+                    $wx->status = 0;
+                    //用户信息
+                    if( $info )
+                    {
+                        $wx->authorizer_info = json_encode($info);
+                        $wx->nick_name =  $info['nick_name'];
+                        $wx->head_img = array_has($info,'head_img')?$info['head_img']:'';
+                        $wx->qrcode_url = array_has($info,'qrcode_url')?$info['qrcode_url']:'';
+                        $wx->verify_type_info =  $info['verify_type_info']['id'];
+                        $wx->user_name =  $info['user_name'];
+                        $wx->principal_name = $info['principal_name'];
+                    }
+                    $wx->seturl = $setUrl?1:0;
+
+                    //提交审核
+                    if( $upCode == true )
+                    {
+                        $wx->uploadcode = 1;
+                        $sourcecode = $this->upCodeLine( $data['authorizer_access_token'] );
+                        //代码推送
+                        if( $sourcecode->status == 1 )
+                        {
+                            $wx->sourcecode = 2;
+                            $wx->auditid = $sourcecode->auditid;
+                            $wx->errmsg = $sourcecode->msg;
+
+                        }else
+                        {
+                            $wx->sourcecode = 0;
+                            $wx->errmsg = $sourcecode->msg;
+                        }
+
+                    }else
+                    {
+                        $wx->uploadcode = 0;
+                        $wx->sourcecode = 0;
+                        $wx->errmsg = '代码提交失败';
+                    }
+                    return $wx->save();
+                }else
+                {
+                    return false;
+                }
+            }else
+            {
+               return false;
+            }
+        }catch ( Exception $e )
+        {
+            return false;
+        }
+    }
+    public function WxAuthorizeBack1( $code )
     {
         try{
 
@@ -167,14 +257,7 @@ class WxAuthorize
                     if($wx->save())
                     {
                         //执行授权成功的业务
-                        //1.检查基本信息
-                        //2.检查分类
-                        //3.设置URl
-                        //4.提交代码
-                        //5.提交审核
-                        //6.发布
-                        $this->wxInfo( $data['authorizer_appid'],$companyID );
-                        return true;
+
                     }
                     return false;
                 }else
@@ -190,74 +273,74 @@ class WxAuthorize
             return false;
         }
     }
+    /**
+     * 设置分类信息
+     */
+    public function setCategory($appid)
+    {
+        $access_token = $this->getUserAccessToken($appid);
+        //1.查询
+        $url = 'https://api.weixin.qq.com/wxa/get_category?access_token='.$access_token;
+        $data = getCurl($url,0);
+        if( $data )
+        {
+            $data = json_decode($data,true);
+            if($data['errcode'] == 0 )
+            {
+                $category_list = $data['category_list'];
+                if( count($category_list) )
+                {
+                    foreach ( $category_list as $row )
+                    {
+                        //循环删除分类
+                        $delUrl = 'https://api.weixin.qq.com/cgi-bin/wxopen/deletecategory?access_token='.$access_token;
+                        $delPost['first'] = $row['first_id'];
+                        $delPost['Second'] = $row['second_id'];
+                        wxPostCurl( $delUrl, $delPost );
+                    }
+                }
+                //添加分类
+                $addUrl = 'https://api.weixin.qq.com/cgi-bin/wxopen/addcategory?access_token='.$access_token;
+                $addPost['categories']['first'] = 287;
+                $addPost['categories']['second'] = 612;
+                $addPost['categories']['certicates'] = ['key'=>'信息查询','value'=>''];
+                $add = wxPostCurl( $addUrl, $addPost );
+                dd($add);
+            }
+        }
+        //2.删除
+        //3.添加
+    }
 
     /**
      * 小程序信息
      */
-    public function wxInfo( $authorizer_appid,$companyID )
+    public function wxInfo( $authorizer_appid )
     {
-        //写入数据库
-        $wx = SmallProgram::where(['authorizer_appid'=>$authorizer_appid,'companyid'=>$companyID])->first();
         $url = 'https://api.weixin.qq.com/cgi-bin/component/api_get_authorizer_info?component_access_token='.$this->component_access_token;
         $post['component_appid'] = $this->appid;
         $post['authorizer_appid'] = $authorizer_appid;
         $data = wxPostCurl( $url, $post );
         if( $data )
         {
-            $info = json_decode($data,true);
-            if( !array_has( $info,'authorizer_info') )
+            $data = json_decode($data,true);
+            if( !array_has( $data,'authorizer_info') )
             {
-                $wx->codestatus = 1;//完善信息
-                $wx->save();
-            }else
-            {
-                //写入信息
-                $info = $info['authorizer_info'];
-                $wx->authorizer_info = json_encode($info);
-                $wx->nick_name =  $info['nick_name'];
-                $wx->head_img = array_has($info,'head_img')?$info['head_img']:'';
-                $wx->qrcode_url = array_has($info,'qrcode_url')?$info['qrcode_url']:'';
-                $wx->verify_type_info =  $info['verify_type_info']['id'];
-                $wx->user_name =  $info['user_name'];
-                $wx->principal_name = $info['principal_name'];
-                if( $wx->save() )
-                {
-                    //2.去检查分类信息
-                    $acctoken = $this->getUserAccessToken( $authorizer_appid );
-                    $Category = $this->getWxUserCategory($acctoken);
-                    //存在类目
-                    if( $Category && is_array($Category) && count($Category) )
-                    {
-                         //3.设置URl
-                         $this->setUrl($authorizer_appid,$companyID);
-                    }else
-                    {
-                        $wx->codestatus = 2;//分类信息
-                        $wx->save();
-                    }
-                }else
-                {
-                    $wx->codestatus = 1;//完善信息
-                    $wx->save();
-                }
+                $data = false;
             }
-        }else
-        {
-            $wx->codestatus = 1;//完善信息
-            $wx->save();
+            return $data['authorizer_info'];
         }
+        return false;
     }
 
 
     /**
      * 设置小程序地址
      */
-    public function setUrl( $appID,$companyID )
+    public function setUrl( $acctoken )
     {
-        $acctoken = $this->getUserAccessToken( $appID );
-        $wx = SmallProgram::where(['authorizer_appid'=>$appID,'companyid'=>$companyID])->first();
         $url = 'https://api.weixin.qq.com/wxa/modify_domain?access_token='.$acctoken;
-        $post['action'] = 'add';
+        $post['action'] = 'set';
         $post['requestdomain'] = config('wxconfig.requestdomain');
         $post['wsrequestdomain'] = config('wxconfig.wsrequestdomain');
         $post['uploaddomain'] = config('wxconfig.uploaddomain');
@@ -268,27 +351,18 @@ class WxAuthorize
             $data = json_decode($data,true);
             if( $data['errcode'] == 0 )
             {
-                //4.提交代码
-                $this->upCode( $appID,$companyID );
-            }else
-            {
-                $wx->codestatus = 3; //设置url
-                $wx->save();
+                return true;
             }
-        }else
-        {
-            $wx->codestatus = 3; //设置url
-            $wx->save();
+            return false;
         }
-
+        return false;
     }
-
 
 
     /**
      * ---------------------------------------------------------
      *
-     *  代码操作
+     *  发布代码
      *
      * ---------------------------------------------------------
      *
@@ -296,14 +370,18 @@ class WxAuthorize
 
     /**
      * 上传代码
+     * $appid 授权用户的appid
      */
-    public function upCode($appID,$companyID)
+    public function upCode( $appid, $token=null, $anual=false )
     {
-        $acctoken = $this->getUserAccessToken( $appID );
-        $wx = SmallProgram::where(['authorizer_appid'=>$appID,'companyid'=>$companyID])->first();
-        $url = 'https://api.weixin.qq.com/wxa/commit?access_token='.$acctoken;
-        $ext_json['extAppid'] = $appID;
-        $ext_json['ext'] = ['appid'=> $appID ];
+        if( !$token )
+        {
+            $token = $this->getUserAccessToken($appid);
+            $anual = true;
+        }
+        $url = 'https://api.weixin.qq.com/wxa/commit?access_token='.$token;
+        $ext_json['extAppid'] = $appid;
+        $ext_json['ext'] = ['appid'=> $appid ];
         $post['template_id'] = config('wxconfig.template_id'); //模板id
         $post['ext_json'] = json_encode($ext_json,JSON_FORCE_OBJECT);
         $post['user_version'] = config('wxconfig.version');
@@ -314,99 +392,148 @@ class WxAuthorize
             $data = json_decode($data,true);
             if( $data['errcode'] == 0 )
             {
-                //5.提交代码审核
-               $this->upCodeLine($appID,$companyID);
-            }else
-            {
-                $wx->codestatus = 4;//上传代码
-                $wx->save();
+                if( $anual )
+                {
+                     return $this->setCodeStatus( $appid );
+                }
+                return true;
             }
-        }else
-        {
-            $wx->codestatus = 4;//上传代码
-            $wx->save();
+            return false;
         }
-
+        return false;
     }
 
 
     /**
-     * 5.提交代码审核
+     * @param $token
+     * 发布代码
      */
-    public function upCodeLine( $appID,$companyID )
+    public function upCodeLine( $token, $appid=null, $anual=false )
     {
-        $acctoken = $this->getUserAccessToken( $appID );
-        $wx = SmallProgram::where(['authorizer_appid'=>$appID,'companyid'=>$companyID])->first();
-        $item = $this->getWxUserCategory( $acctoken );
+        //$appid为真就表示手动提交的
+        if( $appid )
+        {
+            $token = $this->getUserAccessToken($appid);
+            $anual = true;
+        }
+        $obj = new \stdClass();
+        $item = $this->getWxUserCategory( $token );
         if( $item == false || count($item) == 0 )
         {
-            $wx->codestatus = 2;//分类信息
-            $wx->save();
-
-        }else
-        {
-            $url = 'https://api.weixin.qq.com/wxa/submit_audit?access_token='.$acctoken;
-            $post['item_list'] = [
+            $obj->status = 0;
+            $obj->msg = '请完善小程序用户信息';
+            return $obj;
+        }
+        $url = 'https://api.weixin.qq.com/wxa/submit_audit?access_token='.$token;
+        $post['item_list'] = [
                 ['address'=>config('wxconfig.address'),
-                    'tag'=>config('wxconfig.tag'),
-                    'first_class'=>$item[0]['first_class'],
-                    'second_class'=>$item[0]['second_class'],
-                    'first_id'=>$item[0]['first_id'],
-                    'second_id'=>$item[0]['second_id'],
-                    'title'=>config('wxconfig.title')
-                ]
-            ];
-            $data = wxPostCurl($url,$post);
-            //防止data为空
-            $msg = '提交审核失败';
-            if( $data )
+                'tag'=>config('wxconfig.tag'),
+                'first_class'=>$item[0]['first_class'],
+                'second_class'=>$item[0]['second_class'],
+                'first_id'=>$item[0]['first_id'],
+                'second_id'=>$item[0]['second_id'],
+                'title'=>config('wxconfig.title')
+                 ]
+        ];
+        $data = wxPostCurl($url,$post);
+        if( $data )
+        {
+            $data = json_decode($data,true);
+            if($data['errcode'] == 0 )
             {
-                $data = json_decode($data,true);
-                if($data['errcode'] == 0 )
+                //$anual为真就表示手动提交的
+                if( $anual )
                 {
-                    //提交审核
-                    $wx->codestatus = 6;//提交代码审核
-                    $wx->errmsg = '审核中。。。';//提交代码审核中
-                    $wx->save();
-                }else
-                {
-                    switch ( (int)$data['errcode'] )
-                    {
-                        case -1:
-                            $msg = '系统繁忙';
-                            break;
-                        case 85009:
-                            $msg = '已经有正在审核的版本';
-                            break;
-                        case 85077:
-                            $msg = '小程序类目信息失效（类目中含有官方下架的类目，请重新选择类目）';
-                            break;
-                        case 86002:
-                            $msg = '小程序还未设置昵称、头像、简介。请先设置完后再重新提交。';
-                            break;
-                        case 85085:
-                            $msg = '近7天提交审核的小程序数量过多，请耐心等待审核完毕后再次提交';
-                            break;
-                        default:
-                            $msg = '提交审核失败';
-                            break;
-                    }
-                    $wx->codestatus = 5;//提交代码审核
-                    $wx->errmsg = $msg;//提交代码审核
-                    $wx->save();
+                    $obj->status = 1;
+                    $obj->msg = '提交成功';
+                    SmallProgram::where('authorizer_appid',$appid)->update(['sourcecode'=>2,'errmsg'=>'审核中','auditid'=>$data['auditid']]);
+                    return $obj;
                 }
+                $obj->status = 1;
+                $obj->auditid = $data['auditid'];
+                $obj->msg = '审核中';
+                return $obj;
             }else
             {
-                $wx->codestatus = 5;//提交代码审核
-                $wx->errmsg = $msg;//提交代码审核
-                $wx->save();
+                $obj->status = 0;
+                switch ( (int)$data['errcode'] )
+                {
+                    case -1:
+                         $obj->msg = '系统繁忙';
+                         break;
+                    case 85009:
+                         $obj->msg = '已经有正在审核的版本';
+                         break;
+                    case 85077:
+                         $obj->msg = '小程序类目信息失效（类目中含有官方下架的类目，请重新选择类目）';
+                         break;
+                    case 86002:
+                        $obj->msg = '小程序还未设置昵称、头像、简介。请先设置完后再重新提交。';
+                        break;
+                    case 85085:
+                        $obj->mg = '近7天提交审核的小程序数量过多，请耐心等待审核完毕后再次提交';
+                        break;
+                    default:
+                        $obj->msg = '发布失败';
+                        break;
+                }
+                if( $anual )
+                {
+                    SmallProgram::where('authorizer_appid',$appid)->update(['errmsg'=>$obj->msg]);
+                }
+                return $obj;
             }
         }
+        $obj->status = 0;
+        $obj->msg = '发布失败';
+        return $obj;
+    }
+    /**
+     * 修改代码状态
+     */
+    public function setCodeStatus( $appid )
+    {
+        $res = SmallProgram::where('authorizer_appid',$appid)->first();
+        if( $res )
+        {
+            $res->uploadcode = 1;
+            if( $res->save() )
+            {
+                return true;
+            }
+            return false;
+            return false;
+        }
+        return false;
     }
 
     /**
      * @param $appid
-     * 发布审核完成的代码
+     * @param $sourcecode
+     * @param $msg
+     * @return bool
+     * 审核结果
+     */
+    public function wxExamine( $appid,$sourcecode,$msg )
+    {
+        $res = SmallProgram::where('authorizer_appid',$appid)->first();
+        if( $res )
+        {
+            $res->sourcecode = $sourcecode;
+            $res->errmsg = $msg;
+            if( $res->save() )
+            {
+                $this->wxaRelease( $appid );
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    /**
+     * @param $appid
+     * 发布审核的代码
      */
     public function wxaRelease( $appid )
     {
@@ -419,22 +546,11 @@ class WxAuthorize
         {
             //更新数据库
             $res = SmallProgram::where('authorizer_appid',$appid)->first();
-            $res->codestatus = 7;//发布上线
+            $res->sourcecode = 3;//发布上线
             $res->errmsg = '小程序发布成功';//发布上线
-            return $res->save();
+            $res->save();
         }
-        return false;
     }
-
-
-    /**
-     * ------------------------------
-     *
-     * 检查操作
-     *
-     * ------------------------------
-     */
-
 
     /**
      * @param $token
@@ -509,10 +625,11 @@ class WxAuthorize
         $res = SmallProgram::where($where)->select('authorizer_appid','expires_in','authorizer_refresh_token','authorizer_access_token')->first();
         if( $res )
         {
+            //刷新token
+            return $this->refreshUserToken( $res->authorizer_appid,$res->authorizer_refresh_token );
             if( $res->expires_in <= time() )
             {
-                //刷新token
-                return $this->refreshUserToken( $res->authorizer_appid,$res->authorizer_refresh_token );
+
             }
             return $res->authorizer_access_token;
         }
@@ -557,14 +674,6 @@ class WxAuthorize
         return $authorizer_access_token;
     }
 
-
-
-    /**
-     *
-     * -------------------------------------
-     *  二维码
-     * -------------------------------------
-     */
     /**
      * @param $companyid
      * @param $type
