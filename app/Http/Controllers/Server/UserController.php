@@ -32,8 +32,8 @@ class UserController extends ServerBaseController
         if ($this->request->method() == "GET") {
             $user = User::where(['companyid' => $userInfo->companyid, 'id' => $userInfo->id])->first();
             //小程序审核通过放可微信绑定
-            $sourcecode = SmallProgram::where("companyid", $user->companyid)->value("sourcecode");
-            $user->sourcecode = $sourcecode;
+            $codestatus = SmallProgram::where("companyid", $user->companyid)->value("codestatus");
+            $user->codestatus = $codestatus;
             return view('server.user.info', compact('user'));
         } else {
             $this->request->validate(
