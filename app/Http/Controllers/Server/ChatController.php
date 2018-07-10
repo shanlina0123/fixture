@@ -51,7 +51,7 @@ class ChatController extends ServerBaseController
     public  function  getListData()
     {
         //业务调用
-        $list = $this->chat_business->getListData($this->userInfo->id,$this->userInfo->jguser);
+        $list = $this->chat_business->getListData($this->userInfo->id,$this->userInfo->nickname,$this->userInfo->faceimg,$this->userInfo->token,$this->userInfo->jguser);
         return responseCData(\StatusCode::SUCCESS,"",$list);
     }
 
@@ -74,6 +74,7 @@ class ChatController extends ServerBaseController
         if ($validator->fails()) {
             responseData(\StatusCode::PARAM_ERROR,$validator->errors()->first(),"",$validator->errors());
         }
+
         //执行业务处理
         $list=$this->chat_business->getUserMessageData($this->userInfo->id,$data["jguser"]);
         //接口返回结果

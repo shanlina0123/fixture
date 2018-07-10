@@ -175,7 +175,14 @@ class AdminBusiness extends ServerBase
 
                 //TODO::注册极光账号
                 $jmessage =  new JmessageBusiness();
-                $jmessage->userRegister(username($adminid),null,$data["nickname"]);
+                $newUser=$jmessage->userRegister(username($adminid),null,$data["nickname"]);
+                //检测是否注册成功
+                if(!array_key_exists("error", $newUser["body"][0]))
+                {
+                    //更新user
+                    User::where(['id'=>$adminid])->update(["jguser"=>username($adminid)]);
+                }
+
 
             } else {
                 DB::rollBack();

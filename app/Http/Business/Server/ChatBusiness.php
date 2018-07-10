@@ -25,28 +25,40 @@ class ChatBusiness extends ServerBase
     /***
      * 获取用户信息+好友列表
      */
-    public function getListData($userid)
+    public function getListData($userid,$nickname,$faceimg,$token,$jguser)
     {
         $defaultFaceimg=config("jmessage.defaultfaceimg");
         //极光账号
-        //$username=username($userid);
-        $username= User::where(['id'=>$userid])->value("jguser");
+        $username=username($userid);
         //检查是否有管理员账号
-        if(!$username)
+        if(!$jguser)
         {
-            $newUser=$this->jmessage->userRegister($username);
+            $newUser=$this->jmessage->userRegister($username,null,$nickname,["faceimg"=>$faceimg]);
             //检测是否注册成功
-            if (!array_key_exists("error", $newUser["body"][0])) {
-                $token=create_uuid();
-                //更新user
-                User::where(['id'=>$userid])->update(["jguser"=>username($userid),"token"=>$token]);
-                //重置session
-                Cache::put('userToken'.$userid,['token'=>$token,'type'=>1],config('session.lifetime'));
-            }
+                if(!array_key_exists("error", $newUser["body"][0]))
+                {
+                    //更新user
+                    User::where(['id'=>$userid])->update(["jguser"=>username($userid)]);
+                    //重置session
+                    Cache::put('userToken'.$userid,['token'=>$token,'type'=>1],config('session.lifetime'));
+                    $userInfo=session("userInfo");
+                    $userInfo["jguser"]=username($userid);
+                    session("userInfo",$userInfo);
+                }else{
+                    if( $newUser["body"][0]["error"]["code"]==899001)
+                    {
+                        User::where(['id'=>$userid])->update(["jguser"=>username($userid)]);
+                        //重置session
+                        Cache::put('userToken'.$userid,['token'=>$token,'type'=>1],config('session.lifetime'));
+                        $userInfo=session("userInfo");
+                        $userInfo["jguser"]=username($userid);
+                        session("userInfo",$userInfo);
+                    }
+                }
             $list["friend"]=[];
         }else{
             //好友列表
-            $friend=$this->jmessage->friendListAll($username);
+            $friend=$this->jmessage->friendListAll($jguser);
             $friendUsers=array_column($friend["body"],"username",null);
 
             $listFriend=User::whereIn("jguser",$friendUsers)->select("jguser","faceimg")->get()->toArray();
