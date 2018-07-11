@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Http\Business\Server\WxTempletBusiness;
+use App\Http\Business\Server\WeChatPublicNumberBusiness;
 use App\Http\Model\Company\Company;
 use App\Http\Model\Log\Notice;
 use App\Http\Model\Site\Site;
@@ -86,7 +86,7 @@ class EventServiceProvider extends ServiceProvider
                     switch (  (int)$event['sourceid'] )
                     {
                         case 1:
-                            $site = Site::where('id',$event['siteid'])->select('cityid','storeid')->first();
+                            $site = Site::where('id',$event['siteid'])->select('cityid','storeid','createuserid')->first();
                             $obj->title = '预约参观';
                             $obj->content = $notice_type?str_replace('【客户姓名】',$event['name'],config('template.7')):str_replace('【公司简称】',$name,config('template.3'));
                             $obj->content = str_replace('【工地】',$event['sname'],$obj->content);
@@ -94,6 +94,7 @@ class EventServiceProvider extends ServiceProvider
                             $obj->cityid = $site->cityid;
                             $obj->storeid = $site->storeid;
                             $event['title'] = $obj->title;
+                            $event['createuserid'] = $obj->createuserid;
                             break;
                         case 2:
                             $obj->title = '免费量房';
@@ -110,12 +111,9 @@ class EventServiceProvider extends ServiceProvider
                         case 5:
                             break;
                     }
-                    if( array_has($event,'formId') )
-                    {
-                        //发送小程序消息
-                        $temple = new WxTempletBusiness;
-                        $temple->sendTemplet($event,$user->companyid,1);
-                    }
+                    //发送通知
+                    $wchat = new WeChatPublicNumberBusiness;
+                    $wchat->processingData($user->companyid, 1, $event );
                     break;
             }
             $obj->save();

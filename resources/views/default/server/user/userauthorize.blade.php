@@ -41,7 +41,7 @@
                     </div>
                 @endif
             @else
-                <p class="tips"><a href="https://mp.weixin.qq.com/" target="blank" class="layui-btn">去授权</a></p>
+                <p class="tips"><a href="{{route('wx-authorize')}}" class="layui-btn">去授权</a></p>
             @endif
             @if( $data && $data->status == 0 )
                 <div class="settingwrap">

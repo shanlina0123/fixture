@@ -39,7 +39,7 @@ class ClientAppointmentController extends ClientBaseController
             'sourceid'=>'required|numeric',//客户来源
             'phone'=>'required|regex:/^1[345789][0-9]{9}$/',//电话
             'name'=>'present|max:10',//姓名
-            'area'=>'sometimes|numeric|between:1,99999999999',//面积
+            'uarea'=>'sometimes|numeric|between:1,99999999999',//面积
             'content'=>'required',//内容
             'wechatopenid'=>'required',//openid
         ],[
@@ -53,8 +53,8 @@ class ClientAppointmentController extends ClientBaseController
             'phone.required'=>'手机号码有误',
             'name.present'=>'缺少用户名',
             'name.max'=>'用户名有误',
-            'area.between'=>'请输入实际面积',
-            'area.numeric'=>'面积为正整数',
+            'uarea.between'=>'请输入实际面积',
+            'uarea.numeric'=>'面积为正整数',
             'content.required'=>'内容不能为空',
             'wechatopenid.required'=>'用户openid不能为空',
             ]
@@ -64,7 +64,6 @@ class ClientAppointmentController extends ClientBaseController
             $messages = $validator->errors()->first();
             responseData(\StatusCode::CHECK_FORM,'验证失败','',$messages);
         }
-
         $res = $this->clientAppointment->Appointment( $data );
         if( $res == true )
         {
