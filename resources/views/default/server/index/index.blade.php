@@ -96,7 +96,7 @@
                     </td>
                     <td>
                         <div class="">
-                            <!-- <img src="{{pix_asset('server/images/fortop.jpg')}}" class="jiantou"> -->
+                        <!-- <img src="{{pix_asset('server/images/fortop.jpg')}}" class="jiantou"> -->
                             <a href="{{route('admin-index')}}" class="circle yellowcircle">用户管理</a>
                         </div>
                     </td>

@@ -1,8 +1,9 @@
 /**
  * 页面鼠标样式
  */
-layui.use(['element'], function () {
-    var element = layui.element;
+layui.use(['element',"layer"], function () {
+    var element = layui.element,
+    layer = layui.layer;
 });
 
 /**
@@ -190,22 +191,18 @@ function checkArrRepeat(a)
     return /(\x0f[^\x0f]+)\x0f[\s\S]*\1/.test("\x0f"+a.join("\x0f\x0f") +"\x0f");
 }
 
-/**
- * 分享弹窗
- */
-$(".sharewrap").click(function() {
-    layer.open({
-        type: 1,
-        closeBtn: 1,
-        title: false, //不显示标题
-        shadeClose: true,
-        area:['auto','auto'],
-        content: $('.sharepop'), //捕获的元素，注意：最好该指定的元素要存放在body最外层，否则可能被其它的相对元素所影响
-    });
-});
-
 
 //取消操作
 $(".channelBtn").click(function(){
     layer.closeAll();
-})
+});
+
+//F5
+$("body").bind("keydown",function(event) {
+    if (event.keyCode == 116) {
+        event.preventDefault(); //阻止默认刷新
+        //location.reload();
+        //采用location.reload()在火狐下可能会有问题，火狐会保留上一次链接
+        location = location;
+    }
+});

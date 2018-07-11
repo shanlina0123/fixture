@@ -100,6 +100,7 @@ a:focus {
 }
 .main {
   padding: 15px;
+  overflow-y: auto;
 }
 .layui-layout-admin .layui-logo,
 .layui-layout-admin .layui-side {
@@ -111,6 +112,7 @@ a:focus {
 }
 .layui-body {
   left: 160px;
+  overflow-y: hidden;
 }
 .layui-layout-admin .layui-body {
   bottom: 0;

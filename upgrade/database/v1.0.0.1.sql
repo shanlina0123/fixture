@@ -99,7 +99,29 @@ ALTER TABLE `fixture_user` ADD COLUMN `jguser`  varchar(100) CHARACTER SET utf8 
 
 ALTER TABLE `fixture`.`fixture_client`  CHANGE `clientcity` `clientcity` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL  COMMENT '客户所在城市';
 
+CREATE TABLE `fixture_data_mptemplate` (
+`id`  int(11) NULL DEFAULT NULL ,
+`name`  varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '模板名称' ,
+`format`  text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '格式，' ,
+`content`  varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '模板格式json' ,
+`status`  tinyint(1) NULL DEFAULT 0 COMMENT '是否显示 1显示 0不显示' ,
+`created_at`  datetime NULL DEFAULT NULL COMMENT '创建时间'
+)
+ENGINE=InnoDB
+DEFAULT CHARACTER SET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+ROW_FORMAT=Compact
+;
 
-ALTER TABLE `fixture_user` ADD COLUMN `wechatpubopenid`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '微信公众号openid,关注了值不为空，未关注值保留空' AFTER `wechatopenid`;
+ALTER TABLE `fixture_small_program` DROP COLUMN `template_id`;
+
+CREATE TABLE `fixture_user_mptemplate` (
+  `id` int(11) DEFAULT NULL,
+  `companyid` int(11) DEFAULT NULL COMMENT '公司id',
+  `mptemplateid` int(100) DEFAULT NULL COMMENT '微信公众号申请的模板id，对应mptemplate表id',
+  `mpopenid` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '微信公众号openid',
+  `mpstatus` tinyint(1) DEFAULT '1' COMMENT '是否开启发送,1开启 0关闭',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '修改时间'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户 - 申请的微信公众号服务通知模板';
 
 #####以上已同步线上######

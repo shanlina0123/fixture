@@ -31,31 +31,8 @@
     <script type="text/javascript" src="{{pix_asset('server/plugins/jquery/jquery-2.1.4.min.js',false)}}"></script>
     @yield('css')
 </head>
-<body class="layui-layout-body">
-    <div class="layui-layout layui-layout-admin">
-        <!--顶部导航-->
-        <div class="layui-header" id="header">
-            @include('server.public.top')
-        </div>
-        <!--左侧导航-->
-        <div class="layui-side layui-bg-black" id="left">
-            @include('server.public.left')
-        </div>
-        <div class="layui-body">
-            @yield('content')
-        </div>
-    </div>
-    <!--分享功能-->
-    <div class="sharewrap" title="分享">
-        <img src="{{pix_asset('server/images/share.png')}}">
-    </div>
-    <ul class="sharepop clearfix">
-        <li>
-            <p>小程序码</p>
-            <a href="javascript:;"><img src="{{url('wx-code')}}/index/null/258"></a>
-        </li>
-    </ul>
-    @yield('other')
+    @yield('content')
+@yield('other')
 </body>
 <script type="text/javascript" src="{{pix_asset('server/plugins/layui/layui.js',false)}}"></script>
 <script type="text/javascript" src="{{pix_asset('server/js/common/common.js')}}"></script>
