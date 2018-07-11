@@ -28,8 +28,8 @@ class WeChatPublicNumberBusiness extends ServerBase
 
         $url = self::$send_url.'access_token='.$data->access_token;
         $content = $data->content;
-        $b = wxPostCurl( $url, $content );
-        var_dump( $b );
+        wxPostCurl( $url, $content );
+
 
     }
 
