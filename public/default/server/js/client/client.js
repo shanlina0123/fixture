@@ -21,6 +21,15 @@ $(".update-btn").click(function() {
     var url = $(this).data('url');
     var form = $(this).data('form');
     $("#layui-form").attr('action', form);
+   var clientcity=$($(this).parents("tr").find(".td_clientcity")).attr("clientcity");
+   if(clientcity)
+   {
+       $("#clientcity").val(clientcity);
+       $(".clientcityDiv").show();
+   }else{
+       $(".clientcityDiv").hide();
+   }
+
     $.get(url,function ( data ) {
         //console.log( data.data );
         if( data.status == 1 )

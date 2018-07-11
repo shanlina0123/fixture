@@ -13,6 +13,7 @@ use App\Http\Model\Filter\FilterFunction;
 use App\Http\Model\Filter\FilterRole;
 use App\Http\Model\Filter\FilterRoleFunction;
 use App\Http\Model\User\User;
+use App\Model\Roles\Role;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -310,7 +311,7 @@ class RolesBusiness extends ServerBase
      * 勾选权限
      * @param $uuid
      */
-    public function updateAuth($roleid, $data)
+    public function updateAuth($roleid,$companyid, $data)
     {
         try {
             //开启事务
@@ -389,7 +390,20 @@ class RolesBusiness extends ServerBase
             {
                 DB::commit();
                 //删除缓存
-                Cache::tags(["Filter-RolePageList","Filter-RoleFunctionList","Admin-RoleList"])->flush();
+                Cache::tags(["Filter-RolePageList","Filter-RoleFunctionList","Admin-RoleList","Admin-RoleAuth","Admin-Menue"])->flush();
+                //角色
+                $resetUser=User::where("roleid",$roleid)->where("companyid",$companyid)->select("id")->get();
+                foreach($resetUser as $k=>$v)
+                {
+                    //修改token
+                    if($v->id)
+                    {
+                        Cache::put('userToken' . $v->id, ['token' => create_uuid(), 'type' => 2], config('session.lifetime'));
+                    }
+
+                }
+
+
             } else {
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR, "勾选失败");

@@ -171,11 +171,18 @@ class AdminBusiness extends ServerBase
             if ($adminid !== false) {
                 DB::commit();
                 //删除缓存
-                Cache::tags(["Admin-PageList","Data-CateList"])->flush();
+                Cache::tags(["Admin-PageList","Data-CateList","Admin-LookUser"])->flush();
 
                 //TODO::注册极光账号
                 $jmessage =  new JmessageBusiness();
-                $jmessage->userRegister(username($adminid),null,$data["nickname"]);
+                $newUser=$jmessage->userRegister(username($adminid),null,$data["nickname"]);
+                //检测是否注册成功
+                if(!array_key_exists("error", $newUser["body"][0]))
+                {
+                    //更新user
+                    User::where(['id'=>$adminid])->update(["jguser"=>username($adminid)]);
+                }
+
 
             } else {
                 DB::rollBack();
@@ -266,7 +273,7 @@ class AdminBusiness extends ServerBase
             if ($rs !== false) {
                 DB::commit();
                 //删除缓存
-                Cache::tags(["Admin-PageList","Data-CateList"])->flush();
+                Cache::tags(["Admin-PageList","Data-CateList","Admin-RoleAuth","Admin-Menue","Admin-LookUser"])->flush();
 
                 //修改token
                 Cache::put('userToken' . $row['id'], ['token' => create_uuid(), 'type' => 2], config('session.lifetime'));
@@ -392,7 +399,7 @@ class AdminBusiness extends ServerBase
             if ($rs !== false) {
                 DB::commit();
                 //删除缓存
-                Cache::tags(["Admin-PageList"])->flush();
+                Cache::tags(["Admin-PageList","Admin-RoleAuth","Admin-Menue","Admin-LookUser"])->flush();
                 //修改token
                 Cache::put('userToken' . $row['id'], ['token' => create_uuid(), 'type' => 2], config('session.lifetime'));
 

@@ -56,8 +56,12 @@ class TestBusiness
 //        $e = $jmessage->userStat(username(1));
 //        print_r($e);
 
-       // 修改用户信息
-//        $f = $jmessage->userUpdate(username(18),["nickname"=>"ddds","extras"=>["faceimg"=>"http://local.fixture.com/default/server/images/chatimg.jpg?v=20180613"]]);
+//        //修改用户信息
+//        $fd=[12,17,25,33,39,41];
+//        foreach($fd as $k=>$v)
+//        {
+//            $f[] = $jmessage->userUpdate(username($v),["extras"=>["faceimg"=>"http://fixture.yygsoft.com/default/server/images/chatimg.jpg?v=V1.0.1.1_201807091759"]]);
+//        }
 //        print_r($f);
 //
 //        //添加好友

@@ -95,6 +95,52 @@ ALTER TABLE `fixture_user` ADD COLUMN `oid`  int(11) NULL DEFAULT NULL COMMENT '
 #用户对应极光账号
 ALTER TABLE `fixture_user` ADD COLUMN `jguser`  varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '极光账号' AFTER `oid`;
 
-#####以上已同步线上######
+
 
 ALTER TABLE `fixture`.`fixture_client`  CHANGE `clientcity` `clientcity` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL  COMMENT '客户所在城市';
+
+ALTER TABLE `fixture_small_program` DROP COLUMN `template_id`;
+
+CREATE TABLE `fixture_data_mptemplate` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '模板名称',
+  `format` text COLLATE utf8mb4_unicode_ci COMMENT '格式，',
+  `content` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '模板格式json',
+  `status` tinyint(1) DEFAULT '0' COMMENT '是否显示 1显示 0不显示',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='数据源 - 微信公众号模板类型';
+
+-- ----------------------------
+-- Records of fixture_data_mptemplate
+-- ----------------------------
+INSERT INTO `fixture_data_mptemplate` VALUES ('1', '客户预约', '{\r\n    \"first\":\"{{first.DATA}}\",\r\n    \"keyword1\":\"{{keyword1.DATA}}\",\r\n    \"keyword2\":\"{{keyword2.DATA}}\",\r\n    \"keyword3\":\"{{keyword3.DATA}}\",\r\n    \"keyword4\":\"{{keyword4.DATA}}\",\r\n    \"remark\":\"{{remark.DATA}}\"\r\n}', '{\r\n    \"first\":\"客户有新留言了，赶快看吧\",\r\n    \"客户姓名\":\"小王\",\r\n    \"留言内容\":\"您好，我要参观工地\",\r\n    \"预约时间\":\"2018-07-11 14:07\"\r\n}', '1', '2018-07-11 14:05:22');
+INSERT INTO `fixture_data_mptemplate` VALUES ('2', '客户留言通知', '{\r\n    \"first\":\"{{first.DATA}}\",\r\n    \"keyword1\":\"{{keyword1.DATA}}\",\r\n    \"keyword2\":\"{{keyword2.DATA}}\",\r\n    \"keyword3\":\"{{keyword3.DATA}}\",\r\n    \"remark\":\"{{remark.DATA}}\"\r\n}', '{\r\n    \"first\":\"客户有新留言了，赶快看吧\",\r\n    \"客户姓名\":\"小王\",\r\n    \"留言内容\":\"您好，我要参观工地\",\r\n    \"预约时间\":\"2018-07-11 14:07\"\r\n}', '1', '2018-07-11 14:05:25');
+
+
+CREATE TABLE `fixture_company_mptemplate` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `companyid` int(11) DEFAULT NULL COMMENT '公司id',
+  `datatemplateid` int(11) DEFAULT NULL COMMENT '模板类型id,对应data_mptemplate表的id',
+  `mptemplateid` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '微信公众号号模板id',
+  `status` tinyint(1) DEFAULT '1' COMMENT '是否禁用  1正常 0关闭',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='公司 - 设置的微信公众号服务通知模板';
+
+
+CREATE TABLE `fixture_user_mptemplate` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `userid` int(11) DEFAULT NULL COMMENT '用户id',
+  `companytempid` int(11) DEFAULT NULL COMMENT '公司微信公众号模板绑定id，对应company_mptemplate表id',
+  `mpopenid` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '微信公众号openid',
+  `mpstatus` tinyint(1) DEFAULT '1' COMMENT '是否开启发送,1开启 0关闭',
+  `isdefault` tinyint(1) DEFAULT '0' COMMENT '是否公司超管0 非超管 1超管',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户 - 已申请的微信公众号服务通知模板';
+
+
+#####以上已同步线上######

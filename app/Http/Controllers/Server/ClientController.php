@@ -28,7 +28,7 @@ class ClientController extends ServerBaseController
         $data = $this->client->getClientList( $this->userInfo, $this->request );
         $where['k'] = $this->request->input('k');
         $where['status'] = $this->request->input('status');
-        return view('server.client.index',compact('data','status','where'));
+        return view('server.client.index',compact('data','status',"lookuser",'where'));
     }
 
     /**

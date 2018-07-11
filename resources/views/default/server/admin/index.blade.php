@@ -155,6 +155,7 @@
             </div>
             <div class="layui-form-item popSubmitBtn">
                 <button type="button" class="layui-btn  ajaxSubmit">立即提交</button>
+                <button type="button" class="layui-btn  channelBtn" >取消</button>
             </div>
         </form>
     </div>
@@ -212,6 +213,7 @@
             </div>
             <div class="layui-form-item popSubmitBtn">
                 <button type="button" class="layui-btn ajaxSubmit">立即提交</button>
+                <button type="button" class="layui-btn  channelBtn" >取消</button>
             </div>
         </form>
     </div>

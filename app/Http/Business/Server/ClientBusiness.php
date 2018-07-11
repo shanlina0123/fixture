@@ -14,6 +14,7 @@ use App\Http\Model\Activity\ActivityLuckyRecord;
 use App\Http\Model\Client\Client;
 use App\Http\Model\Client\ClientFollow;
 use App\Http\Model\Data\ClientFollowStatus;
+use App\Http\Model\User\User;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
@@ -29,11 +30,17 @@ class ClientBusiness extends ServerBase
      */
     public function getClientList($user, $request)
     {
+
+        //非管理员/视野条件1全部 2城市 3门店
+        $lookWhere = $this->lookWhere($user["isadmin"], $user["companyid"], $user["cityid"], $user["storeid"], $user["islook"]);
+
         $tag = 'client' . $user->companyid;
         //Cache::tags([$tag])->flush();
         $where = $tag . $request->input('page') . $request->input('k') . $request->input('status');
-        $value = Cache::tags($tag)->remember($tag . $where, config('configure.sCache'), function () use ($user, $request) {
+        $value = Cache::tags($tag)->remember($tag . $where, config('configure.sCache'), function () use ($user,$lookWhere, $request) {
             $sql = Client::where("companyid", $user->companyid)->where("sourcecateid",1)->orderBy('id', 'desc')->with('clientToStatus', 'clientToSource');
+            //视野条件
+            $sql->where($lookWhere);
             //判断查询
             $k = trim($request->input('k'));
             if ($k) {
@@ -117,6 +124,26 @@ class ClientBusiness extends ServerBase
         return $data;
     }
 
+    /***
+     * 获取可视用户
+     * @param $user
+     * @param $request
+     * @param string $tag
+     * @return mixed
+     */
+    public function getLookUser($user, $request,$tag="Admin-LookUser")
+    {
+
+        //非管理员/视野条件1全部 2城市 3门店
+        $lookWhere = $this->lookWhere($user["isadmin"], $user["companyid"], $user["cityid"], $user["storeid"], $user["islook"]);
+        //缓存key
+        $tagKey = base64_encode(mosaic("", $tag, $user["companyid"], $user["cityid"], $user["storeid"], $user["islook"]));
+        //redis缓存返回
+        return  Cache::tags($tag)->remember($tagKey, config('configure.sCache'), function () use ($lookWhere) {
+            //视野条件查詢
+            return User::where($lookWhere)->orderBy('id', 'desc')->select("id","nickname")->get();
+        });
+    }
 
     /**
      * @param $user

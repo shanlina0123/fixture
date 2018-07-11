@@ -36,6 +36,7 @@
                 <th>编号</th>
                 <th>客户姓名</th>
                 <th>电话</th>
+                <th>所在城市</th>
                 <th>客户来源</th>
                 <th>状态</th>
                 <th>预约时间</th>
@@ -48,6 +49,7 @@
                     <td>{{$k+1}}</td>
                     <td>{{$row->name}}</td>
                     <td>{{$row->phone}}</td>
+                    <td class="td_clientcity" clientcity="{{$row->clientcity}}">{{$row->clientcity}}</td>
                     <td>{{$row->clientToSource?$row->clientToSource->name:''}}</td>
                     <td>{{$row->clientToStatus?$row->clientToStatus->name:''}}</td>
                     <td>{{$row->created_at}}</td>
@@ -84,7 +86,15 @@
                 <textarea placeholder="请输入内容" name="followcontent" class="layui-textarea"></textarea>
             </div>
         </div>
-        <div class="describe"><button type="button" id="btn_submit" class="layui-btn ">立即提交</button></div>
+        <div class="layui-form-item clientcityDiv" style="display: none">
+            <label class="layui-form-label">客户所在城市</label>
+            <div class="layui-input-block">
+                <input type="text" lay-verify="title" autocomplete="off" placeholder="客户所在城市" class="layui-input" value="" id="clientcity">
+            </div>
+        </div>
+        <div class="describe">
+            <button type="button" id="btn_submit" class="layui-btn ">立即提交</button>
+            <button type="button" class="layui-btn  channelBtn" >取消</button></div>
     </form>
     <div id="list">
 

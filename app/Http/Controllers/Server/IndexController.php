@@ -16,7 +16,7 @@ class IndexController extends ServerBaseController
      */
     public function index(Request $request)
     {
-        return view('server.index.index');
+        return view('server.index.main');
     }
 
     /**
