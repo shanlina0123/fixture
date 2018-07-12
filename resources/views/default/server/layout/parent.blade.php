@@ -40,7 +40,7 @@
         @include('server.public.left')
     </div>
     <div class="layui-body">
-        <iframe name="iframeMain" id="iframeMain" src="{{route('index-content')}}" scrolling="yes" frameborder="0" width="100%" height="100%">
+        <iframe name="iframeMain" id="iframeMain" src="{{route('index-content')}}" scrolling="yes" frameborder="0" width="100%" height="100%" firsturl="{{route('index-content')}}">
             该浏览器不支持iframe，请使用其他浏览器！
         </iframe>
         <!--iframe框自适应js-->
