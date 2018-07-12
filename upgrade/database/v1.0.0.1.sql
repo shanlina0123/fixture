@@ -144,3 +144,5 @@ CREATE TABLE `fixture_user_mptemplate` (
 
 
 #####以上已同步线上######
+
+ALTER TABLE `xxs_fixture`.`fixture_small_program` DROP COLUMN `uploadcode`, DROP COLUMN `sourcecode`, DROP COLUMN `verify_ticket`;
