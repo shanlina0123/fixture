@@ -17,4 +17,13 @@ class CompanyMpTemplate extends Model
     protected $guarded = ['id'];
     protected $table = 'company_mptemplate';
     public $timestamps = true;
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * 关联用户
+     */
+    public function companyToUserTemplate()
+    {
+        return $this->belongsTo('App\Http\Model\User\UserMpTemplate','id','companytempid');
+    }
 }

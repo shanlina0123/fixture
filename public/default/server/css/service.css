@@ -1,0 +1,155 @@
+.toptitle {
+  font-size: 20px;
+}
+.partwrap {
+  padding: 15px 0;
+  margin-top: 20px;
+}
+.partwrap .lefttext {
+  font-size: 16px;
+  line-height: 25px;
+}
+.topnotice{
+  font-size: 14px;
+  padding: 6px 10px;
+  color: #E65C5C;
+  border: 1px solid #E65C5C;
+  border-radius: 4px;
+  margin-top: 20px;
+}
+.toptitle{
+  font-size: 20px;
+}
+.partwrap .layui-form-switch {
+  margin-top: 7px;
+}
+.formitem {
+  margin-top: 10px;
+}
+.formitem .formname {
+  display: inline-block;
+  width: 70px;
+  line-height: 35px;
+  text-align: right;
+  padding-right: 10px;
+}
+.formitem .forminput {
+  width: 260px;
+  height: 35px;
+  line-height: 35px;
+  border-width: 1px;
+  border-style: solid;
+  background-color: #fff;
+  border-radius: 2px;
+  border-color: #D2D2D2;
+  padding-left: 10px;
+}
+.formwrap {
+  position: relative;
+}
+.formwrap .bindbtn {
+  position: absolute;
+  left: 420px;
+  top: 64px;
+}
+.listul li {
+  line-height: 25px;
+  margin-top: 15px;
+}
+.listul .leftnumber {
+  width: 100px;
+  text-align: right;
+}
+.listul .listdiv {
+  min-width: 400px;
+  height: 25px;
+  line-height: 25px;
+  border-bottom: 1px solid #d2d2d2;
+  padding-left: 10px;
+  margin: 0 15px;
+}
+.listul .listdiv .noinsert {
+  color: #9A9A9A;
+}
+.listul .snotice {
+  line-height: 25px;
+}
+.settingul > li {
+  margin-top: 20px;
+  margin-left: 40px;
+}
+.settingul > li.complete {
+  background: #ecf8fd url(../images/success.png) 96% 5px no-repeat;
+}
+.settingul > li.complete .layui-btn {
+  background-color: #c2c2c2;
+}
+.settingul .leftpart {
+  border: 1px solid #E7E7EB;
+  min-width: 300px;
+  border-radius: 4px;
+}
+.settingul .leftpart .centertop {
+  padding: 15px 30px;
+  border-bottom: 1px solid #d2d2d2;
+}
+.settingul .leftpart .centertop img {
+  width: 40px;
+  height: 40px;
+  border-radius: 40px;
+  border: 1px solid #F0F0F0;
+}
+.settingul .leftpart .centertoptext {
+  padding: 10px 20px;
+}
+.settingul .leftpart .centertoptext p {
+  font-size: 14px;
+  line-height: 25px;
+}
+.settingul .leftpart .centertoptext span {
+  color: #9A9A9A;
+}
+.settingul .leftpart .centerul {
+  padding: 15px 20px;
+  margin-bottom: 30px;
+  min-height: 160px;
+}
+.settingul .leftpart .centerul li {
+  padding-bottom: 10px;
+}
+.settingul .leftpart .centerul li span {
+  margin-right: 15px;
+  color: #9A9A9A;
+}
+.settingul .leftpart .bottomdetail {
+  border-top: 1px solid #d2d2d2;
+  padding: 10px 20px;
+}
+.bottonbtnswrap {
+  padding: 15px 10px ;
+  background-color: #f2f2f2;
+}
+.applywrap a {
+  display: block;
+  color: #1E9FFF;
+  line-height: 20px;
+}
+.islock .switchwrap {
+  text-align: right;
+}
+.islock > span {
+  display: block;
+  color: #c2c2c2;
+  line-height: 20px;
+  margin-top: 5px;
+}
+.applyPop {
+  display: none;
+  padding-top: 30px;
+}
+.layui-form-label {
+  width: 45px;
+}
+.layui-form-item .layui-input-inline {
+  width: 305px;
+}

@@ -138,6 +138,11 @@ Route::group(['namespace' => 'Server'], function () {
             Route::put('dynamic/update/{uuid}', 'DynamicController@update')->name("dynamic-update");//动态修改
             Route::delete('dynamic/destroy/{uuid}', 'DynamicController@destroy')->name("dynamic-destroy");//动态删除
 
+            //服务通知
+            Route::get('mp/send/index','WeChatPublicNumberController@sendIndex')->name('mp-send-index');//列表
+            Route::post('mp/authorize','WeChatPublicNumberController@mpAuthorize')->name('mp-authorize');//授权共号
+            Route::post('mp/send/template','WeChatPublicNumberController@sendTemplate')->name('send-template');//添加模板
+
         });
     });
 });
