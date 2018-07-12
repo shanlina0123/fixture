@@ -131,8 +131,10 @@ CREATE TABLE `fixture_company_mptemplate` (
 
 CREATE TABLE `fixture_user_mptemplate` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `companyid` int(11) DEFAULT NULL COMMENT '公司id',
   `userid` int(11) DEFAULT NULL COMMENT '用户id',
   `companytempid` int(11) DEFAULT NULL COMMENT '公司微信公众号模板绑定id，对应company_mptemplate表id',
+  `datatemplateid` int(11) DEFAULT NULL COMMENT '数据源模板id,对应 data_mptemplate表id',
   `mpopenid` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '微信公众号openid',
   `mpstatus` tinyint(1) DEFAULT '1' COMMENT '是否开启发送,1开启 0关闭',
   `isdefault` tinyint(1) DEFAULT '0' COMMENT '是否公司超管0 非超管 1超管',
@@ -142,6 +144,7 @@ CREATE TABLE `fixture_user_mptemplate` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户 - 已申请的微信公众号服务通知模板';
 
 
-#####以上已同步线上######
-
 ALTER TABLE `xxs_fixture`.`fixture_small_program` DROP COLUMN `uploadcode`, DROP COLUMN `sourcecode`, DROP COLUMN `verify_ticket`;
+
+
+#####以上已同步线上######
