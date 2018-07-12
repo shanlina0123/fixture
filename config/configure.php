@@ -33,8 +33,8 @@ return [
      * ----------------------------
      */
     "pix_asset"=>"default/",//css js 目录
-    "cssVersion"=>"V1.0.1.1_201807121125",//strtotime(date("Y-m-d H:i:s")),//css版本
-    "jsVersion"=>"V1.0.1.1_201807121125",//strtotime(date("Y-m-d H:i:s")),//js版本
+    "cssVersion"=>"V1.0.1.1_201807121359",//strtotime(date("Y-m-d H:i:s")),//css版本
+    "jsVersion"=>"V1.0.1.1_201807121359",//strtotime(date("Y-m-d H:i:s")),//js版本
 
 
     /**
@@ -85,5 +85,9 @@ return [
     'applicationName'=>'云易装',
 
     //外连接配置
-    "link_website"=>"http://www.yygsoft.com"
+    "website"=>[
+        "home"=>"http://www.yygsoft.com",
+        "tel"=>"029 - 89379272",
+        "time"=>"(周一至周六09:00-18:00)"
+    ],
 ];

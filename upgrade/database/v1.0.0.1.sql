@@ -114,9 +114,8 @@ CREATE TABLE `fixture_data_mptemplate` (
 -- ----------------------------
 -- Records of fixture_data_mptemplate
 -- ----------------------------
-INSERT INTO `fixture_data_mptemplate` VALUES ('1', '客户预约', '{\r\n    \"first\":\"{{first.DATA}}\",\r\n    \"keyword1\":\"{{keyword1.DATA}}\",\r\n    \"keyword2\":\"{{keyword2.DATA}}\",\r\n    \"keyword3\":\"{{keyword3.DATA}}\",\r\n    \"keyword4\":\"{{keyword4.DATA}}\",\r\n    \"remark\":\"{{remark.DATA}}\"\r\n}', '{\r\n    \"first\":\"客户有新留言了，赶快看吧\",\r\n    \"客户姓名\":\"小王\",\r\n    \"留言内容\":\"您好，我要参观工地\",\r\n    \"预约时间\":\"2018-07-11 14:07\"\r\n}', '1', '2018-07-11 14:05:22');
-INSERT INTO `fixture_data_mptemplate` VALUES ('2', '客户留言通知', '{\r\n    \"first\":\"{{first.DATA}}\",\r\n    \"keyword1\":\"{{keyword1.DATA}}\",\r\n    \"keyword2\":\"{{keyword2.DATA}}\",\r\n    \"keyword3\":\"{{keyword3.DATA}}\",\r\n    \"remark\":\"{{remark.DATA}}\"\r\n}', '{\r\n    \"first\":\"有新的客户预约，请及时确认\",\r\n    \"客户姓名\":\"张某\",\r\n    \"客户手机\":\"13888888888\",\r\n    \"预约时间\":\"2018-07-11 14:07\"，\r\n    \"预约内容\":\"免费量房\",\r\n    “remark\":\"客户在 陕西省 西安市发起了预约,住房面积为25平米\"\r\n}', '1', '2018-07-11 14:05:25');
-
+INSERT INTO `fixture_data_mptemplate` VALUES ('1', '客户预约', '{\r\n    \"first\":\"{{first.DATA}}\",\r\n    \"keyword1\":\"{{keyword1.DATA}}\",\r\n    \"keyword2\":\"{{keyword2.DATA}}\",\r\n    \"keyword3\":\"{{keyword3.DATA}}\",\r\n    \"remark\":\"{{remark.DATA}}\"\r\n}', '{\r\n    \"first\":\"有新的客户预约，请及时确认\",\r\n    \"客户姓名\":\"张某\",\r\n    \"客户手机\":\"13888888888\",\r\n    \"预约时间\":\"2018-07-11 14:07\",\r\n    \"预约内容\":\"免费量房\",\r\n    \"remark\":\"客户在 陕西省 西安市发起了预约,住房面积为25平米\"\r\n}', '1', '2018-07-11 14:05:25');
+INSERT INTO `fixture_data_mptemplate` VALUES ('2', '客户留言通知', '{\r\n    \"first\":\"{{first.DATA}}\",\r\n    \"keyword1\":\"{{keyword1.DATA}}\",\r\n    \"keyword2\":\"{{keyword2.DATA}}\",\r\n    \"keyword3\":\"{{keyword3.DATA}}\",\r\n    \"keyword4\":\"{{keyword4.DATA}}\",\r\n    \"remark\":\"{{remark.DATA}}\"\r\n}', '{\r\n    \"first\":\"客户有新留言了，赶快看吧\",\r\n    \"客户姓名\":\"小王\",\r\n    \"留言内容\":\"您好，我要参观工地\",\r\n    \"预约时间\":\"2018-07-11 14:07\"\r\n}', '1', '2018-07-11 14:05:22');
 
 CREATE TABLE `fixture_company_mptemplate` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

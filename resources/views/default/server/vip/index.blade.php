@@ -50,15 +50,15 @@
                 @endforeach
             </div>
         </li>
-        <li>
+        <li class="li3">
             <p class="toptext level3">定制版</p>
-            <a href="{{config('configure.link_website')}}" target="blank" class="levelbtn level3btn">了解定制版</a>
+            <a href="{{config('configure.website.home')}}" target="blank" class="levelbtn level3btn">了解定制版</a>
             <div class="lipswrap">
                 <div class="level3inner clearfix">
                     <div class="fl level3left">业务咨询</div>
                     <div class="fl level3right">
-                        <p>02989379272</p>
-                        <span>(周一至周六09:00-18:00)</span>
+                        <p>{{config("configure.website.tel")}}</p>
+                        <span>{{config("configure.website.time")}}</span>
                     </div>
                 </div>
             </div>
