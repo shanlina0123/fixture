@@ -21,7 +21,7 @@ layui.use(['form', 'layer','upload'], function() {
         }
         ,done: function(res)
         {
-            layer.closeAll('loading'); //关闭loading
+            layer.closeAll();
             if(res.code==1)
             {
                 $("#src").attr('src',res.data.src);
@@ -33,7 +33,7 @@ layui.use(['form', 'layer','upload'], function() {
             //console.log(res)
         },
         error: function(index, upload){
-            layer.closeAll('loading'); //关闭loading
+            layer.closeAll();
             layer.msg(res.msg,{icon: 2,  time:2000});
         }
     });
@@ -61,7 +61,7 @@ layui.use(['form', 'layer','upload'], function() {
             }
         }
         ,done: function(res){
-            layer.closeAll('loading'); //关闭loading
+            layer.closeAll();
             //上传完毕
             if( res.code==1)
             {
@@ -89,7 +89,7 @@ layui.use(['form', 'layer','upload'], function() {
             }
         },
         error: function (index, upload) {
-            layer.closeAll('loading'); //关闭loading
+            layer.closeAll();
             layer.msg(res.msg,{icon: 2,  time:2000});
         }
     });

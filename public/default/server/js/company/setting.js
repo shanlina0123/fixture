@@ -20,7 +20,7 @@ $.get('/default/server/json/city.json',function ( data )
                     layer.load(); //上传loading
                 }
                 , done: function (res) {
-                    layer.closeAll('loading'); //关闭loading
+                    layer.closeAll();
                     if (res.code == 1) {
                         if( $("#companySrc").length )
                         {
@@ -37,7 +37,7 @@ $.get('/default/server/json/city.json',function ( data )
 
                 },
                 error: function (index, upload) {
-                    layer.closeAll('loading'); //关闭loading
+                    layer.closeAll();
                     layer.msg(res.msg,{icon: 2,  time:2000});
                 }
             });
@@ -53,7 +53,7 @@ $.get('/default/server/json/city.json',function ( data )
                     layer.load(); //上传loading
                 }
                 , done: function (res) {
-                    layer.closeAll('loading'); //关闭loading
+                    layer.closeAll();
                     if (res.code == 1) {
                         if( $("#covermapSrc").length )
                         {
@@ -70,7 +70,7 @@ $.get('/default/server/json/city.json',function ( data )
 
                 },
                 error: function (index, upload) {
-                    layer.closeAll('loading'); //关闭loading
+                    layer.closeAll();
                     layer.msg(res.msg,{icon: 2,  time:2000});
                 }
             });

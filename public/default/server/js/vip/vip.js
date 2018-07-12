@@ -9,8 +9,6 @@ layui.use(['form', 'layer', 'jquery'], function() {
         $.getJSON(url,"",function(data){
            if(data.status==1)
            {
-               $(".centerBtnWrap").hide();
-               $(".notice").html(data.messages);
                layer.open({
                    type: 1,
                    content: '<div style="padding: 10px; font-size:14px; ">'+data.messages+'</div>',

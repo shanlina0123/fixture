@@ -76,10 +76,10 @@ layui.use(['form', 'layer', 'jquery', 'laydate', 'upload'], function () {
             layer.msg('图片上传中...', {icon: 16, shade: 0.01, time: 0})
         }
         , done: function (res) {
-            layer.closeAll('loading'); //关闭loading
+            layer.closeAll(); //关闭loading
             if (res.code == 1) {
                 var parent = this.item.parents(".baseUrl")
-                layer.closeAll('loading'); //关闭loading
+                layer.closeAll();
                 $('.showUrl', parent).html("");
                 $(".showUrl", parent).append("<img class='showImg' src='" + res.data.src + "'/>");
                 $(".hiddenUrl", parent).val(res.data.name);
@@ -88,7 +88,7 @@ layui.use(['form', 'layer', 'jquery', 'laydate', 'upload'], function () {
             }
         },
         error: function (index, upload) {
-            layer.closeAll('loading'); //关闭loading
+            layer.closeAll(); //关闭loading
             layer.msg(res.msg,{icon: 2,  time:2000});
         }
     });
@@ -126,7 +126,7 @@ layui.use(['form', 'layer', 'jquery', 'laydate', 'upload'], function () {
                 }
             }
             , done: function (res) {
-                layer.closeAll('loading'); //关闭loading
+                layer.closeAll();
                 //上传完毕
                 if (res.code == 1) {
                     if ($(".imgHomeShow").length > 8) {
@@ -142,7 +142,7 @@ layui.use(['form', 'layer', 'jquery', 'laydate', 'upload'], function () {
                 }
             },
             error: function (index, upload) {
-                layer.closeAll('loading'); //关闭loading
+                layer.closeAll();
                 layer.msg(res.msg,{icon: 2,  time:2000});
             }
         });

@@ -119,7 +119,7 @@ window.parent.$("title").html($("title").html());
 $("body").bind("keydown",function(event) {
     if (event.keyCode == 116) {
         event.preventDefault(); //阻止默认刷新
-        $("#main_frame").attr("src", window.frames["main_frame"].src);
+        $("#iframeMain").attr("src", window.frames["iframeMain"].src);
 
     }
 });
