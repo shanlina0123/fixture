@@ -41,6 +41,9 @@ class VipBusiness extends ServerBase
             case 2:
                 $data["name"]="标准版";
                 break;
+            case 3:
+                $data["name"]="定制版";
+                break;
             default:
                 $data["name"]="免费版";
         }

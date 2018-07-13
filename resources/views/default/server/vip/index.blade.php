@@ -1,41 +1,69 @@
 @extends('server.layout.content')
 @section("title")VIP升级@endsection
 @section('content')
-<div class="main">
+<div class="main" style="margin-bottom: 200px;">
     <fieldset class="layui-elem-field layui-field-title">
-        <legend>VIP升级</legend>
+        @if($data["tipname"])
+            <legend>{{$data["tipname"]}}</legend>
+        @else
+           <legend>您已成为{{$data["name"]}}会员</legend>
+        @endif
     </fieldset>
-    @if($data["tipname"])
-        <h1 class="notice">{{$data["tipname"]}}</h1>
-    @else
-        <h1 class="notice">您当前使用的是<span style="color: #1E9FFF">{{$data["name"]}}</span>@if($data['id']==1) 开放更多功能请购买<span style="color: #1E9FFF">标准版</span>@endif</h1>
-        <div class="centerBtnWrap"><button type="button" class="layui-btn addBtn" url="{{route('vip-store')}}">立即升级</button></div>
-    @endif
-    <p class="describe">云易装平台版本功能明</p>
-    <table class="layui-table">
-        <thead>
-        <tr>
-            <th>功能</th>
-            <th>免费版</th>
-            <th>标准版</th>
-            <th>定制版</th>
-        </tr>
-        </thead>
-        <tr>
-            <td></td>
-            <td>基础功能</td>
-            <td></td>
-            <td></td>
-        </tr>
-        @foreach($data['list'] as $k=>$item)
-            <tr>
-                <td>{{$item['content']}}</td>
-                <td>@if($item['text']=='无') <i class="layui-icon">&#x1006;</i>@elseif($item['text']=='有')<i class="layui-icon">&#xe605;</i>@else{{$item['text']}} @endif</td>
-                <td>@if($item['viptext']=='无') <i class="layui-icon">&#x1006;</i>@elseif($item['viptext']=='有')<i class="layui-icon">&#xe605;</i>@else{{$item['viptext']}} @endif</td>
-                <td>@if($k==0)请拨打电话{!! config("configure.sys.site_phone") !!}我们会尽快联系您@endif</td>
-            </tr>
-        @endforeach
-    </table>
+    <ul class="levelul clearfix">
+        <li>
+            <p class="toptext">免费版</p>
+            <button class="levelbtn">@if($data['id']==1) 当前版本  @elseif($data['id']==2) 已升级 @endif</button>
+            <div class="lipswrap">
+                @foreach($data['list'] as $k=>$item)
+                <div class="lip clearfix">
+                    <p class="fl">{{$item['content']}}@if($item['type']=='max') :{{$item['text']}}@endif</p>
+                    <i class="fr">
+                        @if($item['type']=='has'&&$item['value']==0)
+                            <img src="{{pix_asset('server/images/levelno.png')}}">
+                        @elseif(($item['type']=='has'&&$item['value']==1) || $item['type']=='max' || $item['type']=='allow')
+                            <img src="{{pix_asset('server/images/levelyes.png')}}">
+                        @endif
+                    </i>
+                </div>
+                @endforeach
+            </div>
+        </li>
+        <li>
+            <p class="toptext level2">标准版</p>
+            @if($data["tipname"])
+                <button class="levelbtn level2btn">已申请,系统受理中...</button>
+            @else
+                <button class="levelbtn level2btn @if($data['id']==1) addBtn @endif" url="{{route('vip-store')}}">@if($data['id']==1) 升级标准版 @elseif($data['id']==2) 当前版本 @endif</button>
+            @endif
+            <div class="lipswrap">
+                @foreach($data['list'] as $k=>$item)
+                    <div class="lip clearfix">
+                        <p class="fl">{{$item['content']}}@if($item['type']=='max') :{{$item['viptext']}}@endif</p>
+                        <i class="fr">
+                            @if($item['type']=='has'&&$item['vipvalue']==0)
+                                <img src="{{pix_asset('server/images/levelno.png')}}">
+                            @elseif(($item['type']=='has'&&$item['vipvalue']==1) || $item['type']=='max' || $item['type']=='allow')
+                                <img src="{{pix_asset('server/images/levelyes.png')}}">
+                            @endif
+                        </i>
+                    </div>
+                @endforeach
+            </div>
+        </li>
+        <li class="li3">
+            <p class="toptext level3">定制版</p>
+            <a href="{{config('configure.website.home')}}" target="blank" class="levelbtn level3btn">了解定制版</a>
+            <div class="lipswrap">
+                <div class="level3inner clearfix">
+                    <div class="fl level3left">业务咨询</div>
+                    <div class="fl level3right">
+                        <p>{{config("configure.website.tel")}}</p>
+                        <span>{{config("configure.website.time")}}</span>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
     <!--错误 -->
     <input type="hidden" id="msg" value="{{session('msg')}}">
 </div>

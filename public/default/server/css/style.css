@@ -630,3 +630,99 @@
   padding-left: 35px!important;
   padding-right: 35px!important;
 }
+/*VIP升级页面样式*/
+.levelul li {
+  float: left;
+  width: 370px;
+  text-align: center;
+  padding: 80px 20px 20px 20px;
+  margin-top: 30px;
+  box-shadow: 0px 0px 20px 2px rgba(74, 92, 130, 0.16);
+}
+.levelul li:nth-child(2n) {
+  margin-left: 50px;
+  margin-right: 50px;
+}
+.levelul li .toptext {
+  font-size: 22px;
+  color: #6F8E95;
+  line-height: 30px;
+}
+.levelul li .levelbtn {
+  display: block;
+  width: 100%;
+  height: 35px;
+  line-height: 35px;
+  color: #FFF;
+  border: 1px solid #6F8E95;
+  background-color: #6F8E95;
+  border-radius: 5px;
+  margin-top: 15px;
+}
+.levelul li .level2 {
+  color: #00C151;
+}
+.levelul li .level2btn {
+  background-color: #00C151;
+  border-color: #00C151;
+}
+.levelul li .lipswrap {
+  width: 85%;
+  margin: 0 auto;
+  margin-top: 15px;
+}
+.levelul li .lipswrap .lip {
+  font-size: 14px;
+  line-height: 25px;
+  color: #A8ACB9;
+  padding-bottom: 5px;
+}
+.levelul li .lipswrap .lip:last-child {
+  padding-bottom: 0;
+}
+.levelul li .lipswrap .lip p {
+  max-width: 90%;
+  text-align: left;
+}
+.levelul li .level3 {
+  color: #00B1B5;
+}
+.levelul li .level3btn {
+  background-color: #00B1B5;
+  border: none;
+}
+.levelul li .level3inner {
+  font-size: 14px;
+  color: #A8ACB9;
+  padding: 60px 0;
+}
+.levelul li .level3inner .level3left {
+  width: 48px;
+  line-height: 40px;
+  text-align: center;
+  letter-spacing: 10px;
+}
+.levelul li .level3inner .level3right {
+  border-left: 1px solid #A8ACB9;
+  padding-left: 14px;
+  margin-left: 10px;
+}
+.levelul li .level3inner .level3right p {
+  text-align: left;
+  font-size: 18px;
+  line-height: 40px;
+  color: #00B1B5;
+}
+.levelul li .level3inner .level3right span {
+  display: block;
+  text-align: left;
+  line-height: 40px;
+}
+.levelul .li3 {
+  background: url(../images/tips.png) center top no-repeat;
+}
+@media (max-width: 1000px){
+  .levelul li:nth-child(2n){
+    margin-left: 0;
+  }
+}

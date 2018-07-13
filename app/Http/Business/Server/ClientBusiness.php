@@ -70,16 +70,21 @@ class ClientBusiness extends ServerBase
      */
     public function getLuckyClient($user, $request)
     {
+        //非管理员/视野条件1全部 2城市 3门店
+        $lookWhere = $this->lookWhere($user["isadmin"], $user["companyid"], $user["cityid"], $user["storeid"], $user["islook"]);
+
         $tag = 'luckyClient'.$user->companyid;
         //Cache::tags([$tag])->flush();
         $where = $tag . $request->input('page') . $request->input('k') . $request->input('status') . $request->input('iswin');
-        $value = Cache::tags($tag)->remember($tag . $where, config('configure.sCache'), function () use ($user, $request) {
+        $value = Cache::tags($tag)->remember($tag . $where, config('configure.sCache'), function () use ($user,$lookWhere, $request) {
             $sql = Client::where("companyid", $user->companyid)->orderBy('id', 'desc')->with('clientToStatus')->whereHas('clientToLuckyNum', function ($query) use ($request) {
                 if ($request->input('iswin') != '') {
                     $win=$request->input('iswin')==1?1:0;
                     $query->where('iswin', $win);
                 }
             });
+            //视野条件
+            $sql->where($lookWhere);
             //判断查询
             $k = trim($request->input('k'));
             if ($k) {

@@ -15,10 +15,20 @@ class PublicController extends StoreBaseController
         {
             responseData(\StatusCode::ERROR,'文件不存在');
         }
+        $obj = new \stdClass();
+        //检验大小
+        $fileSize=$request->file('file')->getSize();
+        if(!$request->file('file')->getSize() || $fileSize>config("configure.maxImgSizeByte"))
+        {
+            $obj->code = 0;
+            $obj->msg = $fileSize."图片大小不能低于0或超过".config("configure.maxImgSize");;
+            $obj->data = '';
+            return response()->json($obj, 200);
+        }
         try {
             $res = $request->file('file')->store('temp', 'temp');
             $name = explode('/',$res)[1];
-            $obj = new \stdClass();
+
             $obj->src = "http://".$_SERVER['HTTP_HOST'].'/temp/'.$name;
             $obj->name = $name;
             responseData(\StatusCode::SUCCESS,'上传成功',$obj);

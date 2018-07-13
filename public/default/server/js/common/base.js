@@ -117,9 +117,10 @@ window.parent.$("title").html($("title").html());
 
 //F5
 $("body").bind("keydown",function(event) {
-    if (event.keyCode == 116) {
+
+    if (event.keyCode == 116 || event.ctrlKey &&event.keyCode == 116) {
         event.preventDefault(); //阻止默认刷新
-        $("#main_frame").attr("src", window.frames["main_frame"].src);
+        $("#iframeMain").attr("src", $("#iframeMain").attr("firsturl"));
 
     }
 });

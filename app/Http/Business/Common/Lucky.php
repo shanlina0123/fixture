@@ -267,6 +267,9 @@ class Lucky
                 //中了清除一下客户信息缓存
                 Cache::tags(['luckyClient'.$res->companyid])->flush();
                 Cache::forget('getLuckUser'.$res->id);
+
+                //TODO::抽完奖，立即提交客户信息
+
             }
 
             //客户数据统计
@@ -304,6 +307,7 @@ class Lucky
             $Record->created_at = date('Y-m-d H:i:s');
             $Record->save();
 
+
             DB::commit();
             return true;
         }catch (\Exception $e){
@@ -323,6 +327,8 @@ class Lucky
             //开启事务
             DB::beginTransaction();
 
+           //TODO::因所有抽完中奖后未填写客户资料时候都会记录client表，所以之后再填写客户信息就是完善客户信息update (name phone)
+
             //添加用户
             $client = new Client();
             $client->uuid = create_uuid();
@@ -341,7 +347,7 @@ class Lucky
             $res = ActivityLucky::where('id',$data['activityluckyid'])->first();
 
             //写记录
-            if( $res->ishasconnectinfo == 1 )
+            if( $res->ishasconnectinfo == 1)
             {
                 $LuckyNum = new ActivityLuckyNum();
                 $LuckyNum->uuid = create_uuid();

@@ -114,9 +114,8 @@ CREATE TABLE `fixture_data_mptemplate` (
 -- ----------------------------
 -- Records of fixture_data_mptemplate
 -- ----------------------------
-INSERT INTO `fixture_data_mptemplate` VALUES ('1', '客户预约', '{\r\n    \"first\":\"{{first.DATA}}\",\r\n    \"keyword1\":\"{{keyword1.DATA}}\",\r\n    \"keyword2\":\"{{keyword2.DATA}}\",\r\n    \"keyword3\":\"{{keyword3.DATA}}\",\r\n    \"keyword4\":\"{{keyword4.DATA}}\",\r\n    \"remark\":\"{{remark.DATA}}\"\r\n}', '{\r\n    \"first\":\"客户有新留言了，赶快看吧\",\r\n    \"客户姓名\":\"小王\",\r\n    \"留言内容\":\"您好，我要参观工地\",\r\n    \"预约时间\":\"2018-07-11 14:07\"\r\n}', '1', '2018-07-11 14:05:22');
-INSERT INTO `fixture_data_mptemplate` VALUES ('2', '客户留言通知', '{\r\n    \"first\":\"{{first.DATA}}\",\r\n    \"keyword1\":\"{{keyword1.DATA}}\",\r\n    \"keyword2\":\"{{keyword2.DATA}}\",\r\n    \"keyword3\":\"{{keyword3.DATA}}\",\r\n    \"remark\":\"{{remark.DATA}}\"\r\n}', '{\r\n    \"first\":\"客户有新留言了，赶快看吧\",\r\n    \"客户姓名\":\"小王\",\r\n    \"留言内容\":\"您好，我要参观工地\",\r\n    \"预约时间\":\"2018-07-11 14:07\"\r\n}', '1', '2018-07-11 14:05:25');
-
+INSERT INTO `fixture_data_mptemplate` VALUES ('1', '客户预约', '{\r\n    \"first\":\"{{first.DATA}}\",\r\n    \"keyword1\":\"{{keyword1.DATA}}\",\r\n    \"keyword2\":\"{{keyword2.DATA}}\",\r\n    \"keyword3\":\"{{keyword3.DATA}}\",\r\n    \"remark\":\"{{remark.DATA}}\"\r\n}', '{\r\n    \"first\":\"有新的客户预约，请及时确认\",\r\n    \"客户姓名\":\"张某\",\r\n    \"客户手机\":\"13888888888\",\r\n    \"预约时间\":\"2018-07-11 14:07\",\r\n    \"预约内容\":\"免费量房\",\r\n    \"remark\":\"客户在 陕西省 西安市发起了预约,住房面积为25平米\"\r\n}', '1', '2018-07-11 14:05:25');
+INSERT INTO `fixture_data_mptemplate` VALUES ('2', '客户留言通知', '{\r\n    \"first\":\"{{first.DATA}}\",\r\n    \"keyword1\":\"{{keyword1.DATA}}\",\r\n    \"keyword2\":\"{{keyword2.DATA}}\",\r\n    \"keyword3\":\"{{keyword3.DATA}}\",\r\n    \"keyword4\":\"{{keyword4.DATA}}\",\r\n    \"remark\":\"{{remark.DATA}}\"\r\n}', '{\r\n    \"first\":\"客户有新留言了，赶快看吧\",\r\n    \"客户姓名\":\"小王\",\r\n    \"留言内容\":\"您好，我要参观工地\",\r\n    \"预约时间\":\"2018-07-11 14:07\"\r\n}', '1', '2018-07-11 14:05:22');
 
 CREATE TABLE `fixture_company_mptemplate` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -132,8 +131,10 @@ CREATE TABLE `fixture_company_mptemplate` (
 
 CREATE TABLE `fixture_user_mptemplate` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `companyid` int(11) DEFAULT NULL COMMENT '公司id',
   `userid` int(11) DEFAULT NULL COMMENT '用户id',
   `companytempid` int(11) DEFAULT NULL COMMENT '公司微信公众号模板绑定id，对应company_mptemplate表id',
+  `datatemplateid` int(11) DEFAULT NULL COMMENT '数据源模板id,对应 data_mptemplate表id',
   `mpopenid` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '微信公众号openid',
   `mpstatus` tinyint(1) DEFAULT '1' COMMENT '是否开启发送,1开启 0关闭',
   `isdefault` tinyint(1) DEFAULT '0' COMMENT '是否公司超管0 非超管 1超管',
@@ -143,6 +144,7 @@ CREATE TABLE `fixture_user_mptemplate` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户 - 已申请的微信公众号服务通知模板';
 
 
-#####以上已同步线上######
-
 ALTER TABLE `xxs_fixture`.`fixture_small_program` DROP COLUMN `uploadcode`, DROP COLUMN `sourcecode`, DROP COLUMN `verify_ticket`;
+
+
+#####以上已同步线上######
