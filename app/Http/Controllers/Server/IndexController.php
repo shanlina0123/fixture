@@ -16,7 +16,6 @@ class IndexController extends ServerBaseController
      */
     public function index(Request $request)
     {
-        //echo encrypt('ab5e6a0349268ed349fa976aef7babf3');die;
         return view('server.index.main');
     }
 

@@ -13,6 +13,7 @@ namespace App\Http\Controllers\Server;
 use App\Http\Business\Server\WeChatPublicNumberBusiness;
 use App\Http\Controllers\Common\ServerBaseController;
 use App\Http\Model\Data\MpTemplate;
+use App\Http\Model\User\UserMpTemplate;
 use App\Http\Model\Wx\SmallProgram;
 use Illuminate\Http\Request;
 
@@ -36,7 +37,9 @@ class WeChatPublicNumberController extends ServerBaseController
         $user = $this->userInfo;
         $small = SmallProgram::where('companyid',$user->companyid)->first();
         $mpData = MpTemplate::where('status',1)->with(['templateToCompanyTemplate'=>function($query) use($user){
-                     return $query->where('companyid',$user->companyid);
+                     return $query->where('companyid',$user->companyid)->with(['companyToUserTemplate'=>function($query) use($user){
+                         return $query->where('userid',$user->id);
+                     }]);
                   }])->get();
         return view('server.send.index', compact('small','mpData','user'));
     }
@@ -74,6 +77,55 @@ class WeChatPublicNumberController extends ServerBaseController
         }else
         {
             responseData(\StatusCode::ERROR,'申请失败');
+        }
+    }
+
+    /**
+     * 检测扫码回调
+     */
+    public function checkOpenidBack()
+    {
+        $str = $this->request->input('str');
+        parse_str($str,$arr);
+        if(is_array($arr))
+        {
+            $where['companyid'] = $arr['c'];
+            $where['userid'] = $arr['u'];
+            $where['id'] = $arr['i'];
+            $res = UserMpTemplate::where($where)->first();
+            if( $res->mpopenid )
+            {
+                return 'success';
+            }
+        }
+        return 'fail';
+    }
+
+    /**
+     * 非管理员用户设置模板
+     */
+    public function sendAddTemplate()
+    {
+        $user = $this->userInfo;
+        $datatemplateid = $this->request->input('datatemplateid');
+        $companytempid = $this->request->input('companytempid');
+        $mpstatus = $this->request->input('mpstatus');
+        if( !$datatemplateid || !$companytempid)
+        {
+            responseData(\StatusCode::ERROR,'开启失败');
+        }else
+        {
+            $res = $this->weChat->sendAddTemplate($user,$mpstatus,$datatemplateid,$companytempid);
+            if( $res === true )
+            {
+                responseData(\StatusCode::SUCCESS,'开启成功');
+            }elseif( $res === false )
+            {
+                responseData(\StatusCode::ERROR,'开启失败');
+            }else
+            {
+                responseData(\StatusCode::SUCCESS,'授权',$res);
+            }
         }
     }
 }

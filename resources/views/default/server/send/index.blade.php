@@ -9,8 +9,7 @@
         <fieldset class="layui-elem-field layui-field-title">
            <legend>微信公众号服务通知配置</legend>
         </fieldset>
-
-        <div class="topnotice">请联系管理员进行操作</div>
+        <div class="topnotice">如果管理员未申请模板将无法开启接收服务消息</div>
         @if($user->type == 0 && $user->isadmin )
         <div class="partwrap formwrap">
             <p class="lefttext">公众号开发信息：</p>
@@ -79,19 +78,39 @@
                     <div class="bottonbtnswrap clearfix">
                         <div class="applywrap fl">
                             @if($row->templateToCompanyTemplate)
-                                <button class="layui-btn">已申请</button>
-                            @else
-                                @if( $small && $small->union_wechat_mp_appid)
-                                    <button class="layui-btn ask" data-url="{{route('send-template')}}" data-id="{{encrypt($row->id)}}"  data-ww="{{$row->id}}">申请</button>
+                                @if($user->isadmin==1)
+                                    <button class="layui-btn ask" data-url="{{route('send-template')}}" data-id="{{encrypt($row->id)}}"  data-ww="{{$row->id}}">修改模板ID</button>
                                 @else
-                                    <button class="layui-btn tip">申请</button>
+                                    <button class="layui-btn">已申请</button>
+                                @endif
+                            @else
+                                <!--管理员才有申请的权限-->
+                                @if( $user->isadmin == 1 )
+                                    @if( $small && $small->union_wechat_mp_appid)
+                                        <button class="layui-btn ask" data-url="{{route('send-template')}}" data-id="{{encrypt($row->id)}}"  data-ww="{{$row->id}}">申请</button>
+                                    @else
+                                        <button class="layui-btn tip">申请</button>
+                                    @endif
+                                @else
+                                    <button class="layui-btn isadmin">申请</button>
                                 @endif
                             @endif
                             <a href="#" target="black">如何申请模板?</a>
                         </div>
                         <div class="islock fr">
                             <form class="layui-form switchwrap">
-                                <input type="checkbox"  @if($row->templateToCompanyTemplate) @endif name="open" lay-skin="switch" lay-text="ON|OFF">
+                                <!--公司申请了-->
+                                @if($row->templateToCompanyTemplate )
+                                    @if( $row->templateToCompanyTemplate->companyToUserTemplate)
+                                        <!--个人存在这个模板-->
+                                        <input type="checkbox" name="open" @if($row->templateToCompanyTemplate->companyToUserTemplate->mpstatus == 1 ) checked="checked" @endif lay-skin="switch" lay-text="ON|OFF" data-url="{{route('mp-usersend-add')}}" data-datatemplateid="{{encrypt($row->templateToCompanyTemplate->datatemplateid)}}" data-companytempid="{{encrypt($row->templateToCompanyTemplate->id)}}" lay-filter="addUserTemplate">
+                                    @else
+                                        <!--个人不存在这个模板-->
+                                        <input type="checkbox" name="open" lay-skin="switch" lay-text="ON|OFF" data-url="{{route('mp-usersend-add')}}" data-datatemplateid="{{encrypt($row->templateToCompanyTemplate->datatemplateid)}}" data-companytempid="{{encrypt($row->templateToCompanyTemplate->id)}}" lay-filter="addUserTemplate">
+                                    @endif
+                                @else
+                                    <input type="checkbox" name="open" lay-skin="switch" lay-text="ON|OFF" disabled="disabled">
+                                @endif
                             </form>
                             <span>开启后可接受微信通知</span>
                         </div>
@@ -122,15 +141,6 @@
     </form>
 </div>
 @section('js')
-    <script type="text/javascript" src="{{pix_asset('server/plugins/code/jquery.qrcode.min.js',false)}}"></script>
-    <script>
-        function getTime(companytempid,datatemplateid) {
-            var back = '{{route('mp-authorize-code').'?uid='.$user->id.'&time='.time()}}';
-                back = back+'&companytempid'+companytempid+'&datatemplateid'+datatemplateid;
-                back = encodeURIComponent(back);
-            var backUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxbe1cdb19d2290193&redirect_uri="+back+"&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect";
-        }
-    </script>
     <script>
         layui.use(['form', 'jquery', 'layer'], function() {
             var form = layui.form,
@@ -197,6 +207,7 @@
                                     if( data.data.isOpenid == 0 )
                                     {
                                         layer.closeAll();
+                                        var i;
                                         $("#src").attr('src','https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket='+data.data.ticket);
                                         //弹出
                                         layer.open({
@@ -205,7 +216,12 @@
                                             title: false,
                                             shadeClose: true,
                                             content: $('.sharepop'),
+                                            cancel: function(){
+                                                clearInterval(i);
+                                            }
                                         });
+                                        var url = '/mp/send/authorize/back';
+                                        i= checkOpenid(url,data.data.backStr);
                                     }else
                                     {
                                         location = location;
@@ -222,6 +238,73 @@
             $(".applywrap .tip").click(function() {
                 layer.msg('授权完成才可申请');
             });
+            $(".applywrap .isadmin").click(function() {
+                layer.msg('您不是超级管理员无权申请');
+            });
+
+            /**
+             * 监听指定开关
+             * 非管理员添加模板
+             */
+            form.on('switch(addUserTemplate)', function(data){
+                var mpstatus = data.elem.checked?1:0;
+                var datatemplateid = $(data.elem).attr('data-datatemplateid');
+                var companytempid = $(data.elem).attr('data-companytempid');
+                var url = $(data.elem).attr('data-url');
+                $.post(url,{'datatemplateid':datatemplateid,'companytempid':companytempid,'mpstatus':mpstatus},function (res) {
+                    if(res.status==1)
+                    {
+                        if( res.data && res.data.isOpenid == 0 )
+                        {
+                            var i;
+                            $(data.elem).removeAttr('checked');
+                            form.render();
+                            layer.closeAll();
+                            $("#src").attr('src','https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket='+res.data.ticket);
+                            layer.open({
+                                type: 1,
+                                closeBtn: 1,
+                                title: false,
+                                shadeClose: true,
+                                content: $('.sharepop'),
+                                cancel: function(){
+                                    clearInterval(i);
+                                }
+                            });
+                            var url = '/mp/send/authorize/back';
+                            i = checkOpenid(url,res.data.backStr);
+                        }
+                    }else
+                    {
+                        layer.msg(res.messages);
+                    }
+                },'json');
+            });
         });
+        /**
+         * 检测openid
+         */
+        var num=0;
+        function checkOpenid(url,data)
+        {
+            var i = setInterval(function()
+            {
+                num++;
+                $.post(url,{'str':data},function(data){
+                    if( data == 'success' )
+                    {
+                        clearInterval(i);
+                        window.location = location;
+                    }
+                });
+                if ( num > 100 )
+                {
+                    clearInterval(i);
+                    window.location = location;
+                }
+            }, 3000);
+            return i;
+        }
+
     </script>
 @endsection

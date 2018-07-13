@@ -14,6 +14,7 @@ use App\Http\Model\Company\CompanyMpTemplate;
 use App\Http\Model\User\UserMpTemplate;
 use App\Http\Model\Wx\SmallProgram;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class WeChatPublicNumberBusiness extends ServerBase
 {
@@ -199,27 +200,58 @@ class WeChatPublicNumberBusiness extends ServerBase
                }])->first();
         if( $res )
         {
+            //修改
             $res->mptemplateid = $data['mptemplateid'];
             $res->status = 1;
             if($res->save())
             {
-                $res->ticket = $this->getTicket($user->companyid);
-                $res->isOpenid = $res->companyToUserTemplate?1:0;
+                $res->isOpenid = 1;
                 return $res;
             }else return false;
         }else
         {
-            $res = new CompanyMpTemplate;
-            $res->companyid = $user->companyid;
-            $res->datatemplateid = decrypt($data['datatemplateid']);
-            $res->mptemplateid = $data['mptemplateid'];
-            $res->status = 1;
-            if( $res->save() )
+            try{
+                DB::beginTransaction();
+                //添加
+                $res = new CompanyMpTemplate;
+                $res->companyid = $user->companyid;
+                $res->datatemplateid = decrypt($data['datatemplateid']);
+                $res->mptemplateid = $data['mptemplateid'];
+                $res->status = 1;
+                $cRes = $res->save();
+                //添加用户
+                $ump = new UserMpTemplate;
+                $ump->companyid = $user->companyid;
+                $ump->userid = $user->id;
+                $ump->companytempid = $res->id;
+                $ump->datatemplateid = decrypt($data['datatemplateid']);
+                if(  $res->companyToUserTemplate )
+                {
+                    $ump->mpstatus = 1;
+                    $ump->mpopenid = $res->companyToUserTemplate->mpopenid;
+                }else
+                {
+                    $ump->mpstatus = 0;
+                }
+                $ump->isdefault = $user->isadmin?1:0;
+                $uRes = $ump->save();
+                if( $cRes && $uRes )
+                {
+                    DB::commit();
+                    $str = 'c='.$user->companyid.'&u='.$user->id.'&i='.$ump->id;
+                    $res->ticket = $this->getTicket($user->companyid,$str);
+                    $res->isOpenid = $res->companyToUserTemplate?1:0;
+                    $res->backStr = $str;
+                    return $res;
+                }else{
+                    DB::rollBack();
+                    return false;
+                }
+            }catch (\Exception $e)
             {
-                $res->ticket = $this->getTicket($user->companyid);
-                $res->isOpenid = 0;
-                return $res;
-            }else return false;
+                DB::rollBack();
+                return false;
+            }
         }
     }
 
@@ -229,14 +261,14 @@ class WeChatPublicNumberBusiness extends ServerBase
      * @return bool
      * 生成ticket
      */
-    public function getTicket($companyId)
+    public function getTicket($companyId,$str)
     {
         $access_token = $this->getAccessToken( $companyId );
         $url = self::$ticket_url.'access_token='.$access_token;
         $post = array(
             "expire_seconds"=>300,
             "action_name"=>"QR_STR_SCENE",
-            "action_info"=>["scene"=>["scene_id"=>12456]]
+            "action_info"=>["scene"=>["scene_str"=>$str]]
         );
         $data = wxPostCurl($url,$post);
         if( $data )
@@ -248,5 +280,98 @@ class WeChatPublicNumberBusiness extends ServerBase
             }
         }
         return false;
+    }
+
+    /**
+     * @param $str
+     * 微信扫码回掉处理数据
+     */
+    public function mpAuthorizeBack( $str, $openid )
+    {
+        parse_str($str,$arr);
+        if(is_array($arr))
+        {
+            $where['companyid'] = $arr['c'];
+            $where['userid'] = $arr['u'];
+            $where['id'] = $arr['i'];
+            $res = UserMpTemplate::where($where)->first();
+            if( !$res )
+            {
+                return false;
+            }
+            $res->mpopenid = $openid;
+            $res->mpstatus = 1;
+            return $res->save();
+        }
+        return false;
+    }
+
+    /**
+     * @param $user
+     * @param $datatemplateid
+     * @param $companytempid
+     * 非管理员用户设置模板
+     */
+    public function sendAddTemplate( $user,$mpstatus,$datatemplateid,$companytempid )
+    {
+        $where['companytempid'] = decrypt($companytempid);
+        $where['datatemplateid'] = decrypt($datatemplateid);
+        $where['userid'] = $user->id;
+        $where['companyid'] = $user->companyid;
+        $res = UserMpTemplate::where($where)->first();
+        //查询看用户有无开启过消息提示主要是获取openid
+        $openid = UserMpTemplate::where(['userid'=>$user->id,'companyid'=> $user->companyid])->where('mpopenid','!=','')->value('mpopenid');
+        if( $res )
+        {
+            //存在用户
+            if($res->mpopenid || $openid)
+            {
+                $res->mpopenid = $openid;
+                $res->isOpenid = 1;
+                return $res->save();
+            }else
+            {
+                $str = 'c='.$user->companyid.'&u='.$user->id.'&i='.$res->id;
+                $res->ticket = $this->getTicket($user->companyid,$str);
+                $res->isOpenid = 0;
+                $res->backStr = $str;
+                return $res;
+            }
+        }else
+        {
+
+            //添加
+            $ump = new UserMpTemplate();
+            $ump->companyid = $user->companyid;
+            $ump->userid = $user->id;
+            $ump->companytempid = decrypt($companytempid);
+            $ump->datatemplateid = decrypt($companytempid);
+            $ump->isdefault = 0;
+            if( $openid )
+            {
+                $ump->mpopenid = $openid;
+                $ump->mpstatus = 1;
+            }else
+            {
+                $ump->mpstatus = 0;
+            }
+            if($ump->save())
+            {
+                if( !$openid )
+                {
+                    $str = 'c='.$user->companyid.'&u='.$user->id.'&i='.$ump->id;
+                    $ump->ticket = $this->getTicket($user->companyid,$str);
+                    $ump->isOpenid = 0;
+                    $ump->backStr = $str;
+                    return $ump;
+                }else
+                {
+                    return true;
+                }
+            }else
+            {
+                return false;
+            }
+        }
     }
 }

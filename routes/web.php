@@ -145,6 +145,8 @@ Route::group(['namespace' => 'Server'], function () {
             Route::get('mp/send/index','WeChatPublicNumberController@sendIndex')->name('mp-send-index');//列表
             Route::post('mp/authorize','WeChatPublicNumberController@mpAuthorize')->name('mp-authorize');//授权共号
             Route::post('mp/send/template','WeChatPublicNumberController@sendTemplate')->name('send-template');//添加模板
+            Route::post('mp/send/authorize/back','WeChatPublicNumberController@checkOpenidBack');//扫码回调检测
+            Route::post('mp/send/addTemplate','WeChatPublicNumberController@sendAddTemplate')->name('mp-usersend-add');//个人添加模板
 
         });
     });

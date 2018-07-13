@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Server;
 
 
+use App\Http\Business\Server\WeChatPublicNumberBusiness;
 use App\Http\Controllers\Controller;
 use App\Http\Model\Wx\SmallProgram;
 use Illuminate\Http\Request;
@@ -29,8 +30,10 @@ class WxMessageController extends Controller
             }
         }else
         {
+            //微信消息
             $this->mpResponseMsg();
-            $this->responseMsg();
+            //小程序消息
+            //$this->responseMsg();
         }
     }
 
@@ -99,33 +102,70 @@ class WxMessageController extends Controller
             libxml_disable_entity_loader(true);
             $postObj = simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
             $MsgType = trim($postObj->MsgType);
-            Log::error('www'.json_decode($postObj));
             switch ( $MsgType )
             {
-                case "subscribe":
-                    if (isset($object->EventKey))
-                    {
-                        $contentStr = "关注二维码场景 ".$postObj->EventKey;
-                        echo $contentStr;
-                    }
-                    break;
-                case "SCAN":
-                    $contentStr = "扫描 ".$postObj->EventKey;
-                    echo $contentStr;
-                    //要实现统计分析，则需要扫描事件写入数据库，这里可以记录 EventKey及用户OpenID，扫描时间
-                    break;
                 case 'event':
-                    echo '欢迎关注：无聊的时候你可以直接发送消息给我，24小时陪伴你。。。'.$postObj->FromUserName;
-                    break;
-                case 'text':
-                    $keyword = trim($postObj->Content);
-                    echo '文字'.$keyword;
-                    break;
+                    switch ($postObj->Event)
+                    {
+                        case "subscribe":
+                            //处理结果
+                            $wxchat = new WeChatPublicNumberBusiness();
+                            $postObj->EventKey = str_replace('qrscene_','',$postObj->EventKey);
+                            $res = $wxchat->mpAuthorizeBack($postObj->EventKey,$postObj->FromUserName);
+                            if( $res )
+                            {
+                                $contentStr = '绑定成功';
+                            }else
+                            {
+                                $contentStr = '绑定失败';
+                            }
+                            return $this->transmitText($postObj,$contentStr);
+                            break;
+                        case "SCAN":
+                            //处理结果
+                            $wxchat = new WeChatPublicNumberBusiness();
+                            $res = $wxchat->mpAuthorizeBack($postObj->EventKey,$postObj->FromUserName);
+                            if( $res )
+                            {
+                                $contentStr = '绑定成功';
+                            }else
+                            {
+                                $contentStr = '绑定失败';
+                            }
+                            return $this->transmitText($postObj,$contentStr);
+                            break;
+                        default:
+                            break;
+
+                    }
+                break;
             }
 
         }else
         {
             return '请求失败。。';
         }
+    }
+
+    /**
+     * @param $postObj
+     * @return mixed
+     * 处理text类型
+     */
+    private function transmitText( $postObj,$keyword )
+    {
+        $time = time();
+        $fromUsername = $postObj->FromUserName;
+        $toUsername = $postObj->ToUserName;
+        $textTpl = "<xml>
+                    <ToUserName><![CDATA[%s]]></ToUserName>
+                    <FromUserName><![CDATA[%s]]></FromUserName>
+                    <CreateTime>%s</CreateTime>
+                    <MsgType><![CDATA[%s]]></MsgType>
+                    <Content><![CDATA[%s]]></Content>
+                    <FuncFlag>0</FuncFlag>
+                    </xml>";
+        $resultStr = sprintf($textTpl, $fromUsername, $toUsername, $time, 'text', $keyword);
+        return $resultStr;
     }
 }

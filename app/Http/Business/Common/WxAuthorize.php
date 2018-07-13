@@ -151,11 +151,17 @@ class WxAuthorize
                     $data = $data['authorization_info'];
                     //写入数据库
                     $companyID = session('userInfo')->companyid;
-                    $wx = SmallProgram::where(['authorizer_appid'=>$data['authorizer_appid'],'companyid'=>$companyID])->first();
+                    $wx = SmallProgram::where(['authorizer_appid'=>$data['authorizer_appid']])->first();
                     if( !$wx )
                     {
                         $wx = new SmallProgram();
                         $wx->companyid = $companyID;
+                    }else
+                    {
+                        if($wx->companyid != $companyID)
+                        {
+                            return false;
+                        }
                     }
                     $wx->authorization_info = json_encode($data);
                     $wx->authorizer_appid = $data['authorizer_appid'];
