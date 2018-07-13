@@ -19,6 +19,7 @@ class WeChatPublicNumberBusiness extends ServerBase
 {
     private static $send_url = 'https://api.weixin.qq.com/cgi-bin/message/template/send?';
     private static $token_url = 'https://api.weixin.qq.com/cgi-bin/token?';
+    private static $ticket_url = 'https://api.weixin.qq.com/cgi-bin/qrcode/create?';
 
     /**
      * 发送模板消息
@@ -46,14 +47,14 @@ class WeChatPublicNumberBusiness extends ServerBase
         if( $data['sourceid'] != 1 )
         {
             //发给默认的管理员
-            $res = UserMpTemplate::where(['isdefault'=>1,'datatemplateid'=>$type])->with('userToCompanyTemplate')->first();
+            $res = UserMpTemplate::where(['isdefault'=>1,'datatemplateid'=>$type,'companyid'=>$companyId])->with('userToCompanyTemplate')->first();
         }else
         {
             //发给对应的添加人员
-            $res = UserMpTemplate::where(['userid'=>$data['createuserid'],'datatemplateid'=>$type])->with('userToCompanyTemplate')->first();
+            $res = UserMpTemplate::where(['userid'=>$data['createuserid'],'datatemplateid'=>$type,'companyid'=>$companyId])->with('userToCompanyTemplate')->first();
             if( $res == false )
             {
-                $res = UserMpTemplate::where(['isdefault'=>1,'datatemplateid'=>$type])->with('userToCompanyTemplate')->first();
+                $res = UserMpTemplate::where(['isdefault'=>1,'datatemplateid'=>$type,'companyid'=>$companyId])->with('userToCompanyTemplate')->first();
             }
         }
         if( $res )
@@ -136,5 +137,116 @@ class WeChatPublicNumberBusiness extends ServerBase
             }
         }
         return $access_token;
+    }
+
+    /**
+     * @param $user
+     * @param $union_wechat_mp_appid
+     * @param $union_wechat_mp_appsecret
+     * 授权
+     */
+    public function mpAuthorize($user,$union_wechat_mp_appid,$union_wechat_mp_appsecret)
+    {
+        $res = SmallProgram::where('union_wechat_mp_appid',$union_wechat_mp_appid)->first();
+        if( $res )
+        {
+            responseData(\StatusCode::ERROR,'APPID已被使用');
+        }else
+        {
+            //查询存数据
+            $resObj = SmallProgram::where('companyid',$user->companyid)->first();
+            if( $resObj )
+            {
+                if( $resObj->union_wechat_mp_appid )
+                {
+                    responseData(\StatusCode::ERROR,'已授权不能重复授权');
+                }
+            }else
+            {
+                $resObj = new SmallProgram();
+            }
+            $url = self::$token_url.'grant_type=client_credential&appid='.trim($union_wechat_mp_appid).'&secret='.trim($union_wechat_mp_appsecret);
+            $data = getCurl($url,0);
+            if( $data )
+            {
+                $data = json_decode($data,true);
+                if( !array_has($data,'errcode') )
+                {
+                    $resObj->token = str_random(32);
+                    $resObj->EncodingAESKey = str_random(43);
+                    $resObj->union_wechat_mp_appid = trim($union_wechat_mp_appid);
+                    $resObj->union_wechat_mp_appsecret = encrypt(trim($union_wechat_mp_appsecret));
+                    if( $resObj->save() )
+                    {
+                        responseData(\StatusCode::SUCCESS,'授权成功,请继续配置服务器信息');
+                    }
+                    responseData(\StatusCode::ERROR,'授权失败');
+                }
+            }
+            responseData(\StatusCode::ERROR,'授权失败请检查APPID和密钥');
+        }
+    }
+
+    /**
+     * 申请模板
+     */
+    public function sendTemplate( $user,$data )
+    {
+        $where['companyid'] = $user->companyid;
+        $where['datatemplateid'] = decrypt($data['datatemplateid']);
+        $res = CompanyMpTemplate::where($where)->with(['companyToUserTemplate'=>function($query) use($user){
+                    return $query->where('userid',$user->id)->first();
+               }])->first();
+        if( $res )
+        {
+            $res->mptemplateid = $data['mptemplateid'];
+            $res->status = 1;
+            if($res->save())
+            {
+                $res->ticket = $this->getTicket($user->companyid);
+                $res->isOpenid = $res->companyToUserTemplate?1:0;
+                return $res;
+            }else return false;
+        }else
+        {
+            $res = new CompanyMpTemplate;
+            $res->companyid = $user->companyid;
+            $res->datatemplateid = decrypt($data['datatemplateid']);
+            $res->mptemplateid = $data['mptemplateid'];
+            $res->status = 1;
+            if( $res->save() )
+            {
+                $res->ticket = $this->getTicket($user->companyid);
+                $res->isOpenid = 0;
+                return $res;
+            }else return false;
+        }
+    }
+
+
+    /**
+     * @param $companyId
+     * @return bool
+     * 生成ticket
+     */
+    public function getTicket($companyId)
+    {
+        $access_token = $this->getAccessToken( $companyId );
+        $url = self::$ticket_url.'access_token='.$access_token;
+        $post = array(
+            "expire_seconds"=>300,
+            "action_name"=>"QR_STR_SCENE",
+            "action_info"=>["scene"=>["scene_id"=>12456]]
+        );
+        $data = wxPostCurl($url,$post);
+        if( $data )
+        {
+            $data = json_decode($data,true);
+            if( array_has($data,'ticket') )
+            {
+               return $data['ticket'];
+            }
+        }
+        return false;
     }
 }

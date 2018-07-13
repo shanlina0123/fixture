@@ -12,6 +12,7 @@ namespace App\Http\Controllers\Server;
 use App\Http\Controllers\Controller;
 use App\Http\Model\Wx\SmallProgram;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class WxMessageController extends Controller
 {
@@ -28,6 +29,7 @@ class WxMessageController extends Controller
             }
         }else
         {
+            $this->mpResponseMsg();
             $this->responseMsg();
         }
     }
@@ -85,6 +87,45 @@ class WxMessageController extends Controller
         }else{
             echo "";
             exit;
+        }
+    }
+
+
+    public function mpResponseMsg()
+    {
+        $postStr = file_get_contents("php://input");
+        if (!empty($postStr))
+        {
+            libxml_disable_entity_loader(true);
+            $postObj = simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
+            $MsgType = trim($postObj->MsgType);
+            Log::error('www'.json_decode($postObj));
+            switch ( $MsgType )
+            {
+                case "subscribe":
+                    if (isset($object->EventKey))
+                    {
+                        $contentStr = "关注二维码场景 ".$postObj->EventKey;
+                        echo $contentStr;
+                    }
+                    break;
+                case "SCAN":
+                    $contentStr = "扫描 ".$postObj->EventKey;
+                    echo $contentStr;
+                    //要实现统计分析，则需要扫描事件写入数据库，这里可以记录 EventKey及用户OpenID，扫描时间
+                    break;
+                case 'event':
+                    echo '欢迎关注：无聊的时候你可以直接发送消息给我，24小时陪伴你。。。'.$postObj->FromUserName;
+                    break;
+                case 'text':
+                    $keyword = trim($postObj->Content);
+                    echo '文字'.$keyword;
+                    break;
+            }
+
+        }else
+        {
+            return '请求失败。。';
         }
     }
 }

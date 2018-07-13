@@ -37,6 +37,9 @@ Route::group(['namespace' => 'Server'], function () {
     //测试
     Route::get("test/index","TestController@index")->name("test-index");//test
 
+    //手机授权页面
+    Route::get('mp/authorize/code','WeChatPublicNumberController@authorizeCode')->name('mp-authorize-code');
+
     //中间件登录认证路由
     Route::group(['middleware' => ['checkUser']], function () {
         Route::get('/', 'IndexController@index')->name('index'); //入口
@@ -137,6 +140,11 @@ Route::group(['namespace' => 'Server'], function () {
             Route::get('dynamic/edit/{uuid}', 'DynamicController@edit')->name("dynamic-edit");//动态修改
             Route::put('dynamic/update/{uuid}', 'DynamicController@update')->name("dynamic-update");//动态修改
             Route::delete('dynamic/destroy/{uuid}', 'DynamicController@destroy')->name("dynamic-destroy");//动态删除
+
+            //服务通知
+            Route::get('mp/send/index','WeChatPublicNumberController@sendIndex')->name('mp-send-index');//列表
+            Route::post('mp/authorize','WeChatPublicNumberController@mpAuthorize')->name('mp-authorize');//授权共号
+            Route::post('mp/send/template','WeChatPublicNumberController@sendTemplate')->name('send-template');//添加模板
 
         });
     });

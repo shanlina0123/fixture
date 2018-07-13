@@ -55,6 +55,7 @@
             <li class="layui-nav-item nav-menu @if(url()->current() == route('roles-index') ) layui-this @endif"  url="{{route('roles-index')}}"><a>角色管理</a></li>
             <li class="layui-nav-item nav-menu @if(url()->current() == route('admin-index') ) layui-this @endif"  url="{{route('admin-index')}}"><a>用户管理</a></li>
             <li class="layui-nav-item nav-menu @if(url()->current() == route('data-index') ) layui-this @endif"  url="{{route('data-index')}}"><a>系统属性</a></li>
+            <li class="layui-nav-item nav-menu @if(url()->current() == route('mp-send-index') ) layui-this @endif"  url="{{route('mp-send-index')}}"><a>服务通知</a></li>
 
         @endif
     </ul>
