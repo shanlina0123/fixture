@@ -57,6 +57,9 @@ class WxMessageController extends Controller
     }
 
 
+    /**
+     * 小程序发消息
+     */
     public function responseMsg()
     {
         $postStr = file_get_contents("php://input");
@@ -94,6 +97,10 @@ class WxMessageController extends Controller
     }
 
 
+    /**
+     * @return string
+     * 公众号发消息
+     */
     public function mpResponseMsg()
     {
         $postStr = file_get_contents("php://input");
@@ -102,6 +109,7 @@ class WxMessageController extends Controller
             libxml_disable_entity_loader(true);
             $postObj = simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
             $MsgType = trim($postObj->MsgType);
+            //Log::error(var_export($postObj->EventKey,true));
             switch ( $MsgType )
             {
                 case 'event':
@@ -119,10 +127,11 @@ class WxMessageController extends Controller
                             {
                                 $contentStr = '绑定失败';
                             }
-                            return $this->transmitText($postObj,$contentStr);
+                            echo $this->transmitText($postObj,$contentStr);
                             break;
                         case "SCAN":
                             //处理结果
+                            Log::error(var_export($postObj->EventKey,true));
                             $wxchat = new WeChatPublicNumberBusiness();
                             $res = $wxchat->mpAuthorizeBack($postObj->EventKey,$postObj->FromUserName);
                             if( $res )
@@ -132,7 +141,7 @@ class WxMessageController extends Controller
                             {
                                 $contentStr = '绑定失败';
                             }
-                            return $this->transmitText($postObj,$contentStr);
+                            echo $this->transmitText($postObj,$contentStr);
                             break;
                         default:
                             break;
@@ -163,7 +172,6 @@ class WxMessageController extends Controller
                     <CreateTime>%s</CreateTime>
                     <MsgType><![CDATA[%s]]></MsgType>
                     <Content><![CDATA[%s]]></Content>
-                    <FuncFlag>0</FuncFlag>
                     </xml>";
         $resultStr = sprintf($textTpl, $fromUsername, $toUsername, $time, 'text', $keyword);
         return $resultStr;
