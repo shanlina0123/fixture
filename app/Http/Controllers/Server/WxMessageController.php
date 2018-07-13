@@ -28,6 +28,7 @@ class WxMessageController extends Controller
             }
         }else
         {
+            $this->mpResponseMsg();
             $this->responseMsg();
         }
     }
