@@ -37,6 +37,9 @@ Route::group(['namespace' => 'Server'], function () {
     //测试
     Route::get("test/index","TestController@index")->name("test-index");//test
 
+    //手机授权页面
+    Route::get('mp/authorize/code','WeChatPublicNumberController@authorizeCode')->name('mp-authorize-code');
+
     //中间件登录认证路由
     Route::group(['middleware' => ['checkUser']], function () {
         Route::get('/', 'IndexController@index')->name('index'); //入口

@@ -107,7 +107,7 @@
 <ul class="sharepop clearfix">
     <li>
         <p>公众号二维码</p>
-        <a href="javascript:;"><img src="../../images/erweima.png"></a>
+        <a href="javascript:;"><img id="src" src=""></a>
         <p class="popnotice">这是一段提示信息</p>
     </li>
 </ul>
@@ -122,7 +122,15 @@
     </form>
 </div>
 @section('js')
-    <script type="text/javascript" src="{{pix_asset('server/plugins/validform/Validform_v5.3.2_min.js',false)}}"></script>
+    <script type="text/javascript" src="{{pix_asset('server/plugins/code/jquery.qrcode.min.js',false)}}"></script>
+    <script>
+        function getTime(companytempid,datatemplateid) {
+            var back = '{{route('mp-authorize-code').'?uid='.$user->id.'&time='.time()}}';
+                back = back+'&companytempid'+companytempid+'&datatemplateid'+datatemplateid;
+                back = encodeURIComponent(back);
+            var backUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxbe1cdb19d2290193&redirect_uri="+back+"&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect";
+        }
+    </script>
     <script>
         layui.use(['form', 'jquery', 'layer'], function() {
             var form = layui.form,
@@ -188,7 +196,19 @@
                                 {
                                     if( data.data.isOpenid == 0 )
                                     {
+                                        layer.closeAll();
+                                        $("#src").attr('src','https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket='+data.data.ticket);
                                         //弹出
+                                        layer.open({
+                                            type: 1,
+                                            closeBtn: 1,
+                                            title: false,
+                                            shadeClose: true,
+                                            content: $('.sharepop'),
+                                        });
+                                    }else
+                                    {
+                                        location = location;
                                     }
                                 }else
                                 {

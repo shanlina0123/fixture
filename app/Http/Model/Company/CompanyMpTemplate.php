@@ -24,6 +24,6 @@ class CompanyMpTemplate extends Model
      */
     public function companyToUserTemplate()
     {
-        return $this->belongsTo('App\Http\Model\User\UserMpTemplate','id','companytempid');
+        return $this->belongsTo('App\Http\Model\User\UserMpTemplate','datatemplateid','datatemplateid');
     }
 }

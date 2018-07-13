@@ -19,6 +19,7 @@ class WeChatPublicNumberBusiness extends ServerBase
 {
     private static $send_url = 'https://api.weixin.qq.com/cgi-bin/message/template/send?';
     private static $token_url = 'https://api.weixin.qq.com/cgi-bin/token?';
+    private static $ticket_url = 'https://api.weixin.qq.com/cgi-bin/qrcode/create?';
 
     /**
      * 发送模板消息
@@ -194,7 +195,7 @@ class WeChatPublicNumberBusiness extends ServerBase
         $where['companyid'] = $user->companyid;
         $where['datatemplateid'] = decrypt($data['datatemplateid']);
         $res = CompanyMpTemplate::where($where)->with(['companyToUserTemplate'=>function($query) use($user){
-                    return $query->where('userid',$user->id);
+                    return $query->where('userid',$user->id)->first();
                }])->first();
         if( $res )
         {
@@ -202,6 +203,7 @@ class WeChatPublicNumberBusiness extends ServerBase
             $res->status = 1;
             if($res->save())
             {
+                $res->ticket = $this->getTicket($user->companyid);
                 $res->isOpenid = $res->companyToUserTemplate?1:0;
                 return $res;
             }else return false;
@@ -214,9 +216,37 @@ class WeChatPublicNumberBusiness extends ServerBase
             $res->status = 1;
             if( $res->save() )
             {
+                $res->ticket = $this->getTicket($user->companyid);
                 $res->isOpenid = 0;
                 return $res;
             }else return false;
         }
+    }
+
+
+    /**
+     * @param $companyId
+     * @return bool
+     * 生成ticket
+     */
+    public function getTicket($companyId)
+    {
+        $access_token = $this->getAccessToken( $companyId );
+        $url = self::$ticket_url.'access_token='.$access_token;
+        $post = array(
+            "expire_seconds"=>300,
+            "action_name"=>"QR_STR_SCENE",
+            "action_info"=>["scene"=>["scene_id"=>12456]]
+        );
+        $data = wxPostCurl($url,$post);
+        if( $data )
+        {
+            $data = json_decode($data,true);
+            if( array_has($data,'ticket') )
+            {
+               return $data['ticket'];
+            }
+        }
+        return false;
     }
 }
