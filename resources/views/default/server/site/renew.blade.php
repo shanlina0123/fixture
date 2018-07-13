@@ -50,7 +50,7 @@
                 <div class="layui-input-block layui-upload">
                     <button type="button" class="layui-btn" id="updateImg"><i class="layui-icon"></i>上传图片(最多9张)</button>
                     <button type="button" class="layui-btn" id="updateVideo"><i class="layui-icon"></i>上传视频(最多1个)</button>
-                    <span class="imgnotice">请上传图片240px*240px,视频mp4,格式最大{{config("configure.maxImgSize")}}</span>
+                    <span class="imgnotice">请上传图片240px*240px,视频mp4格式,单文件最大{{config("configure.maxImgSize")}}</span>
                     <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
                         预览图：
                         <div class="layui-upload-list clearfix" id="update_img"></div>
