@@ -16,6 +16,15 @@ class PublicController extends StoreBaseController
             responseData(\StatusCode::ERROR,'文件不存在');
         }
         $obj = new \stdClass();
+        
+        //检验文件类型
+        $fileTypes = array('image/jpeg','image/png','video/mp4');
+        if(!in_array($request->file('file')->getMimeType(),$fileTypes)) {
+            $obj->code = 0;
+            $obj->msg =  '文件格式不合法'.$request->file('file')->getMimeType();
+            $obj->data = '';
+            return response()->json($obj, 200);
+        }
         //检验大小
         $fileSize=$request->file('file')->getSize();
         if(!$request->file('file')->getSize() || $fileSize>config("configure.maxImgSizeByte"))

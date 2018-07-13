@@ -64,8 +64,8 @@ layui.use(['form', 'layer','upload'], function() {
                 {
                     if(isvideo==0)
                     {
-                        arr.push(res.data.name);
-                        $('#update_img').append('<div class="ImgWrap fl"><span><img src="/default/server/images/close.png" data-title="'+ res.data.name +'" onclick="delTempImg(this)" style="z-index:1"></span><video src="'+res.data.src+'" class="layui-upload-img"  width="100" height="100" controls="controls">your browser does not support the video tag </video></div>');
+                        arr.unshift(res.data.name);
+                        $('#update_img').prepend('<div class="ImgWrap fl"><span><img src="/default/server/images/close.png" data-title="'+ res.data.name +'" onclick="delTempImg(this)" style="z-index:1"></span><video src="'+res.data.src+'" class="layui-upload-img"  width="100" height="100" controls="controls">your browser does not support the video tag </video></div>');
                         $("#img").val(arr.join());
                     }else{
                         layer.msg('视频最多可上传1个');
