@@ -7,7 +7,7 @@ layui.use(['form', 'layer','upload'], function() {
 
 
     /**
-     * 拖拽上传
+     * 单图上传--工地封面
      */
     upload.render({
         elem: '#test10',
@@ -39,7 +39,53 @@ layui.use(['form', 'layer','upload'], function() {
     });
 
     /**
-     * 多图片上传
+     * 上传小视频-工地动态
+     */
+    upload.render({
+        elem: '#updateVideo',
+        exts:"mp4",
+        url: '/upload-temp-img',
+        accept:'video',
+        acceptMime:'video/mp4',
+        before: function(obj)
+        {
+            layer.load(); //上传loading
+        }
+        ,done: function(res)
+        {
+            layer.closeAll();
+            //上传完毕
+            if( res.code==1)
+            {
+                var allnum=$(".layui-upload-img").length;
+                var isvideo=$(".ImgWrap").find("video").length?1:0;
+                var arr = $("#img").val().split(",");
+                if(allnum<9)
+                {
+                    if(isvideo==0)
+                    {
+                        arr.unshift(res.data.name);
+                        $('#update_img').prepend('<div class="ImgWrap fl"><span><img src="/default/server/images/close.png" data-title="'+ res.data.name +'" onclick="delTempImg(this)" style="z-index:1"></span><video src="'+res.data.src+'" class="layui-upload-img"  width="100" height="100" controls="controls">your browser does not support the video tag </video></div>');
+                        $("#img").val(arr.join());
+                    }else{
+                        layer.msg('视频最多可上传1个');
+                    }
+
+                }else{
+                    layer.msg('图片加视频最多可上传9个');
+                }
+            }else{
+                layer.msg(res.msg,{icon: 2,  time:2000});
+            }
+        },
+        error: function(index, upload){
+            layer.closeAll();
+            layer.msg(res.msg,{icon: 2,  time:2000});
+        }
+    });
+
+    /**
+     * 多图片上传-工地动态
      */
     upload.render({
         elem: '#updateImg'
@@ -65,24 +111,17 @@ layui.use(['form', 'layer','upload'], function() {
             //上传完毕
             if( res.code==1)
             {
-                var img = $("#img").val();
-                if( img )
+                var allnum=$(".layui-upload-img").length;
+                var isvideo=$(".ImgWrap").find("video").length?1:0;
+                var arr = $("#img").val().split(",");
+                if(allnum<9)
                 {
-                    var arr = img.split(",");
-                    if( arr.length < 9 )
-                    {
-                        arr.push(res.data.name);
-                        $('#update_img').append('<div class="ImgWrap fl"><span><img src="/default/server/images/close.png" data-title="'+ res.data.name +'" onclick="delTempImg(this)"></span><img src="'+ res.data.src +'" alt="'+ res.data.name +'" class="layui-upload-img"></div>');
-                        $("#img").val(arr.join());
-                    }else
-                    {
-                        layer.msg('最多可上传9个哦');
-                    }
+                    arr.push(res.data.name);
+                    $('#update_img').append('<div class="ImgWrap fl"><span><img src="/default/server/images/close.png" data-title="'+ res.data.name +'" onclick="delTempImg(this)"></span><img src="'+ res.data.src +'" alt="'+ res.data.name +'" class="layui-upload-img"></div></div>');
 
-                }else
-                {
-                    $('#update_img').append('<div class="ImgWrap fl"><span><img src="/default/server/images/close.png" data-title="'+ res.data.name +'" onclick="delTempImg(this)"></span><img src="'+ res.data.src +'" alt="'+ res.data.name +'" class="layui-upload-img"></div>');
-                    $("#img").val(res.data.name);
+                    $("#img").val(arr.join());
+                }else{
+                    layer.msg('图片最多可上传9张');
                 }
             }else{
                 layer.msg(res.msg,{icon: 2,  time:2000});
@@ -163,6 +202,7 @@ function delTempImg( index )
 {
     var name = $(index).attr('data-title');
     $.get('/upload-temp-del/'+name);
+
     $(index).parents('.ImgWrap').remove();
 }
 
