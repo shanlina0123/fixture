@@ -3,8 +3,8 @@
 @section('css')
     <style>
         .layui-upload-img {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
         }
         .ImgWrap {
             position: relative;
@@ -16,6 +16,9 @@
             right: 3px;
             top: 3px;
             cursor: pointer;
+        }
+        video{
+            width: 202px!important;
         }
     </style>
 @stop
@@ -45,8 +48,9 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">上传图片</label>
                 <div class="layui-input-block layui-upload">
-                    <button type="button" class="layui-btn" id="updateImg"><i class="layui-icon"></i>上传图片</button>
-                    <span class="imgnotice">请上传240px*240px的图片,最大{{config("configure.maxImgSize")}}</span>
+                    <button type="button" class="layui-btn" id="updateImg"><i class="layui-icon"></i>上传图片(最多9张)</button>
+                    <button type="button" class="layui-btn" id="updateVideo"><i class="layui-icon"></i>上传视频(最多1个)</button>
+                    <span class="imgnotice">请上传图片240px*240px,视频mp4,格式最大{{config("configure.maxImgSize")}}</span>
                     <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
                         预览图：
                         <div class="layui-upload-list clearfix" id="update_img"></div>
