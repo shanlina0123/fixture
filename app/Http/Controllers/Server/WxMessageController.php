@@ -12,6 +12,7 @@ namespace App\Http\Controllers\Server;
 use App\Http\Controllers\Controller;
 use App\Http\Model\Wx\SmallProgram;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class WxMessageController extends Controller
 {
@@ -98,6 +99,7 @@ class WxMessageController extends Controller
             libxml_disable_entity_loader(true);
             $postObj = simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
             $MsgType = trim($postObj->MsgType);
+            Log::error('www'.json_decode($postObj));
             switch ( $MsgType )
             {
                 case "subscribe":
