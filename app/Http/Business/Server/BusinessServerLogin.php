@@ -86,7 +86,7 @@ class BusinessServerLogin extends ServerBase
             session(['userInfo' => $res,"menueInfo"=>$menue]);
 
             $obj->status = 1;
-            $obj->msg = '登陆成功';
+            $obj->msg = '登录成功';
             return $obj;
         } else {
             $obj->status = 0;

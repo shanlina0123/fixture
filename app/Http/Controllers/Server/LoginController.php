@@ -27,7 +27,7 @@ class LoginController extends ServerBaseController
             {
                 case 1:
                     //密码登陆
-                    if( is_numeric($data['username']) && strlen($data['username']) )
+                    if( is_numeric($data['username']) && strlen($data['username']) == 11 )
                     {
                         //手机号码
                         $request->validate([
@@ -86,7 +86,7 @@ class LoginController extends ServerBaseController
                     $res = $this->user->checkUserPhone($where);
                     break;
                 default:
-                    return redirect()->back()->with('msg','登陆失败');
+                    return redirect()->back()->with('msg','登录失败');
                     break;
             }
 

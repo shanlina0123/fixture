@@ -65,7 +65,7 @@
                             <ul class="centerul">
                                 @if(is_array(json_decode($row->content,true)))
                                     @foreach( json_decode($row->content,true) as $k=>$v )
-                                    <li>@if($loop->first || $loop->last) {{$v}} @else <span>{{$k}}</span>{{$v}} @endif</li>
+                                    <li>@if($loop->first || $loop->last && $k =='remark') {{$v}} @else <span>{{$k}}</span>{{$v}} @endif</li>
                                     @endforeach
                                 @endif
                             </ul>

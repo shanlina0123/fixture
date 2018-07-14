@@ -15,6 +15,7 @@ use App\Http\Model\User\UserMpTemplate;
 use App\Http\Model\Wx\SmallProgram;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class WeChatPublicNumberBusiness extends ServerBase
 {
@@ -31,8 +32,6 @@ class WeChatPublicNumberBusiness extends ServerBase
         $url = self::$send_url.'access_token='.$data->access_token;
         $content = $data->content;
         wxPostCurl( $url, $content );
-
-
     }
 
 
@@ -56,6 +55,7 @@ class WeChatPublicNumberBusiness extends ServerBase
             if( $res == false )
             {
                 $res = UserMpTemplate::where(['isdefault'=>1,'datatemplateid'=>$type,'companyid'=>$companyId])->with('userToCompanyTemplate')->first();
+                $data['value'] = '提示:由于对应负管理人员未开启接收消息权限，本通知转发给超级管理员。';
             }
         }
         if( $res )
@@ -80,7 +80,7 @@ class WeChatPublicNumberBusiness extends ServerBase
      * @param $data
      * 客户留言通知
      */
-    private function customerReservation( $res, $companyId, $data )
+    private function leavingMessage( $res, $companyId, $data )
     {
         try{
 
@@ -95,6 +95,7 @@ class WeChatPublicNumberBusiness extends ServerBase
                     'keyword1'=>['value'=>$data['name']?$data['name']:'未填写姓名'],//客户姓名
                     'keyword2'=>['value'=>$data['content']],//内容
                     'keyword3'=>['value'=>$time],
+                    'remark'=>['value'=>array_has($data,'value')?$data['value']:'','color'=>'#ff0000']
                 )
             );
             //发送
@@ -105,7 +106,14 @@ class WeChatPublicNumberBusiness extends ServerBase
         }
     }
 
-    private function leavingMessage( $res, $companyId, $data )
+    /**
+     * @param $res
+     * @param $companyId
+     * @param $data
+     * @return bool
+     * 客户预约
+     */
+    private function customerReservation( $res, $companyId, $data )
     {
         try{
 

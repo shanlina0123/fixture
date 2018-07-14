@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Common;
 
 use App\Http\Business\Common\Lucky;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 class LuckyController extends Controller
 {
@@ -84,8 +85,7 @@ class LuckyController extends Controller
     public function lucyDraw()
     {
         $data = $this->request->all();
-        $data['companyid'] = $this->apiUser->companyid;
-        $data['userid'] = $this->apiUser->id;
+        $user = $this->apiUser;
         $validator = Validator::make(
             $data,[
             'id'=>'sometimes|required'
@@ -98,7 +98,7 @@ class LuckyController extends Controller
             $messages = $validator->errors()->first();
             responseData(\StatusCode::CHECK_FORM,'验证失败','',$messages);
         }
-        $res = $this->lucky->lucyDraw($data);
+        $res = $this->lucky->lucyDraw($data,$user);
         if( $res )
         {
             responseData(\StatusCode::SUCCESS,'您的抽奖次信息',$res);
@@ -113,9 +113,7 @@ class LuckyController extends Controller
     public function lucyClient()
     {
         $data = trimValue($this->request->all());
-        $data['companyid'] = $this->apiUser->companyid;
-        $data['userid'] = $this->apiUser->id;
-        $data['wechatopenid'] = $this->apiUser->wechatopenid;
+        $user = $this->apiUser;
         $validator = Validator::make(
             $data,[
             'companyid'=>'required|numeric',//公司
@@ -124,7 +122,6 @@ class LuckyController extends Controller
             'phone'=>'required|regex:/^1[345789][0-9]{9}$/',//电话
             'name'=>'present|max:10',//姓名
             'content'=>'required',//内容
-            'wechatopenid'=>'required',//openid
             'activityluckyid'=>'required'
         ],[
                 'companyid.required'=>'公司信息未获取到',
@@ -138,7 +135,6 @@ class LuckyController extends Controller
                 'name.present'=>'缺少用户名',
                 'name.max'=>'用户名有误',
                 'content.required'=>'内容不能为空',
-                'wechatopenid.required'=>'用户openid不能为空',
                 'activityluckyid.required'=>'活动ID不能为空',
             ]
         );
@@ -147,9 +143,10 @@ class LuckyController extends Controller
             $messages = $validator->errors()->first();
             responseData(\StatusCode::CHECK_FORM,'验证失败','',$messages);
         }
-        $res = $this->lucky->lucyClient($data);
+        $res = $this->lucky->lucyClient($data,$user);
         if( $res )
         {
+            Cache::tags(['luckyClient'.$user->companyid])->flush();
             responseData(\StatusCode::SUCCESS,'提交成功');
         }
         responseData(\StatusCode::ERROR,'提交失败');
