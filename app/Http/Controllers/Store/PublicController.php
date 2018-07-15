@@ -20,19 +20,19 @@ class PublicController extends StoreBaseController
         //检验文件类型
         $fileTypes = array('image/jpeg','image/png','video/mp4');
         if(!in_array($request->file('file')->getMimeType(),$fileTypes)) {
-            $obj->code = 0;
+            $obj->src ='';
+            $obj->name ='';
             $obj->msg =  '文件格式不合法'.$request->file('file')->getMimeType();
-            $obj->data = '';
-            return response()->json($obj, 200);
+            responseData(\StatusCode::ERROR,$obj->msg);
         }
         //检验大小
         $fileSize=$request->file('file')->getSize();
         if(!$request->file('file')->getSize() || $fileSize>config("configure.maxImgSizeByte"))
         {
-            $obj->code = 0;
+            $obj->src ='';
+            $obj->name ='';
             $obj->msg = $fileSize."图片大小不能低于0或超过".config("configure.maxImgSize");;
-            $obj->data = '';
-            return response()->json($obj, 200);
+            responseData(\StatusCode::ERROR,$obj->msg);
         }
         try {
             $res = $request->file('file')->store('temp', 'temp');

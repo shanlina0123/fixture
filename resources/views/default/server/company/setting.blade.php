@@ -67,7 +67,7 @@
                 <label class="layui-form-label">公司Logo</label>
                 <div class="layui-upload-drag" id="test10" style="float: left">
                     <i class="layui-icon"></i>
-                    <p>请上传174px*64px的图片,最大{{config("configure.maxImgSize")}}</p>
+                    <p>请上传150px*150px的图片,最大{{config("configure.maxImgSize")}}</p>
                 </div>
                 @if( $data && $data->logo )  <div  id="companyLogoImg" class="uploadImg layui-inline fl"><img  id="companySrc" width="230" height="132" src="{{getImgUrl($data?$data->logo:'')}}" class="layui-upload-img"> </div> @endif
             </div>

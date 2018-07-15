@@ -110,7 +110,7 @@ class DynamicBusiness
                             //写入数据库
                             $img[$k]['dynamicid'] = $res->id;
                             $img[$k]['ossurl'] = 'site/'.$res->sitetid.'/dynamic/'.$row;
-                            $img[$k]['type'] = 0;
+                            $img[$k]['type'] = substr($row,-4)==".mp4"?1:0;
                             $img[$k]['created_at'] = date("Y-m-d H:i:s");
                         }
                         if( count($img) )

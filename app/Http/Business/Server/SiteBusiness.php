@@ -578,7 +578,7 @@ class SiteBusiness extends ServerBase
                         //写入数据库
                         $img[$k]['dynamicid'] = $dynamic->id;
                         $img[$k]['ossurl'] = 'site/'.$site->uuid.'/dynamic/'.$row;
-                        $img[$k]['type'] = 0;
+                        $img[$k]['type'] = substr($row,-4)==".mp4"?1:0;
                         $img[$k]['created_at'] = date("Y-m-d H:i:s");
                     }
                     if( count($img) )
@@ -593,6 +593,8 @@ class SiteBusiness extends ServerBase
             DB::commit();
             $obj->status = 1;
             $obj->msg = '更新成功';
+            //删除缓存
+            Cache::tags(['DynamicListPc'.$site->companyid])->flush();
             return $obj;
         }catch ( Exception $e )
         {

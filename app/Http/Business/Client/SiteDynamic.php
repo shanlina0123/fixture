@@ -34,7 +34,9 @@ class SiteDynamic extends ClientBase
             $tagWhere = $request->input('page').implode('',$where);
         }
         $value = Cache::tags($tag)->remember( $tag.$tagWhere,config('configure.sCache'), function() use( $where, $request,$siteID ){
-                $sql = Dynamic::where( $where )->orderBy('id','desc')->with('dynamicToImages');//关联图片
+                $sql = Dynamic::where( $where )->orderBy('id','desc')->with(['dynamicToImages' => function ($sql) {
+                    $sql->orderBy('type', 'desc');
+                }]);//关联图片
                 //参与者的动态
                 if( $siteID )
                 {

@@ -31,7 +31,7 @@ class ClientCompanyController extends ClientBaseController
             $res = Cache::get('CompanyInfo'.$user->companyid);
         }else
         {
-            $res = Company::where($where)->select('name','fullname','phone','fulladdr','resume','logo','covermap')->first();
+            $res = Company::where($where)->select('name','fullname','phone','addr','fulladdr','resume','logo','covermap')->first();
             $res->covermap = $res->covermap?$res->covermap:'';
             $res->applicationName = config('configure.applicationName');
             Cache::put('CompanyInfo'.$user->companyid,$res,config('configure.sCache'));
