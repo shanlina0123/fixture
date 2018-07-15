@@ -118,7 +118,7 @@ class WeChatPublicNumberController extends ServerBaseController
             $res = $this->weChat->sendAddTemplate($user,$mpstatus,$datatemplateid,$companytempid);
             if( $res === true )
             {
-                responseData(\StatusCode::SUCCESS,'开启成功');
+                responseData(\StatusCode::SUCCESS,'操作成功');
             }elseif( $res === false )
             {
                 responseData(\StatusCode::ERROR,'开启失败');

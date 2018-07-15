@@ -15,6 +15,7 @@ use App\Http\Model\User\UserMpTemplate;
 use App\Http\Model\Wx\SmallProgram;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class WeChatPublicNumberBusiness extends ServerBase
 {
@@ -31,8 +32,6 @@ class WeChatPublicNumberBusiness extends ServerBase
         $url = self::$send_url.'access_token='.$data->access_token;
         $content = $data->content;
         wxPostCurl( $url, $content );
-
-
     }
 
 
@@ -56,6 +55,7 @@ class WeChatPublicNumberBusiness extends ServerBase
             if( $res == false )
             {
                 $res = UserMpTemplate::where(['isdefault'=>1,'datatemplateid'=>$type,'companyid'=>$companyId])->with('userToCompanyTemplate')->first();
+                $data['value'] = '提示:由于对应负管理人员未开启接收消息权限，本通知转发给超级管理员。';
             }
         }
         if( $res )
@@ -66,8 +66,10 @@ class WeChatPublicNumberBusiness extends ServerBase
                 switch ( (int)$type )
                 {
                     case 1://客户预约通知
-                        $this->customerReservation($res,$companyId, $data );
+                        $this->customerReservation($res,$companyId, $data);
                         break;
+                    case 2://客户留言
+                        $this->leavingMessage($res,$companyId, $data);
                 }
             }
         }
@@ -76,7 +78,40 @@ class WeChatPublicNumberBusiness extends ServerBase
     /**
      * @param $res
      * @param $data
-     * 客户预约通知
+     * 客户留言通知
+     */
+    private function leavingMessage( $res, $companyId, $data )
+    {
+        try{
+
+            $time = date('Y-m-d H:i');
+            $obj = new \stdClass();
+            $obj->access_token = $this->getAccessToken($companyId);
+            $obj->content = array(
+                'touser'=>$res->mpopenid,
+                'template_id'=>$res->userToCompanyTemplate->mptemplateid,
+                'data'=>array(
+                    'first'=>['value'=>'客户有新留言了，赶快看吧',"color"=>"#173177"],
+                    'keyword1'=>['value'=>$data['name']?$data['name']:'未填写姓名'],//客户姓名
+                    'keyword2'=>['value'=>$data['content']],//内容
+                    'keyword3'=>['value'=>$time],
+                    'remark'=>['value'=>array_has($data,'value')?$data['value']:'','color'=>'#ff0000']
+                )
+            );
+            //发送
+            $this->sendMessage($obj);
+        }catch (\Exception $e)
+        {
+            return false;
+        }
+    }
+
+    /**
+     * @param $res
+     * @param $companyId
+     * @param $data
+     * @return bool
+     * 客户预约
      */
     private function customerReservation( $res, $companyId, $data )
     {
@@ -94,7 +129,7 @@ class WeChatPublicNumberBusiness extends ServerBase
                     'keyword2'=>['value'=>$data['phone']],//客户电话
                     'keyword3'=>['value'=>$time],
                     'keyword4'=>['value'=>$data['title']],
-                    'remark'=>['value'=>array_has($data,'uarea')?'住房面积'.$data['uarea'].'㎡，选择城市，'.$data['clientcity']:'选择城市，'.$data['clientcity']],
+                    'remark'=>['value'=>array_has($data,'uarea')?'客户在 '.$data['clientcity'].'发起了预约,住房面积为'.$data['uarea'].'平米':'客户在'.$data['clientcity'].'发起了预约'],
                 )
             );
             //发送
@@ -320,14 +355,14 @@ class WeChatPublicNumberBusiness extends ServerBase
         $where['companyid'] = $user->companyid;
         $res = UserMpTemplate::where($where)->first();
         //查询看用户有无开启过消息提示主要是获取openid
-        $openid = UserMpTemplate::where(['userid'=>$user->id,'companyid'=> $user->companyid])->where('mpopenid','!=','')->value('mpopenid');
+        $openid = UserMpTemplate::where(['userid'=>$user->id,'companyid'=>$user->companyid])->orderBy('mpopenid','desc')->value('mpopenid');
         if( $res )
         {
             //存在用户
             if($res->mpopenid || $openid)
             {
                 $res->mpopenid = $openid;
-                $res->isOpenid = 1;
+                $res->mpstatus = $mpstatus;
                 return $res->save();
             }else
             {
@@ -345,7 +380,7 @@ class WeChatPublicNumberBusiness extends ServerBase
             $ump->companyid = $user->companyid;
             $ump->userid = $user->id;
             $ump->companytempid = decrypt($companytempid);
-            $ump->datatemplateid = decrypt($companytempid);
+            $ump->datatemplateid = decrypt($datatemplateid);
             $ump->isdefault = 0;
             if( $openid )
             {

@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Common;
 
 use App\Http\Business\Common\JmessageBusiness;
 use App\Http\Business\Common\SystemMessage;
+use App\Http\Business\Server\WeChatPublicNumberBusiness;
 use App\Http\Controllers\Controller;
 use App\Http\Model\User\User;
 use Illuminate\Http\Request;
@@ -185,13 +186,31 @@ class SystemMessageController extends Controller
         var_dump($user);
     }
 
+
     /**
-     * 头像
+     * 检测对方在线不
      */
-    public function jmessageGetUserFace()
+    public function jmessageUserTesting()
     {
-        $userName = $this->request->input('username');
-        $img = User::whereIn('jguser',$userName)->pluck('faceimg','jguser');
+        $friends = $this->request->input('username');
+        $content = $this->request->input('content');
+        $createuserid = $this->request->input('createuserid');
+        $Jmessages = new JmessageBusiness();
+        $res = $Jmessages->userStat($friends);
+        if( array_has($res,'body'))
+        {
+            if(  $res['body']['login'] != true &&  $res['body']['online'] != true)
+            {
+                //对方不在线发送微信消息
+                $user = $this->apiUser;
+                $wchat = new WeChatPublicNumberBusiness();
+                $event['sourceid'] = 1;//发送留言信息对的是个人
+                $event['createuserid'] = $createuserid;//发送留言信息对的是个人
+                $event['name'] = $user->nickname;
+                $event['content'] = $content;
+                $wchat->processingData($user->companyid, 2, $event );
+            }
+        }
     }
 
 }

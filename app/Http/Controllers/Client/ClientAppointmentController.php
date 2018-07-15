@@ -73,7 +73,7 @@ class ClientAppointmentController extends ClientBaseController
             event('log.notice',array('type'=>4,$this->apiUser,'event'=>$data));
             //发给B端
             event('log.notice',array('type'=>4,$this->apiUser,'event'=>$data,'notice_type'=>true));
-            responseData(\StatusCode::SUCCESS,'预约成功',$res);
+            responseData(\StatusCode::SUCCESS,'预约成功我们会尽快联系您',$res);
         }else
         {
             responseData(\StatusCode::ERROR,'预约失败',$res);

@@ -24,9 +24,9 @@ return [
     'address'=>'pages/index/index',//审核代码地址
     'tag'=>'装修',//审核代码标签
     'title'=>'装修',//小程序页面的标题
-    'template_id'=>'6',//小程序模板id
-    'version'=>'2.0.0',//小程序模板版本
-    'desc'=>'云易装v2.0',//小程序模板版本描述
+    'template_id'=>'7',//小程序模板id
+    'version'=>'1.0.1',//小程序模板版本
+    'desc'=>'云易装v1.0',//小程序模板版本描述
     "wxCode"=>[
             "lucky"=>"pages/activity/prize/prize",
             "site"=>"pages/projectdetail/projectdetail",

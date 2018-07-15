@@ -23,7 +23,7 @@ class Lucky
     {
         $res = new \stdClass();
         $res->info = ActivityLucky::where(['companyid'=>$data['companyid'],'id'=>$data['id']])->first();
-        $res->luck_num = ActivityLuckyNum::where(['userid'=>$data['userid'],'activityluckyid'=>$data['id']])->first();
+        $res->luck_num = ActivityLuckyNum::where(['userid'=>$data['userid'],'activityluckyid'=>$data['id']])->with('LuckyNumToClient')->first();
         //判断如果中途修改了人数限制那么就得判断
         if( $res->info->ischancelimit == 1 )
         {
@@ -93,7 +93,7 @@ class Lucky
      * @param $data
      * 抽奖
      */
-    public function lucyDraw( $data )
+    public function lucyDraw( $data, $user )
     {
         //1.判断活动是不是在线
         //2.判断活动开始时间
@@ -101,7 +101,7 @@ class Lucky
         //4.判断个人活动参与次数
         //5.判断中将次数
         //6.抽奖
-        $res = ActivityLucky::where(['companyid'=>$data['companyid'],'id'=>$data['id']])->first();
+        $res = ActivityLucky::where(['companyid'=>$user->companyid,'id'=>$data['id']])->first();
         if( !$res )
         {
             responseData(\StatusCode::ERROR,'未查询到信息');
@@ -132,7 +132,7 @@ class Lucky
         if( $res->ischancelimit == 1 )
         {
             //限制了个人抽奖机会
-            $userLuckNum = ActivityLuckyNum::where(['activityluckyid'=>$data['id'],'userid'=>$data['userid']])->value('chanceusenum');
+            $userLuckNum = ActivityLuckyNum::where(['activityluckyid'=>$data['id'],'userid'=>$user->id])->value('chanceusenum');
             if( $res->chancelimitnum <= $userLuckNum )
             {
                 responseData(\StatusCode::ERROR,'您的抽奖次数已达上限');
@@ -149,7 +149,6 @@ class Lucky
            {
                if( $row['levelid'] == 1 )
                {
-                   $saveData['userid'] = $data['userid'];
                    $saveData['iswin'] = 0;
                    $saveData['name'] = $row['name'];
                    $saveData['id'] = $row['id'];
@@ -157,7 +156,7 @@ class Lucky
                    $saveData['picture'] = $row['picture'];
                }
            }
-           $luckRes = $this->saveLuck($res,$saveData);
+           $luckRes = $this->saveLuck($res,$saveData,$user);
            if( $luckRes )
            {
                responseData(\StatusCode::SUCCESS,'您的抽奖次信息',$saveData);
@@ -165,14 +164,14 @@ class Lucky
             responseData(\StatusCode::ERROR,'参与失败');
         }
         //在概率范围内
-        return $this->luckAlgorithm($prize, $res, $data['userid']);
+        return $this->luckAlgorithm($prize, $res, $user);
 
     }
 
     /**
      * 中将算法
      */
-    public function luckAlgorithm( $prize, $res, $uid )
+    public function luckAlgorithm( $prize, $res, $user )
     {
         $indexArr = array();
         for($i=0;$i<sizeof($prize);$i++)
@@ -193,7 +192,6 @@ class Lucky
             {
                 if( $row['levelid'] == 1 )
                 {
-                    $saveData['userid'] = $uid;
                     $saveData['iswin'] = 0;
                     $saveData['name'] = $row['name'];
                     $saveData['id'] = $row['id'];
@@ -201,7 +199,7 @@ class Lucky
                     $saveData['picture'] = $row['picture'];
                 }
             }
-            $luckRes = $this->saveLuck($res,$saveData);
+            $luckRes = $this->saveLuck($res,$saveData,$user);
             if( $luckRes )
             {
                 responseData(\StatusCode::SUCCESS,'您的抽奖次信息',$saveData);
@@ -218,9 +216,8 @@ class Lucky
         $data['iswin'] = 1;
         $data['id'] = $prizeInfo['id'];
         $data['name'] = $prizeInfo['name'];
-        $data['userid'] = $uid;
         $data['picture'] = $prizeInfo['picture'];
-        $luckRes = $this->saveLuck($res,$data);
+        $luckRes = $this->saveLuck($res,$data,$user);
         if( $luckRes )
         {
            return $data;
@@ -249,7 +246,7 @@ class Lucky
     /**
      * 保存抽奖数据
      */
-    public function saveLuck( $res, $data )
+    public function saveLuck( $res, $data, $user )
     {
         try{
             //开启事务
@@ -267,31 +264,62 @@ class Lucky
                 //中了清除一下客户信息缓存
                 Cache::tags(['luckyClient'.$res->companyid])->flush();
                 Cache::forget('getLuckUser'.$res->id);
-
-                //TODO::抽完奖，立即提交客户信息
-
             }
-
             //客户数据统计
-            $LuckyNum = ActivityLuckyNum::where(['activityluckyid'=>$res->id,'userid'=>$data['userid']])->first();
+            $LuckyNum = ActivityLuckyNum::where(['activityluckyid'=>$res->id,'userid'=>$user->id])->first();
             if( $LuckyNum )
             {
+                //没有客户信息
+                if( $LuckyNum->clientid == false )
+                {
+                    //添加用户
+                    $client = new Client();
+                    $client->uuid = create_uuid();
+                    $client->companyid = $res->companyid;
+                    $client->storeid = $res->storeid;
+                    $client->cityid = $res->cityid;
+                    $client->sourcecateid = 2;//客户来源分类
+                    $client->sourceid = 5;//客户来源
+                    $client->name = $user->nickname;
+                    $client->wechatopenid = $user->wechatopenid;
+                    $client->area = 0;
+                    $client->content = $res->title;
+                    $client->created_at = date("Y-m-d H:i:s");
+                    $client->save();
+                    $LuckyNum->clientid = $client->id;
+                }
                 $LuckyNum->activityluckyid = $res->id;
-                $LuckyNum->chanceusenum = $LuckyNum->chanceusenum+1;
+                $LuckyNum->chanceusenum = $res->ischancelimit?$LuckyNum->chanceusenum+1:0;//不限制机会
                 $LuckyNum->iswin = $LuckyNum->iswin?1:$data['iswin'];//第一次中了就不在修改了
                 $LuckyNum->save();
 
             }else
             {
+                //添加用户
+                $client = new Client();
+                $client->uuid = create_uuid();
+                $client->companyid = $res->companyid;
+                $client->storeid = $res->storeid;
+                $client->cityid = $res->cityid;
+                $client->sourcecateid = 2;//客户来源分类
+                $client->sourceid = 5;//客户来源
+                $client->name = $user->nickname;
+                $client->wechatopenid = $user->wechatopenid;
+                $client->area = 0;
+                $client->content = $res->title;
+                $client->created_at = date("Y-m-d H:i:s");
+                $client->save();
+
+                //添加抽奖数据统计
                 $LuckyNum = new ActivityLuckyNum();
                 $LuckyNum->uuid = create_uuid();
                 $LuckyNum->activityluckyid = $res->id;
-                $LuckyNum->clientid = 0;
+                $LuckyNum->clientid = $client->id;
                 $LuckyNum->chancenum = $res->chancelimitnum;
                 $LuckyNum->chanceusenum = 1;
                 $LuckyNum->iswin = $data['iswin'];
                 $LuckyNum->friendhelpusenum = 0;
-                $LuckyNum->userid = $data['userid'];
+                $LuckyNum->userid = $user->id;
                 $LuckyNum->created_at = date('Y-m-d H:i:s');
                 $LuckyNum->save();
             }
@@ -303,10 +331,9 @@ class Lucky
             $Record->prizename = $data['name'];
             $Record->clientid = $LuckyNum->clientid;
             $Record->iswin = $data['iswin'];
-            $Record->userid = $data['userid'];
+            $Record->userid = $user->id;
             $Record->created_at = date('Y-m-d H:i:s');
             $Record->save();
-
 
             DB::commit();
             return true;
@@ -319,36 +346,64 @@ class Lucky
     /**
      * @param $data
      * @return bool
-     * 抽奖客户
+     * 抽奖客户填写资料
      */
-    public function lucyClient( $data )
+    public function lucyClient( $data, $user )
     {
        try{
             //开启事务
             DB::beginTransaction();
-
-           //TODO::因所有抽完中奖后未填写客户资料时候都会记录client表，所以之后再填写客户信息就是完善客户信息update (name phone)
-
-            //添加用户
-            $client = new Client();
-            $client->uuid = create_uuid();
-            $client->companyid = $data['companyid'];
-            $client->storeid = $data['storeid']?$data['storeid']:0;
-            $client->sourcecateid = $data['sourcecateid'];
-            $client->sourceid = $data['sourceid'];
-            $client->phone = $data['phone'];
-            $client->name = $data['name'];
-            $client->area = 0;
-            $client->content = $data['content'];
-            $client->wechatopenid = $data['wechatopenid'];
-            $client->created_at = date("Y-m-d H:i:s");
-            $client->save();
-            //修改抽奖数据
+            //查询活动
             $res = ActivityLucky::where('id',$data['activityluckyid'])->first();
-
-            //写记录
-            if( $res->ishasconnectinfo == 1)
+            //查询奖品统计数据
+            $LuckyNum = ActivityLuckyNum::where(['activityluckyid'=>$data['activityluckyid'],'userid'=>$user->id])->first();
+            if( $LuckyNum )
             {
+                //已经参与了抽奖
+                if($LuckyNum->clientid)
+                {
+                    //有客户信息了修改
+                    $client = Client::where(['companyid'=>$user->companyid,'id'=>$LuckyNum->clientid])->first();
+                    $client->phone = $data['phone'];
+                    $client->name = $data['name'];
+                    $client->save();
+                }else
+                {
+                    //新建客户信息
+                    $client = new Client();
+                    $client->uuid = create_uuid();
+                    $client->companyid = $res->companyid;
+                    $client->storeid = $res->storeid;
+                    $client->cityid = $res->cityid;
+                    $client->sourcecateid = 2;//客户来源分类
+                    $client->sourceid = 5;//客户来源
+                    $client->phone = $data['phone'];
+                    $client->name = $data['name'];
+                    $client->area = 0;
+                    $client->content = $res->title;
+                    $client->wechatopenid = $user->wechatopenid;
+                    $client->created_at = date("Y-m-d H:i:s");
+                    $client->save();
+                }
+            }else
+            {
+                //新建客户信息和个人抽奖数据
+                //新建客户信息
+                $client = new Client();
+                $client->uuid = create_uuid();
+                $client->companyid = $res->companyid;
+                $client->storeid = $res->storeid;
+                $client->cityid = $res->cityid;
+                $client->sourcecateid = 2;//客户来源分类
+                $client->sourceid = 5;//客户来源
+                $client->phone = $data['phone'];
+                $client->name = $data['name'];
+                $client->area = 0;
+                $client->content = $res->title;
+                $client->wechatopenid = $user->wechatopenid;
+                $client->created_at = date("Y-m-d H:i:s");
+                $client->save();
+
                 $LuckyNum = new ActivityLuckyNum();
                 $LuckyNum->uuid = create_uuid();
                 $LuckyNum->activityluckyid = $data['activityluckyid'];
@@ -357,18 +412,9 @@ class Lucky
                 $LuckyNum->chanceusenum = 0;
                 $LuckyNum->iswin = 0;
                 $LuckyNum->friendhelpusenum = 0;
-                $LuckyNum->userid = $data['userid'];
+                $LuckyNum->userid = $user->id;
                 $LuckyNum->created_at = date('Y-m-d H:i:s');
                 $LuckyNum->save();
-            }
-
-            //修改记录
-            if( $res->ishasconnectinfo == 2 )
-            {
-                $LuckyNum = ActivityLuckyNum::where(['activityluckyid'=>$data['activityluckyid'],'userid'=>$data['userid']])->first();
-                $LuckyNum->clientid = $client->id;
-                $LuckyNum->save();
-                ActivityLuckyRecord::where(['activityluckid'=>$data['activityluckyid'],'userid'=>$data['userid']])->update(['clientid'=>$client->id]);
             }
             DB::commit();
             return true;

@@ -11,4 +11,11 @@ class ActivityLuckyNum extends Model
     protected $table = 'activity_luck_num';
     public $timestamps = false;
 
+    /**
+     * 关联客户表
+     */
+    public function LuckyNumToClient()
+    {
+        return $this->belongsTo('App\Http\Model\Client\Client','clientid','id');
+    }
 }
