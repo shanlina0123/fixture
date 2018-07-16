@@ -2,7 +2,8 @@
 SQLyog 企业版 - MySQL GUI v8.14 
 MySQL - 5.5.5-10.1.30-MariaDB : Database - xxs_fixture
 *********************************************************************
-*/
+*/
+
 
 /*!40101 SET NAMES utf8 */;
 
@@ -818,7 +819,8 @@ CREATE TABLE `fixture_filter_function` (
 
 /*Data for the table `fixture_filter_function` */
 
-insert  into `fixture_filter_function`(`id`,`uuid`,`name`,`pid`,`sort`,`ismenu`,`menuname`,`level`,`controller`,`url`,`status`,`created_at`) values (1,'a62045a65ff211e889fa94de807e34a0','活动管理',0,1,1,'活动管理',1,'',NULL,1,'2018-05-25 16:07:00'),(2,'a620486f5ff211e889fa94de807e34a0','项目管理',0,2,1,'项目管理',1,'',NULL,1,'2018-05-25 16:07:00'),(3,'a620498d5ff211e889fa94de807e34a0','客户管理',0,3,1,'客户管理',1,'',NULL,1,'2018-05-25 16:07:00'),(4,'a6204aa75ff211e889fa94de807e34a0','门店管理',0,4,1,'门店管理',1,'StoreController','store-index',1,'2018-05-25 16:07:00'),(5,'a6204b8e5ff211e889fa94de807e34a0','角色管理',0,5,1,'角色管理',1,'RolesController','roles-index',1,'2018-05-25 16:07:00'),(6,'a6204c755ff211e889fa94de807e34a0','用户管理',0,6,1,'用户管理',1,'AdminController','admin-index',1,'2018-05-25 16:07:00'),(7,'a6204d5f5ff211e889fa94de807e34a0','系统属性',0,7,1,'系统属性',1,'DataController','data-index',1,'2018-05-25 16:07:00'),(101,'a6204e405ff211e889fa94de807e34a0','幸运抽奖',1,1,1,'幸运抽奖',2,'ActivityLuckyController','lucky-index',1,'2018-05-25 16:07:00'),(201,'a62055235ff211e889fa94de807e34a0','项目列表',2,1,1,'项目列表',2,'SiteController','site.index',1,'2018-05-25 16:07:00'),(202,'a62056155ff211e889fa94de807e34a0','新建项目',2,2,1,'新建项目',2,'SiteController','site.create',1,'2018-05-25 16:07:00'),(203,'a62056f55ff211e889fa94de807e34a0','阶段模板',2,3,1,'阶段模板',2,'SiteTemplateController','site-template.index',1,'2018-05-25 16:07:00'),(204,'751e6d517b8111e89f8694de807e34a0','工地动态',2,4,0,'工地动态',2,'DynamicController','dynamic-index',1,'2018-06-29 17:47:38'),(301,'a6205c485ff211e889fa94de807e34a0','预约客户',3,1,1,'预约客户',3,'ClientController','client.index',1,'2018-05-25 16:07:00'),(302,'a6205d325ff211e889fa94de807e34a0','抽奖客户',3,2,1,'抽奖客户',3,'ClientController','lucky-client',1,'2018-05-25 16:07:00');
+insert  into `fixture_filter_function`(`id`,`uuid`,`name`,`pid`,`sort`,`ismenu`,`menuname`,`level`,`controller`,`url`,`status`,`created_at`) values (1,'a62045a65ff211e889fa94de807e34a0','活动管理',0,1,1,'活动管理',1,'',NULL,1,'2018-05-25 16:07:00'),(2,'a620486f5ff211e889fa94de807e34a0','项目管理',0,2,1,'项目管理',1,'',NULL,1,'2018-05-25 16:07:00'),(3,'a620498d5ff211e889fa94de807e34a0','客户管理',0,3,1,'客户管理',1,'',NULL,1,'2018-05-25 16:07:00'),(4,'a6204aa75ff211e889fa94de807e34a0','门店管理',0,5,1,'门店管理',1,'StoreController','store-index',1,'2018-05-25 16:07:00'),(5,'a6204b8e5ff211e889fa94de807e34a0','角色管理',0,6,1,'角色管理',1,'RolesController','roles-index',1,'2018-05-25 16:07:00'),(6,'a6204c755ff211e889fa94de807e34a0','用户管理',0,7,1,'用户管理',1,'AdminController','admin-index',1,'2018-05-25 16:07:00'),(7,'a6204d5f5ff211e889fa94de807e34a0','系统属性',0,8,1,'系统属性',1,'DataController','data-index',1,'2018-05-25 16:07:00'),(8,'817dee2788e211e89e1f94de807e34a0','服务通知',0,4,1,'服务通知',1,'WeChatPublicNumberController','mp-send-index',1,'2018-07-16 18:25:05'),(101,'a6204e405ff211e889fa94de807e34a0','幸运抽奖',1,1,1,'幸运抽奖',2,'ActivityLuckyController','lucky-index',1,'2018-05-25 16:07:00'),(201,'a62055235ff211e889fa94de807e34a0','项目列表',2,1,1,'项目列表',2,'SiteController','site.index',1,'2018-05-25 16:07:00'),(202,'a62056155ff211e889fa94de807e34a0','新建项目',2,2,1,'新建项目',2,'SiteController','site.create',1,'2018-05-25 16:07:00'),(203,'a62056f55ff211e889fa94de807e34a0','阶段模板',2,3,1,'阶段模板',2,'SiteTemplateController','site-template.index',1,'2018-05-25 16:07:00'),(204,'751e6d517b8111e89f8694de807e34a0','工地动态',2,4,0,'工地动态',2,'DynamicController','dynamic-index',1,'2018-06-29 17:47:38'),(301,'a6205c485ff211e889fa94de807e34a0','预约客户',3,1,1,'预约客户',3,'ClientController','client.index',1,'2018-05-25 16:07:00'),(302,'a6205d325ff211e889fa94de807e34a0','抽奖客户',3,2,1,'抽奖客户',3,'ClientController','lucky-client',1,'2018-05-25 16:07:00');
+
 
 /*Table structure for table `fixture_filter_role` */
 
@@ -1292,23 +1294,40 @@ CREATE TABLE `fixture_user_token` (
 DELIMITER $$
 
 /*!50003 CREATE DEFINER=`xxs`@`%` PROCEDURE `role_function`()
-BEGIN
-  DECLARE strRoleid int;
-  DECLARE strIslook int;
-  DECLARE stop int default 0;
-  DECLARE cur cursor for(
-		SELECT roleid,islook FROM `fixture_filter_role_function` WHERE functionid=2 and roleid not in (
-			SELECT roleid FROM `fixture_filter_role_function` WHERE functionid=204 GROUP BY roleid
-		) GROUP BY roleid
-	);
-  DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET stop = null;
-  OPEN cur;
-		FETCH cur INTO strRoleid,strIslook;
-		WHILE (stop is not null)DO
-		INSERT INTO `fixture_filter_role_function` VALUES ('', REPLACE(UUID(),"-",""), strRoleid, '204', strIslook, now());
-		FETCH cur INTO strRoleid,strIslook;
-    END WHILE;
-	CLOSE cur;
+BEGIN
+
+  DECLARE strRoleid int;
+
+  DECLARE strIslook int;
+
+  DECLARE stop int default 0;
+
+  DECLARE cur cursor for(
+
+		SELECT roleid,islook FROM `fixture_filter_role_function` WHERE functionid=2 and roleid not in (
+
+			SELECT roleid FROM `fixture_filter_role_function` WHERE functionid=204 GROUP BY roleid
+
+		) GROUP BY roleid
+
+	);
+
+  DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET stop = null;
+
+  OPEN cur;
+
+		FETCH cur INTO strRoleid,strIslook;
+
+		WHILE (stop is not null)DO
+
+		INSERT INTO `fixture_filter_role_function` VALUES ('', REPLACE(UUID(),"-",""), strRoleid, '204', strIslook, now());
+
+		FETCH cur INTO strRoleid,strIslook;
+
+    END WHILE;
+
+	CLOSE cur;
+
 END */$$
 DELIMITER ;
 
