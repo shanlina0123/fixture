@@ -289,8 +289,10 @@
 }
 .part2 .backtext {
   color: #fe161b;
-  text-align: center;
+  text-align: left;
   padding: 10px 0;
+  margin-left: 50px;
+  margin-right: 50px;
 }
 
 .erweimawrap img {

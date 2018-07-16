@@ -35,11 +35,6 @@
         <div class="tabcontent part2">
             @if( $data && $data->status == 0 )
                 <div class="backmessage"><img src="{{pix_asset('server/images/succ.png')}}">&nbsp;授权成功！</div>
-                @if( $data->codestatus < 6 )
-                    <div class="backtext">
-                        <span>错误原因：</span>{!! $data->errmsg !!}</span>
-                    </div>
-                @endif
             @else
                 <p class="tips"><a href="{{route('wx-authorize')}}" class="layui-btn">去授权</a></p>
             @endif
@@ -81,6 +76,13 @@
                         </li>
                     </ul>
                 </div>
+            @endif
+             @if( $data && $data->status == 0 )
+                @if( $data->codestatus < 6 && $data->errmsg )
+                    <div class="backtext">
+                        <span>错误原因：</span>{!! $data->errmsg !!}</span>
+                   </div>
+              @endif
             @endif
             <div class="bottombtn">
                 <a href="javascript:;" class="page2last layui-btn">上一步</a>
