@@ -181,8 +181,8 @@ class PublicController extends ServerBaseController
     public function delTempImg($name)
     {
         @unlink(public_path().'/temp/'.$name);
-
     }
+
     /*public function city()
     {
 

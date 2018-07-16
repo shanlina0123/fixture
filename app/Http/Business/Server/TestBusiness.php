@@ -10,6 +10,7 @@ namespace App\Http\Business\Server;
 
 use App\Http\Business\Common\JmessageBusiness;
 use App\Http\Business\Common\ServerBase;
+use Illuminate\Support\Facades\Cache;
 use JMessage\IM\Resource;
 use JMessage\JMessage;
 use JMessage\IM\User;
@@ -24,9 +25,10 @@ class TestBusiness
     public function index()
     {
         //客户端
-        $jmessage = new JmessageBusiness();
+        //$jmessage = new JmessageBusiness();
 
 
+        Cache::flush();
 
 //        //所有用户
 //        $b = $jmessage->userGetalllist(100, 0);

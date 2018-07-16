@@ -125,7 +125,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" style="font-size: 14px;">账户</label>
                 <div class="layui-input-inline">
-                    <input type="text" class="layui-input" id="username" maxlength="20" minlength="3"  size="20" placeholder="3-20位字符">
+                    <input type="text" class="layui-input" id="username" maxlength="20" minlength="3"  size="20" placeholder="3-20位字符+数字">
                 </div>
             </div>
             <div class="layui-form-item">
@@ -183,7 +183,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" style="font-size: 14px;">账户</label>
                 <div class="layui-input-inline">
-                    <input type="text" class="layui-input"  id="username" maxlength="20" minlength="3"  size="20" placeholder="3-20位字符">
+                    <input type="text" class="layui-input"  id="username" maxlength="20" minlength="3"  size="20" placeholder="3-20位字符+数字">
                 </div>
             </div>
             <div class="layui-form-item">

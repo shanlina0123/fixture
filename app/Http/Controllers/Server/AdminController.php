@@ -98,7 +98,14 @@ class AdminController extends ServerBaseController
             'status.required' => '锁定不能为空', 'status.numeric' => '锁定只能是数字格式']);
         //进行验证
         if ($validator->fails()) {
-            responseData(\StatusCode::PARAM_ERROR, "验证失败", "", $validator->errors());
+            responseData(\StatusCode::PARAM_ERROR, $validator->errors()->first(), "", $validator->errors());
+        }
+
+
+        //账号
+        if (!preg_match_all("/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{3,20}$$/",$data["username"],$array))
+        {
+            responseData(\StatusCode::PARAM_ERROR, "账号格式错误,请输入3-20位字母+数字(区分大小写)", "", ["username" => ["账号格式错误"]]);
         }
 
         //密码
@@ -109,7 +116,7 @@ class AdminController extends ServerBaseController
 
         //检测锁定值是否符合预定义
         if (!in_array($data["status"], [0, 1])) {
-            responseData(\StatusCode::PARAM_ERROR, "验证失败", "", ["status" => ["锁定值不符合预定义"]]);
+            responseData(\StatusCode::PARAM_ERROR, $validator->errors()->first(), "", ["status" => ["锁定值不符合预定义"]]);
         }
 
         //非管理员
@@ -155,9 +162,14 @@ class AdminController extends ServerBaseController
 
         //进行验证
         if ($validator->fails()) {
-            responseData(\StatusCode::PARAM_ERROR, "验证失败", "", $validator->errors());
+            responseData(\StatusCode::PARAM_ERROR, $validator->errors()->first(), "", $validator->errors());
         }
 
+        //账号
+        if (!preg_match_all("/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{3,20}$$/",$data["username"],$array))
+        {
+            responseData(\StatusCode::PARAM_ERROR, "账号格式错误,请输入3-20位字母+数字(区分大小写)", "", ["username" => ["账号格式错误"]]);
+        }
         //密码
         if (!preg_match_all("/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,12}$$/",$data["password"],$array))
         {

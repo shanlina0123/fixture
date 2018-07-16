@@ -54,6 +54,7 @@ Route::group(['namespace' => 'Server'], function () {
        //上传图片
         Route::any('upload-temp-img', 'PublicController@uploadImgToTemp');
         Route::get('upload-temp-del/{name}', 'PublicController@delTempImg');
+
         //Vip
         Route::get("vip","VipController@index")->name("vip-index");//列表
         Route::get("vip/store","VipController@store")->name("vip-store");//申请标准版

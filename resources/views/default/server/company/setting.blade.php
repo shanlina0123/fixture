@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="{{pix_asset('server/css/login.css')}}">
 @endsection
 @section('content')
-<div class="main">
+<div class="main" style="margin-bottom: 100px;">
     <fieldset class="layui-elem-field layui-field-title">
         <legend>填写资料</legend>
     </fieldset>
@@ -45,6 +45,8 @@
             <input type="hidden" id="fulladdr" name="fulladdr" value="{{$data?$data->fulladdr:''}}" >
             <input type="hidden" id="companyLogoName" value="" name="logo"  >
             <input type="hidden" id="covermapName" value="" name="covermap">
+            <input type="hidden" id="delcompanyLogoName" value="" name="dellogo"  >
+            <input type="hidden" id="delcovermapName" value="" name="delcovermap">
             <div class="layui-form-item">
                 <label class="layui-form-label">详细地址</label>
                 <div class="layui-input-block">
@@ -69,7 +71,10 @@
                     <i class="layui-icon"></i>
                     <p>请上传150px*150px的图片,最大{{config("configure.maxImgSize")}}</p>
                 </div>
-                @if( $data && $data->logo )  <div  id="companyLogoImg" class="uploadImg layui-inline fl"><img  id="companySrc" width="230" height="132" src="{{getImgUrl($data?$data->logo:'')}}" class="layui-upload-img"> </div> @endif
+                @if( $data && $data->logo )  <div  id="companyLogoImg" class="uploadImg layui-inline fl">
+                    <span><img src="{{pix_asset('server/images/close.png')}}" data-clear="delcompanyLogoName" data-clear-src="{{$data?$data->logo:''}}" onclick="delTempImg(this,'up')"></span>
+                    <img  id="companySrc" width="230" height="132" src="{{getImgUrl($data?$data->logo:'')}}" class="layui-upload-img">
+                </div> @endif
             </div>
             <div class="layui-form-item" id="covermap">
                 <label class="layui-form-label">首页封面</label>
@@ -77,7 +82,9 @@
                     <i class="layui-icon"></i>
                     <p>请上传750px*250px的图片,最大{{config("configure.maxImgSize")}}</p>
                 </div>
-                @if( $data && $data->covermap )  <div  id="covermapImg" class="uploadImg layui-inline fl"><img  id="covermapSrc" width="230" height="132" src="{{getImgUrl($data?$data->covermap:'')}}" class="layui-upload-img"> </div> @endif
+                @if( $data && $data->covermap )  <div  id="covermapImg" class="uploadImg layui-inline fl">
+                    <span><img src="{{pix_asset('server/images/close.png')}}" data-clear="delcovermapName"  data-clear-src="{{$data?$data->covermap:''}}" onclick="delTempImg(this,'up')"></span>
+                    <img  id="covermapSrc" width="230" height="132" src="{{getImgUrl($data?$data->covermap:'')}}" class="layui-upload-img"> </div> @endif
             </div>
             <div class="submitButWrap">
                 <button type="button" class="layui-btn" id="btn_submit">立即提交</button>

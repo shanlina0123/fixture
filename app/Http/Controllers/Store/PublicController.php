@@ -11,30 +11,31 @@ class PublicController extends StoreBaseController
      */
     public function uploadImgToTemp( Request $request )
     {
-        if( $request->file('file') == false )
-        {
-            responseData(\StatusCode::ERROR,'文件不存在');
-        }
-        $obj = new \stdClass();
-        
-        //检验文件类型
-        $fileTypes = array('image/jpeg','image/png','video/mp4');
-        if(!in_array($request->file('file')->getMimeType(),$fileTypes)) {
-            $obj->src ='';
-            $obj->name ='';
-            $obj->msg =  '文件格式不合法'.$request->file('file')->getMimeType();
-            responseData(\StatusCode::ERROR,$obj->msg);
-        }
-        //检验大小
-        $fileSize=$request->file('file')->getSize();
-        if(!$request->file('file')->getSize() || $fileSize>config("configure.maxImgSizeByte"))
-        {
-            $obj->src ='';
-            $obj->name ='';
-            $obj->msg = $fileSize."图片大小不能低于0或超过".config("configure.maxImgSize");;
-            responseData(\StatusCode::ERROR,$obj->msg);
-        }
         try {
+            if( $request->file('file') == false )
+            {
+                responseData(\StatusCode::ERROR,'文件不存在');
+            }
+            $obj = new \stdClass();
+
+            //检验文件类型
+            $fileTypes = array('image/jpeg','image/png','video/mp4');
+            if(!in_array($request->file('file')->getMimeType(),$fileTypes)) {
+                $obj->src ='';
+                $obj->name ='';
+                $obj->msg =  '文件格式不合法'.$request->file('file')->getMimeType();
+                responseData(\StatusCode::ERROR,$obj->msg);
+            }
+            //检验大小
+            $fileSize=$request->file('file')->getSize();
+            if(!$request->file('file')->getSize() || $fileSize>config("configure.maxImgSizeByte"))
+            {
+                $obj->src ='';
+                $obj->name ='';
+                $obj->msg = $fileSize."图片大小不能低于0或超过".config("configure.maxImgSize");;
+                responseData(\StatusCode::ERROR,$obj->msg);
+            }
+
             $res = $request->file('file')->store('temp', 'temp');
             $name = explode('/',$res)[1];
 

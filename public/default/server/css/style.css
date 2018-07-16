@@ -721,6 +721,14 @@
 .levelul .li3 {
   background: url(../images/tips.png) center top no-repeat;
 }
+/**close**/
+.uploadImg span img {
+  position: absolute;
+  right: 3px;
+  top: 3px;
+  cursor: pointer;
+}
+
 @media (max-width: 1000px){
   .levelul li:nth-child(2n){
     margin-left: 0;

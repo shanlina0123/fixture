@@ -53,6 +53,7 @@
                     <th>活动门店</th>
                     <th>开始时间</th>
                     <th>结束时间</th>
+                    <th>创建人</th>
                     <th>上线/下线</th>
                     <th>操作</th>
                 </tr>
@@ -64,6 +65,7 @@
                         <td>@if($item->luckyToStore){{$item->luckyToStore->name}}@endif</td>
                         <td>{{$item->startdate}}</td>
                         <td>{{$item->enddate}}</td>
+                        <td>@if($item->luckyToUser){{$item->luckyToUser->nickname}} @endif</td>
                         <td id="rowIsOnline" isonline="{{$item->isonline}}">
                             @if($item->isonline==1)
                                 <input type="checkbox" name="isonline" lay-skin="switch" lay-text="ON|OFF" value="1"
