@@ -44,6 +44,9 @@ class ClientController extends StoreBaseController
                         $where['storeid'] = $user->storeid;
                         break;
                 }
+            }else
+            {
+                $where['storeid'] = $user->storeid;
             }
             $where['companyid'] = $this->apiUser->companyid;
             $where['sourcecateid'] = 1;

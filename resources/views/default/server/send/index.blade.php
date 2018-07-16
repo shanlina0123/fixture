@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="{{pix_asset('server/css/service.css')}}"/>
 @endsection
 @section('content')
-<div class="main">
+<div class="main" style="margin-bottom: 100px;">
     <div class="servicewrap">
         <fieldset class="layui-elem-field layui-field-title">
            <legend>微信公众号服务通知配置</legend>
@@ -95,7 +95,7 @@
                                     <button class="layui-btn isadmin">申请</button>
                                 @endif
                             @endif
-                            <a href="#" target="black">如何申请模板?</a>
+                            <a href="{{config('wxconfig.appapplywxmp')}}" target="black">如何申请模板?</a>
                         </div>
                         <div class="islock fr">
                             <form class="layui-form switchwrap">
@@ -127,7 +127,7 @@
     <li>
         <p>公众号二维码</p>
         <a href="javascript:;"><img id="src" src=""></a>
-        <p class="popnotice">这是一段提示信息</p>
+        <p class="popnotice">绑定成功后可开启接收微信通知服务</p>
     </li>
 </ul>
 <div class="applyPop">
