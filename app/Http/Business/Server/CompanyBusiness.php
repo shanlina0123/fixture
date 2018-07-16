@@ -48,6 +48,9 @@ class CompanyBusiness extends ServerBase
         {
             try{
                 $res = Company::find($companyId);
+
+                $oldLogo=$res->logo;
+                $oldCovermap=$res->covermap;
                 //查询是否写入工地
                 $storeID = Store::where(['companyid'=>$res->id,'isdefault'=>1])->value('id');
                 $site = Site::where(['companyid'=>$res->id,'storeid'=>$storeID])->count();
@@ -80,6 +83,16 @@ class CompanyBusiness extends ServerBase
                     }
                 }
 
+                if($data["dellogo"])
+                {
+                    $res->logo ="";
+                }
+
+                if($data["delcovermap"])
+                {
+                    $res->covermap ="";
+                }
+
                 if( $site )
                 {
                     $obj->ststus = 1;
@@ -109,6 +122,18 @@ class CompanyBusiness extends ServerBase
                     $user->token = create_uuid();
                     $user->save();
                     Cache::put('userToken'.$user->id,['token'=>$user->token,'type'=>1],config('session.lifetime'));
+
+
+                    //删除图片
+                    if($oldLogo&&$data["dellogo"]&&$data["dellogo"]==$oldLogo)
+                    {
+                        (new \Upload())->delImg($oldLogo);
+                    }
+                    if($oldCovermap&&$data["delcovermap"]&&$data["delcovermap"]==$oldCovermap)
+                    {
+                        (new \Upload())->delImg($oldCovermap);
+                    }
+
                     return $obj;
                 }else
                 {
@@ -149,6 +174,7 @@ class CompanyBusiness extends ServerBase
                         $obj->covermap = 'user/'.$obj->uuid.'/'.$data['covermap'];
                     }
                 }
+
                 $obj->provinceid = $data['provinceid'];
                 $obj->cityid = $data['cityid'];
                 $obj->coucntryid = $data['coucntryid'];

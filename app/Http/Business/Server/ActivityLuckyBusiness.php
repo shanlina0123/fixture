@@ -42,7 +42,7 @@ class ActivityLuckyBusiness extends ServerBase
         $tagKey = base64_encode(mosaic("", $tag, $companyid, $cityid, $storeid, $islook,$searchTitle,$searchIsOnline,$searchStoreid, $page));
         //redis缓存返回
         $list["luckyList"] = Cache::tags($tag)->remember($tagKey, config('configure.sCache'), function () use ($lookWhere, $searchTitle, $searchIsOnline, $searchStoreid, $data, $tag1) {
-            //查詢
+
             $queryModel = ActivityLucky::orderBy('id', 'desc');
             //视野条件
             $queryModel->where($lookWhere);
@@ -64,8 +64,13 @@ class ActivityLuckyBusiness extends ServerBase
                     //关联门店
                     $query->select("id", "name");
                 }])
+                ->with(["luckyToUser" => function ($query1) {
+                    //关联用户
+                    $query1->select( "id","nickname");
+                }])
                 ->orderBy('id', 'asc')
                 ->paginate(config('configure.sPage'));
+
             return $list;
         });
 

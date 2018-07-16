@@ -81,7 +81,11 @@ class SiteBusiness extends ServerBase
             {
                 $sWhere['isopen'] = $where['isopen'];
             }
-            $sql = Site::where( $sWhere )->orderBy('id','desc')->with('siteToStore','siteToDataTag','siteToCommpanyTag');
+            $sql = Site::where( $sWhere )->orderBy('id','desc')->with('siteToStore','siteToDataTag','siteToCommpanyTag')
+                ->with(["siteToUser" => function ($query) {
+                    //关联用户
+                    $query->select( "id","nickname");
+                }]);
             //名称搜索
             if( $where['name'] )
             {

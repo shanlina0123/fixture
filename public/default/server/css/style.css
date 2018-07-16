@@ -134,6 +134,11 @@
   height: 60px;
   z-index: 10;
 }
+.uploadImgWrap .imgHome img {
+  width:60px;
+  height: 60px;
+}
+
 .editBtns {
   width: 100px;
 }
@@ -284,8 +289,10 @@
 }
 .part2 .backtext {
   color: #fe161b;
-  text-align: center;
+  text-align: left;
   padding: 10px 0;
+  margin-left: 50px;
+  margin-right: 50px;
 }
 
 .erweimawrap img {
@@ -721,6 +728,14 @@
 .levelul .li3 {
   background: url(../images/tips.png) center top no-repeat;
 }
+/**close**/
+.uploadImg span img {
+  position: absolute;
+  right: 3px;
+  top: 3px;
+  cursor: pointer;
+}
+
 @media (max-width: 1000px){
   .levelul li:nth-child(2n){
     margin-left: 0;

@@ -64,6 +64,7 @@
                     <th>门店</th>
                     <th>创建日期</th>
                     <th>最后更新时间</th>
+                    <th>创建人</th>
                     <th>是否公开</th>
                     <th>操作</th>
                 </tr>
@@ -78,6 +79,7 @@
                         <td>{{$row->siteToStore?$row->siteToStore->name:''}}</td>
                         <td>{{$row->created_at}}</td>
                         <td>{{$row->updated_at}}</td>
+                        <td>{{$row->siteToUser?$row->siteToUser->nickname:''}}</td>
                         <td><input type="checkbox" name="show" data-url="{{route('site-isopen')}}" value="{{$row->id}}"
                                    @if( $row->isfinish == 1) disabled @else @if($row->isopen == 1) checked
                                    @endif  lay-filter="isOpen" @endif lay-skin="switch" lay-text="是|否"></td>

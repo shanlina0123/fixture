@@ -20,5 +20,14 @@ class ActivityLucky extends Model
     {
         return $this->belongsTo('App\Http\Model\Store\Store','storeid','id');
     }
+    /***
+     * 关联用户
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function luckyToUser()
+    {
+        return $this->belongsTo('App\Http\Model\User\User','userid','id');
+    }
+
 
 }

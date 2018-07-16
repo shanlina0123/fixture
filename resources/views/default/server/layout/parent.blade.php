@@ -62,7 +62,7 @@
 <ul class="sharepop clearfix">
     <li>
         <p>小程序码</p>
-        <a href="javascript:;"><img src="{{url('wx-code')}}/index/null/258"></a>
+        <a href="{{url('wx-code')}}/index/null/258" download="小程序二维码"><img src="{{url('wx-code')}}/index/null/258"></a>
     </li>
 </ul>
 </body>

@@ -27,7 +27,7 @@ $.get('/default/server/json/city.json',function ( data )
                             $("#companySrc").attr('src', res.data.src);
                         }else
                         {
-                            $("#companyLogo").append('<div class="uploadImg layui-inline fl"><img width="230" height="132" id="companySrc" src="'+res.data.src+'" class="layui-upload-img"> </div>');
+                            $("#companyLogo").append('<div class="uploadImg layui-inline fl"><span><img src="/default/server/images/close.png" data-title="'+res.data.name+'"   onclick="delTempImg(this,\'temp\')"></span><img width="230" height="132" id="companySrc" src="'+res.data.src+'" class="layui-upload-img" > </div>');
                         }
                         $("#companyLogoName").val(res.data.name);
                         //console.log(res)
@@ -60,7 +60,7 @@ $.get('/default/server/json/city.json',function ( data )
                             $("#covermapSrc").attr('src', res.data.src);
                         }else
                         {
-                            $("#covermap").append('<div class="uploadImg layui-inline fl"><img width="230" height="132" id="covermapSrc" src="'+res.data.src+'" class="layui-upload-img"> </div>');
+                            $("#covermap").append('<div class="uploadImg layui-inline fl"><span><img src="/default/server/images/close.png" data-title="'+res.data.name+'"  onclick="delTempImg(this,\'temp\')"></span><img width="230" height="132" id="covermapSrc" src="'+res.data.src+'" class="layui-upload-img" > </div>');
                         }
                         $("#covermapName").val(res.data.name);
                         //console.log(res)
@@ -211,5 +211,29 @@ $.get('/default/server/json/city.json',function ( data )
             $("#area").append(str);
             form.render('select');
         }
+
     }
+
+
 });
+
+
+
+function delTempImg( index,type )
+{
+    switch (type)
+    {
+        case "temp":
+            var name = $(index).attr('data-title');
+            $.get('/upload-temp-del/'+name);
+            break;
+        case "up":
+            var id = $(index).attr('data-clear');
+            var src = $(index).attr('data-clear-src');
+            $("#"+id).val(src);
+            break;
+        default:
+            break;
+    }
+    $(index).parents('.uploadImg').remove();
+}

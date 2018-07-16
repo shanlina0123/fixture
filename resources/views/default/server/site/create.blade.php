@@ -4,7 +4,7 @@
 
 @endsection
 @section('content')
-    <div class="main">
+    <div class="main" style="margin-bottom: 100px;">
         <fieldset class="layui-elem-field layui-field-title">
             <legend>新建项目</legend>
         </fieldset>
