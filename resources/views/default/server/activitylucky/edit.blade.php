@@ -170,7 +170,7 @@
                                                 <!--<button type="button" class="layui-btn uploadBtn uploadImg"></button>-->
                                                 <input name="file" type="file" class="uploadBtn uploadImg prizelist"  id="uploadImg{{$k}}" selectIndex="{{$k}}">
                                                 <input type="hidden" name="picture" />
-                                                <div class="imgHome" style="background: url({{pix_asset('server/images/add.png')}}) center center no-repeat;background-size: 60px;">
+                                                <div class="imgHome"  @if(!$itemPrize['picture']) style="background: url({{pix_asset('server/images/add.png')}}) center center no-repeat;background-size: 60px;" @endif>
                                                     @if($itemPrize['picture'])<img src="{{"/".config('configure.uploads')."/".$itemPrize['picture']}}"  class="layui-upload-img imgHomeShow">@endif
                                                 </div>
                                             </div>
