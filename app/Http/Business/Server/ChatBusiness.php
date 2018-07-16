@@ -43,7 +43,7 @@ class ChatBusiness extends ServerBase
                     Cache::put('userToken'.$userid,['token'=>$token,'type'=>1],config('session.lifetime'));
                     $userInfo=session("userInfo");
                     $userInfo["jguser"]=username($userid);
-                    session("userInfo",$userInfo);
+                    session(['userInfo'=>$userInfo]);
                 }else{
                     if( $newUser["body"][0]["error"]["code"]==899001)
                     {
@@ -52,7 +52,7 @@ class ChatBusiness extends ServerBase
                         Cache::put('userToken'.$userid,['token'=>$token,'type'=>1],config('session.lifetime'));
                         $userInfo=session("userInfo");
                         $userInfo["jguser"]=username($userid);
-                        session("userInfo",$userInfo);
+                        session(['userInfo'=>$userInfo]);
                     }
                 }
             $list["friend"]=[];

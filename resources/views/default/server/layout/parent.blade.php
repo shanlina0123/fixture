@@ -40,9 +40,19 @@
         @include('server.public.left')
     </div>
     <div class="layui-body">
-        <iframe name="iframeMain" id="iframeMain" src="{{route('index-content')}}" scrolling="yes" frameborder="0" width="100%" height="100%" firsturl="{{route('index-content')}}">
-            该浏览器不支持iframe，请使用其他浏览器！
-        </iframe>
+        @if(!session("userInfo")->companyid && session("userInfo")->isadmin == 1 )
+            <iframe name="iframeMain" id="iframeMain" src="{{route('company-setting')}}" scrolling="yes" frameborder="0" width="100%" height="100%" firsturl="{{route('index-content')}}">
+                该浏览器不支持iframe，请使用其他浏览器！
+            </iframe>
+        @elseif(session("userInfo")->companyid &&(!session("userInfo")->phone))
+            <iframe name="iframeMain" id="iframeMain" src="{{route('user-info')}}" scrolling="yes" frameborder="0" width="100%" height="100%" firsturl="{{route('index-content')}}">
+                该浏览器不支持iframe，请使用其他浏览器！
+            </iframe>
+        @else
+            <iframe name="iframeMain" id="iframeMain" src="{{route('index-content')}}" scrolling="yes" frameborder="0" width="100%" height="100%" firsturl="{{route('index-content')}}">
+                该浏览器不支持iframe，请使用其他浏览器！
+            </iframe>
+        @endif
         <!--iframe框自适应js-->
         <script type="text/javascript">
             function changeFrameHeight(){
@@ -65,6 +75,8 @@
         <a href="{{url('wx-code')}}/index/null/258" download="小程序二维码"><img src="{{url('wx-code')}}/index/null/258"></a>
     </li>
 </ul>
+<input type="hidden" id="sessionTmp" data-companyid="{{session("userInfo")->companyid}}" data-isadmin="{{session("userInfo")->isadmin}}"  data-phone="{{session("userInfo")->phone}}" />
+<input type="hidden"  id="sessionUrl" data-company="{{route('company-setting')}}"  data-user="{{route('user-info')}}"/>
 </body>
 <script type="text/javascript" src="{{pix_asset('server/plugins/layui/layui.js',false)}}"></script>
 <script type="text/javascript" src="{{pix_asset('server/js/common/base.js')}}"></script>

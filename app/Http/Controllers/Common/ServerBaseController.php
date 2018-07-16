@@ -31,7 +31,7 @@ class ServerBaseController extends Controller
             $userInfo = $request->session()->get('userInfo');
             if( !$userInfo->companyid && $userInfo->isadmin == 1 )
             {
-                return redirect()->route('company-setting')->with('msg','请完善资料');
+               // return redirect()->route('company-setting')->with('msg','请完善资料');
             }
 
             //当前访问的控制器和方法
@@ -41,7 +41,7 @@ class ServerBaseController extends Controller
 
                 if($userInfo->companyid &&(!$userInfo->phone)){
 
-                    return redirect()->route('user-info')->with('msg','请绑定手机');
+                //    return redirect()->route('user-info')->with('msg','请绑定手机');
                 }
             }
 

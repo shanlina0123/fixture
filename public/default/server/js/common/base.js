@@ -109,11 +109,24 @@ $(".channelBtn").click(function(){
 
 //点击菜单
 $('.nav-menu').click(function () {
-    $('#iframeMain').attr('src', $(this).attr("url"));
+    var companyid=$('#sessionTmp').attr("data-companyid");
+    var isadmin=$('#sessionTmp').attr("data-isadmin");
+    var phone=$('#sessionTmp').attr("data-phone");
+    var url=  $(this).attr("url");
+    if(!companyid&&isadmin == 1)
+    {
+        url=$('#sessionUrl').attr("data-company");
+    }else if(companyid&&!phone){
+        url=$('#sessionUrl').attr("data-user");
+    }
+
+    $('#iframeMain').attr('src',url);
+
 });
 
 //iframe的title赋值给父类
 window.parent.$("title").html($("title").html());
+
 
 //F5
 $("body").bind("keydown",function(event) {

@@ -22,7 +22,6 @@ class UserController extends ServerBaseController
         $this->request = $request;
         $this->user = $user;
     }
-
     /**
      * 用户信息
      */
@@ -69,7 +68,7 @@ class UserController extends ServerBaseController
                 Cache::forget('tel_' . $phone);
                 $userInfo->phone = $phone;
                 $userInfo->token = $data['token'];
-                session('userInfo',$userInfo);
+                session(['userInfo'=>$userInfo]);
                 Cache::put('userToken' . $userInfo['id'], ['token' => $data['token'], 'type' => 2], config('session.lifetime'));
                 return redirect()->route('user-info')->with('msg', $oldPhone ? '修改成功' : "绑定成功");
             } else {
@@ -123,7 +122,7 @@ class UserController extends ServerBaseController
             if ($res) {
                 Cache::forget('tel_' . $phone);
                 $userInfo->token = $data['token'];
-                session('userInfo',$userInfo);
+                session(['userInfo'=>$userInfo]);
                 Cache::put('userToken' . $userInfo['id'], ['token' => $data['token'], 'type' => 2], config('session.lifetime'));
                 return redirect()->route('set-pass')->with('msg', '修改成功');
             } else {

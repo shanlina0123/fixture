@@ -31,14 +31,14 @@ class UserCheck
                      $where['id'] = $userInfo['id'];
                      $res = User::where($where)->first();
                      $res->islook=$userInfo["islook"];
-                     session('userInfo',$res);
+                     session(['userInfo'=>$res]);
                  }
              }
 
              if( $userToken['type'] == 2 && $userToken['token'] != $userInfo->token )
              {
                  //用户修改了重要信息需要其他用户退出
-                 session('userInfo',false);
+                 session(['userInfo'=>false]);
                  session(['userInfo' => false,"menueInfo"=>false]);
                  Cache::forget('userToken'.$userInfo['id']);
                  Cache::tags(["Admin-RoleAuth","Admin-Menue"])->flush();
@@ -50,7 +50,7 @@ class UserCheck
         //vip版本-不要放登录处理器
         $userInfo= session("userInfo");
         $userInfo["vipmechanismid"]=$this->getVipType($userInfo->companyid);
-        session('userInfo',$userInfo);
+        session(['userInfo'=>$userInfo]);
 
         return $next($request);
     }
