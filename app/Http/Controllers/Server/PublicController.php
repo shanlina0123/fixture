@@ -261,4 +261,16 @@ class PublicController extends ServerBaseController
         $wx = new WxAuthorize();
         $wx->getWxExperienceCodeImg($companyid);
     }
+
+    /***
+     * 获取session。控制iframe
+     */
+    public function  getFrameSesion()
+    {
+        $userInfo=session("userInfo");
+        $data["companyid"]=$userInfo->companyid;
+        $data["isadmin"]=$userInfo->isadmin;
+        $data["phone"]=$userInfo->phone;
+        responseData(\StatusCode::SUCCESS, "获取成功",$data);
+    }
 }

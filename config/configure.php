@@ -33,8 +33,8 @@ return [
      * ----------------------------
      */
     "pix_asset"=>"default/",//css js 目录
-    "cssVersion"=>"V1.0.1.1_201807162126",//strtotime(date("Y-m-d H:i:s")),//css版本
-    "jsVersion"=>"V1.0.1.1_201807162126",//strtotime(date("Y-m-d H:i:s")),//js版本
+    "cssVersion"=>"V1.0.1.1_201807171844",//strtotime(date("Y-m-d H:i:s")),//css版本
+    "jsVersion"=>"V1.0.1.1_201807171844",//strtotime(date("Y-m-d H:i:s")),//js版本
 
 
     /**

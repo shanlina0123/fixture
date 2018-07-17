@@ -297,16 +297,16 @@ class CompanyBusiness extends ServerBase
                 Cache::tags(["Data-CateList",'siteTemplate'.$obj->id,'roomType'.$obj->id,'roomStyle'.$obj->id,'renovationMode'.$obj->id])->flush();
                 DB::commit();
 
-                $obj->ststus = 1;
-                $obj->msg = '修改成功';
+                $obj->ststus = 2;
+                $obj->msg = '设置成功';
                 Cache::put('userToken'.$user->id,['token'=>$user->token,'type'=>1],config('session.lifetime'));
-                return $obj;
+               return $obj;
 
             }catch( Exception $e )
             {
                 DB::rollBack();
                 $obj->ststus = 0;
-                $obj->msg = '修改失败';
+                $obj->msg = '设置失败';
                 return $obj;
             }
         }

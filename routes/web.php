@@ -44,6 +44,7 @@ Route::group(['namespace' => 'Server'], function () {
     Route::group(['middleware' => ['checkUser']], function () {
         Route::get('/', 'IndexController@index')->name('index'); //入口
         Route::get('index/content', 'IndexController@indexContent')->name('index-content');
+        Route::get('public/frm-session', 'PublicController@getFrameSesion')->name('public-frm-session');
 
         //用户资料
         Route::match(['get', 'post'], 'user/info', 'UserController@userInfo')->name('user-info'); //个人资料跟换电话+绑定电话

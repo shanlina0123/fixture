@@ -107,25 +107,26 @@ $(".channelBtn").click(function(){
     layer.closeAll();
 });
 
+
+
 //点击菜单
 $('.nav-menu').click(function () {
-    var obj=$($("#iframeMain").contents().find("#sessionTmp")).data();
-    obj=typeof(obj)=="undefined"
-    {
-        obj=$("#sessionTmp").data();
-    }
-    var tip=$('#sessionUrl').data();
-    var url=  $(this).attr("url");
-
-    if(!obj.companyid&&obj.isadmin == 1)
-    {
-        url=tip.company;
-    }else if(obj.companyid&&!obj.phone){
-        url=tip.user;
-    }
-
-    $('#iframeMain').attr('src',url);
-
+    var urls=$('#sessionUrl').data();
+    var menueUrl=$(this).attr("url");
+    $.getJSON(urls.session,{},function(data){
+          if(data.status==1)
+          {
+              var obj=data.data;
+              if(!obj.companyid&&obj.isadmin == 1)
+              {
+                  $('#iframeMain').attr('src',urls.company);
+              }else if(obj.companyid&&!obj.phone){
+                  $('#iframeMain').attr('src',urls.user);
+              }else{
+                  $('#iframeMain').attr('src',menueUrl);
+              }
+          }
+    });
 });
 
 //iframe的title赋值给父类
