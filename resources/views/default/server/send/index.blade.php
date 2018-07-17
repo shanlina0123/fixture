@@ -112,7 +112,7 @@
                                     <input type="checkbox" name="open" lay-skin="switch" lay-text="ON|OFF" disabled="disabled">
                                 @endif
                             </form>
-                            <span>开启后可接受微信通知</span>
+                            <span style="color:#34a123;">开启后可接受微信通知</span>
                         </div>
                     </div>
                 </li>
