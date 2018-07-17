@@ -76,6 +76,8 @@
     </li>
 </ul>
 <input type="hidden"  id="sessionUrl" data-company="{{route('company-setting')}}"  data-user="{{route('user-info')}}"/>
+<input type="hidden" id="sessionTmp" data-companyid="{{session("userInfo")->companyid}}" data-isadmin="{{session("userInfo")->isadmin}}"  data-phone="{{session("userInfo")->phone}}" />
+
 </body>
 <script type="text/javascript" src="{{pix_asset('server/plugins/layui/layui.js',false)}}"></script>
 <script type="text/javascript" src="{{pix_asset('server/js/common/base.js')}}"></script>

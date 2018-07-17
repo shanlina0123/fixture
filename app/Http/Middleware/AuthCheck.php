@@ -84,9 +84,9 @@ class AuthCheck
         //当前访问控制器
         $routeController = $current["controller"];
 
-        $tagKey = base64_encode(mosaic("", $tag, $company));
+        $tagKey = base64_encode(mosaic("", $tag, $routeController.$company));
         //redis缓存返回
-        return Cache::tags($tag)->remember($tagKey, config('configure.sCache'), function () use ($company, $routeController) {
+        return Cache::tags($tagKey)->remember($tagKey, config('configure.sCache'), function () use ($company, $routeController) {
             //vip限制的控制器
             $vipData = ConfVipfunctionpoint::where("status", 1)->where("type", "has")->where("controller", $routeController)->first();
             if ($vipData) {
@@ -97,6 +97,7 @@ class AuthCheck
             }
             return true;
         });
+
 
 
     }
