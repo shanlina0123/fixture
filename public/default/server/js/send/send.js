@@ -95,7 +95,7 @@ layui.use(['form', 'jquery', 'layer'], function() {
         layer.msg('授权完成才可申请');
     });
     $(".applywrap .isadmin").click(function() {
-        layer.msg('您不是超级管理员无权申请');
+        layer.msg('管理员未绑定微信公众号服务通知，绑定后您可进行申请此模板为自己的通知模板',{time:5000});
     });
 
     /**

@@ -50,12 +50,16 @@ class CompanyController extends ServerBaseController
 
             $data = trimValue(array_except($request->all(),['_token']));
             $res = $this->company->setCompany($data);
-            if($res->ststus == 1)
+            if($res->ststus == 1 || $res->ststus == 2)
             {
                 $userInfo = session('userInfo');
                 Cache::forget('CompanyInfo'.$userInfo->companyid);
                 Cache::tags(['site'.$userInfo->companyid])->flush();
 
+                if($res->ststus == 2)
+                {
+                    return redirect()->route('user-authorize');
+                }
                 if( $data['returnUrl'] )
                 {
                     return redirect($data['returnUrl']);
