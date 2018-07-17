@@ -1,6 +1,10 @@
 layui.use(['element','layer','form'], function() {
     var element = layui.element;
     var layer = layui.layer;
+    if( $("#registerMsg").val() )
+    {
+        layer.msg('注册成功请登录。。。',{icon:1,time:3000});
+    }
 });
 $.ajaxSetup({
     headers: {

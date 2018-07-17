@@ -51,7 +51,7 @@ class RegisterController extends ServerBaseController
             $res = $this->user->userSave($data);
             if( $res == true )
             {
-                return redirect()->route('register')->with(['regMsg'=>'注册成功','phone'=>$data['phone']]);
+                return redirect()->route('login')->with(['regMsg'=>'注册成功','phone'=>$data['phone']]);
             }else
             {
                 return redirect()->route('register')->with('msg','注册失败');

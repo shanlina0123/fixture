@@ -104,6 +104,7 @@
         </div>
     </div>
 </div>
+<input id="registerMsg" type="hidden" value="{{session('regMsg')}}">
 <script type="text/javascript" src="{{pix_asset('server/plugins/layui/layui.js',false)}}"></script>
 <script type="text/javascript" src="{{pix_asset('server/plugins/validform/Validform_v5.3.2_min.js',false)}}"></script>
 <script type="text/javascript" src="{{pix_asset('server/js/login/login.js')}}"></script>
