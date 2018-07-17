@@ -76,7 +76,7 @@ class WxTicketController extends WxBaseController
                 case 'unauthorized':   //取消授权
                     $array_appid = $xml->getElementsByTagName('AuthorizerAppid');
                     $authorizer_appid = $array_appid->item(0)->nodeValue;
-                    SmallProgram::where('authorizer_appid',$authorizer_appid)->update(['status'=>1]);
+                    SmallProgram::where('authorizer_appid',$authorizer_appid)->delete();
                     break;
                 case 'updateauthorized'://跟新授权
                     $array_code = $xml->getElementsByTagName('AuthorizationCode');
