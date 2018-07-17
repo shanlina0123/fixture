@@ -45,17 +45,18 @@ class SiteController extends ServerBaseController
      */
     public function create()
     {
-        //控制工地个数  目前设置只有在标准版的时候判断
-        if( $this->userInfo->vipmechanismid == 1 )
+        //控制工地个数  目前设置只有在标准版的时候判断个人不判断
+        if( config('wxtype.type') != 1 )
         {
-            $siteNum = Site::where('companyid',$this->userInfo->companyid)->count();
-            if( $siteNum )
-            {
-                //查询版本
-                $siteMax = ConfVipfunctionpoint::where(['name'=>'vip_max_site'])->value('value');
-                if( $siteNum >= $siteMax )
+            if ($this->userInfo->vipmechanismid == 1) {
+                $siteNum = Site::where('companyid', $this->userInfo->companyid)->count();
+                if ($siteNum)
                 {
-                    return redirect()->route('vip-index')->with('msg', '当前项目数量已达到上线，需升级会员版本');
+                    //查询版本
+                    $siteMax = ConfVipfunctionpoint::where(['name' => 'vip_max_site'])->value('value');
+                    if ($siteNum >= $siteMax) {
+                        return redirect()->route('vip-index')->with('msg', '当前项目数量已达到上线，需升级会员版本');
+                    }
                 }
             }
         }
@@ -81,17 +82,20 @@ class SiteController extends ServerBaseController
      */
     public function store(Request $request)
     {
-        //控制工地个数  目前设置只有在标准版的时候判断
-        if( $this->userInfo->vipmechanismid == 1 )
+        //控制工地个数  目前设置只有在标准版的时候判断个人不判断
+        if( config('wxtype.type') != 1 )
         {
-            $siteNum = Site::where('companyid',$this->userInfo->companyid)->count();
-            if( $siteNum )
+            if( $this->userInfo->vipmechanismid == 1 )
             {
-                //查询版本
-                $siteMax = ConfVipfunctionpoint::where(['name'=>'vip_max_site'])->value('value');
-                if( $siteNum >= $siteMax )
+                $siteNum = Site::where('companyid',$this->userInfo->companyid)->count();
+                if( $siteNum )
                 {
-                    return redirect()->route('vip-index')->with('msg', '当前项目数量已达到上线，需升级会员版本');
+                    //查询版本
+                    $siteMax = ConfVipfunctionpoint::where(['name'=>'vip_max_site'])->value('value');
+                    if( $siteNum >= $siteMax )
+                    {
+                        return redirect()->route('vip-index')->with('msg', '当前项目数量已达到上线，需升级会员版本');
+                    }
                 }
             }
         }
