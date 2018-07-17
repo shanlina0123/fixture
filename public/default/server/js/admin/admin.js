@@ -64,8 +64,9 @@ $(".ajaxSubmit").click(function () {
     var roleid = $("#roleid", form).val()*1;
     var storeid = $("#storeid", form).val()*1;
     var status = $("#status", form).val()*1;
+    var btnType=$(this).attr("btn");
     //表单验证
-    if(checkForm(nickname,username,password,roleid,status))
+    if(checkForm(btnType,nickname,username,password,roleid,status))
     {
         $.ajaxSubmit(form,{nickname: nickname,username:username,password:password,roleid:roleid,storeid:storeid,status:status},doStoreOrUpdate);
     }
@@ -76,9 +77,9 @@ var doStoreOrUpdate=function (data) {
     if(data.status===1){
         window.location.href=$("#listForm").attr("action");
         layer.closeAll();
-        layer.msg(data.messages,{icon: 1,time: 1000});
+        layer.msg(data.messages,{icon: 1});
     }else{
-        layer.msg(data.messages, {icon: 2,time: 1000});
+        layer.msg(data.messages, {icon: 2});
     }
 }
 
@@ -117,7 +118,7 @@ layuiForm.on('switch(rowStatus)', function (data) {
 
 
 //表单验证
-var checkForm = function(nickname,username,password,roleid,status) {
+var checkForm = function(btnType,nickname,username,password,roleid,status) {
     if (nickname == "") {
         layer.msg("名称不能为空", {icon: 2,time:800});
         return false;
@@ -126,7 +127,7 @@ var checkForm = function(nickname,username,password,roleid,status) {
         layer.msg("账号不能为空", {icon: 2,time:800});
         return false;
     }
-    if (password == "") {
+    if (btnType=="addBtn"&&password == "") {
         layer.msg("密码不能为空", {icon: 2,time:800});
         return false;
     }

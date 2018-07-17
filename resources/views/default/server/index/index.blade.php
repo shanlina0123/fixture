@@ -103,6 +103,7 @@
                 </tr>
             </table>
         </div>
+        <input type="hidden" id="sessionTmp" data-companyid="{{session("userInfo")->companyid}}" data-isadmin="{{session("userInfo")->isadmin}}"  data-phone="{{session("userInfo")->phone}}" />
     </div>
 @endsection
 @section("js")

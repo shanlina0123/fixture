@@ -75,7 +75,6 @@
         <a href="{{url('wx-code')}}/index/null/258" download="小程序二维码"><img src="{{url('wx-code')}}/index/null/258"></a>
     </li>
 </ul>
-<input type="hidden" id="sessionTmp" data-companyid="{{session("userInfo")->companyid}}" data-isadmin="{{session("userInfo")->isadmin}}"  data-phone="{{session("userInfo")->phone}}" />
 <input type="hidden"  id="sessionUrl" data-company="{{route('company-setting')}}"  data-user="{{route('user-info')}}"/>
 </body>
 <script type="text/javascript" src="{{pix_asset('server/plugins/layui/layui.js',false)}}"></script>

@@ -123,7 +123,7 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label" style="font-size: 14px;">账户</label>
+                <label class="layui-form-label" style="font-size: 14px;">账号</label>
                 <div class="layui-input-inline">
                     <input type="text" class="layui-input" id="username" maxlength="20" minlength="3"  size="20" placeholder="3-20位字符+数字">
                 </div>
@@ -154,7 +154,7 @@
                 </div>
             </div>
             <div class="layui-form-item popSubmitBtn">
-                <button type="button" class="layui-btn  ajaxSubmit">立即提交</button>
+                <button type="button" class="layui-btn  ajaxSubmit" btn="addBtn">立即提交</button>
                 <button type="button" class="layui-btn  channelBtn" >取消</button>
             </div>
         </form>
@@ -181,7 +181,7 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label" style="font-size: 14px;">账户</label>
+                <label class="layui-form-label" style="font-size: 14px;">账号</label>
                 <div class="layui-input-inline">
                     <input type="text" class="layui-input"  id="username" maxlength="20" minlength="3"  size="20" placeholder="3-20位字符+数字">
                 </div>
@@ -212,7 +212,7 @@
                 </div>
             </div>
             <div class="layui-form-item popSubmitBtn">
-                <button type="button" class="layui-btn ajaxSubmit">立即提交</button>
+                <button type="button" class="layui-btn ajaxSubmit" btn="updateBtn">立即提交</button>
                 <button type="button" class="layui-btn  channelBtn" >取消</button>
             </div>
         </form>
