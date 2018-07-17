@@ -33,17 +33,20 @@ class SiteController extends StoreBaseController
             responseData(\StatusCode::ERROR,'您无发布权限');
         }
         //查询版本
-        $vipmechanismid = Company::where('id',$user->companyid)->value('vipmechanismid');
-        if( $vipmechanismid == 1 )
+        if( config('wxtype.type') != 1 )
         {
-            //控制工地个数
-            $siteNum = Site::where('companyid',$user->companyid)->count();
-            if( $siteNum )
+            $vipmechanismid = Company::where('id',$user->companyid)->value('vipmechanismid');
+            if( $vipmechanismid == 1 )
             {
-                $siteMax = ConfVipfunctionpoint::where(['name'=>'vip_max_site'])->value('value');
-                if( $siteNum >= $siteMax )
+                //控制工地个数
+                $siteNum = Site::where('companyid',$user->companyid)->count();
+                if( $siteNum )
                 {
-                    responseData(\StatusCode::ERROR,'当前项目数量已达到上线，需升级会员版本');
+                    $siteMax = ConfVipfunctionpoint::where(['name'=>'vip_max_site'])->value('value');
+                    if( $siteNum >= $siteMax )
+                    {
+                        responseData(\StatusCode::ERROR,'当前项目数量已达到上线，需升级会员版本');
+                    }
                 }
             }
         }
