@@ -60,7 +60,7 @@ layui.use(['form', 'layer','upload'], function() {
                 var allnum=$(".layui-upload-img").length;
                 var isvideo=$(".ImgWrap").find("video").length?1:0;
                 var arr = $("#img").val().split(",");
-                if(allnum<10)
+                if(allnum<9)
                 {
                     if(isvideo==0)
                     {
@@ -72,7 +72,7 @@ layui.use(['form', 'layer','upload'], function() {
                     }
 
                 }else{
-                    layer.msg('视频最多上传1个,图片最多上传9张');
+                    layer.msg('视频加图片最多上传9个');
                 }
             }else{
                 layer.msg(res.msg,{icon: 2,  time:2000});
