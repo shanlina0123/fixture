@@ -109,15 +109,19 @@ $(".channelBtn").click(function(){
 
 //点击菜单
 $('.nav-menu').click(function () {
-    var companyid=$('#sessionTmp').attr("data-companyid");
-    var isadmin=$('#sessionTmp').attr("data-isadmin");
-    var phone=$('#sessionTmp').attr("data-phone");
-    var url=  $(this).attr("url");
-    if(!companyid&&isadmin == 1)
+    var obj=$($("#iframeMain").contents().find("#sessionTmp")).data();
+    obj=typeof(obj)=="undefined"
     {
-        url=$('#sessionUrl').attr("data-company");
-    }else if(companyid&&!phone){
-        url=$('#sessionUrl').attr("data-user");
+        obj=$("#sessionTmp").data();
+    }
+    var tip=$('#sessionUrl').data();
+    var url=  $(this).attr("url");
+
+    if(!obj.companyid&&obj.isadmin == 1)
+    {
+        url=tip.company;
+    }else if(obj.companyid&&!obj.phone){
+        url=tip.user;
     }
 
     $('#iframeMain').attr('src',url);
