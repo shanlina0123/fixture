@@ -64,7 +64,7 @@
                             </div>
                             <div class="layui-form-item">
                                 <input type="hidden" name="logintype" value="1"/>
-                                <input type="password" name="password"  class="layui-input" datatype="*6-12"   placeholder="密码" nullmsg="请输入密码" errormsg="密码范围在6~12位之间"  autocomplete="off" autocomplete="new-password">
+                                <input type="password" name="password" value="" class="layui-input" datatype="*6-12"   placeholder="密码" nullmsg="请输入密码" errormsg="密码范围在6~12位之间"  autocomplete="off" autocomplete="new-password">
                             </div>
                             <div class="layui-form-item">
                                 <input type="checkbox" lay-skin="primary" title="记住密码" checked="">
@@ -84,7 +84,7 @@
                             {{csrf_field()}}
                             <input type="hidden" name="logintype" value="2"/>
                             <div class="layui-form-item">
-                                <input type="text" name="username" id="phone" datatype="m"  nullmsg="请输入手机号码" errormsg="手机号码不正确"  placeholder="手机号" class="layui-input">
+                                <input type="text" name="username" id="phone" value="{{session('phone')}}" datatype="m"  nullmsg="请输入手机号码" errormsg="手机号码不正确"  placeholder="手机号" class="layui-input">
                             </div>
                             <div class="layui-form-item clearfix">
                                 <input type="text" name="code" placeholder="短信验证码" datatype="n4-4" nullmsg="请输入验证码" errormsg="验证码不正确" class="layui-input codeInput fl" style="width:72%">
@@ -104,6 +104,7 @@
         </div>
     </div>
 </div>
+<input id="registerMsg" type="hidden" value="{{session('regMsg')}}">
 <script type="text/javascript" src="{{pix_asset('server/plugins/layui/layui.js',false)}}"></script>
 <script type="text/javascript" src="{{pix_asset('server/plugins/validform/Validform_v5.3.2_min.js',false)}}"></script>
 <script type="text/javascript" src="{{pix_asset('server/js/login/login.js')}}"></script>
