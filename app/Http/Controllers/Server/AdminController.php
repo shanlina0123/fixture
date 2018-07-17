@@ -103,9 +103,9 @@ class AdminController extends ServerBaseController
 
 
         //账号
-        if (!preg_match_all("/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{3,20}$$/",$data["username"],$array))
+        if (!preg_match_all("/^[A-Za-z][A-Za-z1-9_-]{3,20}$/",$data["username"],$array))
         {
-            responseData(\StatusCode::PARAM_ERROR, "账号格式错误,请输入3-20位字母+数字(区分大小写)", "", ["username" => ["账号格式错误"]]);
+            responseData(\StatusCode::PARAM_ERROR, "账号格式错误,字母开头 + 数字/字母/下划线", "", ["username" => ["账号格式错误"]]);
         }
 
         //密码
@@ -149,13 +149,13 @@ class AdminController extends ServerBaseController
         $validator = Validator::make($validateData, [
             "nickname" => 'required|max:100|min:1',
             "username" => 'required|max:20|min:3',
-            "password" => 'required|max:12|min:6',
+            "password" => 'present|max:12|min:6',
             "roleid" => 'required|numeric',
             'storeid' => 'present|numeric',
             "status" => 'required|numeric',
         ], ['nickname.required' => '姓名不能为空', 'nickname.max' => '姓名长度不能大于100个字符', 'nickname.min' => '姓名长度不能小于1个字符',
             'username.required' => '账号不能为空', 'username.max' => '账号长度不能大于20个字符', 'username.min' => '账号长度不能小于3个字符',
-            'password.required' => '密码不能为空', 'password.max' => '密码长度不能大于12个字符', 'password.min' => '密码长度不能小于6个字符',
+            'password.present' => '密码参数缺少', 'password.max' => '密码长度不能大于12个字符', 'password.min' => '密码长度不能小于6个字符',
             'roleid.required' => '角色不能为空', 'roleid.numeric' => '角色只能是数字格式',
             'storeid.required' => '门店不能为空', 'storeid.numeric' => '门店只能是数字格式',
             'status.required' => '锁定不能为空', 'status.numeric' => '锁定只能是数字格式']);
@@ -166,12 +166,12 @@ class AdminController extends ServerBaseController
         }
 
         //账号
-        if (!preg_match_all("/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{3,20}$$/",$data["username"],$array))
+        if (!preg_match_all("/^[A-Za-z][A-Za-z1-9_-]{3,20}$/",$data["username"],$array))
         {
-            responseData(\StatusCode::PARAM_ERROR, "账号格式错误,请输入3-20位字母+数字(区分大小写)", "", ["username" => ["账号格式错误"]]);
+            responseData(\StatusCode::PARAM_ERROR, "账号格式错误,字母开头 + 数字/字母/下划线", "", ["username" => ["账号格式错误"]]);
         }
         //密码
-        if (!preg_match_all("/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,12}$$/",$data["password"],$array))
+        if ($data["password"]&&!preg_match_all("/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,12}$$/",$data["password"],$array))
         {
             responseData(\StatusCode::PARAM_ERROR, "密码格式错误,请输入6-12位字母+数字(区分大小写)", "", ["password" => ["密码格式错误"]]);
         }

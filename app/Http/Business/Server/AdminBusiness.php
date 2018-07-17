@@ -264,7 +264,7 @@ class AdminBusiness extends ServerBase
             $admin["type"] = 0;
             $admin["isinvitationed"] = 0;
             $admin["status"] = $data["status"];
-            $admin["password"] = optimizedSaltPwd($data['password'],config('configure.salt'));
+            $data['password']?$admin["password"] = optimizedSaltPwd($data['password'],config('configure.salt')):"";
             $positionid?$admin["positionid"]=$positionid:"";
             $admin["updated_at"] = date("Y-m-d H:i:s");
             //修改Admin数据

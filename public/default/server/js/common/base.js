@@ -129,11 +129,11 @@ window.parent.$("title").html($("title").html());
 
 
 //F5
-$("body").bind("keydown",function(event) {
-
-    if (event.keyCode == 116 || event.ctrlKey &&event.keyCode == 116) {
-        event.preventDefault(); //阻止默认刷新
-        $("#iframeMain").attr("src", $("#iframeMain").attr("firsturl"));
-
-    }
-});
+// $("body").bind("keydown",function(event) {
+//
+//     if (event.keyCode == 116 || event.ctrlKey &&event.keyCode == 116) {
+//         event.preventDefault(); //阻止默认刷新
+//         $("#iframeMain").attr("src", $("#iframeMain").attr("firsturl"));
+//
+//     }
+// });

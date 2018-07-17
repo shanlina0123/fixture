@@ -72,7 +72,7 @@ layui.use(['form', 'layer','upload'], function() {
                     }
 
                 }else{
-                    layer.msg('图片加视频最多可上传9个');
+                    layer.msg('视频加图片最多上传9个');
                 }
             }else{
                 layer.msg(res.msg,{icon: 2,  time:2000});
