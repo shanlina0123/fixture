@@ -1,6 +1,14 @@
-layui.use(['element','layer'], function() {
-   var element = layui.element;
+layui.use(['element','layer','form'], function() {
+    var element = layui.element;
+    var layer = layui.layer;
+    if( $("#registerMsg").val() )
+    {
+        layer.alert($("#registerMsg").val(),{icon: 1,title:'注册提示信息'});
+    }
 });
+
+
+
 $.ajaxSetup({
     headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
