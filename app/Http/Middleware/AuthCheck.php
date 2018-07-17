@@ -29,7 +29,7 @@ class AuthCheck
         }
 
         //验证公司vip免费版权限
-        if ($admin_user["vipmechanismid"] == 1) {
+        if ($admin_user["vipmechanismid"] == 1&&config("wxtype.type")==2) {
             $vipflag = $this->authVip($admin_user->companyid);
             if ($vipflag == false) {
                 return redirect()->route('vip-index')->with('msg', '无权限,请升级为标准版');
