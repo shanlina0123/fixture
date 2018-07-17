@@ -52,6 +52,12 @@ layui.use(['form','layer'], function() {
         form.render('checkbox');
         layer.closeAll();
     })
+    if( $("#registerMsg").val() )
+    {
+        layer.msg('注册成功即将跳转至登录页。。。',{icon:1,time:4000},function () {
+            window.location='/login'
+        });
+    }
 });
 /**
  * 倒计时
