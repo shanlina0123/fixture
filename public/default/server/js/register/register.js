@@ -67,8 +67,9 @@ function time()
         $("#phone").attr("readonly", false);
         $me.text("重新获取");
         $me.css({
-            "background": "#009688",
-            "border-color": "#009688"
+            "background": "#2c9fd1",
+            "border-color": "#2c9fd1",
+            "width":"24%"
         });
         wait = 60;
     }else
@@ -77,7 +78,8 @@ function time()
         $me.text("重新发送(" + wait + ")");
         $me.css({
             "background": "#ccc",
-            "border-color": "#ccc"
+            "border-color": "#ccc",
+            "width":"24%"
         });
         wait--;
         setTimeout(function(){time()}, 1000)

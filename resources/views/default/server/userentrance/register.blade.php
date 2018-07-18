@@ -28,6 +28,9 @@
             margin: 0px;
             overflow: hidden;
         }
+        .layui-input.codeInput {
+            width: 74% !important;
+        }
     </style>
 </head>
 <body>
@@ -54,8 +57,8 @@
                     <input type="number" class="layui-input" placeholder="手机号"  id="phone" name="phone" datatype="m"  nullmsg="请输入手机号码" errormsg="ဇ手机号码有误" autocomplete="off">
                 </div>
                 <div class="layui-form-item clearfix">
-                    <input type="text" name="code" lay-verify="title" autocomplete="off" placeholder="短信验证码" class="layui-input codeInput fl">
-                    <button type="button" class="layui-btn msgUncode fr" data-url="{{route('sms-code')}}" data-type="1" >发送验证码</button>
+                    <input type="text" name="code" lay-verify="title" autocomplete="off" placeholder="短信验证码" class="layui-input codeInput fl" >
+                    <button type="button" class="layui-btn msgUncode fr" data-url="{{route('sms-code')}}" data-type="1" style="width: 24%" >发送验证码</button>
                 </div>
                 <div class="layui-form-item">
                     <input type="password" class="layui-input" name="password" datatype="*6-12" placeholder="请输入6-12位字母+数字(区分大小写)" nullmsg="请输入密码" errormsg="密码范围在6~12位之间"  autocomplete="off">
