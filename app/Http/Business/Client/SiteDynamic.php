@@ -33,7 +33,7 @@ class SiteDynamic extends ClientBase
         {
             $tagWhere = $request->input('page').implode('',$where);
         }
-        $value = Cache::tags($tag)->remember( $tag.$tagWhere,config('configure.sCache'), function() use( $where, $request,$siteID ){
+        $value = Cache::tags($tag)->remember( $tag.$tagWhere,config('configure.sCache'), function() use( $where, $request,$siteID,$user ){
                 $sql = Dynamic::where( $where )->orderBy('id','desc')->with(['dynamicToImages' => function ($sql) {
                     $sql->orderBy('type', 'desc');
                 }]);//关联图片
@@ -58,6 +58,9 @@ class SiteDynamic extends ClientBase
                     }]);
                 },'dynamicToStatistics'=>function($query){
                     $query->select('dynamicid','thumbsupnum','commentnum');
+                },'dynamicToGive'=>function($query) use($user){
+                    //关联点赞
+                    $query->where(['userid'=>$user->id,'companyid'=>$user->companyid]);
                 }]);
             return $sql->paginate(config('configure.sPage'));
         });
