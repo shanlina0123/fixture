@@ -9,13 +9,15 @@
 namespace App\Http\Model\User;
 
 
-class UserDynamicGive
+use Illuminate\Database\Eloquent\Model;
+
+class UserDynamicGive extends Model
 {
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
-    protected $table = 'fixture_user_dynamic_give';
-    public $timestamps = false;
+    protected $table = 'user_dynamic_give';
+    public $timestamps = true;
     protected $hidden = [
-        'created_at'
+        'created_at','updated_at'
     ];
 }

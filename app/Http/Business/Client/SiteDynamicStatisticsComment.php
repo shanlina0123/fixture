@@ -10,6 +10,7 @@ namespace App\Http\Business\Client;
 use App\Http\Business\Common\ClientBase;
 use App\Http\Model\Dynamic\DynamicStatistics;
 use App\Http\Model\User\UserDynamicGive;
+use Illuminate\Support\Facades\DB;
 
 class SiteDynamicStatistics extends ClientBase
 {
@@ -25,15 +26,14 @@ class SiteDynamicStatistics extends ClientBase
         $statistics = DynamicStatistics::where($where)->first();
         if( $statistics )
         {
+            DB::beginTransaction();
             //点赞
             if( $type == 1 )
             {
-                $give = new UserDynamicGive();
-                $give->companyid = $user->companyid;
-                $give->dynamicid = $data['dynamicid'];
-                $give->userid = $user->id;
-                $give->created_at = date('Y-m-d H:i:s');
-                $resGive = $give->save();
+                $give['companyid'] = $user->companyid;
+                $give['dynamicid'] = $data['dynamicid'];
+                $give['userid'] = $user->id;
+                $resGive = UserDynamicGive::firstOrCreate($give);
                 $statistics->thumbsupnum = $resGive?$statistics->thumbsupnum+1:$statistics->thumbsupnum;
 
             }else
@@ -48,9 +48,11 @@ class SiteDynamicStatistics extends ClientBase
                     $statistics->thumbsupnum =  $statistics->thumbsupnum? $statistics->thumbsupnum-1: $statistics->thumbsupnum;
                 }
             }
+            DB::commit();
             return $statistics->save();
         }else
         {
+            DB::beginTransaction();
             $statistics = new DynamicStatistics();
             $statistics->dynamicid = $data['dynamicid'];
             $statistics->siteid = $data['siteid'];
@@ -60,12 +62,10 @@ class SiteDynamicStatistics extends ClientBase
             //点赞
             if( $type == 1 )
             {
-                $give = new UserDynamicGive();
-                $give->companyid = $user->companyid;
-                $give->dynamicid = $data['dynamicid'];
-                $give->userid = $user->id;
-                $give->created_at = date('Y-m-d H:i:s');
-                $resGive = $give->save();
+                $give['companyid'] = $user->companyid;
+                $give['dynamicid'] = $data['dynamicid'];
+                $give['userid'] = $user->id;
+                $resGive = UserDynamicGive::firstOrCreate($give);
 
             }else
             {
@@ -77,9 +77,11 @@ class SiteDynamicStatistics extends ClientBase
             }
             if( $res &&  $resGive )
             {
+                DB::commit();
                 return true;
             }else
             {
+                DB::rollBack();
                 return false;
             }
         }

@@ -14,6 +14,8 @@ use App\Http\Model\Dynamic\Dynamic;
 use App\Http\Model\Dynamic\DynamicComment;
 use App\Http\Model\Dynamic\DynamicImages;
 use App\Http\Model\Dynamic\DynamicStatistics;
+use App\Http\Model\Log\Notice;
+use App\Http\Model\User\UserDynamicGive;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
@@ -96,6 +98,10 @@ class SiteDynamic extends ClientBase
             }
             DynamicImages::where('dynamicid',$dynamic->id)->delete();
             $dynamic->delete();
+            //删除点赞数据
+            UserDynamicGive::where(['dynamicid'=>$dynamic->id])->delete();
+            //删除消息日志
+            Notice::where(['dynamicid'=>$dynamic->id])->delete();
             DB::commit();
             return true;
         }catch ( \Exception $e )

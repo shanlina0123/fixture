@@ -43,7 +43,12 @@ class SiteDynamicStatisticsCommentController extends ClientBaseController
             //写日志
             //event('log.notice',array('type'=>2,$this->apiUser,'event'=>$data,'notice_type'=>true));
             Cache::tags(['DynamicList'.$this->apiUser->companyid])->flush();
-            responseData(\StatusCode::SUCCESS,'点赞成功');
+            if( $data['type']==1 ){
+                $msg = '点赞成功';
+            }else{
+                $msg = '取消点赞';
+            }
+            responseData(\StatusCode::SUCCESS,$msg);
         }
         responseData(\StatusCode::ERROR,'点赞失败');
     }
