@@ -50,6 +50,11 @@ class ChatController extends ServerBaseController
      */
     public  function  getListData()
     {
+        //检查是否配置了极光
+        if(!env('JMESSAGE_APP_KEY') || !env('JMESSAGE_MASECT_SECRET')){
+            return responseCData(\StatusCode::ENV_ERROR,"ENV极光配置错误","");
+        }
+
         //业务调用
         $list = $this->chat_business->getListData($this->userInfo->id,$this->userInfo->nickname,$this->userInfo->faceimg,$this->userInfo->token,$this->userInfo->jguser);
         return responseCData(\StatusCode::SUCCESS,"",$list);
