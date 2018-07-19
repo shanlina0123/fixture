@@ -129,7 +129,7 @@ class AdminBusiness extends ServerBase
             //业务处理
 
             //获取职位id
-            $rsPData=Position::where("roleid",$roleData["id"])->first();
+            $rsPData=Position::where("roleid",$roleData["id"])->where("companyid",$companyid)->first();
             if(!$rsPData)
             {
                 $position["name"]=$roleData["name"];
@@ -239,7 +239,7 @@ class AdminBusiness extends ServerBase
 
             //整理修改数据
             //获取职位id
-            $rsPData=Position::where("roleid",$roleData["id"])->first();
+            $rsPData=Position::where("roleid",$roleData["id"])->where("companyid",$row["companyid"])->first();
             if(!$rsPData)
             {
                 $position["name"]=$roleData["name"];
