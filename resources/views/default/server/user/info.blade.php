@@ -15,6 +15,7 @@
                     <div class="layui-input-block">
                         <input type="text" value="{{$user->nickname}}" class="layui-input" readonly  style="width: 25%;float:left;">
                         @if($user->wechatopenid)
+                            <a href="javascript:;" style="line-height:38px;color: #01AAED" class="binwx" >已绑定</a>
                             已绑定
                         @else
                             <a href="javascript:;" style="line-height:38px;color: #01AAED" class="binwx" url="{{route('user-wxcode')}}" data-check="{{route('check-openid')}}">绑定微信</a>

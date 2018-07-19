@@ -70,6 +70,9 @@ Route::group(['namespace' => 'Server'], function () {
         Route::get("chat/login","ChatController@getLogin")->name("chat-login");//登录用户
         Route::post("chat/message","ChatController@getUserMessageData")->name("chat-message");//获取用户聊天记录
 
+        //升级
+        Route::get("upgrae","UpgradeController@upgradeV1")->name("upgrade-v1");//V1.0更近为V1.0.1.1
+
         //腾讯地图
         Route::post('map-address', 'PublicController@getMapAddress')->name('map-address');//获取腾讯地图搜索的地址
         //二维码

@@ -126,7 +126,7 @@ class Sms
      */
     static function getCode( $phone, $type )
     {
-        $reg = '/^13[0-9]{9}$|14[0-9]{9}|15[0-9]{9}$|18[0-9]{9}$/';
+        $reg = '/^1[345678]\d{9}$/';
         if( preg_match($reg, $phone)  == false )
         {
             responseData(StatusCode::ERROR,'手机号码验证失败');
