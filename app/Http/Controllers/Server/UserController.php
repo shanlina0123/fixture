@@ -151,7 +151,7 @@ class UserController extends ServerBaseController
                 if ($data) {
                     $data = json_decode($data, true);
                     if (array_has($data, 'access_token')) {
-                        $temple = new WxTempletBusiness;
+                        //$temple = new WxTempletBusiness;
                         $res = SmallProgram::where(['companyid' => $userInfo->companyid])->first();
                         if ($res) {
                             $res->authorizer_appid = $this->request->input('authorizer_appid');

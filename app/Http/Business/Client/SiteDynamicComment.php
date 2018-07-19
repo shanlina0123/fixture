@@ -22,9 +22,28 @@ class SiteDynamicComment extends ClientBase
      */
     public function commentDestroy( $data )
     {
-        $where['id'] = $data['id'];
-        $where['dynamicid'] = $data['dynamicid'];
-        return DynamicComment::where( $where )->delete();
+        try{
+            DB::beginTransaction();
+                $where['id'] = $data['id'];
+                $where['dynamicid'] = $data['dynamicid'];
+                $comment = DynamicComment::where( $where )->delete();
+                $statics = DynamicStatistics::where('dynamicid', $data['dynamicid'])->first();
+                $statics->commentnum = $statics->commentnum?$statics->commentnum-1:0;
+                $res = $statics->save();
+                if( $comment && $res )
+                {
+                    DB::commit();
+                    return true;
+                }else
+                {
+                    DB::rollBack();
+                    return false;
+                }
+        }catch (\Exception $e)
+        {
+            DB::rollBack();
+            return false;
+        }
     }
 
     /**

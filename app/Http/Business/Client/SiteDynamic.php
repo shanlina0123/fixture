@@ -14,6 +14,8 @@ use App\Http\Model\Dynamic\Dynamic;
 use App\Http\Model\Dynamic\DynamicComment;
 use App\Http\Model\Dynamic\DynamicImages;
 use App\Http\Model\Dynamic\DynamicStatistics;
+use App\Http\Model\Log\Notice;
+use App\Http\Model\User\UserDynamicGive;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
@@ -33,7 +35,7 @@ class SiteDynamic extends ClientBase
         {
             $tagWhere = $request->input('page').implode('',$where);
         }
-        $value = Cache::tags($tag)->remember( $tag.$tagWhere,config('configure.sCache'), function() use( $where, $request,$siteID ){
+        $value = Cache::tags($tag)->remember( $tag.$tagWhere,config('configure.sCache'), function() use( $where, $request,$siteID,$user ){
                 $sql = Dynamic::where( $where )->orderBy('id','desc')->with(['dynamicToImages' => function ($sql) {
                     $sql->orderBy('type', 'desc');
                 }]);//关联图片
@@ -58,6 +60,9 @@ class SiteDynamic extends ClientBase
                     }]);
                 },'dynamicToStatistics'=>function($query){
                     $query->select('dynamicid','thumbsupnum','commentnum');
+                },'dynamicToGive'=>function($query) use($user){
+                    //关联点赞
+                    $query->where(['userid'=>$user->id,'companyid'=>$user->companyid]);
                 }]);
             return $sql->paginate(config('configure.sPage'));
         });
@@ -93,6 +98,10 @@ class SiteDynamic extends ClientBase
             }
             DynamicImages::where('dynamicid',$dynamic->id)->delete();
             $dynamic->delete();
+            //删除点赞数据
+            UserDynamicGive::where(['dynamicid'=>$dynamic->id])->delete();
+            //删除消息日志
+            Notice::where(['dynamicid'=>$dynamic->id])->delete();
             DB::commit();
             return true;
         }catch ( \Exception $e )

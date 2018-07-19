@@ -67,4 +67,13 @@ class Dynamic extends Model
         return $this->belongsTo('App\Http\Model\Dynamic\DynamicStatistics','id','dynamicid');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * 关联点赞
+     */
+    public function dynamicToGive()
+    {
+        return $this->belongsTo('App\Http\Model\User\UserDynamicGive','id','dynamicid');
+    }
+
 }

@@ -1240,12 +1240,14 @@ CREATE TABLE `fixture_user` (
 DROP TABLE IF EXISTS `fixture_user_dynamic_give`;
 
 CREATE TABLE `fixture_user_dynamic_give` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `dynamicid` int(11) DEFAULT NULL COMMENT '动态id',
-  `userid` int(11) DEFAULT NULL COMMENT '工地id',
-  `created_at` datetime DEFAULT NULL COMMENT '评论数和回复数',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='动态 - 用户点赞';
+   `id` int(11) NOT NULL AUTO_INCREMENT,
+   `companyid` int(11) DEFAULT NULL COMMENT '公司ID',
+   `dynamicid` int(11) DEFAULT NULL COMMENT '动态id',
+   `userid` int(11) DEFAULT NULL COMMENT '用户id',
+   `created_at` datetime DEFAULT NULL,
+   `updated_at` datetime DEFAULT NULL,
+   PRIMARY KEY (`id`)
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='动态 - 用户点赞';
 
 /*Data for the table `fixture_user_dynamic_give` */
 
