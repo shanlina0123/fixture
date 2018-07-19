@@ -172,6 +172,7 @@ class SystemMessageController extends Controller
         $friends = $this->request->input('username');
         $Jmessages = new JmessageBusiness();
         $Jmessages->friendAdd($username,[$friends]);
+        responseData(\StatusCode::SUCCESS,'');
     }
 
 
