@@ -61,7 +61,7 @@ class SiteTemplateController extends ServerBaseController
         $res = $this->template->templateSave( $data );
         if( $res == true )
         {
-            Cache::tags(['siteTemplate'.$data['companyid']])->flush();
+            Cache::tags(['siteTemplate'.$data['companyid'],'templateListHome'.$data['companyid'],'defaultTemplateHome'.$data['companyid']])->flush();
             return redirect()->route('site-template.index')->with('msg','添加成功');
         }else
         {
@@ -128,7 +128,7 @@ class SiteTemplateController extends ServerBaseController
         $res = $this->template->updateTemplate( $data, $id );
         if( $res->ststus )
         {
-            Cache::tags(['siteTemplate'.$data['companyid']])->flush();
+            Cache::tags(['siteTemplate'.$data['companyid'],'templateListHome'.$data['companyid'],'defaultTemplateHome'.$data['companyid']])->flush();
             return redirect()->route('site-template.index')->with('msg','修改成功');
         }else
         {
@@ -148,7 +148,7 @@ class SiteTemplateController extends ServerBaseController
         $res = $this->template->templateDel( $companyId, $id );
         if( $res->status == 1 )
         {
-            Cache::tags(['siteTemplate'.$companyId])->flush();
+            Cache::tags(['siteTemplate'.$companyId,'templateListHome'.$companyId,'defaultTemplateHome'.$companyId])->flush();
         }
         return json_encode($res);
     }
@@ -165,7 +165,7 @@ class SiteTemplateController extends ServerBaseController
         $res = $this->template->templateDefault( $companyId, $id );
         if( $res->status  )
         {
-            Cache::tags(['siteTemplate'.$companyId])->flush();
+            Cache::tags(['siteTemplate'.$companyId,'templateListHome'.$companyId,'defaultTemplateHome'.$companyId])->flush();
         }
         return json_encode($res);
     }
@@ -181,7 +181,7 @@ class SiteTemplateController extends ServerBaseController
         $res = $this->template->addDefaultTemplate( $companyId, $id );
         if( $res->status  )
         {
-            Cache::tags(['siteTemplate'.$companyId])->flush();
+            Cache::tags(['siteTemplate'.$companyId,'templateListHome'.$companyId,'defaultTemplateHome'.$companyId])->flush();
         }
         return json_encode($res);
     }

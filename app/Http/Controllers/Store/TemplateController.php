@@ -96,7 +96,7 @@ class TemplateController extends StoreBaseController
         if( $res == true )
         {
             $companyID = $data['companyid'];
-            Cache::tags(['defaultTemplateHome'.$companyID,'templateListHome'.$companyID])->flush();
+            Cache::tags(['defaultTemplateHome'.$companyID,'templateListHome'.$companyID,'siteTemplate'.$companyID])->flush();
             responseData(\StatusCode::SUCCESS,'设置成功',$res);
         }else
         {
@@ -133,7 +133,7 @@ class TemplateController extends StoreBaseController
         if( $res )
         {
             $companyID = $data['companyid'];
-            Cache::tags(['defaultTemplateHome'.$companyID,'templateListHome'.$companyID])->flush();
+            Cache::tags(['defaultTemplateHome'.$companyID,'templateListHome'.$companyID,'siteTemplate'.$companyID])->flush();
             responseData(\StatusCode::SUCCESS,'删除成功',$res);
         }else
         {

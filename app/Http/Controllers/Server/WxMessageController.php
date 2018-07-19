@@ -109,50 +109,75 @@ class WxMessageController extends Controller
             libxml_disable_entity_loader(true);
             $postObj = simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
             $MsgType = trim($postObj->MsgType);
-            //Log::error(var_export($postObj->EventKey,true));
+            Log::error(var_export($postObj,true));
             switch ( $MsgType )
             {
                 case 'event':
+                    //扫码
                     switch ($postObj->Event)
                     {
                         case "subscribe":
                             //处理结果
                             $wxchat = new WeChatPublicNumberBusiness();
-                            $postObj->EventKey = str_replace('qrscene_','',$postObj->EventKey);
-                            $res = $wxchat->mpAuthorizeBack($postObj->EventKey,$postObj->FromUserName);
-                            if( $res )
+                            $EventKey = $postObj->EventKey;
+                            if( trim($EventKey) != false )
                             {
-                                $contentStr = '绑定成功';
+                                //处理带参数的二维码业务
+                                $postObj->EventKey = str_replace('qrscene_','',$postObj->EventKey);
+                                $res = $wxchat->mpAuthorizeBack($postObj->EventKey,$postObj->FromUserName);
+                                if( $res )
+                                {
+                                    $contentStr = '绑定成功';
+                                }else
+                                {
+                                    $contentStr = '绑定失败';
+                                }
+                                echo $this->transmitText($postObj,$contentStr);
                             }else
                             {
-                                $contentStr = '绑定失败';
+                                //首次关注回复 可定义修改
+                                echo $this->transmitText($postObj,'谢谢关注！！');
                             }
-                            echo $this->transmitText($postObj,$contentStr);
                             break;
                         case "SCAN":
                             //处理结果
-                            Log::error(var_export($postObj->EventKey,true));
-                            $wxchat = new WeChatPublicNumberBusiness();
-                            $res = $wxchat->mpAuthorizeBack($postObj->EventKey,$postObj->FromUserName);
-                            if( $res )
+                            $EventKey = $postObj->EventKey;
+                            if( trim($EventKey) != false )
                             {
-                                $contentStr = '绑定成功';
-                            }else
-                            {
-                                $contentStr = '绑定失败';
+                                //处理带参数的二维码业务
+                                $wxchat = new WeChatPublicNumberBusiness();
+                                $res = $wxchat->mpAuthorizeBack($postObj->EventKey,$postObj->FromUserName);
+                                if( $res )
+                                {
+                                    $contentStr = '绑定成功';
+                                }else
+                                {
+                                    $contentStr = '绑定失败';
+                                }
+                                echo $this->transmitText($postObj,$contentStr);
+                                break;
                             }
-                            echo $this->transmitText($postObj,$contentStr);
+                            exit("");
                             break;
                         default:
                             break;
 
                     }
-                break;
+                    break;
+                case 'text':
+                    //在这里设置文本回复
+                    exit("");
+                    break;
+                case 'image':
+                    //在这里设置图片回复
+                    exit("");
+                    break;
+                default:
+                    //更多可在继续扩展
+                    exit("");
+                    break;
             }
 
-        }else
-        {
-            return '请求失败。。';
         }
     }
 

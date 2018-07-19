@@ -107,7 +107,6 @@ class Sms
             $res['result'] = 0;
         }
 
-        \Illuminate\Support\Facades\Log::error("=============".$phone."发送短信===============".var_export($res,true));
         if( $res['result'] == 0 )
         {
             return true;

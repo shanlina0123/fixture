@@ -205,7 +205,7 @@ class SiteTemplateBusiness extends ServerBase
     public function templateDefault( $companyId, $id )
     {
         $obj = new \stdClass();
-        CompanyStageTemplate::whereNotIn('uuid',[$id])->where(['companyid'=>$companyId])->update(['isdefault'=>0]);
+        CompanyStageTemplate::where(['companyid'=>$companyId])->update(['isdefault'=>0]);
         $res = CompanyStageTemplate::where(['companyid'=>$companyId,'uuid'=>$id])->first();
         $res->isdefault = 1;
         if( $res->save() )
