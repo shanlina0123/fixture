@@ -443,7 +443,7 @@ class SiteController extends StoreBaseController
             $messages = $validator->errors()->first();
             responseData(\StatusCode::CHECK_FORM,'验证失败','',$messages);
         }
-        $res = $this->site->siteDynamic( $data );
+        $res = $this->site->siteDynamic( $data, $this->apiUser );
         responseData(\StatusCode::SUCCESS,'工地详情动态',$res);
     }
 

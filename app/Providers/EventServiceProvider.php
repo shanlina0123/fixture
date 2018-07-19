@@ -94,7 +94,7 @@ class EventServiceProvider extends ServiceProvider
                             $obj->cityid = $site->cityid;
                             $obj->storeid = $site->storeid;
                             $event['title'] = $obj->title;
-                            $event['createuserid'] = $obj->createuserid;
+                            $event['createuserid'] = $site->createuserid;
                             break;
                         case 2:
                             $obj->title = '免费量房';

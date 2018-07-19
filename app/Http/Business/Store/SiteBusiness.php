@@ -246,13 +246,13 @@ class SiteBusiness extends StoreBase
      * @return mixed
      * 工地详情动态
      */
-    public function siteDynamic( $data )
+    public function siteDynamic( $data, $user )
     {
         //动态
         $where = $data;
         $comment = Dynamic::where(['companyid'=>$data['companyid'],'sitetid'=>$data['id'],'type'=>0])->orderBy('id','desc')->with('dynamicToImages');//关联图片
         //关联用户
-        $comment = $comment->with(['dynamicToUser'=>function( $query ) use($where){
+        $comment = $comment->with(['dynamicToUser'=>function( $query ) use($where,$user){
             //关联用户表的职位
             $query->with(['userToPosition'=>function( $query ) use($where){
                 $query->where(['companyid'=>$where['companyid']]);
@@ -267,6 +267,9 @@ class SiteBusiness extends StoreBase
             }]);
         },'dynamicToStatistics'=>function($query){
             $query->select('dynamicid','thumbsupnum','commentnum');
+        },'dynamicToGive'=>function($query) use($user){
+            //关联点赞
+            $query->where(['userid'=>$user->id,'companyid'=>$user->companyid]);
         }])->get();
         return $comment;
     }

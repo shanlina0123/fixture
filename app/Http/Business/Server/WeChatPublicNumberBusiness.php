@@ -70,6 +70,7 @@ class WeChatPublicNumberBusiness extends ServerBase
                         break;
                     case 2://客户留言
                         $this->leavingMessage($res,$companyId, $data);
+                        break;
                 }
             }
         }
