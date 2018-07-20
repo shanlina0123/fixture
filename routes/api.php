@@ -108,6 +108,7 @@ Route::group(['middleware'=>'ApiCheck'], function () {
             Route::get('client/lucky-record', 'ClientActivityLuckyRecordController@luckyRecordList');
             //动态修改
             Route::match(['get', 'post'], 'client/dynamic-up', 'SiteDynamiController@dynamicUp');
+            //工地列表
 
         });
     });

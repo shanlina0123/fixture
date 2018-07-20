@@ -14,6 +14,7 @@ use App\Http\Model\Data\RoomStyle;
 use App\Http\Model\Data\RoomType;
 use App\Http\Model\Dynamic\Dynamic;
 use App\Http\Model\Site\Site;
+use App\Http\Model\Site\SiteEvaluate;
 use App\Http\Model\Site\SiteInvitation;
 use App\Http\Model\Site\SiteParticipant;
 use Illuminate\Support\Facades\Cache;
@@ -237,6 +238,8 @@ class SiteBusiness extends StoreBase
         }])->get();
         //自己关注统计
         $res->siteToFolloWrecord = $res->siteToFolloWrecord()->where('userid',$data['userid'])->count();
+        //业主评价
+        $res->evaluate = $res->siteToEvaluate()->where()->where(['companyid'=>$data['companyid'],'siteid'=>$res->id])->get();
         return $res;
     }
 

@@ -397,7 +397,7 @@ class SiteController extends StoreBaseController
         $data = trimValue( $this->request->all() );
         $data['companyid'] = $this->apiUser->companyid;
         $data['userid'] = $this->apiUser->id;
-        $data['userType'] = $this->apiUser->id;
+        $data['userType'] = $this->apiUser->type;
         $validator = Validator::make(
             $data,
             [

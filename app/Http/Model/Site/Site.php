@@ -103,4 +103,12 @@ class Site extends Model
     {
         return $this->belongsTo('App\Http\Model\User\User','createuserid','id');
     }
+
+    /**
+     * 关联评价
+     */
+    public function siteToEvaluate()
+    {
+        return $this->hasMany('App\Http\Model\Site\SiteEvaluate','id','siteid');
+    }
 }
