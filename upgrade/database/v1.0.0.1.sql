@@ -148,3 +148,4 @@ ALTER TABLE `xxs_fixture`.`fixture_small_program` DROP COLUMN `uploadcode`, DROP
 
 
 #####以上已同步线上######
+ALTER TABLE `xxs_fixture`.`fixture_small_program` DROP COLUMN `seturl`;
