@@ -153,6 +153,13 @@ Route::group(['namespace' => 'Server'], function () {
             Route::post('mp/send/authorize/back','WeChatPublicNumberController@checkOpenidBack');//扫码回调检测
             Route::post('mp/send/addTemplate','WeChatPublicNumberController@sendAddTemplate')->name('mp-usersend-add');//个人添加模板
 
+            //宣传活动
+            Route::get("activity","ActivityController@index")->name("activity-index");//列表
+            Route::get("activity/edit/{id}","ActivityController@edit")->name("activity-edit");//详情列表
+            Route::get("activity/create","ActivityController@create")->name("activity-create");//进入添加页
+            Route::put("activity/{id}","ActivityController@update")->name("activity-update");//修改+新增-执行
+            Route::delete("activity/{id}","ActivityController@delete")->name("activity-delete");//删除-执行
+            Route::put("activity/setting/{id}","ActivityController@setting")->name("activity-setting");//上线/下线
         });
     });
 });
