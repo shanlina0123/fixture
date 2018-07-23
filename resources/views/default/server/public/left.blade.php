@@ -21,6 +21,7 @@
             <li class="layui-nav-item"  >
                 <a href="javascript:;">活动管理</a>
                 <dl class="layui-nav-child" >
+                    {{--<dd class="nav-menu @if(url()->current() == route('activity-index') ) layui-this @endif"  url="{{route('activity-index')}}"><a>宣传活动</a></dd>--}}
                     <dd class="nav-menu @if(url()->current() == route('lucky-index') ) layui-this @endif"  url="{{route('lucky-index')}}"><a>幸运抽奖</a></dd>
                 </dl>
             </li>

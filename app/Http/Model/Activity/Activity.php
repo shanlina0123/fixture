@@ -11,12 +11,28 @@ class Activity extends Model
     protected $table = 'activity';
     public $timestamps = false;
 
+    /***
+     * 关联门店
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function ActivityToStore()
+    {
+        return $this->belongsTo('App\Http\Model\Store\Store','storeid','id');
+    }
+    /***
+     * 关联用户
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function ActivityToUser()
+    {
+        return $this->belongsTo('App\Http\Model\User\User','userid','id');
+    }
 
     /***
      * 活动参与方式关联
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function participatory()
+    public function ActivityToParticipatory()
     {
         return $this->belongsTo('App\Http\Model\Data\Participatory','participatoryid','id');
     }
