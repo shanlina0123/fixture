@@ -10,6 +10,8 @@ namespace App\Http\Controllers\Client;
 
 
 use App\Http\Business\Client\SiteEvaluate;
+use App\Http\Business\Common\WxAlone;
+use App\Http\Business\Common\WxAuthorize;
 use App\Http\Controllers\Common\ClientBaseController;
 use Illuminate\Support\Facades\Validator;
 class SiteEvaluateController extends ClientBaseController
@@ -67,5 +69,42 @@ class SiteEvaluateController extends ClientBaseController
         $data = trimValue($this->request->all());
         $res = $this->siteEvaluate->evaluateInfo( $data, $this->apiUser );
         responseData(\StatusCode::SUCCESS,'评价信息',$res);
+    }
+
+    /**
+     * 删除评价
+     */
+    public function evaluateDestroy()
+    {
+        $data = trimValue($this->request->all());
+        $res = $this->siteEvaluate->evaluateDestroy( $data, $this->apiUser );
+        if( $res )
+        {
+            responseData(\StatusCode::SUCCESS,'删除成功',$res);
+
+        }else
+        {
+            responseData(\StatusCode::SUCCESS,'删除失败',$res);
+        }
+    }
+
+    /**
+     * 二维码
+     */
+    public function code()
+    {
+        //1单独部署
+        if( config('wxtype.type') == 1 )
+        {
+            $wx = new WxAlone();
+        }else
+        {
+            $wx = new WxAuthorize();
+        }
+        $siteid = $this->request->input('siteid');
+        $type = 'evaluate';
+        $scene = $siteid;
+        $companyid = $this->request->input('companyid');
+        $wx->createWxaQrcode($companyid,$type, $scene,'400');
     }
 }

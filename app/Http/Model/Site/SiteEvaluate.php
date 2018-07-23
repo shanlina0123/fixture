@@ -17,4 +17,9 @@ class SiteEvaluate extends Model
     protected $guarded = ['id'];
     protected $table = 'site_evaluate';
     public $timestamps = true;
+
+    public function evaluateToUser()
+    {
+        return $this->belongsTo('App\Http\Model\User\User','userid','id');
+    }
 }
