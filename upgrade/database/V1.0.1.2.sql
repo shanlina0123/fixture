@@ -28,7 +28,7 @@ DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci
 ROW_FORMAT=Compact;
 #业主评价 - 新建表
 CREATE TABLE `fixture_site_evaluate` (
-`id`  int(11) UNSIGNED ZEROFILL NOT NULL ,
+`id`  int(11) NOT NULL AUTO_INCREMENT ,
 `companyid`  int(11) NOT NULL COMMENT '公司id' ,
 `siteid`  int(11) NOT NULL COMMENT '工地ID' ,
 `userid`  int(11) NOT NULL COMMENT '用户id' ,
