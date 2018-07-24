@@ -15,6 +15,7 @@ use App\Http\Model\Site\SiteEvaluate as Evaluate;
 use App\Http\Model\Site\Site;
 use App\Http\Model\Site\SiteInvitation;
 use App\Http\Model\User\User;
+use Illuminate\Support\Facades\DB;
 
 class SiteEvaluate extends ClientBase
 {
@@ -42,7 +43,6 @@ class SiteEvaluate extends ClientBase
             if( !$userID )
             {
                 //第一次评价给邀请的成员表加数据
-                $invitation['uuid'] = create_uuid();
                 $invitation['companyid'] = $user->companyid;
                 $invitation['storeid'] = $site->storeid;
                 $invitation['cityid'] = $site->cityid;
@@ -51,8 +51,10 @@ class SiteEvaluate extends ClientBase
                 $invitation['isowner'] = 1;
                 $invitation['userid'] = $site->createuserid;//工地创建者
                 $invitation['joinuserid'] = $user->id;
-                $invitation['created_at'] = date("Y-m-d H:i:s");
-                SiteInvitation::insert( $invitation );
+                $inv = SiteInvitation::firstOrCreate( $invitation );
+                $inv->uuid = create_uuid();
+                $inv->created_at = date("Y-m-d H:i:s");
+                $inv->save();
                 //设置用户为业主
                 User::where(['companyid'=>$user->companyid,'id'=>$user->id])->update(['isowner'=>1]);
             }
@@ -90,7 +92,15 @@ class SiteEvaluate extends ClientBase
         $obj = new \stdClass();
         $obj->name = $res->name;
         $obj->stageid = $res->stageid; //最新阶段
-        $obj->template = CompanyStageTemplateTag::where(['companyid'=>$user->companyid,'stagetemplateid'=>$user->stagetemplateid])->orderBy('id','asc')->get()->toArray();
+        $obj->template = CompanyStageTemplateTag::where(['companyid'=>$user->companyid,'stagetemplateid'=>$res->stagetemplateid])->orderBy('id','asc')->get()->toArray();
         return $obj;
+    }
+
+    /**
+     * 评价信息
+     */
+    public function evaluateDestroy( $data, $user )
+    {
+        return Evaluate::where(['siteid'=>$data['siteid'],'companyid'=>$user->companyid])->delete();
     }
 }

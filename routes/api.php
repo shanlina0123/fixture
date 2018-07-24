@@ -21,6 +21,7 @@ Route::post('user/login', 'Common\WxApiLoginController@login');//登陆
 Route::post('user/openid', 'Common\WxApiLoginController@getOpenid');//登陆
 Route::get('participant/position-code', 'Store\ParticipantController@code');
 Route::post('jmessage/init', 'Common\SystemMessageController@getJmessageInIt');//极光初始化
+Route::get('site/evaluate-code', 'Client\SiteEvaluateController@code');
 Route::group(['middleware'=>'ApiCheck'], function () {
     //权限验证
     Route::group(['middleware' =>'ApiAuthCheck'], function () {
@@ -108,7 +109,13 @@ Route::group(['middleware'=>'ApiCheck'], function () {
             Route::get('client/lucky-record', 'ClientActivityLuckyRecordController@luckyRecordList');
             //动态修改
             Route::match(['get', 'post'], 'client/dynamic-up', 'SiteDynamiController@dynamicUp');
-            //工地列表
+            //业主评价详情页面
+            Route::get('site/site-evaluate-info', 'SiteEvaluateController@evaluateInfo');
+            //业主评价
+            Route::post('site/owner-evaluate', 'SiteEvaluateController@ownerEvaluate');
+            //删除评价
+            Route::delete('site/evaluate-destroy', 'SiteEvaluateController@evaluateDestroy');
+            //邀请业主二维码
 
         });
     });

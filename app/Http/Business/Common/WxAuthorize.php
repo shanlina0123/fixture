@@ -646,6 +646,27 @@ class WxAuthorize
     }
 
     /**
+     * @param $companyid
+     * @param null $width
+     * 生成固定的二维
+     */
+    public function createWxaQrcode($companyid,$type, $scene, $width=null)
+    {
+        $accessToken = $this->getUserAccessToken(null,$companyid);
+        if($accessToken)
+        {
+            $url= 'https://api.weixin.qq.com/cgi-bin/wxaapp/createwxaqrcode?access_token='.$accessToken;
+            header('content-type:image/gif');
+            $postData = array();
+            $postData['path'] = config('wxconfig.wxCode.'.$type).'?id='.$scene;//扫描后对应的path
+            $postData['width'] = $width?$width:800;//自定义的尺寸
+            $postData = json_encode($postData);
+            $da = get_http_array($url,$postData);
+            echo json_encode($da);//echo直接在浏览器显示或者存储到服务器等其他操作
+        }
+        echo "";
+    }
+    /**
      * 小程序体验二维码
      */
     public function getWxExperienceCodeImg($companyid)

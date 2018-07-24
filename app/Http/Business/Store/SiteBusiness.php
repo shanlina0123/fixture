@@ -234,12 +234,14 @@ class SiteBusiness extends StoreBase
         $res->tag = CompanyStageTemplateTag::orderBy('sort','asc')->where(['stagetemplateid'=>$res->stagetemplateid,'companyid'=>$res->companyid])->select('id','name')->get();
         //工地参与者
         $res->siteInvitation = SiteInvitation::where(['companyid'=>$data['companyid'],'siteid'=>$data['id']])->with(['invitationToUser'=>function($query){
-            $query->select('id','positionid','nickname','faceimg')->with('userToPosition');
+            $query->select('id','positionid','nickname','faceimg','isowner')->with('userToPosition');
         }])->get();
         //自己关注统计
         $res->siteToFolloWrecord = $res->siteToFolloWrecord()->where('userid',$data['userid'])->count();
         //业主评价
-        $res->evaluate = $res->siteToEvaluate()->where()->where(['companyid'=>$data['companyid'],'siteid'=>$res->id])->get();
+        $res->evaluate = $res->siteToEvaluate()->where(['companyid'=>$data['companyid'],'siteid'=>$res->id])->orderBy('sitestageid','asc')->with(['evaluateToUser'=>function($query){
+            $query->select('id','nickname','faceimg');
+        }])->get();
         return $res;
     }
 

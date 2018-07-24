@@ -109,6 +109,6 @@ class Site extends Model
      */
     public function siteToEvaluate()
     {
-        return $this->hasMany('App\Http\Model\Site\SiteEvaluate','id','siteid');
+        return $this->hasMany('App\Http\Model\Site\SiteEvaluate','siteid','id');
     }
 }
