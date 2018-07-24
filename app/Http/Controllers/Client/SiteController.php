@@ -22,6 +22,16 @@ class SiteController extends ClientBaseController
     }
 
     /**
+     * 工地筛选条件
+     */
+    public function siteScreeningConditions()
+    {
+        $companyId = $this->apiUser->companyid;
+        $data = $this->site->siteScreeningConditions( $companyId );
+        responseData(\StatusCode::SUCCESS, '工地筛选条件',$data);
+
+    }
+    /**
      * C端工地列表
      */
     public function siteList()

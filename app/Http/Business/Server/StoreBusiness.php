@@ -123,6 +123,7 @@ class StoreBusiness extends ServerBase
                 //删除缓存
                 Cache::tags(["Store-PageList","Admin-StoreList"])->flush();
                 Cache::forget("storeCompany".$companyid);
+                Cache::forget("siteScreening".$companyid);
                 DB::commit();
             } else {
                 DB::rollBack();
@@ -170,6 +171,7 @@ class StoreBusiness extends ServerBase
                 Cache::tags(["Store-PageList","Admin-StoreList"])->flush();
                 Cache::forget("storeCompany".$rs->companyid);
                 Cache::forget("store".$rs->id);
+                Cache::forget("siteScreening".$rs->companyid);
                 DB::commit();
             } else {
                 DB::rollBack();
@@ -218,6 +220,7 @@ class StoreBusiness extends ServerBase
                 Cache::tags(["Store-PageList","Admin-StoreList"])->flush();
                 Cache::forget("storeCompany".$row["companyid"]);
                 Cache::forget("store".$row->id);
+                Cache::forget("siteScreening".$row["companyid"]);
                 DB::commit();
             }else{
                 DB::rollBack();

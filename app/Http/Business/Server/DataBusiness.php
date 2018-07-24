@@ -160,6 +160,7 @@ class DataBusiness extends ServerBase
                 Cache::forget("roomType".$companyid);
                 Cache::forget("roomStyle".$companyid);
                 Cache::forget("renovationMode".$companyid);
+                Cache::forget("siteScreening".$companyid);
                 return ["dataid"=>$dataid];
             } else {
                 DB::rollBack();
@@ -219,6 +220,7 @@ class DataBusiness extends ServerBase
                 Cache::forget("roomType".$companyid);
                 Cache::forget("roomStyle".$companyid);
                 Cache::forget("renovationMode".$companyid);
+                Cache::forget("siteScreening".$companyid);
             }else{
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR,"删除失败");
