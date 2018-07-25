@@ -119,6 +119,8 @@ Route::group(['middleware'=>'ApiCheck'], function () {
             Route::get('site/evaluate-code', 'SiteEvaluateController@code');
             //C端数据筛选条件
             Route::get('site/screening-conditions', 'SiteController@siteScreeningConditions');
+            //C端工地列表
+            Route::get('site/site-screening', 'SiteController@siteList');
         });
     });
     /**

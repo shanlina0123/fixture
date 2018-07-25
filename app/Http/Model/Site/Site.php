@@ -111,4 +111,15 @@ class Site extends Model
     {
         return $this->hasMany('App\Http\Model\Site\SiteEvaluate','siteid','id');
     }
+
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * 关联城市
+     */
+    public function siteToCity()
+    {
+        return $this->belongsTo('App\Http\Model\Data\City','cityid','id');
+    }
+
 }
