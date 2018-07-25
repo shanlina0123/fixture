@@ -39,7 +39,7 @@ return [
             'prefix' => '',
         ],
 
-        //test环境
+        //PC端
         'mysql' => [
             'driver' => 'mysql',
             'host' => env('DB_HOST', '192.168.15.222'),
@@ -54,7 +54,21 @@ return [
             'strict' => true,
             'engine' => null,
         ],
-
+         //后台
+        'mysql_admin' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST_ADM', '192.168.15.222'),
+            'port' => env('DB_PORT_ADM', '3306'),
+            'database' => env('DB_DATABASE_ADM', 'fixture_admin'),
+            'username' => env('DB_USERNAME_ADM', 'dev_fixture'),
+            'password' => env('DB_PASSWORD_ADM', 'b.123'),
+            'unix_socket' => env('DB_SOCKET_ADM', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => 'admin_',
+            'strict' => true,
+            'engine' => null,
+        ],
         'pgsql' => [
             'driver' => 'pgsql',
             'host' => env('DB_HOST', '127.0.0.1'),

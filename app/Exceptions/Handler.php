@@ -2,9 +2,11 @@
 
 namespace App\Exceptions;
 
+use App\Http\Model\Admin\Report\Report;
 use Exception;
-use App\Mail\ExceptionOccured;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 use Symfony\Component\Debug\Exception\FlattenException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\Debug\ExceptionHandler as SymfonyExceptionHandler;
@@ -85,6 +87,9 @@ class Handler extends ExceptionHandler
     public function sendEmail(Exception $exception)
     {
         try {
+            //录入异常,通过属性找到相匹配的数据并更新，如果不存在即创建
+            Report::updateOrCreate(array('date' =>date("Y-m-d")), array('catch_num' => DB::raw("catch_num+1")));
+            //新增你异常数据
             $userInfo=session("userInfo");
             $toUsers=config("configure.emails.mail_to_address");
             $opt="未登录";
@@ -92,6 +97,7 @@ class Handler extends ExceptionHandler
             {
                 $opt=$userInfo->id."-".$userInfo->nickname;
             }
+            //获取异常数据
             $e = FlattenException::create($exception);
             $handler = new SymfonyExceptionHandler();
             $content = $handler->getHtml($e);
@@ -104,6 +110,7 @@ class Handler extends ExceptionHandler
                 'opt'=>$opt,
                 'deal'=>implode("|",array_column($toUsers,"name",null))
             ];
+            //发送邮件
            Mail::send("emails.exception",["html"=>$html],function($message) use($toUsers){
                $message->to(array_pluck($toUsers,"addr"));
                $message->subject(config("configure.emails.mail_title").$_SERVER["SERVER_NAME"]);

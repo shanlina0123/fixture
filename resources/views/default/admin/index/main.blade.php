@@ -1,0 +1,1 @@
+@extends('server.layout.parent')

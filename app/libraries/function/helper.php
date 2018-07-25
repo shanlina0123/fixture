@@ -465,6 +465,10 @@ function getCurl( $url, $herder=1 )
     return ['controller' => $class, 'method' => $method];
 }
 
+function aaaaa()
+{
+    return  \Route::current();
+}
 /***
  * 极光账号username
  * @param $userid

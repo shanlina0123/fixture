@@ -1,0 +1,268 @@
+/*标签*/
+html,
+body,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+form,
+input,
+textarea,
+select,
+button,
+fieldset,
+legend,
+img,
+ul,
+ol,
+li,
+dl,
+dt,
+dd,
+th,
+td,
+pre,
+blockquote {
+  margin: 0;
+  padding: 0;
+}
+html {
+  color: #333;
+  background: #fff;
+  font-size: 62.5%;
+}
+body,
+button,
+input,
+select,
+textarea,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: 1.2em;
+  font-family: 'Microsoft YaHei', SimSun, Verdana, Arial, sans-serif;
+}
+img,
+fieldset {
+  border: 0;
+  vertical-align: middle;
+}
+textarea {
+  word-wrap: break-word;
+  word-break: break-all;
+  resize: none;
+}
+li {
+  list-style: none;
+}
+img {
+  border: none;
+}
+a {
+  text-decoration: none;
+  color: #333;
+}
+a:hover {
+  color: #628828;
+}
+a:focus {
+  outline: none;
+}
+/*位置*/
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
+}
+.wrap {
+  position: relative;
+  width: 100%;
+  min-height: 100%;
+  height: 100%;
+  height: auto!important;
+}
+.header .layui-nav {
+  position: static;
+}
+.layui-logo {
+  line-height: 60px;
+}
+.layui-logo img {
+  width: 120px;
+  margin-right: 10px;
+}
+.main {
+  padding: 15px;
+  overflow-y: auto;
+}
+.layui-layout-admin .layui-logo,
+.layui-layout-admin .layui-side {
+  width: 160px;
+}
+.layui-side-scroll,
+.layui-nav-tree {
+  width: 160px;
+}
+.layui-body {
+  left: 160px;
+  overflow-y: hidden;
+}
+.layui-layout-admin .layui-body {
+  bottom: 0;
+}
+.pageTitle {
+  font-size: 18px;
+  padding: 10px 0;
+}
+.submitButWrap {
+  width: 750px;
+  padding: 5px 0;
+  text-align: center;
+}
+.erweimaPop {
+  display: none;
+  width: 260px;
+  margin: 20px auto;
+}
+.erweimaPop .erweima {
+  width: 260px;
+  height: 260px;
+  border: 1px solid #eee;
+}
+.erweimaPop p {
+  font-size: 14px;
+  padding: 10px 0;
+  text-align: center;
+}
+.addBtnWrap {
+  padding-bottom: 10px;
+}
+.searchBtn {
+  margin-left: 15px;
+}
+.layui-form-item {
+  position: relative;
+}
+/*.Validform_checktip {
+  display: none;
+}
+.Validform_error {
+  position: absolute;
+  right: -80px;
+  top: 0;
+  line-height: 38px;
+  color: #FF5722;
+}
+.Validform_error i {
+  vertical-align: middle;
+}*/
+.forLineheight {
+  line-height: 38px;
+}
+.forLineheight input {
+  display: inline-block;
+  width: 80px;
+  padding: 0 10px;
+  margin-right: 5px;
+  border: 1px solid #eee;
+}
+.pageWrap {
+  padding: 20px 0;
+  text-align: center;
+}
+.pagination li {
+  display: inline-block;
+  box-sizing: content-box;
+}
+.pagination li.active span {
+  background-color: #009688;
+  color: #fff;
+  border-color: #009688;
+}
+.pagination li a {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 0 15px;
+  height: 28px;
+  line-height: 28px;
+  margin: 0 0 5px 0;
+  background-color: #fff;
+  color: #333;
+  font-size: 14px;
+  box-sizing: content-box;
+  border: 1px solid #e2e2e2;
+}
+.pagination li a:hover,
+.pagination li a:active {
+  background-color: #009688;
+  color: #fff;
+  border-color: #009688;
+}
+.pagination li span {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 0 15px;
+  height: 28px;
+  line-height: 28px;
+  margin: 0 0 5px 0;
+  background-color: #fff;
+  color: #333;
+  font-size: 14px;
+  box-sizing: content-box;
+  border: 1px solid #e2e2e2;
+}
+.imgnotice {
+  color: #c2c2c2;
+}
+/*分享*/
+.sharewrap {
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  top: 60px;
+  right: 0px;
+  border-bottom: 80px solid transparent;
+  border-right: 80px solid #f0ad4e;
+  z-index: 200;
+  cursor: pointer;
+}
+.sharewrap img {
+  position: absolute;
+  display: block;
+  width: 30px;
+  height: 30px;
+  top: 10px;
+  left: 42px;
+}
+.sharepop {
+  display: none;
+
+}
+.sharepop li {
+  float: left;
+  text-align: center;
+  padding: 20px;
+  margin-left: 124px;
+}
+.sharepop li:first-child {
+  margin-left: 0;
+}
+.sharepop li p {
+  font-size: 14px;
+  height: 40px;
+  line-height: 40px;
+}
+.sharepop li a {
+  display: block;
+}
+.sharepop li a img {
+  width: 258px;
+  height: 258px;
+}

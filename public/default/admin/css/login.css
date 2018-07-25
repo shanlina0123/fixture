@@ -1,0 +1,188 @@
+.loginContent {
+  padding: 0 10px;
+}
+.layui-tab {
+  margin: 0;
+}
+.loginWrap {
+  position: fixed;
+  width: 600px;
+  max-height: 310px;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  padding: 20px 10px;
+  background-color: #fff;
+  border-radius: 5px;
+  background: none;
+  margin: auto;
+}
+.loginLogo {
+  width: 150px;
+  display: block;
+  margin: 0 auto;
+}
+.loginInner .layui-tab-title li {
+  color: #fff;
+}
+.loginBtn .loginButton {
+  width: 100%;
+}
+.loginLink a {
+  color: #1E9FFF;
+}
+.loginLink a:hover {
+  opacity: .8;
+}
+.layui-input.codeInput {
+  width: 357px;
+}
+.registDeel {
+  margin-bottom: 10px;
+  text-align: left;
+}
+.registDeel a {
+  color: #1E9FFF;
+}
+.registDeel a:hover {
+  opacity: .8;
+}
+.deal {
+  display: none;
+  width: 650px;
+  margin: 15px auto;
+}
+.btnWrap {
+  text-align: center;
+  padding: 10px 0;
+}
+.bindingInner {
+  width: 500px;
+  margin: 30px auto;
+}
+.fullForm {
+  width: 750px;
+}
+.fullForm .fullFormInner {
+  width: 710px;
+}
+.userMessageForm .layui-input {
+  border: none;
+}
+.userMessageForm .messagePhone {
+  width: 25%;
+}
+.userMessageForm .changePhone {
+  line-height: 38px;
+  color: #01AAED;
+}
+.userMessageForm .changePhone:hover {
+  opacity: 0.8;
+}
+.popWrap {
+  width: 450px;
+  margin: 65px auto 20px auto;
+}
+.levelNotice {
+  display: block;
+  font-size: 14px;
+  color: #01AAED;
+  padding: 10px 0;
+}
+.levelNotice:hover {
+  color: #01AAED;
+  opacity: 0.8;
+}
+.uploadImg {
+  border: 1px solid #eee;
+  height: 132px;
+  min-width: 200px;
+  margin-left: 10px;
+}
+.errorWrap {
+  position: relative;
+  height: 40px;
+  background-color:#ffdce0;
+  border-color: rgba(27,31,35,0.15);
+}
+.loginError {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  margin: 10px 0;
+  right: auto;
+  top: 0;
+  color:#86181d;
+  padding-left:10px;
+  font-size:14px;
+}
+
+.loginError span{
+  line-height: 20px;
+}
+.loginError i {
+  vertical-align: middle;
+}
+.changepWrap {
+  max-width: 600px;
+}
+.ImgWrap {
+  position: relative;
+  margin-left: 10px;
+}
+.ImgWrap span img {
+  position: absolute;
+  right: 3px;
+  top: 3px;
+  cursor: pointer;
+}
+.erweimapop {
+  width: 260px;
+  height: 300px;
+  margin: 20px auto;
+}
+.erweima {
+  width: 260px;
+  height: 260px;
+  border: 1px solid #ddd;
+}
+.poptext {
+  font-size: 16px;
+  text-align: center;
+  line-height: 30px;
+  padding-top: 15px;
+}
+
+
+.erweimatext {
+  font-size: 16px;
+  text-align: center;
+  line-height: 30px;
+  color: red;
+  margin-top:35%;
+}
+.forgetwrap {
+  height: 360px;
+}
+
+.layui-input{
+  height: 60px!important;
+}
+
+.loginButton{
+  line-height: 60px;
+  height: 60px;
+}
+
+.systemName{
+  font-size: 32px;
+  color: #01aaed;
+  line-height: 43px;
+  margin-left: 2px;
+}
+
+.loginInner .topLogo{
+  overflow: hidden;
+  padding: 10px;
+}
