@@ -105,6 +105,6 @@ class SiteEvaluateController extends ClientBaseController
         $type = 'evaluate';
         $scene = $siteid;
         $companyid = $this->request->input('companyid');
-        $wx->createWxaQrcode($companyid,$type, $scene,'400');
+        $wx->createWxappCode($companyid,$type,$scene,500);
     }
 }

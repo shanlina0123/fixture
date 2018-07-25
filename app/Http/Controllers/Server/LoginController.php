@@ -4,6 +4,7 @@ use App\Http\Business\Server\BusinessServerLogin;
 use App\Http\Controllers\Common\ServerBaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\View;
 
 class LoginController extends ServerBaseController
 {

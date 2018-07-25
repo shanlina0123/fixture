@@ -21,6 +21,7 @@ use App\Http\Model\Dynamic\DynamicComment;
 use App\Http\Model\Dynamic\DynamicImages;
 use App\Http\Model\Dynamic\DynamicStatistics;
 use App\Http\Model\Site\Site;
+use App\Http\Model\Site\SiteEvaluate;
 use App\Http\Model\Site\SiteFollowrecord;
 use App\Http\Model\Site\SiteInvitation;
 use App\Http\Model\Site\SiteStageschedule;
@@ -482,6 +483,8 @@ class SiteBusiness extends ServerBase
             SiteStageschedule::where('siteid',$site->id)->delete();
             //删除观光团关注的工地
             SiteFollowrecord::where('siteid',$site->id)->delete();
+            //删除工地评价
+            SiteEvaluate::where('siteid',$site->id)->delete();
             //删除工地
             $site->delete();
             DB::commit();
