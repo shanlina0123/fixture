@@ -7,6 +7,7 @@ return [
      * ---------------------------
      */
     'salt' => 'ABCDEF%%%!!@@@4444',//登录加密秘钥
+    'admin_salt' => 'ABCDEF%%%!!@@@4444###KJH',//登录加密秘钥
 
     /**
      * ---------------------------
@@ -32,9 +33,12 @@ return [
      *  模板配置
      * ----------------------------
      */
-    "pix_asset"=>"default/",//css js 目录
+    "pix_asset"=>"default/",//模板目录
     "cssVersion"=>"V1.0.1.1_201807171844",//strtotime(date("Y-m-d H:i:s")),//css版本
     "jsVersion"=>"V1.0.1.1_201807171844",//strtotime(date("Y-m-d H:i:s")),//js版本
+
+
+
 
 
     /**

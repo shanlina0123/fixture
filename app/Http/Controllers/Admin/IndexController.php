@@ -1,22 +1,29 @@
 <?php
 
-namespace App\Http\Controllers\Server;
+namespace App\Http\Controllers\Admin;
 
-use App\Http\Business\Common\WxAlone;
-use App\Http\Business\Common\WxAuthorize;
-use App\Http\Controllers\Common\ServerBaseController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Common\AdminBaseController;
 
-class IndexController extends ServerBaseController
+/***
+ * 控制面板
+ * Class IndexController
+ * @package App\Http\Controllers\Admin
+ */
+class IndexController extends AdminBaseController
 {
+
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * 入口文件
      */
-    public function index(Request $request)
+    public function index()
     {
-        return view('server.index.main');
+        return view('admin.index.main');
     }
 
     /**
@@ -24,6 +31,6 @@ class IndexController extends ServerBaseController
      */
     public function indexContent()
     {
-        return view('server.index.index');
+        return view('admin.index.index');
     }
 }
