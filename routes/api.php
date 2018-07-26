@@ -97,10 +97,10 @@ Route::group(['middleware'=>'ApiCheck'], function () {
             Route::get('client/follow-record', 'ClientSiteFollowRecordController@followRecord');
             //关注
             Route::post('client/record-site', 'ClientSiteFollowRecordController@recordSite');
-            //参与的活动
-            Route::get('client/activity-inrecord', 'ClientActivityInrecordController@activityInrecord');
+            //活动列表
+            Route::get('client/activity-list', 'ClientActivityController@activityList');
             //活动详情
-            Route::get('client/activity-info/{uuid}', 'ClientActivityInrecordController@activityInfo');
+            Route::get('client/activity-info', 'ClientActivityController@activityInfo');
             //我的装修
             Route::get('client/site-invitation', 'ClientSiteInvitationController@siteInvitation');
             //公司信息
@@ -138,6 +138,7 @@ Route::group(['middleware'=>'ApiCheck'], function () {
     Route::get('lucky/my-luck', 'Common\LuckyController@myLucky');
     Route::get('lucky/draw', 'Common\LuckyController@lucyDraw');
     Route::post('lucky/client', 'Common\LuckyController@lucyClient');
+    Route::get('lucky/draw-list', 'Common\LuckyController@lucyDrawList');
 
     /**
      * 极光推送

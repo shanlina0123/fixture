@@ -423,4 +423,23 @@ class Lucky
             return false;
        }
     }
+
+    /**
+     * @param $user
+     * 抽奖列表
+     */
+    public function lucyDrawList( $user )
+    {
+        $where['isonline'] = 1;
+        $where['companyid'] = $user->companyid;
+        if( Cache::get('lucyDrawList'.$user->companyid) )
+        {
+            return Cache::get('lucyDrawList'.$user->companyid);
+        }else
+        {
+            $data = ActivityLucky::where($where)->select('id','advurl')->orderBy('id','desc')->get()->toArray();
+            Cache::put('lucyDrawList'.$user->companyid,$data,config('configure.sCache'));
+            return $data;
+        }
+    }
 }
