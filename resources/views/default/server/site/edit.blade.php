@@ -100,7 +100,7 @@
                     <select name="renovationmodeid"   ignore="ignore" datatype="*" nullmsg="请选择装修方式">
                         <option value="">请选择装修方式</option>
                         @foreach( $data->renovationMode as $row )
-                            <option value="{{$row->id}}"  @if($data->info->renovationMode == $row->id) selected="selected" @endif>{{$row->name}}</option>
+                            <option value="{{$row->id}}"  @if($data->info->renovationmodeid == $row->id) selected="selected" @endif>{{$row->name}}</option>
                         @endforeach
                     </select>
                 </div>

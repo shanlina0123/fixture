@@ -36,9 +36,10 @@ class SiteController extends ClientBaseController
      */
     public function siteList()
     {
+        $user = $this->apiUser;
         $where = trimValue($this->request->all());
-        $where['companyid'] = $this->apiUser->companyid;
-        $data = $this->site->siteList( $where );
+        $where['companyid'] = $user->companyid;
+        $data = $this->site->siteList( $where,$user );
         responseData(\StatusCode::SUCCESS, '列表信息',$data);
     }
 }
