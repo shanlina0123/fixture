@@ -173,9 +173,13 @@ var checkForm = function (id) {
         layer.msg("开始时间不能大于等于结束时间", {icon: 2});
         return false;
     }
-    if ($("[name=bgurl]").val()=="") {
-        layer.msg("封面图不能为空", {icon: 2});
-        return false;
+    if(id==0)
+    {
+        if ($("[name=bgurl]").val()=="") {
+            layer.msg("封面图不能为空", {icon: 2});
+            return false;
+        }
+
     }
 
     return true;

@@ -1,5 +1,5 @@
 @extends('server.layout.content')
-@section("title")宣传活动@endsection
+@section("title")促销活动@endsection
 @section('content')
     <div class="main">
         <fieldset class="layui-elem-field layui-field-title">
@@ -8,7 +8,7 @@
         <div style="display: none" id="errorMsg" content="{{$errorMsg}}"></div>
         <!--新增和筛选部分-->
         <div class="addBtnWrap">
-            <a class="layui-btn addBtn" url="{{route('activity-create')}}">新建活动</a>
+            <a class="layui-btn addBtn" url="{{route('activity-create')}}">新建促销活动</a>
             <div class="topSort layui-inline">
                 <form class="layui-form " action="{{Request::url()}}" method="get"  id="searchForm">
                     <div class="layui-inline">

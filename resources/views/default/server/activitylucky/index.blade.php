@@ -1,5 +1,5 @@
 @extends('server.layout.content')
-@section("title")活动管理@endsection
+@section("title")幸运抽奖@endsection
 @section('content')
     <div class="main">
         <fieldset class="layui-elem-field layui-field-title">

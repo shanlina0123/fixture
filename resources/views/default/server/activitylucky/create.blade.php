@@ -1,5 +1,5 @@
 @extends('server.layout.content')
-@section("title")活动管理@endsection
+@section("title")幸运抽奖@endsection
 @section('css')
  <link rel="stylesheet" href="{{pix_asset('server/css/luck.css')}}">
 @endsection
