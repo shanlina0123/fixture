@@ -293,6 +293,7 @@ var getPostData = function (obj, form) {
         "ishasconnectinfo": $("[name=ishasconnectinfo]:checked", form).val(),
         "prizelist": getRowPostData(form),
         "sharetitle": $("[name=sharetitle]", form).val(),
+        "advurl":$("[name=advurl]", form).val(),
         "isonline": $("[name=isonline]:checked", form).val(),
         "ispublic": $(obj).attr("ispublic"),
     };

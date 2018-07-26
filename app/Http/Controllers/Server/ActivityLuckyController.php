@@ -149,7 +149,7 @@ class ActivityLuckyController extends ServerBaseController
         $data=$this->getData(["storeid","title","resume","startdate","enddate","ispeoplelimit","peoplelimitnum","bgurl","makeurl","loseurl",
             "ischancelimit","chancelimitnum","everywinnum","winpoint","ishasconnectinfo",
             "prizelist",
-            "sharetitle","isonline"],$this->request->all());
+            "sharetitle","advurl","isonline"],$this->request->all());
         //拼接验证数据集
         $validateData=array_merge(["id"=>$id],$data);
 
@@ -182,6 +182,7 @@ class ActivityLuckyController extends ServerBaseController
                     "ishasconnectinfo"=>'required|max:2|min:1',
                     "prizelist"=>"present",
                     "sharetitle"=>"string",
+                    "advurl"=>"string",
                     "isonline"=>'required|max:1|min:0',
                 ],['id.required'=>'id不能为空','id.numeric'=>'id只能是数字格式',
                     'storeid.required'=>'门店id不能为空','storeid.numeric'=>'门店id只能是数字格式',
@@ -201,6 +202,7 @@ class ActivityLuckyController extends ServerBaseController
                     'ishasconnectinfo.required'=>'联系信息填写位置标识不能为空','ishasconnectinfo.max'=>'联系信息填写位置标识不能大于2','ishasconnectinfo.min'=>'联系信息填写位置标识不能小于1',
                     'prizelist.present'=>'微信分享标题只能是字符串',
                     'sharetitle.string'=>'微信分享标题只能是字符串',
+                    'advurl.string'=>'首页横幅图只能是字符串',
                     'isonline.required'=>'是否上线不能为空','isonline.max'=>'是否上线不能大于1','isonline.min'=>'是否上线能小于0',
                 ]);
                 $prizeCount=count($data["prizelist"]);

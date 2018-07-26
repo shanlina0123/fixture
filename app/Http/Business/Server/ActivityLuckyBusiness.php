@@ -251,6 +251,12 @@ class ActivityLuckyBusiness extends ServerBase
                     responseData(\StatusCode::NOT_EXIST_ERROR, "未中奖图上传错误，请重新上传");
                 }
             }
+            if ($data["advurl"]) {
+                $advurl = $this->tmpToUploads($createUuid, $data["advurl"], "lucky");
+                if (!$advurl) {
+                    responseData(\StatusCode::NOT_EXIST_ERROR, "首页横幅图上传错误，请重新上传");
+                }
+            }
             //整理修改数据
             $lucky["uuid"] = $createUuid;
             $lucky["companyid"] = $companyid;//公司id
@@ -278,6 +284,7 @@ class ActivityLuckyBusiness extends ServerBase
                 $data["bgurl"] ? $lucky["bgurl"] = $bgurl : "";//活动背景图
                 $data["makeurl"] ? $lucky["makeurl"] = $makeurl : "";//立即抽奖
                 $data["loseurl"] ? $lucky["loseurl"] = $loseurl : "";;//未中奖图
+                $data["advurl"] ? $lucky["advurl"] = $advurl : "";//小程序广告位
                 $lucky["updated_at"] = date("Y-m-d H:i:s");
                 $rs = ActivityLucky::where("id", $id)->update($lucky);
                 $activityluckyid = $id;
@@ -286,6 +293,7 @@ class ActivityLuckyBusiness extends ServerBase
                 $lucky["bgurl"] = $data["bgurl"] ? $bgurl : config('configure.lucky.bgurl');//活动背景图
                 $lucky["makeurl"] = $data["makeurl"] ? $makeurl : config('configure.lucky.makeurl');//立即抽奖
                 $lucky["loseurl"] = $data["loseurl"] ? $loseurl : config('configure.lucky.loseurl');//未中奖图
+                $lucky["advurl"] = $data["advurl"] ? $bgurl : config('configure.lucky.advurl');//首页横幅图
                 $lucky["created_at"] = date("Y-m-d H:i:s");
                 $rslucky = ActivityLucky::create($lucky);
                 $rs = $rslucky->id;

@@ -49,4 +49,40 @@ ALTER TABLE `fixture_site_invitation` ADD COLUMN `isowner`  tinyint(4) NULL DEFA
 UPDATE  `fixture_conf_vipfunctionpoint` SET `status`=0  WHERE  id in (3,4,19);
 UPDATE  `fixture_conf_vipfunctionpoint` SET viptext="不限" WHERE  id=5;
 
+
+CREATE TABLE `fixture_log_operation` (
+`id`  int(11) NOT NULL AUTO_INCREMENT ,
+`uid`  int(11) NULL DEFAULT NULL ,
+`path`  varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ,
+`method`  varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ,
+`ip`  varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ,
+`sql`  varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ,
+`input`  text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL ,
+`created_at`  datetime NULL DEFAULT NULL ,
+`updated_at`  datetime NULL DEFAULT NULL ,
+PRIMARY KEY (`id`)
+)
+ENGINE=InnoDB
+DEFAULT CHARACTER SET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+ROW_FORMAT=Compact
+;
+
+#访问日志
+CREATE TABLE `fixture_log_visit` (
+`id`  int(11) NOT NULL AUTO_INCREMENT ,
+`uid`  int(11) NULL DEFAULT NULL ,
+`path`  varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ,
+`method`  varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ,
+`ip`  varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ,
+`sql`  varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ,
+`input`  text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL ,
+`created_at`  datetime NULL DEFAULT NULL ,
+`updated_at`  datetime NULL DEFAULT NULL ,
+PRIMARY KEY (`id`)
+)
+ENGINE=InnoDB
+DEFAULT CHARACTER SET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+ROW_FORMAT=Compact
+;
+
 --  已同步线上

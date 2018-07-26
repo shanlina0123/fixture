@@ -201,6 +201,18 @@
                                             <input type="text" name="sharetitle" class="layui-input" maxlength="200" nullmsg="请输入微信分享标题" errormsg="输入有误超过了200个字符">
                                         </div>
                                     </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">首页横幅图</label>
+                                    <div class="layui-input-block layui-upload baseUrl">
+                                        <button type="button" class="layui-btn tab1Upload"><i class="layui-icon"></i>上传图片</button>
+                                        <span class="imgnotice">请上传750px*100px的图片,最大{{config("configure.maxImgSize")}}</span>
+                                        <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                                            预览图：
+                                            <div class="layui-upload-list showUrl" id="advurl"></div>
+                                            <input type="hidden" name="advurl" class="hiddenUrl"/>
+                                        </blockquote>
+                                    </div>
+                                </div>
                                     <div class="layui-form-item">
                                         <label class="layui-form-label">上线/下线</label>
                                         <div class="layui-input-block">

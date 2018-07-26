@@ -20,7 +20,7 @@ class UserController extends AdminBaseController
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|\think\response\View
      */
     public function index(){
-        return view('admin.used.index');
+        return view('admin.user.index');
     }
 
 

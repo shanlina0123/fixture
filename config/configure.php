@@ -34,8 +34,8 @@ return [
      * ----------------------------
      */
     "pix_asset"=>"default/",//模板目录
-    "cssVersion"=>"V1.0.1.1_201807171844",//strtotime(date("Y-m-d H:i:s")),//css版本
-    "jsVersion"=>"V1.0.1.1_201807171844",//strtotime(date("Y-m-d H:i:s")),//js版本
+    "cssVersion"=>"V1.0.1.1_201807231110",//strtotime(date("Y-m-d H:i:s")),//css版本
+    "jsVersion"=>"V1.0.1.1_201807231110",//strtotime(date("Y-m-d H:i:s")),//js版本
 
 
 
@@ -76,6 +76,7 @@ return [
         "makeurl"=>"default/lucky/brginprize.png",//立即抽奖默认
         "winurl"=>"default/lucky/gift.png",
         "loseurl"=>"default/lucky/noprize.png",
+        "advurl"=>"default/lucky/adv.jpg",
         "prize"=>[
             1=>"default/lucky/prize9.png",
             2=>"default/lucky/prize1.png",
