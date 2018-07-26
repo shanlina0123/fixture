@@ -79,7 +79,7 @@ class Site extends ClientBase
                 //关联风格
                 $query->select('id','name');
             }]);
-            return $sql->paginate(config('configure.sPage'));
+            return $sql->select('id','name','companyid','cityid','roomtypeid','roomstyleid','addr','explodedossurl','budget')->paginate(config('configure.sPage'));
         });
         return $value;
     }

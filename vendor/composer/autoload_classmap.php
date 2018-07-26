@@ -8,7 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
-    'App\\Http\\Business\\Client\\ClientActivityInrecord' => $baseDir . '/app/Http/Business/Client/ClientActivityInrecord.php',
+    'App\\Http\\Business\\Client\\ClientActivity' => $baseDir . '/app/Http/Business/Client/ClientActivityInrecord.php',
     'App\\Http\\Business\\Client\\ClientActivityLuckyRecord' => $baseDir . '/app/Http/Business/Client/ClientActivityLuckyRecord.php',
     'App\\Http\\Business\\Client\\ClientAppointment' => $baseDir . '/app/Http/Business/Client/ClientAppointment.php',
     'App\\Http\\Business\\Client\\ClientSiteFollowRecord' => $baseDir . '/app/Http/Business/Client/ClientSiteFollowRecord.php',
@@ -54,7 +54,7 @@ return array(
     'App\\Http\\Business\\Store\\SiteBusiness' => $baseDir . '/app/Http/Business/Store/SiteBusiness.php',
     'App\\Http\\Business\\Store\\TemplateBusiness' => $baseDir . '/app/Http/Business/Store/TemplateBusiness.php',
     'App\\Http\\Business\\Store\\UserBusiness' => $baseDir . '/app/Http/Business/Store/UserBusiness.php',
-    'App\\Http\\Controllers\\Client\\ClientActivityInrecordController' => $baseDir . '/app/Http/Controllers/Client/ClientActivityInrecordController.php',
+    'App\\Http\\Controllers\\Client\\ClientActivityController' => $baseDir . '/app/Http/Controllers/Client/ClientActivityInrecordController.php',
     'App\\Http\\Controllers\\Client\\ClientActivityLuckyRecordController' => $baseDir . '/app/Http/Controllers/Client/ClientActivityLuckyRecordController.php',
     'App\\Http\\Controllers\\Client\\ClientAppointmentController' => $baseDir . '/app/Http/Controllers/Client/ClientAppointmentController.php',
     'App\\Http\\Controllers\\Client\\ClientCompanyController' => $baseDir . '/app/Http/Controllers/Client/ClientCompanyController.php',

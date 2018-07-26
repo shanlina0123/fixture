@@ -341,7 +341,7 @@ class ComposerStaticInit8fde48a8b0a3d8760651318138fd3161
     public static $classMap = array (
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
-        'App\\Http\\Business\\Client\\ClientActivityInrecord' => __DIR__ . '/../..' . '/app/Http/Business/Client/ClientActivityInrecord.php',
+        'App\\Http\\Business\\Client\\ClientActivity' => __DIR__ . '/../..' . '/app/Http/Business/Client/ClientActivityInrecord.php',
         'App\\Http\\Business\\Client\\ClientActivityLuckyRecord' => __DIR__ . '/../..' . '/app/Http/Business/Client/ClientActivityLuckyRecord.php',
         'App\\Http\\Business\\Client\\ClientAppointment' => __DIR__ . '/../..' . '/app/Http/Business/Client/ClientAppointment.php',
         'App\\Http\\Business\\Client\\ClientSiteFollowRecord' => __DIR__ . '/../..' . '/app/Http/Business/Client/ClientSiteFollowRecord.php',
@@ -387,7 +387,7 @@ class ComposerStaticInit8fde48a8b0a3d8760651318138fd3161
         'App\\Http\\Business\\Store\\SiteBusiness' => __DIR__ . '/../..' . '/app/Http/Business/Store/SiteBusiness.php',
         'App\\Http\\Business\\Store\\TemplateBusiness' => __DIR__ . '/../..' . '/app/Http/Business/Store/TemplateBusiness.php',
         'App\\Http\\Business\\Store\\UserBusiness' => __DIR__ . '/../..' . '/app/Http/Business/Store/UserBusiness.php',
-        'App\\Http\\Controllers\\Client\\ClientActivityInrecordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Client/ClientActivityInrecordController.php',
+        'App\\Http\\Controllers\\Client\\ClientActivityController' => __DIR__ . '/../..' . '/app/Http/Controllers/Client/ClientActivityInrecordController.php',
         'App\\Http\\Controllers\\Client\\ClientActivityLuckyRecordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Client/ClientActivityLuckyRecordController.php',
         'App\\Http\\Controllers\\Client\\ClientAppointmentController' => __DIR__ . '/../..' . '/app/Http/Controllers/Client/ClientAppointmentController.php',
         'App\\Http\\Controllers\\Client\\ClientCompanyController' => __DIR__ . '/../..' . '/app/Http/Controllers/Client/ClientCompanyController.php',

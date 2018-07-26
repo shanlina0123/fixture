@@ -37,4 +37,13 @@ class Activity extends Model
         return $this->belongsTo('App\Http\Model\Data\Participatory','participatoryid','id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * 关联活动图片
+     */
+    public function ActivityToImg()
+    {
+        return $this->hasMany('App\Http\Model\Activity\ActivityImg','activityid','id');
+    }
+
 }

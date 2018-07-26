@@ -152,4 +152,13 @@ class LuckyController extends Controller
         responseData(\StatusCode::ERROR,'提交失败');
     }
 
+    /**
+     * 抽奖活动列表
+     */
+    public function lucyDrawList()
+    {
+        $user = $this->apiUser;
+        $data = $this->lucky->lucyDrawList( $user );
+        responseData(\StatusCode::SUCCESS,'抽奖列表',$data);
+    }
 }
