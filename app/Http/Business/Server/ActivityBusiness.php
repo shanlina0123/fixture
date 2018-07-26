@@ -97,6 +97,36 @@ class ActivityBusiness extends ServerBase
 
 
     /***
+     * 获取添加页面数据
+     * @return mixed
+     */
+    public function create($isadmin, $companyid, $cityid, $storeid, $islook,$tag2 = "Admin-StoreList")
+    {
+        //非管理员/视野条件1全部 2城市 3门店
+        $lookWhere = $this->lookWhere($isadmin, $companyid, $cityid, $storeid, $islook);
+
+        //获取门店数据
+        $tagKey2 = base64_encode(mosaic("", $tag2, $companyid, $cityid, $storeid, $islook));
+        $list["storeList"] = Cache::tags($tag2)->remember($tagKey2, config('configure.sCache'), function () use ($isadmin, $lookWhere) {
+            //查詢
+            $queryModel = Store::select(DB::raw("id,name,id"));
+            //视野条件
+            if(array_key_exists("storeid",$lookWhere)&&$lookWhere["storeid"])
+            {
+                $lookWhere["id"]=$lookWhere["storeid"];
+                unset($lookWhere["storeid"]);
+            }
+            $queryModel = $queryModel->where($lookWhere);
+            $list = $queryModel
+                ->orderBy('id', 'asc')
+                ->get();
+            return $list;
+        });
+
+        return $list;
+    }
+
+    /***
      * 获取详情
      * @return mixed
      */
@@ -183,6 +213,12 @@ class ActivityBusiness extends ServerBase
                     responseData(\StatusCode::NOT_EXIST_ERROR, "封面图上传错误，请重新上传");
                 }
             }
+            if ($data["mainurl"]) {
+                $mainurl = $this->tmpToUploads($createUuid, $data["mainurl"], "activity");
+                if (!$mainurl) {
+                    responseData(\StatusCode::NOT_EXIST_ERROR, "内容图上传错误，请重新上传");
+                }
+            }
             //整理修改数据
             $activity["uuid"] = $createUuid;
             $activity["companyid"] = $companyid;//公司id
@@ -192,61 +228,32 @@ class ActivityBusiness extends ServerBase
             $activity["storeid"] = $data["storeid"];//门店id
             $activity["title"] = $data["title"];//标题
             $data["resume"] ? $activity["resume"] = $data["resume"] : "";//摘要 简述
-            $data["content"] ? $activity["content"] = $data["content"] : "";//内容
             $data["startdate"] ? $activity["startdate"] = $data["startdate"] : "";//开始日期
             $data["enddate"] ? $activity["enddate"] = $data["enddate"] : "";//结束日期
             //高级设置
-            $lucky["isonline"] = $data["isonline"];//是否上线 1上线 0下线
+            $activity["isonline"] = $data["isonline"];//是否上线 1上线 0下线
             if ($id) {
                 //修改
-                $data["bgurl"] ? $activity["bgurl"] = $bgurl : "";//活动背景图
+                $data["bgurl"] ? $activity["bgurl"] = $bgurl : "";//活动封面图
+                $data["mainurl"] ? $activity["mainurl"] = $mainurl : "";//内容图
                 $activity["updated_at"] = date("Y-m-d H:i:s");
                 $rs = Activity::where("id", $id)->update($activity);
                 $activityid = $id;
             } else {
                 //添加
-                $activity["bgurl"] = $data["bgurl"] ? $bgurl : config('configure.activity.bgurl');//活动背景图
+                $activity["bgurl"] = $data["bgurl"] ? $bgurl : "";//活动封面图
+                $activity["mainurl"] = $data["mainurl"] ? $mainurl : "";//活动图
                 $activity["created_at"] = date("Y-m-d H:i:s");
-                $rsactivity = ActivityLucky::create($activity);
+                $rsactivity = Activity::create($activity);
                 $rs = $rsactivity->id;
                 $activityid = $rsactivity->id;
             }
-            //多图设置
-            //添加图
-            $addRsp[] =1;
-            if (count($data["addpic"]) > 0) {
-                foreach ($data["addpic"] as $k => $v) {
-                    if ($v) {
-                        $picture = $this->tmpToUploads($createUuid, $v, "activity");
-                        if ($picture) {
-                            //添加
-                            $actpicData["uuid"] = create_uuid();
-                            $actpicData["activityid"] = $activityid;
-                            $actpicData["picture"] = $picture;
-                            $actpicData["userid"] = $userid;
-                            $actpicData["created_at"] = date("Y-m-d H:i:s");
-                            $addRsp[] = ActivityImages::create($actpicData);
-                        }else{
-                            responseData(\StatusCode::NOT_EXIST_ERROR, "活动图上传错误，请重新上传");
-                        }
-                    }
-                }
-            }
-            //删除图
-            $delRsp[]=1;
-            if (count($data["delpicids"]) > 0) {
-                foreach ($data["delpicids"] as $k => $v) {
-                        if ($v) {
-                            $delRsp[] = ActivityImages::where("id", $v)->delete();
-                        }
-                    }
-            }
             //结果处理
-            if ($rs !== false && !in_array(false, $addRsp, true)&&!in_array(false, $delRsp, true)) {
+            if ($rs !== false) {
                 DB::commit();
                 //删除缓存
-                Cache::tags(["Acitivity-PageList".$companyid])->flush();
-                return ["id" => $activityid,"isonline" => $lucky["isonline"], "listurl" => route("activity-index")];
+                Cache::tags(["Acitivity-PageList".$companyid,"activityList".$companyid])->flush();
+                return ["id" => $activityid,"isonline" => $activity["isonline"], "listurl" => route("activity-index")];
             } else {
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR, "保存失败");
@@ -286,7 +293,7 @@ class ActivityBusiness extends ServerBase
             if ($rs !== false) {
                 DB::commit();
                 //删除缓存
-                Cache::tags(["Acitivity-PageList".$rowData->companyid])->flush();
+                Cache::tags(["Acitivity-PageList".$rowData->companyid,"activityList".$rowData->companyid])->flush();
                 return ["isonline" => $updateData["isonline"]];
             } else {
                 DB::rollBack();
@@ -333,7 +340,7 @@ class ActivityBusiness extends ServerBase
                 (new \Upload())->delDir('activity', $row->uuid);
 
                 //删除缓存
-                Cache::tags(["Acitivity-PageList".$row->companyid])->flush();
+                Cache::tags(["Acitivity-PageList".$row->companyid,"activityList".$row->companyid])->flush();
             } else {
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR, "删除失败");
