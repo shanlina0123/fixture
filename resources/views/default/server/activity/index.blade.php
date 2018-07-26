@@ -3,12 +3,12 @@
 @section('content')
     <div class="main">
         <fieldset class="layui-elem-field layui-field-title">
-            <legend>宣传活动列表</legend>
+            <legend>促销活动列表</legend>
         </fieldset>
         <div style="display: none" id="errorMsg" content="{{$errorMsg}}"></div>
         <!--新增和筛选部分-->
         <div class="addBtnWrap">
-            <a class="layui-btn addBtn" url="{{route('lucky-create')}}">新建活动</a>
+            <a class="layui-btn addBtn" url="{{route('activity-create')}}">新建活动</a>
             <div class="topSort layui-inline">
                 <form class="layui-form " action="{{Request::url()}}" method="get"  id="searchForm">
                     <div class="layui-inline">
@@ -69,19 +69,19 @@
                         <td id="rowIsOnline" isonline="{{$item->isonline}}">
                             @if($item->isonline==1)
                                 <input type="checkbox" name="isonline" lay-skin="switch" lay-text="ON|OFF" value="1"
-                                       checked="checked" lay-filter="rowIsOnline" url="{{route('lucky-setting',$item->id)}}">
+                                       checked="checked" lay-filter="rowIsOnline" url="{{route('activity-setting',$item->id)}}">
                             @else
                                 <input type="checkbox" name="isonline" lay-skin="switch" lay-text="ON|OFF" value="0"
-                                       lay-filter="rowIsOnline" url="{{route('lucky-setting','id')}}">
+                                       lay-filter="rowIsOnline" url="{{route('activity-setting','id')}}">
                             @endif
                         </td>
                         <td>
                             <div class="layui-btn-group">
-                                <a type="button" class="layui-btn seeBtn" url="{{route('lucky-edit',$item->id)}}"
+                                <a type="button" class="layui-btn seeBtn" url="{{route('activity-edit',$item->id)}}"
                                    @if($item->isonline==0)style="display: none;"@endif>查看</a>
-                                <a type="button" class="layui-btn editBtn" url="{{route('lucky-edit',$item->id)}}"
+                                <a type="button" class="layui-btn editBtn" url="{{route('activity-edit',$item->id)}}"
                                    @if($item->isonline==1)style="display: none;"@endif >编辑</a>
-                                <a type="button" class="layui-btn deleteBtn" url="{{route('lucky-delete',$item->id)}}"
+                                <a type="button" class="layui-btn deleteBtn" url="{{route('activity-delete',$item->id)}}"
                                         @if($item->isonline==1)style="display: none;"@endif >删除
                                 </a>
                             </div>
@@ -91,7 +91,7 @@
             </table>
         </form>
 
-        <div class="pageWrap">@if($list['luckyList']!=null){{ $list['luckyList']->links() }} @endif</div>
+        <div class="pageWrap">@if($list['activityList']!=null){{ $list['activityList']->links() }} @endif</div>
     </div>
 @endsection
 @section("js")

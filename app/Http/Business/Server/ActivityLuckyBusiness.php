@@ -384,6 +384,8 @@ class ActivityLuckyBusiness extends ServerBase
                 }
                 //删除缓存
                 Cache::tags(["AcitivityLucky-PageList", "AcitivityLuck-Prize", "AcitivityLuck-Extension-Prize"])->flush();
+                Cache::forget("lucyDrawList".$companyid);
+
                 return ["id" => $activityluckyid, "prizeIds" => $prizeIds, "isonline" => $lucky["isonline"], "listurl" => route("lucky-index")];
             } else {
                 DB::rollBack();
@@ -438,6 +440,7 @@ class ActivityLuckyBusiness extends ServerBase
                 DB::commit();
                 //删除缓存
                 Cache::tags(["AcitivityLucky-PageList", "AcitivityLuck-Prize", "AcitivityLuck-Extension-Prize"])->flush();
+                Cache::forget("lucyDrawList".$rowData["companyid"]);
                 return ["isonline" => $updateData["isonline"]];
             } else {
                 DB::rollBack();
@@ -485,6 +488,7 @@ class ActivityLuckyBusiness extends ServerBase
 
                 //删除缓存
                 Cache::tags(["AcitivityLucky-PageList", "AcitivityLuck-Prize", "AcitivityLuck-Extension-Prize"])->flush();
+                Cache::forget("lucyDrawList".$row["companyid"]);
             } else {
                 DB::rollBack();
                 responseData(\StatusCode::DB_ERROR, "删除失败");

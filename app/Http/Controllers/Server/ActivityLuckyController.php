@@ -157,7 +157,7 @@ class ActivityLuckyController extends ServerBaseController
         {
             if(!in_array($data["isonline"],[0,1]))
             {
-                responseData(\StatusCode::PARAM_ERROR,"上线和下线值不符合预定义","",["ispubic"=>"上线和下线值不符合预定义"]);
+                responseData(\StatusCode::PARAM_ERROR,"上线和下线值不符合预定义","",["isonline"=>"上线和下线值不符合预定义"]);
             }
             //发布验证
             if($data["isonline"]==1)
@@ -221,7 +221,7 @@ class ActivityLuckyController extends ServerBaseController
             }
 
         }else{
-            responseData(\StatusCode::PARAM_ERROR,"暂存或发布的参数缺少","",["ispubic"=>"暂存或发布的参数缺少"]);
+            responseData(\StatusCode::PARAM_ERROR,"暂存或发布的参数缺少","",["isonline"=>"暂存或发布的参数缺少"]);
         }
 
 
