@@ -8,6 +8,10 @@ ALTER TABLE `fixture_activity` ADD COLUMN `mainurl`  varchar(255) CHARACTER SET 
 ALTER TABLE `fixture_activity` ADD COLUMN `isonline`  tinyint(1) NULL DEFAULT 1 COMMENT '是否公开 默认1  1显示  0不显示' AFTER `content`;
 #促销活动 - 新增字段
 ALTER TABLE `fixture_activity` ADD COLUMN `updated_at`  datetime NULL DEFAULT NULL COMMENT '更新时间' AFTER `created_at`;
+#促销活动 - 新增字段
+ALTER TABLE `fixture_activity` ADD COLUMN `startdate`  datetime NULL DEFAULT NULL COMMENT '开始时间' AFTER `title`;
+#促销活动 - 新增字段
+ALTER TABLE `fixture_activity` ADD COLUMN `enddate`  datetime NULL DEFAULT NULL COMMENT '结束时间' AFTER `startdate`;
 #促销活动 - 删除字段
 ALTER TABLE `fixture_activity` DROP COLUMN `createuserid`;
 #促销活动 - 删除字段
