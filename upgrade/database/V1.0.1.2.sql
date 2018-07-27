@@ -60,7 +60,6 @@ ENGINE=InnoDB
 DEFAULT CHARACTER SET=utf8mb4 COLLATE=utf8mb4_unicode_ci
 ROW_FORMAT=Compact
 ;
-
 #访问日志
 CREATE TABLE `fixture_log_visit` (
 `id`  int(11) NOT NULL AUTO_INCREMENT ,
@@ -76,10 +75,11 @@ PRIMARY KEY (`id`)
 )
 ENGINE=InnoDB
 DEFAULT CHARACTER SET=utf8mb4 COLLATE=utf8mb4_unicode_ci
-ROW_FORMAT=Compact
-;
-
+ROW_FORMAT=Compact;
 #抽奖活动 - 新增字段
 ALTER TABLE `fixture_activity_lucky` ADD COLUMN `advurl`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '广告位' AFTER `sharetitle`;
-
+#促销活动  - 图片
+DROP TABLE `fixture_activity_images`;
+#促销活动 - 邀请的促销
+DROP TABLE `fixture_activity_inrecord`;
 --  已同步线上
