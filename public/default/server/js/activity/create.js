@@ -133,6 +133,7 @@ var getPostData = function (obj, form) {
         "startdate": $("[name=startdate]", form).val(),
         "enddate": $("[name=enddate]", form).val(),
         "bgurl": $("[name=bgurl]", form).val(),
+        "content": $("[name=content]", form).val(),
         "mainurl": $("[name=mainurl]", form).val(),
         "isonline": $("[name=isonline]:checked", form).val(),
     };
@@ -179,7 +180,10 @@ var checkForm = function (id) {
             layer.msg("封面图不能为空", {icon: 2});
             return false;
         }
-
+    }
+    if ($("#content").val() == "") {
+        layer.msg("活动内容不能为空", {icon: 2});
+        return false;
     }
 
     return true;

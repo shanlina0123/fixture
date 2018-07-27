@@ -40,7 +40,7 @@
                                                            style="font-size: 12px; color: #FF5722;">*</i>活动简介</label>
                         <div class="layui-input-block">
                                 <textarea class="layui-textarea" name="resume" id="resume" datatype="*" maxlength="200"
-                                          nullmsg="请输入活动简介" errormsg="输入有误超过了255个字符"></textarea>
+                                          nullmsg="请输入活动简介" errormsg="输入有误超过了200个字符"></textarea>
                         </div>
                     </div>
                     <div class="layui-form-item">
@@ -70,6 +70,14 @@
                                 <div class="layui-upload-list showUrl" id="bgurl"></div>
                                 <input type="hidden" name="bgurl" class="hiddenUrl"/>
                             </blockquote>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><i class="layui-icon"
+                                                           style="font-size: 12px; color: #FF5722;">*</i>内容</label>
+                        <div class="layui-input-block">
+                                <textarea class="layui-textarea" name="content" id="content" datatype="*" maxlength="800"
+                                          nullmsg="请输入活动内容" errormsg="输入有误超过了800个字符"></textarea>
                         </div>
                     </div>
                     <div class="layui-form-item">

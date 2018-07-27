@@ -79,6 +79,16 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
+                        <label class="layui-form-label"><i class="layui-icon"
+                                                           style="font-size: 12px; color: #FF5722;">*</i>内容</label>
+                        <div class="layui-input-block">
+                                 <textarea class="layui-textarea" name="content" id="content"
+                                           value="{{$list["activityData"]['content']}}" datatype="*" maxlength="800"
+                                           nullmsg="请输入活动内容"
+                                           errormsg="输入有误超过了800个字符">{{$list["activityData"]['content']}}</textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
                         <label class="layui-form-label">内容图</label>
                         <div class="layui-input-block layui-upload baseUrl">
                             <button type="button" class="layui-btn tab1Upload"><i class="layui-icon"></i>上传图片</button>
