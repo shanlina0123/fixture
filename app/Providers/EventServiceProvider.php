@@ -76,6 +76,7 @@ class EventServiceProvider extends ServiceProvider
                     $obj->userid = $notice_type?$event['createuserid']:$user->id;
                     $obj->typeid = 3;
                     $obj->iscreate = $notice_type && $event['replyuserid']?1:0;
+                    $obj->title = '评论';
                     $obj->typename = '评论';
                     $obj->content = str_replace('【用户微信昵称】', $obj->nickname,config('template.11'));
                     $obj->content = str_replace('【评论内容前10个字】', str_limit($event['content'],10),$obj->content);
@@ -85,7 +86,7 @@ class EventServiceProvider extends ServiceProvider
                     break;
                 case 4:
                     $obj->typeid = 4;
-                    $obj->iscreate = 1;
+                    $obj->iscreate = $notice_type?0:1;
                     $obj->typename = '客户预约';
                     //1预约参观2免费量房3我要报名4装修报价5抽奖活动
                     $name = Company::where( 'id', $obj->companyid)->value('fullname');
@@ -109,6 +110,7 @@ class EventServiceProvider extends ServiceProvider
                             {
                                 return true;
                             }
+                            $obj->userid = $user->id;
                             $obj->title = '免费量房';
                             $obj->content = $notice_type?str_replace('【客户姓名】',$event['name'],config('template.5')):str_replace('【公司简称】',$name,config('template.1'));
                             $obj->siteid = 0;
@@ -138,6 +140,7 @@ class EventServiceProvider extends ServiceProvider
                             {
                                 return true;
                             }
+                            $obj->userid = $user->id;
                             $obj->title = '快速报价';
                             $obj->content = $notice_type?str_replace('【客户姓名】',$event['name'],config('template.6')):str_replace('【公司简称】',$name,config('template.2'));
                             $obj->siteid = 0;

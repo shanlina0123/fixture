@@ -60,7 +60,7 @@ class SiteDynamicComment extends ClientBase
             $dynamic->siteid = $data['siteid'];
             $dynamic->replyuserid = $data['replyuserid'];
             $dynamic->content = $data['content'];
-            $dynamic->createuserid = $data['createuserid'];
+            $dynamic->createuserid = $data['createid'];
             $dynamic->created_at = date("Y-m-d H:i:s");
             $dynamic->save();
 
