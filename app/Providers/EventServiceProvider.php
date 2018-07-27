@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Http\Business\Server\WeChatPublicNumberBusiness;
+use App\Http\Model\Activity\Activity;
 use App\Http\Model\Company\Company;
 use App\Http\Model\Log\Notice;
 use App\Http\Model\Site\Site;
@@ -38,14 +39,6 @@ class EventServiceProvider extends ServiceProvider
          * 消息日志记录
          */
         Event::listen('log.notice', function ($type,$user,$event,$notice_type=false) {
-
-            if( $notice_type )
-            {
-                if( $event['createuserid'] = $user->id )
-                {
-                    return true;
-                }
-            }
             $obj = new Notice;
             $obj->uuid = create_uuid();
             $obj->companyid = $user->companyid;
@@ -56,6 +49,13 @@ class EventServiceProvider extends ServiceProvider
             {
                 //1关注 、2赞、3评论、4客户预约
                 case 2:
+                    if( array_has( $event,'createuserid') )
+                    {
+                        if( $event['createuserid'] == $user->id  )
+                        {
+                            return true;
+                        }
+                    }
                     $obj->userid = $notice_type?$event['createuserid']:$user->id;
                     $obj->typeid = 2;
                     $obj->iscreate = 1;
@@ -66,6 +66,13 @@ class EventServiceProvider extends ServiceProvider
                     $obj->dynamicid = $event['dynamicid'];
                     break;
                 case 3:
+                    if( array_has( $event,'createuserid') )
+                    {
+                        if( $event['createuserid'] == $user->id  )
+                        {
+                            return true;
+                        }
+                    }
                     $obj->userid = $notice_type?$event['createuserid']:$user->id;
                     $obj->typeid = 3;
                     $obj->iscreate = $notice_type && $event['replyuserid']?1:0;
@@ -77,7 +84,6 @@ class EventServiceProvider extends ServiceProvider
                     $obj->dynamicid = $event['dynamicid'];
                     break;
                 case 4:
-                    $obj->userid = $notice_type?'':$user->id;
                     $obj->typeid = 4;
                     $obj->iscreate = 1;
                     $obj->typename = '客户预约';
@@ -87,6 +93,7 @@ class EventServiceProvider extends ServiceProvider
                     {
                         case 1:
                             $site = Site::where('id',$event['siteid'])->select('cityid','storeid','createuserid')->first();
+                            $obj->userid = $notice_type?$site->createuserid:$user->id;
                             $obj->title = '预约参观';
                             $obj->content = $notice_type?str_replace('【客户姓名】',$event['name'],config('template.7')):str_replace('【公司简称】',$name,config('template.3'));
                             $obj->content = str_replace('【工地】',$event['sname'],$obj->content);
@@ -97,12 +104,40 @@ class EventServiceProvider extends ServiceProvider
                             $event['createuserid'] = $site->createuserid;
                             break;
                         case 2:
+                            //没有B端信息
+                            if( $notice_type )
+                            {
+                                return true;
+                            }
                             $obj->title = '免费量房';
                             $obj->content = $notice_type?str_replace('【客户姓名】',$event['name'],config('template.5')):str_replace('【公司简称】',$name,config('template.1'));
                             $obj->siteid = 0;
                             $event['title'] = $obj->title;
                             break;
+                        case 3://我要报名
+                            $activity = Activity::where('id',$event['activityid'])->first();
+                            if( $notice_type )
+                            {
+                                if($activity->userid==$user->id)
+                                {
+                                    return true;
+                                }
+                            }
+                            $obj->userid = $notice_type?$activity->userid:$user->id;
+                            $obj->title = '活动报名';
+                            $obj->content = $notice_type?str_replace('【客户姓名】',$event['name'],config('template.8')):str_replace('【公司简称】',$name,config('template.4'));
+                            $obj->content = str_replace('【活动标题】',$activity->title,$obj->content);
+                            $obj->siteid = 0;
+                            $obj->activityid = $activity->id;
+                            $obj->cityid = $activity->cityid;
+                            $obj->storeid = $activity->storeid;
+                            break;
                         case 4:
+                            //没有B端信息
+                            if( $notice_type )
+                            {
+                                return true;
+                            }
                             $obj->title = '快速报价';
                             $obj->content = $notice_type?str_replace('【客户姓名】',$event['name'],config('template.6')):str_replace('【公司简称】',$name,config('template.2'));
                             $obj->siteid = 0;
@@ -117,9 +152,19 @@ class EventServiceProvider extends ServiceProvider
                     break;
             }
             $obj->save();
-            if($notice_type){
-                Cache::tags(['NoticeList'.$event['createuserid']])->flush();
-            }else{
+            if( $notice_type )
+            {
+                if( array_has( $event,'createuserid') )
+                {
+                    Cache::tags(['NoticeList'.$event['createuserid']])->flush();
+                }
+                if( array_has( $event,'activityid') )
+                {
+                    Cache::tags(['NoticeList'.$activity->userid])->flush();
+                }
+
+            }else
+            {
                 Cache::tags(['NoticeList'.$user->id])->flush();
             }
         });
