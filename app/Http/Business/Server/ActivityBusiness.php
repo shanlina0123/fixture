@@ -228,6 +228,7 @@ class ActivityBusiness extends ServerBase
             $activity["storeid"] = $data["storeid"];//门店id
             $activity["title"] = $data["title"];//标题
             $data["resume"] ? $activity["resume"] = $data["resume"] : "";//摘要 简述
+            $data["content"] ? $activity["content"] = $data["content"] : "";//内容
             $data["startdate"] ? $activity["startdate"] = $data["startdate"] : "";//开始日期
             $data["enddate"] ? $activity["enddate"] = $data["enddate"] : "";//结束日期
             //高级设置

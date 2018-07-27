@@ -115,7 +115,7 @@ class ActivityController extends ServerBaseController
         if ($this->request->ajax()) {
             responseAjax($dataSource);
         }
-        if ($list["luckData"]["isonline"] == 1) {
+        if ($list["activityData"]["isonline"] == 1) {
             return view('server.activity.see', compact('list'))->with("errorMsg", $errorMsg);
         } else {
             return view('server.activity.edit', compact('list'))->with("errorMsg", $errorMsg);
@@ -147,7 +147,7 @@ class ActivityController extends ServerBaseController
     public function update($id)
     {
         //获取请求参数
-        $data = $this->getData(["storeid", "title", "resume", "startdate", "enddate", "bgurl", "mainurl", "isonline"], $this->request->all());
+        $data = $this->getData(["storeid", "title", "resume", "startdate", "enddate", "bgurl","content", "mainurl", "isonline"], $this->request->all());
         //拼接验证数据集
         $validateData = array_merge(["id" => $id], $data);
         //验证规则
@@ -158,7 +158,8 @@ class ActivityController extends ServerBaseController
             "resume" => 'required|max:255|min:1',
             "startdate" => 'required|date',
             "enddate" => 'required|date',
-            "bgurl" => "required|string",
+            "bgurl" => "present|string",
+            "content" => 'required|min:1',
             "mainurl" => "present|string",
             "isonline" => 'required|max:1|min:0',
         ], ['id.required' => 'id不能为空', 'id.numeric' => 'id只能是数字格式',
@@ -167,7 +168,8 @@ class ActivityController extends ServerBaseController
             'resume.required' => '简述不能为空', 'resume.max' => '简述长度不能大于255个字符', 'resume.min' => '简述长度不能小于1个字符',
             'startdate.required' => '开始时间不能为空', 'startdate.date' => '开始时间只能是时间格式',
             'enddate.required' => '结束时间不能为空', 'enddate.date' => '结束时间只能是时间格式',
-            'bgurl.required' => '封面图不能为空', 'bgurl.string' => '封面图值只能是字符串',
+            'bgurl.present' => '封面图参数缺少', 'bgurl.string' => '封面图值只能是字符串',
+            "content.required"=>"活动内容不能为空","content.min" => '活动内容长度不能小于1个字符',
             'mainurl.present' => '内容图参数缺少', 'mainurl.string' => '内容图值只能是字符串',
             'isonline.required' => '是否上线不能为空', 'isonline.max' => '是否上线不能大于1', 'isonline.min' => '是否上线能小于0',
         ]);
@@ -186,6 +188,12 @@ class ActivityController extends ServerBaseController
         //时间验证
         if ($data["startdate"] > $data["enddate"]) {
             responseData(\StatusCode::PARAM_ERROR, "开始时间不能大于等于结束时间", "", ["startdate|enddate" => "开始时间不能大于等于结束时间"]);
+        }
+
+        //编辑时
+        if(!$id&&!$data["bgurl"])
+        {
+           responseData(\StatusCode::PARAM_ERROR, "封面图不能为空", "", ["bgurl" => "封面图不能为空"]);
         }
 
         //获取业务数据

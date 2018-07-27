@@ -133,6 +133,7 @@ var getPostData = function (obj, form) {
         "startdate": $("[name=startdate]", form).val(),
         "enddate": $("[name=enddate]", form).val(),
         "bgurl": $("[name=bgurl]", form).val(),
+        "content": $("[name=content]", form).val(),
         "mainurl": $("[name=mainurl]", form).val(),
         "isonline": $("[name=isonline]:checked", form).val(),
     };
@@ -173,8 +174,15 @@ var checkForm = function (id) {
         layer.msg("开始时间不能大于等于结束时间", {icon: 2});
         return false;
     }
-    if ($("[name=bgurl]").val()=="") {
-        layer.msg("封面图不能为空", {icon: 2});
+    if(id==0)
+    {
+        if ($("[name=bgurl]").val()=="") {
+            layer.msg("封面图不能为空", {icon: 2});
+            return false;
+        }
+    }
+    if ($("#content").val() == "") {
+        layer.msg("活动内容不能为空", {icon: 2});
         return false;
     }
 

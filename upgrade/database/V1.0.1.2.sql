@@ -60,7 +60,6 @@ ENGINE=InnoDB
 DEFAULT CHARACTER SET=utf8mb4 COLLATE=utf8mb4_unicode_ci
 ROW_FORMAT=Compact
 ;
-
 #访问日志
 CREATE TABLE `fixture_log_visit` (
 `id`  int(11) NOT NULL AUTO_INCREMENT ,
@@ -76,10 +75,41 @@ PRIMARY KEY (`id`)
 )
 ENGINE=InnoDB
 DEFAULT CHARACTER SET=utf8mb4 COLLATE=utf8mb4_unicode_ci
-ROW_FORMAT=Compact
-;
-
+ROW_FORMAT=Compact;
 #抽奖活动 - 新增字段
 ALTER TABLE `fixture_activity_lucky` ADD COLUMN `advurl`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '广告位' AFTER `sharetitle`;
+#促销活动  - 图片
+DROP TABLE `fixture_activity_images`;
+#促销活动 - 邀请的促销
+DROP TABLE `fixture_activity_inrecord`;
+#权限功能 - 修改数据
+UPDATE `fixture_filter_function` SET sort=2 WHERE id=101;
+#权限功能 - 新增数据
+INSERT INTO `fixture_filter_function` VALUES ('102', '34800fa0914c11e89a1594de807e34a0', '促销活动', '1', '1', '1', '促销活动', '2', 'ActivityController', 'activity-index', '1', '2018-07-27 11:21:51');
 
+#权限功能 - 过滤已有数据新增数据
+DROP PROCEDURE IF EXISTS pro_actrole_function;
+delimiter //
+CREATE PROCEDURE pro_actrole_function()
+BEGIN
+  DECLARE strRoleid int;
+  DECLARE strIslook int;
+  DECLARE stop int default 0;
+  DECLARE cur cursor for(
+		SELECT roleid,islook FROM `fixture_filter_role_function` WHERE functionid=1 and roleid not in (
+			SELECT roleid FROM `fixture_filter_role_function` WHERE functionid=102 GROUP BY roleid
+		) GROUP BY roleid
+	);
+  DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET stop = null;
+  OPEN cur;
+		FETCH cur INTO strRoleid,strIslook;
+		WHILE (stop is not null)DO
+		INSERT INTO `fixture_filter_role_function` VALUES ('', REPLACE(UUID(),"-",""), strRoleid, '102', strIslook, now());
+		FETCH cur INTO strRoleid,strIslook;
+    END WHILE;
+	CLOSE cur;
+END;//
+delimiter ;
+call pro_actrole_function();
+DROP PROCEDURE IF EXISTS pro_actrole_function;
 --  已同步线上
