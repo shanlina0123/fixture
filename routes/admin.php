@@ -11,9 +11,9 @@
 |
 */
 //后台服务路由
+//Route::domain('')->group(function () {
 
-Route::group(['namespace' => 'Admin'], function () {
-//    //登录、登出
+    //    //登录、登出
 //    Route::match(['get', 'post'], 'login', 'LoginController@login')->name('login');//登录
 //    Route::get('signout', 'LoginController@signOut')->name('signout');//登出
 //
@@ -37,7 +37,8 @@ Route::group(['namespace' => 'Admin'], function () {
 //        Route::get('index/content', 'AdminController@index')->name('admin-index');
 //        Route::match(['get', 'post'], 'user/set-pass', 'AdminController@setPass')->name('set-pass'); //修改密码
 //    });
-});
+
+//});
 
 
 

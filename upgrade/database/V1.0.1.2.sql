@@ -60,22 +60,6 @@ ENGINE=InnoDB
 DEFAULT CHARACTER SET=utf8mb4 COLLATE=utf8mb4_unicode_ci
 ROW_FORMAT=Compact
 ;
-#访问日志
-CREATE TABLE `fixture_log_visit` (
-`id`  int(11) NOT NULL AUTO_INCREMENT ,
-`uid`  int(11) NULL DEFAULT NULL ,
-`path`  varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ,
-`method`  varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ,
-`ip`  varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ,
-`sql`  varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ,
-`input`  text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL ,
-`created_at`  datetime NULL DEFAULT NULL ,
-`updated_at`  datetime NULL DEFAULT NULL ,
-PRIMARY KEY (`id`)
-)
-ENGINE=InnoDB
-DEFAULT CHARACTER SET=utf8mb4 COLLATE=utf8mb4_unicode_ci
-ROW_FORMAT=Compact;
 #抽奖活动 - 新增字段
 ALTER TABLE `fixture_activity_lucky` ADD COLUMN `advurl`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '广告位' AFTER `sharetitle`;
 #促销活动  - 图片
@@ -116,4 +100,15 @@ DROP PROCEDURE IF EXISTS pro_actrole_function;
 ALTER TABLE `fixture_site_invitation` ADD COLUMN `positionid`  int(11) NULL DEFAULT 0 COMMENT '职位id' AFTER `siteid`;
 #邀请的成员 - 新增字段
 ALTER TABLE `fixture_site_invitation` ADD COLUMN `code`  varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '邀请成员对应的code码，只能使用一次' AFTER `joinuserid`;
+#小程序绑定 - 删除字段
+ALTER TABLE `fixture_small_program` DROP COLUMN `seturl`;
+#系统配置 - 删除
+DROP TABLE `fixture_conf_sys`;
+#删除之前同步权限存储过程
+DROP PROCEDURE `role_function`;
+#工地成员 -  删除字段
+ALTER TABLE `fixture_site_invitation` DROP COLUMN `participantid`;
+#公司成员 -  删除字段
+DROP TABLE `fixture_company_participant`;
+
 --  已同步线上
