@@ -140,6 +140,27 @@ class Lucky
         }
         //查询奖品的数量
         $prize = ActivityLuckyPrize::where('activityluckyid',$data['id'])->select('id','levelname','lastnum','levelid','name','picture')->get()->toArray();
+        //判断中奖次数
+        $RecordNum = ActivityLuckyRecord::where(['activityluckid'=>$data['id'],'userid'=>$user->id,'iswin'=>1])->count();
+        if( $RecordNum >= $res->everywinnum )
+        {
+            foreach ( $prize as $k=>$row )
+            {
+                if( $row['levelid'] == 1 )
+                {
+                    $saveData['iswin'] = 0;
+                    $saveData['name'] = $row['name'];
+                    $saveData['id'] = $row['id'];
+                    $saveData['index'] = $k;
+                    $saveData['picture'] = $row['picture'];
+                }
+            }
+            $luckRes = $this->saveLuck($res,$saveData,$user);
+            if( $luckRes )
+            {
+                responseData(\StatusCode::SUCCESS,'您的抽奖次信息',$saveData);
+            }
+        }
         //计算概率
         $luckChance = $this->luckChance($data['id']);
         //超出概率

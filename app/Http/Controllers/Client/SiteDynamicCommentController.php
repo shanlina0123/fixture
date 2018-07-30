@@ -62,7 +62,7 @@ class SiteDynamicCommentController extends ClientBaseController
                 'content'=>'required',//内容
             ]
         );
-        $data['createuserid'] = $this->apiUser->id;
+        $data['createid'] = $this->apiUser->id;
         if ($validator->fails())
         {
             responseData(\StatusCode::CHECK_FORM,'验证失败');

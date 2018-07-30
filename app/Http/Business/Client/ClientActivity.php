@@ -20,11 +20,10 @@ class ClientActivity
      */
     public function activityList( $user ,$request )
     {
-        //Cache::flush();
         $tag = 'activityList'.$user->companyid;
         $tagWhere = $request->input('page');
         $value = Cache::tags($tag)->remember( $tag.$tagWhere,config('configure.sCache'), function() use( $user, $request ){
-            $sql = Activity::where(['companyid'=>$user->companyid,'isonline'=>1])->orderBy('id','desc')->select('id','title','resume','bgurl','created_at');
+            $sql = Activity::where(['companyid'=>$user->companyid,'isonline'=>1])->orderBy('id','desc')->select('id','title','resume','bgurl','startdate','enddate');
             return $sql->paginate(config('configure.sPage'));
         });
         return $value;
