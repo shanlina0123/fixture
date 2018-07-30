@@ -129,7 +129,7 @@ layui.use(['form', 'layer','upload'], function() {
         },
         error: function (index, upload) {
             layer.closeAll();
-            layer.msg(res.msg,{icon: 2,  time:2000});
+            layer.msg("请求上传接口出现异常",{icon: 2,  time:2000});
         }
     });
     form.on('select(stagetemplate)', function(data){

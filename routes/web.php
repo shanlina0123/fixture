@@ -49,6 +49,8 @@ Route::group(['namespace' => 'Server'], function () {
         //用户资料
         Route::match(['get', 'post'], 'user/info', 'UserController@userInfo')->name('user-info'); //个人资料跟换电话+绑定电话
         Route::match(['get', 'post'], 'user/set-pass', 'UserController@setPass')->name('set-pass'); //修改密码
+        Route::post( 'user/nickname', 'UserController@setNickname')->name('user-nickname'); //修改密码
+
         Route::get('user/wxcode', 'UserController@wxcode')->name('user-wxcode');//获取小程序二维码
         Route::get('user/check-openid', 'UserController@checkOpenid')->name('check-openid');//绑定微信检测
 

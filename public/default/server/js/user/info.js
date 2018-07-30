@@ -48,7 +48,17 @@ layui.use(['layer','form'], function() {
             content: $(".popWrap")
         })
     });
-
+    //修改昵称
+    $(".changeNickname").click(function(){
+        layer.open({
+            type: 1,
+            title: '修改姓名',
+            closeBtn: 1,
+            shadeClose: false,
+            area: ['600px', '350px'],
+            content: $(".userNicknamePop")
+        })
+    })
 
     //二维码弹窗
     $(".binwx").click(function(){
@@ -148,10 +158,28 @@ function Countdown()
 
 
 /**
- * 表单验证
+ * 电话号码提交表单验证
  */
 $("#layui-form").Validform({
     btnSubmit: '#btn_submit',
+    tiptype: 1,
+    postonce: true,
+    showAllError: false,
+    tiptype: function (msg, o, cssctl) {
+        if (!o.obj.is("form")) {
+            if (o.type != 2)
+            {
+                layer.msg(msg, {icon: 5, time: 2000, shift: 6});
+            }
+        }
+    }
+});
+
+/**
+ * 昵称修改表单验证
+ */
+$("#layui-nickname-form").Validform({
+    btnSubmit: '#btn_nickname_submit',
     tiptype: 1,
     postonce: true,
     showAllError: false,

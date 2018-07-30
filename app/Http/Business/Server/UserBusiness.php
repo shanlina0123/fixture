@@ -37,7 +37,16 @@ class UserBusiness extends ServerBase
          return User::where($where)->update( $data );
      }
 
-
+    /***
+     * 修改昵称
+     * @param $data
+     * @param $where
+     * @return mixed
+     */
+     public function  setNickname( $data, $where )
+     {
+         return User::where($where)->update( $data );
+     }
     /**
      * @param $user
      * @return mixed
