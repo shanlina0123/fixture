@@ -33,16 +33,7 @@ class ParticipantController extends StoreBaseController
     {
         $user = $this->apiUser;
         $where['companyid'] = $user->companyid;
-        $siteid = $this->request->input('siteid');
-        if( $siteid )
-        {
-            //查询关联
-            $where['siteid'] = $siteid;
-            $res = $this->participant->participantToInvitation( $where );
-        }else
-        {
-            $res = $this->participant->participantList( $where );
-        }
+        $res = $this->participant->participantList( $where );
         responseData(\StatusCode::SUCCESS,'参与者列表',$res);
     }
 
@@ -75,8 +66,8 @@ class ParticipantController extends StoreBaseController
         $participant = $this->request->input('participant');
         $siteid = $this->request->input('siteid');
         $type = 'allow';
-        //u代表邀请者id   p代表职位id   t代表类型 1为邀请2为绑定  因为此字段长度限制为32位所有简写
-        $scene = http_build_query(['u'=>$uid,'p'=>$participant,'s'=>$siteid,'t'=>1]);
+        //u代表邀请者id   p代表职位id  s工地id  t代表类型 1为邀请2为绑定  因为此字段长度限制为32位所有简写
+        $scene = http_build_query(['u'=>$uid,'p'=>$participant,'s'=>$siteid,'t'=>1,'c'=>str_random(6)]);
         $wx->createWxappCode($companyid,$type, $scene,'400');
     }
 

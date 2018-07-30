@@ -21,6 +21,8 @@ Route::post('user/login', 'Common\WxApiLoginController@login');//登陆
 Route::post('user/openid', 'Common\WxApiLoginController@getOpenid');//登陆
 Route::get('participant/position-code', 'Store\ParticipantController@code');
 Route::post('jmessage/init', 'Common\SystemMessageController@getJmessageInIt');//极光初始化
+//邀请业主二维码不登录也可以访问
+Route::get('site/evaluate-code', 'Client\SiteEvaluateController@code');
 
 Route::group(['middleware'=>'ApiCheck'], function () {
     //权限验证
@@ -115,8 +117,6 @@ Route::group(['middleware'=>'ApiCheck'], function () {
             Route::post('site/owner-evaluate', 'SiteEvaluateController@ownerEvaluate');
             //删除评价
             Route::delete('site/evaluate-destroy', 'SiteEvaluateController@evaluateDestroy');
-            //邀请业主二维码
-            Route::get('site/evaluate-code', 'SiteEvaluateController@code');
             //C端数据筛选条件
             Route::get('site/screening-conditions', 'SiteController@siteScreeningConditions');
             //C端工地列表

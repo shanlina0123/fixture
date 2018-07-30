@@ -38,4 +38,13 @@ class SiteInvitation extends Model
     {
         return $this->belongsTo('App\Http\Model\User\User','joinuserid','id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * 关联店铺
+     */
+    public function invitationToStore()
+    {
+        return $this->belongsTo('App\Http\Model\Store\Store','storeid','id');
+    }
 }

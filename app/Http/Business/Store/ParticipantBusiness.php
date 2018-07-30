@@ -25,15 +25,16 @@ class ParticipantBusiness
      */
     public function participantList( $where )
     {
-       if(Cache::has('companyParticipant'.$where['companyid']))
-       {
-           $data = Cache::get('companyParticipant'.$where['companyid']);
-       }else
-       {
-           $data = CompanyParticipant::where($where)->with('participantToPosition')->get();
-           Cache::put('companyParticipant'.$where['companyid'],$data,config('configure.sCache'));
-       }
-       return $data;
+        $data = SiteInvitation::where($where)->with(['invitationToSite'=>function($query){
+            $query->select('id','name');
+        },'invitationToUser'=>function($query){
+            $query->select('id','nickname','faceimg','positionid')->with(['userToPosition'=>function($query){
+                $query->select('id','name');
+            }]);
+        },'invitationToStore'=>function($query){
+            $query->select('id','name');
+        }])->get();
+        return $data;
     }
 
     /**

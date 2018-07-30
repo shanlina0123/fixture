@@ -84,10 +84,10 @@ class WxApiLoginController extends Controller
         $res = $this->user->setUserInfo($data);
         if( $res )
         {
-            responseData(\StatusCode::SUCCESS,"授权成功" );
+            responseData(\StatusCode::SUCCESS,"修改成功" );
         }else
         {
-            responseData(\StatusCode::ERROR,"授权失败" );
+            responseData(\StatusCode::ERROR,"修改失败" );
         }
     }
 }

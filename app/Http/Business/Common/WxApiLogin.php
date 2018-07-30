@@ -56,7 +56,7 @@ class WxApiLogin
                 $uToken->save();
             }
 
-            $res->nickname = $nickname;
+            //$res->nickname = $nickname;
             $res->faceimg = $faceimg;
             $res->save();
 
@@ -132,13 +132,19 @@ class WxApiLogin
                         try{
                             DB::beginTransaction();
                             //查询成员信息
-                            $participant = CompanyParticipant::where(['companyid'=>$companyid,'id'=>$arr['p']])->first();
+                            //$participant = CompanyParticipant::where(['companyid'=>$companyid,'id'=>$arr['p']])->first();
 
                             //判断是不是添加了
                             $Invitation = SiteInvitation::where(['companyid'=>$companyid,'siteid'=>$arr['s']])->first();
                             if( $Invitation )
                             {
                                 responseData(\StatusCode::ERROR,"您已是此项目成员");
+                            }
+                            //判断二维码谁不是不是使用过
+                            $code = SiteInvitation::where(['companyid'=>$companyid,'code'=>$arr['c']])->first();
+                            if( $code )
+                            {
+                                responseData(\StatusCode::ERROR,"同一二维码只能使用一次");
                             }
                             //工地对应区域
                             $site = Site::where(['companyid'=>$companyid,'id'=>$arr['s']])->first();
@@ -148,7 +154,7 @@ class WxApiLogin
                             $res->storeid = $site->storeid;//门店
                             $res->cityid = $site->cityid;//城市
                             $res->isinvitationed = 1;
-                            $res->positionid = $participant->positionid;
+                            $res->positionid = $arr['p'];
                             $user = $res->save();
 
                             //添加工地成员表
@@ -158,15 +164,16 @@ class WxApiLogin
                             $siteInvitation->storeid = $site->storeid;
                             $siteInvitation->cityid = $site->cityid;
                             $siteInvitation->siteid = $arr['s'];
-                            $siteInvitation->participantid = $arr['p'];//成员信息id
+                            $siteInvitation->positionid = $arr['p'];//职位id
+                            $siteInvitation->isowner = 0;//职位id
                             $siteInvitation->userid = $arr['u'];
                             $siteInvitation->joinuserid = $res->id;
+                            $siteInvitation->code = $arr['c'];
                             $siteInvitation->created_at = date("Y-m-d H:i:s");
                             $siteInvitation->save();
                             if($user && $siteInvitation->id )
                             {
                                 DB::commit();
-                                 //TODO::邀请的用户 - 扩展极光 此代码未加入
                                 return $this->userLogin( $openid, $companyid,$nickname,$faceimg );
                             }
                             DB::rollBack();
@@ -182,18 +189,16 @@ class WxApiLogin
                     //注册成邀请的用户
                     try{
                         DB::beginTransaction();
-                        //查询成员信息
-                        $participant = CompanyParticipant::where(['companyid'=>$companyid,'id'=>$arr['p']])->first();
                         //用户表
                         $user = new User();
                         $user->uuid = create_uuid();
                         $user->companyid = $companyid;
-                        $user->positionid = $participant->positionid;
+                        $user->positionid = $arr['p'];//职位id
                         $user->wechatopenid = $openid;
                         $user->isadmin = 0;
                         $user->isadminafter = 0;
-                        $res->type = 0;
-                        $res->isinvitationed = 1;
+                        $user->type = 0;
+                        $user->isinvitationed = 1;
                         $user->status = 1;
                         $user->nickname = $nickname;
                         $user->faceimg = $faceimg;
@@ -205,10 +210,14 @@ class WxApiLogin
                         {
                             responseData(\StatusCode::ERROR,"您已是此项目成员");
                         }
+                        //判断二维码谁不是不是使用过
+                        $code = SiteInvitation::where(['companyid'=>$companyid,'code'=>$arr['c']])->first();
+                        if( $code )
+                        {
+                            responseData(\StatusCode::ERROR,"同一二维码只能使用一次");
+                        }
                         //工地对应区域
                         $site = Site::where(['companyid'=>$companyid,'id'=>$arr['s']])->first();
-                        //查询成员信息
-
                         //添加工地成员表
                         $siteInvitation = new SiteInvitation();
                         $siteInvitation->uuid = create_uuid();
@@ -216,9 +225,11 @@ class WxApiLogin
                         $siteInvitation->storeid = $site->storeid;
                         $siteInvitation->cityid = $site->cityid;
                         $siteInvitation->siteid = $arr['s'];
-                        $siteInvitation->participantid = $res->id;//成员信息id
-                        $siteInvitation->userid = $arr['p'];
+                        $siteInvitation->positionid = $arr['p'];//职位id
+                        $siteInvitation->isowner = 0;//职位id
+                        $siteInvitation->userid = $arr['u'];
                         $siteInvitation->joinuserid = $res->id;
+                        $siteInvitation->code = $arr['c'];
                         $siteInvitation->created_at = date("Y-m-d H:i:s");
                         $siteInvitation->save();
                         if( $user->id && $siteInvitation->id )
@@ -332,8 +343,14 @@ class WxApiLogin
         $res = User::where('id',$data['id'])->first();
         if ($res)
         {
-            $res->nickname = $data['nickname'];
-            $res->faceimg = $data['faceimg'];
+            if( array_has($data,'nickname') )
+            {
+                $res->nickname = $data['nickname'];
+            }
+            if( array_has($data,'faceimg') )
+            {
+                $res->faceimg = $data['faceimg'];
+            }
             return $res->save();
         }
 
