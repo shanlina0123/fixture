@@ -77,6 +77,32 @@ class UserController extends ServerBaseController
         }
     }
 
+    /***
+     * 修改昵称
+     */
+    public  function  setNickname()
+    {
+        if ($this->request->method() == "POST") {
+            //验证规则
+            $this->request->validate(
+                [ "nickname" => 'required|max:100|min:1'],
+                ['nickname.required' => '姓名不能为空', 'nickname.max' => '姓名长度不能大于100个字符', 'nickname.min' => '姓名长度不能小于1个字符']
+            );
+            $data["nickname"]= $this->request->input('nickname');
+            $where['id'] =  $this->userInfo->id;
+            $res = $this->user->setNickname($data,$where);
+            if ($res) {
+                //删除缓存
+                Cache::tags(["Admin-PageList"])->flush();
+                Cache::put('userToken' . $this->userInfo->id, ['token' =>create_uuid(), 'type' => 1], config('session.lifetime'));
+                return redirect()->route('user-info')->with('msg',"修改成功");
+            } else {
+                return redirect()->route('user-info')->with('msg',"修改失败");
+            }
+
+        }
+    }
+
     /**
      * 修改密码
      */

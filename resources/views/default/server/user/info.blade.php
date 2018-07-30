@@ -14,9 +14,11 @@
                     <label class="layui-form-label">姓名</label>
                     <div class="layui-input-block">
                         <input type="text" value="{{$user->nickname}}" class="layui-input" readonly  style="width: 25%;float:left;">
+                        <a href="javascript:;" style="line-height:38px;color: #01AAED" class="changeNickname" >
+                            修改姓名 |
+                        </a>
                         @if($user->wechatopenid)
-                            <a href="javascript:;" style="line-height:38px;color: #01AAED" class="binwx" >已绑定</a>
-                            已绑定
+                            <a href="javascript:;" style="line-height:38px;"  >已绑定</a>
                         @else
                             <a href="javascript:;" style="line-height:38px;color: #01AAED" class="binwx" url="{{route('user-wxcode')}}" data-check="{{route('check-openid')}}">绑定微信</a>
                         @endif
@@ -66,7 +68,24 @@
             </div>
         </form>
     </div>
-
+    <!--修改姓名-->
+    <div class="popWrap userNicknamePop" style="display: none">
+        <form class="layui-form" id="layui-nickname-form" action="{{route('user-nickname')}}" method="post">
+            {{csrf_field()}}
+            <div class="layui-form-item">
+                <label class="layui-form-label">旧姓名</label>
+                <input type="text" class="layui-input readonly"  value="{{$user->nickname}}" readonly="readonly" disabled="disabled" style="width:70%">
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">新姓名</label>
+                <input type="text" name="nickname" value="" id="nickname" datatype="*" nullmsg="请输入新姓名" errormsg="新姓名格式错误"
+                       autocomplete="off" placeholder="请输入姓名" class="layui-input" style="width:70%">
+            </div>
+            <div class="layui-form-item loginBtn">
+                <button type="button" class="layui-btn loginButton" id="btn_nickname_submit">立即提交</button>
+            </div>
+        </form>
+    </div>
     <!--二维码弹窗-->
     <div class="erweimapop" style="display: none;" >
         <div class="erweima">

@@ -112,4 +112,8 @@ END;//
 delimiter ;
 call pro_actrole_function();
 DROP PROCEDURE IF EXISTS pro_actrole_function;
+#邀请的成员 - 新增字段
+ALTER TABLE `fixture_site_invitation` ADD COLUMN `positionid`  int(11) NULL DEFAULT 0 COMMENT '职位id' AFTER `siteid`;
+#邀请的成员 - 新增字段
+ALTER TABLE `fixture_site_invitation` ADD COLUMN `code`  varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '邀请成员对应的code码，只能使用一次' AFTER `joinuserid`;
 --  已同步线上

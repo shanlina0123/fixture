@@ -33,25 +33,26 @@ class PublicController extends ServerBaseController
         $obj = new \stdClass();
         $src = new \stdClass();
         if( $request->file('file') == false ) return '';
-
-        //检验文件类型
-        $fileTypes = array('image/jpeg','image/png','video/mp4');
-        if(!in_array($request->file('file')->getMimeType(),$fileTypes)) {
-            $obj->code = 0;
-            $obj->msg =  '文件格式不合法'.$request->file('file')->getMimeType();
-            $obj->data = '';
-            return response()->json($obj, 200);
-        }
-        //检验大小
-        $fileSize=$request->file('file')->getSize();
-        if(!$request->file('file')->getSize() || $fileSize>config("configure.maxImgSizeByte"))
-        {
-            $obj->code = 0;
-            $obj->msg = $fileSize."图片大小不能低于0或超过".config("configure.maxImgSize");;
-            $obj->data = '';
-            return response()->json($obj, 200);
-        }
         try {
+            //检验大小
+            $fileSize=$request->file('file')->getSize();
+            if(!$request->file('file')->getSize() || $fileSize>config("configure.maxImgSizeByte"))
+            {
+                $obj->code = 0;
+                $obj->msg = $fileSize."图片大小不能低于0或超过".config("configure.maxImgSize");;
+                $obj->data = '';
+                return response()->json($obj, 200);
+            }
+
+            //检验文件类型
+            $fileTypes = array('image/jpeg','image/png','video/mp4');
+            if(!in_array($request->file('file')->getMimeType(),$fileTypes)) {
+                $obj->code = 0;
+                $obj->msg =  '文件格式不合法'.$request->file('file')->getMimeType();
+                $obj->data = '';
+                return response()->json($obj, 200);
+            }
+
             $res = $request->file('file')->store('temp', 'temp');
             $name = explode('/',$res)[1];
             $obj->code = 1;
