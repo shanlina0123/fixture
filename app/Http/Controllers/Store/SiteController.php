@@ -499,7 +499,7 @@ class SiteController extends StoreBaseController
         if( $res->status == 1 )
         {
             Cache::tags(['site'.$companyid, 'DynamicList'.$companyid,'siteHome'.$companyid])->flush();
-            responseData(\StatusCode::SUCCESS,$res->msg,$res->tage);
+            responseData(\StatusCode::SUCCESS,$res->msg,$res);
         }
         responseData(\StatusCode::ERROR,$res->msg);
     }
