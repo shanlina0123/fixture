@@ -30,7 +30,7 @@ layui.use(['layer','form'], function() {
                 scrollbar: false,
                 skin: 'layui-layer-rim',
                 area: ['600px', '400px'],
-                content: $(".popWrap")
+                content: $(".userInfoPop")
             })
         }
 
@@ -45,7 +45,7 @@ layui.use(['layer','form'], function() {
             scrollbar: false,
             skin: 'layui-layer-rim',
             area: ['600px', '400px'],
-            content: $(".popWrap")
+            content: $(".userInfoPop")
         })
     });
     //修改昵称

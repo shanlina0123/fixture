@@ -69,7 +69,7 @@
         </form>
     </div>
     <!--修改姓名-->
-    <div class="popWrap userNicknamePop" style="display: none">
+    <div class=" popWrap userNicknamePop" style="display: none">
         <form class="layui-form" id="layui-nickname-form" action="{{route('user-nickname')}}" method="post">
             {{csrf_field()}}
             <div class="layui-form-item">
