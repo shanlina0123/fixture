@@ -28,7 +28,7 @@ class SiteBusiness extends StoreBase
      */
     public function siteList( $sWhere, $data, $siteID )
     {
-        $tag = 'siteHome'.$sWhere['companyid'];
+       /* $tag = 'siteHome'.$sWhere['companyid'];
         $where = array_has($data,'page')?$data['page']:1;
         if(is_array($siteID))
         {
@@ -52,7 +52,19 @@ class SiteBusiness extends StoreBase
             }
             return $site->select('id','uuid','name','addr','explodedossurl','stageid','isfinish','isopen','linkednum','follownum')->paginate(config('configure.sPage'));
         });
-        return $value;
+        return $value;*/
+        $site = Site::where( $sWhere )->orderBy('id','desc')->with(
+            [
+                'siteToCommpanyTag'=>function( $query ){
+                    $query->select('id','stagetemplateid','name');
+                }
+            ]
+        );
+        if( $siteID )
+        {
+            $site->whereIn('id',$siteID);
+        }
+        return $site->select('id','uuid','name','addr','explodedossurl','stageid','isfinish','isopen','linkednum','follownum')->paginate(config('configure.sPage'));
     }
 
     /**

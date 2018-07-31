@@ -506,7 +506,7 @@ class SiteBusiness extends ServerBase
     public function getSiteRenew( $companyId, $uuid )
     {
         $obj = new \stdClass();
-        $site = Site::where(['companyid'=>$companyId,'uuid'=>$uuid])->select('stagetemplateid','stageid','name','isfinish')->first();
+        $site = Site::where(['companyid'=>$companyId,'uuid'=>$uuid])->select('stagetemplateid','stageid','name','isfinish')->with('siteToCommpanyTag')->first();
         if( $site )
         {
             if( $site->isfinish == 1 )
@@ -524,6 +524,7 @@ class SiteBusiness extends ServerBase
             $obj->name = $site->name;
             $obj->status = 1;
             $obj->msg = '更改进度信息';
+            $obj->siteToCommpanyTag = $site->siteToCommpanyTag;
             return $obj;
         }else
         {
