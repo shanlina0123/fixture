@@ -29,7 +29,7 @@ class Site extends ClientBase
         $tag = 'siteScreeningList'.$user->companyid;
         $tags = http_build_query($where);
         $value = Cache::tags($tag)->remember( $tags,config('configure.sCache'), function() use( $where,$user ){
-            $sql = SiteModel::where('companyid',$user->companyid)->orderBy('id','desc');
+            $sql = SiteModel::where(['companyid'=>$user->companyid,'isopen'=>1])->orderBy('id','desc');
             //拼接条件
             if( array_has($where,'cityid') && $where['cityid'])
             {

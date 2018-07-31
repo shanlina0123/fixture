@@ -453,14 +453,18 @@ class Lucky
     {
         $where['isonline'] = 1;
         $where['companyid'] = $user->companyid;
-        if( Cache::get('lucyDrawList'.$user->companyid) )
-        {
-            return Cache::get('lucyDrawList'.$user->companyid);
-        }else
-        {
-            $data = ActivityLucky::where($where)->select('id','advurl')->orderBy('id','desc')->get()->toArray();
-            Cache::put('lucyDrawList'.$user->companyid,$data,config('configure.sCache'));
-            return $data;
-        }
+//        if( Cache::get('lucyDrawList'.$user->companyid) )
+//        {
+//            return Cache::get('lucyDrawList'.$user->companyid);
+//        }else
+//        {
+//            $data = ActivityLucky::where($where)->select('id','advurl')->orderBy('id','desc')->get()->toArray();
+//            Cache::put('lucyDrawList'.$user->companyid,$data,config('configure.sCache'));
+//            return $data;
+//        }
+
+        $time = date("Y-m-d H:i:s");
+        $data = ActivityLucky::where($where)->whereRaw('startdate >= ? and enddate <= ?',[$time,$time])->select('id','advurl')->orderBy('id','desc')->get()->toArray();
+        return $data;
     }
 }
