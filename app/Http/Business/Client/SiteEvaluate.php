@@ -47,7 +47,7 @@ class SiteEvaluate extends ClientBase
                 $invitation['storeid'] = $site->storeid;
                 $invitation['cityid'] = $site->cityid;
                 $invitation['siteid'] = $site->id;
-                $invitation['participantid'] = 0;
+                $invitation['positionid'] = 0;
                 $invitation['isowner'] = 1;
                 $invitation['userid'] = $site->createuserid;//工地创建者
                 $invitation['joinuserid'] = $user->id;
